@@ -78,11 +78,23 @@ function srbc_install() {
 
 	dbDelta( $sql );
 	
-	//Database for encrypted cc
+	//Database for encrypted credit card storage
 	$sql = "CREATE TABLE IF NOT EXISTS srbc_cc (
 		cc_id INT AUTO_INCREMENT,
 		data TEXT NOT NULL
 		PRIMARY KEY (cc_id)
+		)  ENGINE=INNODB;";
+
+	dbDelta( $sql );
+	
+	//Database for encrypted cc
+	$sql = "CREATE TABLE IF NOT EXISTS srbc_payemnts (
+		payment_id INT AUTO_INCREMENT,
+		camp_id INT NOT NULL,
+		camper_id INT NOT NULL,
+		payment_type TINYTEXT NOT NULL,
+		payment_amount SMALLINT NOT NULL,
+		PRIMARY KEY (payment_id)
 		)  ENGINE=INNODB;";
 
 	dbDelta( $sql );
