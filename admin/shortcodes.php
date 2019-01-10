@@ -523,13 +523,46 @@ function srbc_registration_complete($atts)
 				'%s'
 			) 
 			);
+			
+	if (isset($_POST["using_check"])){
+		sendMail("armystorms@gmail.com","$parent_first_name $parent_last_name is sending a check ",
+		"Hi,\r\n$parent_first_name $parent_last_name is sending a check for $camper_first_name $camper_last_name<br>Thanks!<br>-Peter Hawke SRBC Ancilla");
+	}
+	else
+	{
+		//Credit Card Stuff
+		//Append all the data together so we only have to encrypt one string
+		$data = $_POST["cc_name"] . "	" . $_POST["cc_type"] . "	" . $_POST["cc_number"] . "	" . $_POST["cc_vcode"] . "	" . $_POST["cc_month"]
+		. "/" . $_POST["cc_year"] . "	" . $_POST["cc_zipcode"];
+		//Encrypt using ssl
+		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
+		$pub_key=fread($fp,8192);
+		fclose($fp);
+		openssl_get_publickey($pub_key);
+		openssl_public_encrypt($data,$edata,$pub_key);
+		$wpdb->insert(
+			'srbc_cc', 
+			array( 
+				'cc_id' =>0,
+				//Use base64 so the database can handle it properly since we are just using text
+				'data' => base64_encode($edata), 
+				'amount' => $_POST["cc_amount"]
+			), 
+			array( 
+				'%d',
+				'%s', 
+				'%d'			
+			) 
+			);
+		
+	}
 	
 	$message = "Hi ". $camper_first_name . ",<br><br>Thanks for signing up for " . $_POST["camp_desc"] . ".  If you have any questions feel free to check ". 
 	"our FAQ page http://solidrockbiblecamp.com/FAQS.  If you want to know what your child should pack for camp we also have that!".
 	"   http://solidrockbiblecamp.com/camps/packing-lists\r\nOn last thing is that we ask that you print out this health form and fill it out to speed up the registration process.<br>Thanks!<br>Solid Rock Bible Camp";
 
 
-	sendMail($email,"Thank you for signing up for a Solid Rock Camp!",$message,'E:\xampp\htdocs\attachments\healthform.pdf');
+	sendMail($email,"Thank you for signing up for a Solid Rock Camp!",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
 	return "Registration Sucessful!";
 }
 
