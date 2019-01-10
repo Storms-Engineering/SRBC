@@ -5,8 +5,44 @@ function srbc_credit_cards(){
         return;
     }
 	?>
+	<script src="../wp-content/plugins/SRBC/JSEncrypt/jsencrypt.min.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/credit_card.js"></script>
-	
+	<table style="width:100%;">
+		<tr>
+			<th>Camp Description</th>
+			<th>Start Date</th>
+			<th>Boys Registered</th>
+			<th>Girls Registered</th>
+			<th>Total Registered</th>
+			<th>Waitlist</th>
+		</tr>
+	<?php
+	global $wpdb;
+	$ccs = $wpdb->get_results("SELECT * FROM srbc_cc");
+	foreach ($ccs as $cc)
+	{
+		$waitlistsize = $wpdb->get_results("SELECT COUNT(camp_id)
+										FROM srbc_registration
+										WHERE camp_id=$camp->camp_id AND NOT waitlist=0", ARRAY_N)[0][0]; 
+		$male_registered = $wpdb->get_results("SELECT COUNT(camp_id)
+										FROM srbc_registration
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='male'", ARRAY_N)[0][0]; 
+		$female_registered = $wpdb->get_results("SELECT COUNT(camp_id)
+										FROM srbc_registration
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='female'", ARRAY_N)[0][0]; 
+		
+		echo '<tr><td>' . $camp->camp_description;
+		echo "</td><td>" . $camp->start_date . "</td>";
+		echo "<td>" . $male_registered . "</td>";
+		echo "<td>" . $female_registered . "</td>";
+		echo "<td>" . ($male_registered + $female_registered) . "/" . $camp->overall_size . "</td>"; 
+		echo "<td>" . $waitlistsize ."/" . $camp->waiting_list_size;
+		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $camp->camp_id . '})}">Delete</button>';
+		echo "</td></tr>";
+	}
+	echo "</table> ";
 	<?php
 }
 
