@@ -5,45 +5,39 @@ function srbc_credit_cards(){
         return;
     }
 	?>
+	<style>
+	table, th, td
+	{
+	border: 1px solid black;
+	border-collapse: collapse;
+	word-wrap: break-word;
+	max-width: 800px;
+	}
+	</style>
 	<script src="../wp-content/plugins/SRBC/JSEncrypt/jsencrypt.min.js"></script>
+	<script src="../wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
+	<!--<script src="../wp-content/plugins/SRBC/Jsrsasign/crypto-1.1.js"></script>-->
 	<script src="../wp-content/plugins/SRBC/admin/credit_card.js"></script>
-	<table style="width:100%;">
+	<h1>Credit Cards pending processing:</h1>
+	Password :  <input type="password" id="pwd"> 
+	<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">Drop key file here</div>
+	<table style="width:100%;" >
 		<tr>
-			<th>Camp Description</th>
-			<th>Start Date</th>
-			<th>Boys Registered</th>
-			<th>Girls Registered</th>
-			<th>Total Registered</th>
-			<th>Waitlist</th>
+			<th>Data</th>
+			<th>Amount</th>
+			<th>Delete</th>
 		</tr>
 	<?php
 	global $wpdb;
 	$ccs = $wpdb->get_results("SELECT * FROM srbc_cc");
 	foreach ($ccs as $cc)
 	{
-		$waitlistsize = $wpdb->get_results("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										WHERE camp_id=$camp->camp_id AND NOT waitlist=0", ARRAY_N)[0][0]; 
-		$male_registered = $wpdb->get_results("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='male'", ARRAY_N)[0][0]; 
-		$female_registered = $wpdb->get_results("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='female'", ARRAY_N)[0][0]; 
-		
-		echo '<tr><td>' . $camp->camp_description;
-		echo "</td><td>" . $camp->start_date . "</td>";
-		echo "<td>" . $male_registered . "</td>";
-		echo "<td>" . $female_registered . "</td>";
-		echo "<td>" . ($male_registered + $female_registered) . "/" . $camp->overall_size . "</td>"; 
-		echo "<td>" . $waitlistsize ."/" . $camp->waiting_list_size;
-		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $camp->camp_id . '})}">Delete</button>';
+		echo '<tr><td>' . $cc->data;
+		echo "</td><td>" . $cc->amount;
+		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $cc->cc_id . '})}">Delete</button>';
 		echo "</td></tr>";
 	}
 	echo "</table> ";
-	<?php
 }
 
 //Shows camper management page
