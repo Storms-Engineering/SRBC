@@ -508,7 +508,6 @@ function srbc_registration_complete($atts)
 			array( 
 				'registration_id' =>0,
 				'camp_id' => $campid, 
-				//TODO: Test out and see if this insert ID is correct even if we replace a camper with the correct camper id
 				'camper_id' => $wpdb->insert_id,
 				'horse_opt' => $horse_opt,
 				'busride' => $busride,

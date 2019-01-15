@@ -96,14 +96,14 @@ function postAjax(obj) {
     if (this.readyState == 4 && this.status == 200) {
 		var txt = this.responseText;1
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
-        if (txt.includes("Saved"))
-			showToast(txt);
-		else
-		{
+        //if (txt.includes("Saved"))
+		//	showToast(txt);
+		//else
+		//{
 			showToast("Error occured, please let Website Administrator know");
 			document.getElementById("results").innerHTML = txt;
-			
-		}
+		
+		//}
     }
 };
 xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_registration.php", true);
@@ -144,11 +144,13 @@ function saveInfo()
 				info_child[inputs[j].name] = inputs[j].value;
 		}
 		info_child["amount_due"] = document.getElementById("amount_due").innerText;
+		info_child["payment_type"] = document.getElementById("payment_type").value;
 		info[registration_ids[i].innerText.toString()] = info_child;
 	}
 	
 	console.log(info);
 	postAjax(info);
+	closeModal();
 }
 
 //Add event listeners to all the fields we want to watch for calculate_totals
@@ -193,7 +195,9 @@ function calculate_totals()
 		var inputs = containers[i].getElementsByTagName('input');
 		for (var j = 0; j < inputs.length; ++j) {
 			//We don't want to grab text fields and parseInt doesn't like empty strings
-			if(inputs[j].name != "scholarship_type" && inputs[j].name != "counselor" && inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].value != "")
+			if(inputs[j].name != "scholarship_type" && inputs[j].name != "counselor" && 
+				inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].name != "payment_amt" &&
+				inputs[j].name != "note" && inputs[j].value != "")
 			{				
 				if(inputs[j].name == "horse_opt")
 					localAmountDue -= parseInt(inputs[j].value);

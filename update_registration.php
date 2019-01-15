@@ -33,6 +33,62 @@ if (array_key_exists("deleteid",$obj))
 for($i = 0;$i < count($obj); $i++){
 	//Current key for database
 	$key = $arrayKeys[$i];
+	//Add payment info to payment database
+	if ($obj[$key]["payment_type"] != "none"){
+		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d",$key));
+		$wpdb->insert(
+				'srbc_payments', 
+				array( 
+					'payment_id' =>0,
+					'camp_id' => $o->camp_id, 
+					'camper_id' => $o->camper_id,
+					'payment_type' => $obj[$key]["payment_type"],
+					'payment_amt' => $obj[$key]["payment_amt"],
+					'payment_date' =>  date("m/j/Y G:i"),
+					'note' =>  $obj[$key]["note"]
+				), 
+				array( 
+					'%d',
+					'%d', 
+					'%s',
+					'%d',
+					'%s',
+					'%s'
+				) 
+			);
+		$paymentType = NULL;
+		$add = 0;
+		if ($obj[$key]["payment_type"] == "card") {
+			$paymentType = "payed_card";
+			$add = $o->payed_card;
+		}
+		else if($obj[$key]["payment_type"] == "check"){
+			$paymentType = "payed_check";
+			$add = $o->payed_check;
+		}
+		else if($obj[$key]["payment_type"] == "cash"){
+			$paymentType = "payed_cash";
+			$add = $o->payed_cash;
+		}
+		else 
+		{
+			error_msg("Please notify admin that there was a problem with the payment type");
+			return;
+		}
+		$wpdb->update( 		
+		'srbc_registration', 
+		array( 
+			$paymentType => ($obj[$key]["payment_amt"] + $add),	
+		), 
+		array( 'registration_id' => $key ), 
+		array( 
+			'%s',	
+		), 
+		array( '%d' ) 
+	);
+	}
+	
+	
 	$wpdb->update( 
 		'srbc_registration', 
 		array( 
@@ -43,9 +99,6 @@ for($i = 0;$i < count($obj); $i++){
 			'discount' => $obj[$key]["discount"],	
 			'scholarship_amt' => $obj[$key]["scholarship_amt"],
 			'scholarship_type' => $obj[$key]["scholarship_type"],
-			'payed_check' => $obj[$key]["payed_check"],
-			'payed_cash' => $obj[$key]["payed_cash"],
-			'payed_card' => $obj[$key]["payed_card"],
 			'amount_due' => $obj[$key]["amount_due"],
 			'checked_in' => $obj[$key]["checked_in"]
 		), 

@@ -33,7 +33,7 @@ function srbc_credit_cards(){
 	foreach ($ccs as $cc)
 	{
 		echo '<tr><td>' . $cc->data;
-		echo "</td><td>" . $cc->amount;
+		echo "</td><td>$" . $cc->amount;
 		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $cc->cc_id . '})}">Delete</button>';
 		echo "</td></tr>";
 	}

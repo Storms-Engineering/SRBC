@@ -11,7 +11,7 @@
 	?></h2>
 	
 	</div>
-	<button class="save_button" style="float:right;" onclick="saveInfo();">Save Info</button>
+	<button class="save_button" style="float:right;" onclick="saveInfo();">Save Info & Close</button>
 			<div class="modal-body">
 			<?php
 				echo '<span class="info">Parent: ' . $camper->parent_first_name . ' ' . $camper->parent_last_name . '</span>';
@@ -107,19 +107,29 @@
 					echo '<span class="financial_info">Discount: $<input class="financial" type="text" name="discount" value="' . $registration->discount . '"></span>';
 					echo '<span class="financial_info">Scholarship Amount: $<input class="financial" name="scholarship_amt" type="text" value="' . $registration->scholarship_amt . '"></span>';
 					echo '<span class="financial_info">Scholarship Type: <input type="text" name="scholarship_type" value="' . $registration->scholarship_type . '"><br></span>';
-					echo '<span class="financial_info">Payed Check: $<input class="financial" name="payed_check" type="text" value="' . $registration->payed_check . '"></span>';
-					echo '<span class="financial_info">Payed Cash: $<input class="financial" name="payed_cash" type="text" value="' . $registration->payed_cash . '"></span>';
-					echo '<span class="financial_info">Payed Card: $<input class="financial" name="payed_card" type="text" value="' . $registration->payed_card . '"></span>';
+					echo '<span class="financial_info">Payed Check: $<input class="financial" name="payed_check" type="text" value="' . $registration->payed_check . '" readonly></span>';
+					echo '<span class="financial_info">Payed Cash: $<input class="financial" name="payed_cash" type="text" value="' . $registration->payed_cash . '" readonly></span>';
+					echo '<span class="financial_info">Payed Card: $<input class="financial" name="payed_card" type="text" value="' . $registration->payed_card . '" readonly></span>';
 					echo '<span class="financial_info"><h3>Amount Due: $<span id="amount_due">' . $registration->amount_due . '</span></h3></span>';
+					
 					
 					$checked = "";
 					if ($registration->checked_in == 1)
 						$checked = "checked";
 					echo '<h3>Camper checked in:</h3><label class="switch"><input name="checked_in" type="checkbox" ' . $checked .'><span class="slider"></span></label>';
 					echo '<button onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button>';
-					echo '</div>';
+					echo '<span><h2>Make a payment:</h3>Payment type: <select class="inputs" id="payment_type">
+					<option value="none" selected></option>
+					<option value="card">Credit Card</option>
+					<option value="check">Check</option>
+					<option value="cash">Cash</option>
+					</select>
+					Amount: $<input type="text" name="payment_amt"><br>
+					Note (Check # or Last 4 of CC): <input type="text" name="note"></span></div>';
 				}
+				//Show payment history:
 				
+				echo '<h3>Payment History</h3><br><textarea>$paymentHistory</textarea>'
 			?>
 			</div>
-			<div class="modal-footer"><button onclick="saveInfo()" class="save_button">Save Info</button></div>
+			<div class="modal-footer"><button onclick="saveInfo()" class="save_button">Save Info & Close</button></div>
