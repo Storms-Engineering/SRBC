@@ -128,8 +128,12 @@
 					Note (Check # or Last 4 of CC): <input type="text" name="note"></span></div>';
 				}
 				//Show payment history:
-				
-				echo '<h3>Payment History</h3><br><textarea>$paymentHistory</textarea>'
+				$payments = $wpdb->get_results( "SELECT * FROM srbc_payments WHERE camper_id=$camper->camper_id");
+				$paymentHistory = NULL;
+				foreach ($payments as $payment) {
+					$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . "\r\n";
+				}
+				echo '<h3>Payment History</h3><br><textarea rows="4" cols="50">' . $paymentHistory . '</textarea>'
 			?>
 			</div>
 			<div class="modal-footer"><button onclick="saveInfo()" class="save_button">Save Info & Close</button></div>

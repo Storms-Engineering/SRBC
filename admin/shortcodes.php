@@ -5,13 +5,28 @@
 SHORTCODE HOOKS
 */
 //Lets people email solid rock about renting the facility
-function contact_form_email($atts){
-	if (!isset($_GET['contact_name'])){
+function srbc_contact_form_email($atts){
+	if (!isset($_POST['contact_name'])){
 		//They put nothing in so just exit.
 		//This will usually happen when they load the page
 		return;
 	}
 	//EMAIL STUFF
+	 //Generate text for body
+   $body = NULL;
+   $keys = array_keys($_POST);
+   $i = 0;
+   //Loop through all of the parameters and join them together in one big text block
+   foreach ($_POST as $val){
+	   //Position is a nested array so we spit out stuff
+		$body .= $keys[$i] . ": " . $val . "\r\n";
+	   $i++;
+   }
+   /* Set the mail message body. */
+	mail(srbc_email,
+	'Retreat request for ' . $_POST["organization"],$body,"From: info@solidrockbiblecamp.com");
+
+	return "Request submitted sucessfully!";
 }
 
 //Search page for parents to search through camps
@@ -109,7 +124,7 @@ function srbc_application_complete($atts){
    }
    /* Set the mail message body. */
 	mail($_POST["email"],
-	'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body,"From: armystorms@gmail.com");
+	'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body,"From: " . srbc_email);
 
 echo "Application submitted sucessfully!
   You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!";
@@ -524,7 +539,7 @@ function srbc_registration_complete($atts)
 			);
 			
 	if (isset($_POST["using_check"])){
-		sendMail("armystorms@gmail.com","$parent_first_name $parent_last_name is sending a check ",
+		sendMail(srbc_email,"$parent_first_name $parent_last_name is sending a check ",
 		"Hi,\r\n$parent_first_name $parent_last_name is sending a check for $camper_first_name $camper_last_name<br>Thanks!<br>-Peter Hawke SRBC Ancilla");
 	}
 	else

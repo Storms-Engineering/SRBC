@@ -1,5 +1,5 @@
 <?php
-const srbc_email = "info@solidrockbiblecamp.com";
+const srbc_email ="armystorms@gmail.com"; // "info@solidrockbiblecamp.com";
 
 
 //Collection of random functions that might come in handy

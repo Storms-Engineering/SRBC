@@ -36,6 +36,7 @@ for($i = 0;$i < count($obj); $i++){
 	//Add payment info to payment database
 	if ($obj[$key]["payment_type"] != "none"){
 		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d",$key));
+		$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 		$wpdb->insert(
 				'srbc_payments', 
 				array( 
@@ -44,12 +45,13 @@ for($i = 0;$i < count($obj); $i++){
 					'camper_id' => $o->camper_id,
 					'payment_type' => $obj[$key]["payment_type"],
 					'payment_amt' => $obj[$key]["payment_amt"],
-					'payment_date' =>  date("m/j/Y G:i"),
+					'payment_date' =>  $date->format("m/j/Y G:i"),
 					'note' =>  $obj[$key]["note"]
 				), 
 				array( 
 					'%d',
 					'%d', 
+					'%d',
 					'%s',
 					'%d',
 					'%s',
