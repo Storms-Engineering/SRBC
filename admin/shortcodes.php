@@ -213,7 +213,8 @@ function srbc_registration( $atts )
 					}
 				}
 				else
-					echo "</select>Please use the Camp Finder page to select a camp or go to the correct program area and find your camp there";
+					echo "</select><br><br>";
+				error_msg("Please use the Camp Finder page to select a camp or go to the correct program area and find your camp there.  You should'nt acess this page directly");
 				
 				
 				//
@@ -316,9 +317,11 @@ function srbc_registration( $atts )
 	</table> 
 	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received.</span><br>
 	You must at least pay $50, but you may pay up to the full amount of the camp.  Any remaining amount will be due the day of registration.
-	Send a check instead of using a credit card <input type="checkbox" id="use_check" name="using_check">
+	<br>
 	<br>
 	
+	
+	<h3>Use a credit card:</h3>
 	Amount to pay: $ <input type="number" name="cc_amount" min="50"><br>
 		<br>		
 		Name on Credit Card: <input type="text" name="cc_name">
@@ -358,6 +361,9 @@ function srbc_registration( $atts )
 									<option value="26">2026</option>
 									<option value="27">2027</option>
 								</select>
+								<br>
+		<h2>OR</h2>
+		<h2>Send a check <h2><input type="checkbox" id="use_check" name="using_check">
 		<br>
 		<br>
 		<input type="submit" value="Submit">
@@ -593,7 +599,7 @@ function srbc_camps($atts){
 	global $wpdb;
 	$camps = $wpdb->get_results("SELECT * FROM srbc_camps WHERE area='$query' ORDER BY start_date");	
 	if (count($camps) == 0)
-		return "There is currently no camps scheduled for this area at this time.  Please check back later!";
+		return "<h2>There is currently no camps scheduled for this area at this time.  Please check back later!</h2>";
 	foreach ($camps as $camp){
 		$finalText .=  '<tr><td>' . $camp->camp_description . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
 		$finalText .=  "</td><td>$" . $camp->cost;

@@ -95,15 +95,15 @@ function postAjax(obj) {
 	xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
 		var txt = this.responseText;1
-		//If an error occurs show the error from the php properly so it doesn't go away in a toast
-        //if (txt.includes("Saved"))
-		//	showToast(txt);
-		//else
-		//{
+		If an error occurs show the error from the php properly so it doesn't go away in a toast
+        if (txt.includes("Saved"))
+			showToast(txt);
+		else
+		{
 			showToast("Error occured, please let Website Administrator know");
 			document.getElementById("results").innerHTML = txt;
 		
-		//}
+		}
     }
 };
 xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_registration.php", true);
