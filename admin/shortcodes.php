@@ -363,7 +363,7 @@ function srbc_registration( $atts )
 								</select>
 								<br>
 		<h2>OR</h2>
-		<h2>Send a check <h2><input type="checkbox" id="use_check" name="using_check">
+		Send a check <input type="checkbox" id="use_check" name="using_check">
 		<br>
 		<br>
 		<input type="submit" value="Submit">

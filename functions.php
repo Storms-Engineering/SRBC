@@ -1,12 +1,12 @@
 <?php
-const srbc_email ="armystorms@gmail.com"; // "info@solidrockbiblecamp.com";
+const srbc_email = "info@solidrockbiblecamp.com";
 
 
 //Collection of random functions that might come in handy
 //Echoes an error msg to the user with red
 function error_msg($msg)
 {
-	echo '<p style="color:red;text-align:center">' .$msg.'</p>';
+	echo '<h2 style="color:red;text-align:center">' .$msg.'</h2>';
 }
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
