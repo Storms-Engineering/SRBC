@@ -36,11 +36,7 @@
 				$registrations = $wpdb->get_results( "SELECT * FROM srbc_registration WHERE camper_id=$camper->camper_id");
 				if (count($registrations) == 0)
 					echo "Camper is not signed up for any camps";
-				
-				
-				
-				//This should be for the inputs so we can use javascript grouping the inputs by classname
-				$classname = 0;				
+			
 				//Display each camp that they are registered for in a collapsible
 				foreach ($registrations as $registration)
 				{

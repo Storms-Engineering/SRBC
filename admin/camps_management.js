@@ -1,3 +1,34 @@
+var modal = document.getElementById('myModal');
+//Opens modal showing the ability to edit a camp
+function openModal(cmp_id) {
+	var xhttp;
+	if (window.XMLHttpRequest) {
+		// code for modern browsers
+		xhttp = new XMLHttpRequest();
+		} else {
+		// code for IE6, IE5
+		xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		document.getElementById('modal-content').innerHTML = this.responseText;
+		modal.style.display = "block";
+		}
+	};
+	xhttp.open("GET", "/wp-content/plugins/SRBC/camps_modal_query.php?camp_id="+cmp_id, true);
+	xhttp.send();
+	
+}
+// When the user clicks on <span> (x), close the modal
+function closeModal() {
+	modal.style.display = "none";
+}
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+	if (event.target == document.getElementById('myModal')) {
+		modal.style.display = "none";
+	}
+}
 //Toast Notification
 function showToast(text) {
     // Get the snackbar DIV
@@ -24,14 +55,29 @@ function postAjax(obj) {
 			document.getElementById("error").innerHTML = txt;
 			
 		}
-		location.reload();
     }
 };
 xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_camps.php", true);
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 xmlhttp.send("x=" + param);
 }
-
+function saveInfo(cmp_id)
+{
+	// Get the container element
+	//This is the JSON object that we will pass to the server to store in the database
+	var info = {};
+	info["camp_id"] = cmp_id;
+	//Get all the inputs for a camp
+	var container = document.getElementsByClassName("modal-body");
+	// Find its child `input` elements
+	var inputs = container[0].getElementsByTagName('input');
+	for (var j = 0; j < inputs.length; ++j) {
+			info[inputs[j].name] = inputs[j].value;
+	}
+	console.log(info);
+	postAjax(info);
+	closeModal();
+}
 function addNewCamp()
 {
 	// Get the container element
@@ -65,5 +111,6 @@ function openPage(pageName,elmnt,color) {
 		elmnt.style.backgroundColor = color;
 
 	}
+
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();

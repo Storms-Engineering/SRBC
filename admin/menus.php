@@ -97,8 +97,7 @@ function listCamps($area)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
 										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='female'", ARRAY_N)[0][0]; 
-		
-		echo '<tr><td>' . $camp->camp_description;
+		echo '<tr onclick="openModal(' . $camp->camp_id . ')"><td>' . $camp->camp_description;
 		echo "</td><td>" . $camp->start_date . "</td>";
 		echo "<td>" . $male_registered . "</td>";
 		echo "<td>" . $female_registered . "</td>";
@@ -208,6 +207,14 @@ function srbc_camps_management()
 			<button onclick="addNewCamp()" class="tablink" >Add New Camp</button>
 		</div> 
     </div>
+	<!--Modal box Example fom W3schools-->
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
+			<!-- Modal content -->
+			<div id="modal-content" class="modal-content">
+				
+			</div>
+		</div>
 	<div id="snackbar"></div>
 	<div id="error"></div>
 	<script src="../wp-content/plugins/SRBC/admin/camps_management.js"></script>
