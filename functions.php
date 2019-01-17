@@ -1,5 +1,14 @@
 <?php
-const srbc_email = "info@solidrockbiblecamp.com";
+//For testing so it will email me on the localsite
+//if ($_SERVER['SERVER_NAME'] == "127.0.0.1"  )
+//{
+    define('srbc_email', 'armystorms@gmail.com');
+//}
+//else
+//{
+//    define('srbc_email', 'srbc@alaska.net');
+//}
+
 
 
 //Collection of random functions that might come in handy

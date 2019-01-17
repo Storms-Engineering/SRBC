@@ -122,9 +122,13 @@ function srbc_application_complete($atts){
 			$body .= $keys[$i] . ": " . $val . "\r\n";
 	   $i++;
    }
+   //Email applicant
+   mail($_POST["email"], 'You applied to work at Solid Rock Bible Camp ',
+   "Dear" . $_POST["Firstname"] . ",<br>Thanks for applying to work at Solid Rock Bible Camp!
+   <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
+   <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp", "From: " . srbc_email);
    /* Set the mail message body. */
-	mail($_POST["email"],
-	'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body,"From: " . srbc_email);
+	mail(srbc_email, 'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body,"From: " . srbc_email);
 
 echo "Application submitted sucessfully!
   You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!";
@@ -189,6 +193,7 @@ function srbc_registration( $atts )
 	}
 	</script>
 	<div class="registration_box">
+	<div style="overflow-x:auto;">
 	<form action="../registration-complete/" method="post" style="margin:auto;" onsubmit="return validateForm()">
 	 <table style="width:100%;">
 		<tr>
@@ -213,8 +218,10 @@ function srbc_registration( $atts )
 					}
 				}
 				else
+				{
 					echo "</select><br><br>";
 				error_msg("Please use the Camp Finder page to select a camp or go to the correct program area and find your camp there.  You should'nt acess this page directly");
+				}
 				
 				
 				//
@@ -256,8 +263,8 @@ function srbc_registration( $atts )
 			<td>
 			<input class="inputs" type="text" name="parent_first_name" required placeholder="First Name" pattern="[A-Za-z]{1,}" title="Please enter only letters">
 			<input class="inputs" type="text" name="parent_last_name" required placeholder="Last Name" pattern="[A-Za-z]{1,}" title="Please enter only letters">
-			Email:<input type="email" name="email"><br>
-			Phone (Numbers only please):<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
+			Email:<input type="email" name="email" required><br>
+			Phone including area code (Numbers only please):<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
 			</td>
 		</tr>
 		<tr>
@@ -315,6 +322,7 @@ function srbc_registration( $atts )
 			</td>		
 		</tr>
 	</table> 
+	</div>
 	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received.</span><br>
 	You must at least pay $50, but you may pay up to the full amount of the camp.  Any remaining amount will be due the day of registration.
 	<br>
@@ -577,13 +585,11 @@ function srbc_registration_complete($atts)
 		
 	}
 	
-	$message = "Hi ". $camper_first_name . ",<br><br>Thanks for signing up for " . $_POST["camp_desc"] . ".  If you have any questions feel free to check ". 
-	"our FAQ page http://solidrockbiblecamp.com/FAQS.  If you want to know what your child should pack for camp we also have that!".
-	"   http://solidrockbiblecamp.com/camps/packing-lists\r\nOn last thing is that we ask that you print out this health form and fill it out to speed up the registration process.<br>Thanks!<br>Solid Rock Bible Camp";
-
-
+	$message = "Hi ". $camper_first_name . ",<br><br>Thanks for signing up for " . $_POST["camp_desc"] . "!  If you have any questions feel free to check ". 
+	'our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.  If you want to know what your child should pack for camp we also have <a href=" http://solidrockbiblecamp.com/camps/packing-lists">here</a>!'.
+	"<br> One last thing is that we ask that you print out this health form and fill it out to speed up the registration process.<br>Thanks!<br>-Solid Rock Bible Camp";
 	sendMail($email,"Thank you for signing up for a Solid Rock Camp!",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
-	return "Registration Sucessful!";
+	return "Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. (If you don't see the email check your spam box and please mark it not spam)";
 }
 
 function srbc_camps($atts){
