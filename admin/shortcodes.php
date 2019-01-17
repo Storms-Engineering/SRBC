@@ -615,6 +615,7 @@ function srbc_camps($atts){
 		$finalText .=  '<tr><td>' . $camp->camp_description . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
 		$finalText .=  "</td><td>$" . $camp->cost;
 		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j - Y",strtotime($camp->end_date));
+		$finalText .=  "</td><td>" . $camp->grade_range;
 		$total_registered = $wpdb->get_results("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										WHERE camp_id=$camp->camp_id AND waitlist=0", ARRAY_N)[0][0]; 

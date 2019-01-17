@@ -194,6 +194,7 @@ function srbc_camps_management()
 			Camp Description: <input type="text" name="camp_description">
 			Camp Start Date:<input  type="date" name="start_date">
 			Camp End Date: <input  type="date" name="end_date"><br>
+			Grade Range (ex. 2nd to 3rd): <input type="text" name="grade_range"><br>
 			Cost: <input type="text" name="cost">
 			Horse Option cost (Put 0 if there is no horse option for this camp):<input type="text" name="horse_opt"><br>
 			Waiting List Size:<input type="text" name="waiting_list_size"><br>

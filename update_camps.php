@@ -1,5 +1,5 @@
 <?php
-//Makes camp edits or deletes them
+//Makes camp edits or deletes or creates new ones them
 header("Content-Type: application/json; charset=UTF-8");
 $obj = json_decode( stripslashes($_POST["x"]), true);
 
@@ -27,7 +27,8 @@ $wpdb->insert(
 		'waiting_list_size' => $obj["waiting_list_size"],
 		'boy_registration_size' => $obj["boy_registration_size"],
 		'girl_registration_size' => $obj["girl_registration_size"],
-		'overall_size' => $obj["overall_size"]
+		'overall_size' => $obj["overall_size"],
+		'grade_range' => $obj["grade_range"]
 	), 
 	array( 
 		'%s',	
@@ -39,7 +40,8 @@ $wpdb->insert(
 		'%d',	
 		'%d',
 		'%d',
-		'%d'
+		'%d',
+		'%s'
 	) 
 );
 echo "Data Saved Sucessfully";
