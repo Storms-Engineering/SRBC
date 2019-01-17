@@ -48,6 +48,7 @@ function srbc_install() {
 		boy_registration_size SMALLINT NOT NULL,
 		girl_registration_size SMALLINT NOT NULL,
 		overall_size SMALLINT NOT NULL,
+		grade_range TINYTEXT NOT NULL,
 		PRIMARY KEY (camp_id)
 		)  ENGINE=INNODB;";
 

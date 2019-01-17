@@ -16,7 +16,6 @@ function srbc_credit_cards(){
 	</style>
 	<script src="../wp-content/plugins/SRBC/JSEncrypt/jsencrypt.min.js"></script>
 	<script src="../wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
-	<!--<script src="../wp-content/plugins/SRBC/Jsrsasign/crypto-1.1.js"></script>-->
 	<script src="../wp-content/plugins/SRBC/admin/credit_card.js"></script>
 	<h1>Credit Cards pending processing:</h1>
 	Password :  <input type="password" id="pwd"> 

@@ -562,6 +562,10 @@ function srbc_registration_complete($atts)
 		//Append all the data together so we only have to encrypt one string
 		$data = $_POST["cc_name"] . "	" . $_POST["cc_type"] . "	" . $_POST["cc_number"] . "	" . $_POST["cc_vcode"] . "	" . $_POST["cc_month"]
 		. "/" . $_POST["cc_year"] . "	" . $_POST["cc_zipcode"];
+		if ($waitlistsize > 0)
+		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it
+			$data .= 'USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
+		}
 		//Encrypt using ssl
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
 		$pub_key=fread($fp,8192);
@@ -586,7 +590,7 @@ function srbc_registration_complete($atts)
 	}
 	
 	$message = "Hi ". $camper_first_name . ",<br><br>Thanks for signing up for " . $_POST["camp_desc"] . "!  If you have any questions feel free to check ". 
-	'our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.  If you want to know what your child should pack for camp we also have <a href=" http://solidrockbiblecamp.com/camps/packing-lists">here</a>!'.
+	'our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.  If you want to know what your child should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>!'.
 	"<br> One last thing is that we ask that you print out this health form and fill it out to speed up the registration process.<br>Thanks!<br>-Solid Rock Bible Camp";
 	sendMail($email,"Thank you for signing up for a Solid Rock Camp!",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
 	return "Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. (If you don't see the email check your spam box and please mark it not spam)";
@@ -599,6 +603,7 @@ function srbc_camps($atts){
 				<th>Camp Description</th>
 				<th>Cost</th>
 				<th>Start/End Date</th>
+				<th>Grade Range</th>
 				<th>Spots Available</th>
 				<th>Waiting List Spots Available</th> 
 				</tr>';
