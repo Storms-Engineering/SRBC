@@ -195,3 +195,4 @@ add_shortcode( 'srbc_application', 'srbc_application' );
 add_shortcode( 'srbc_application_complete', 'srbc_application_complete' );
 add_shortcode( 'srbc_camp_search', 'srbc_camp_search' );
 add_shortcode( 'srbc_contact_form_email', 'srbc_contact_form_email' );
+add_shortcode( 'srbc_volunteer_contact_form_email', 'srbc_volunteer_contact_form_email' );

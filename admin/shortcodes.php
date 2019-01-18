@@ -4,6 +4,19 @@
 -------------------------------------------------------------------------
 SHORTCODE HOOKS
 */
+function srbc_volunteer_contact_form_email($atts){
+	if (!isset($_POST['contact_name'])){
+		//They put nothing in so just exit.
+		//This will usually happen when they load the page
+		return;
+	}
+	$body = $_POST['contact_name'] . " has some questions:<br>" . $_POST['questions'] . "<br>Contact info: " .
+		$_POST['contact_info'] . "<br><br>- Peter Hakwe SRBC Ancilla";
+	sendMail(srbc_email,
+	$_POST['contact_name'] . ' is interested at working at Solid Rock' ,$body);
+	return "<h1>Info Sent Sucessfully!</h1>";
+}
+
 //Lets people email solid rock about renting the facility
 function srbc_contact_form_email($atts){
 	if (!isset($_POST['contact_name'])){
@@ -19,12 +32,12 @@ function srbc_contact_form_email($atts){
    //Loop through all of the parameters and join them together in one big text block
    foreach ($_POST as $val){
 	   //Position is a nested array so we spit out stuff
-		$body .= $keys[$i] . ": " . $val . "\r\n";
+		$body .= $keys[$i] . ": " . $val . "<br>";
 	   $i++;
    }
    /* Set the mail message body. */
-	mail(srbc_email,
-	'Retreat request for ' . $_POST["organization"],$body,"From: info@solidrockbiblecamp.com");
+	sendMail(srbc_email,
+	'Retreat request for ' . $_POST["organization"],$body);
 
 	return "Request submitted sucessfully!";
 }
@@ -123,12 +136,12 @@ function srbc_application_complete($atts){
 	   $i++;
    }
    //Email applicant
-   mail($_POST["email"], 'You applied to work at Solid Rock Bible Camp ',
+   sendMail($_POST["email"], 'You applied to work at Solid Rock Bible Camp ',
    "Dear" . $_POST["Firstname"] . ",<br>Thanks for applying to work at Solid Rock Bible Camp!
    <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
    <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp", "From: " . srbc_email);
    /* Set the mail message body. */
-	mail(srbc_email, 'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body,"From: " . srbc_email);
+	sendMail(srbc_email, 'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body);
 
 echo "Application submitted sucessfully!
   You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!";
