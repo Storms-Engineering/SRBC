@@ -611,14 +611,15 @@ function srbc_registration_complete($atts)
 
 function srbc_camps($atts){
 	$query = $atts["area"];
-	$finalText = '<table style="width:100%;">
+	$finalText = "*If a camp is full but there is still waitlist spots available then continue registration and it will put you on the waitlist";
+	$finalText .= '<table style="width:100%;">
 				<tr style="background:#51d3ff;">
 				<th>Camp Description</th>
 				<th>Cost</th>
 				<th>Start/End Date</th>
 				<th>Grade Range</th>
 				<th>Spots Available</th>
-				<th>Waiting List Spots Available</th> 
+				<th>Waiting List Spots Available*</th> 
 				</tr>';
 	global $wpdb;
 	$camps = $wpdb->get_results("SELECT * FROM srbc_camps WHERE area='$query' ORDER BY start_date");	
@@ -629,10 +630,30 @@ function srbc_camps($atts){
 		$finalText .=  "</td><td>$" . $camp->cost;
 		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j - Y",strtotime($camp->end_date));
 		$finalText .=  "</td><td>" . $camp->grade_range;
-		$total_registered = $wpdb->get_results("SELECT COUNT(camp_id)
+		
+										
+		$boycount = $wpdb->get_results("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										WHERE camp_id=$camp->camp_id AND waitlist=0", ARRAY_N)[0][0]; 
-		$finalText .=  "</td><td>" . ($camp->overall_size - $total_registered); 
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='male'", ARRAY_N)[0][0];
+		$girlcount = $wpdb->get_results("SELECT COUNT(camp_id)
+										FROM srbc_registration
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='female'", ARRAY_N)[0][0]; 
+										
+		$total_registered = $boycount + $girlcount;
+		$finalText .=  "</td><td>";
+		if (($camp->overall_size - $total_registered) == 0){
+			$finalText .= "Camp is full,<br> see if waitlist is full.";
+		}	
+		else if($boycount >= $camp->boy_registration_size){
+			$finalText .= "Boy's section is full,<br>girls can stil register!";
+		}
+		else if($girlcount >= $camp->girl_registration_size){
+			$finalText .= "Girl's section is full,<br>boys can still register!.";
+		}
+		else
+			$finalText .= ($camp->overall_size - $total_registered); 
 		$finalText .=  "</td><td>";
 		$waitlistsize = $wpdb->get_results("SELECT COUNT(camp_id)
 										FROM srbc_registration
