@@ -33,7 +33,7 @@
 				echo $camper->address . ' ' . $camper->city . ' ' . $camper->state . ' ' . $camper->zipcode . '</span>';
 				
 				echo '<h3>Camps signed up for:</h3><br>';
-				$registrations = $wpdb->get_results( "SELECT * FROM srbc_registration WHERE camper_id=$camper->camper_id");
+				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_registration WHERE camper_id=%s",$camper->camper_id));
 				if (count($registrations) == 0)
 					echo "Camper is not signed up for any camps";
 			
@@ -41,7 +41,7 @@
 				foreach ($registrations as $registration)
 				{
 					//Grab the camp since we need some info from it
-					$camp = $wpdb->get_row( "SELECT * FROM srbc_camps WHERE camp_id=$registration->camp_id");
+					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$registration->camp_id));
 					echo '<span id="registration_id" style="display: none;">' . $registration->registration_id . '</span>';
 					//Calculate the busfee
 					$busride = $registration->busride;
@@ -124,7 +124,7 @@
 					Note (Check # or Last 4 of CC): <input type="text" name="note"></span></div>';
 				}
 				//Show payment history:
-				$payments = $wpdb->get_results( "SELECT * FROM srbc_payments WHERE camper_id=$camper->camper_id");
+				$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM srbc_payments WHERE camper_id=%s",$camper->camper_id));
 				$paymentHistory = NULL;
 				foreach ($payments as $payment) {
 					$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . "\r\n";

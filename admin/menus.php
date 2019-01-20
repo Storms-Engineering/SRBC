@@ -22,17 +22,23 @@ function srbc_credit_cards(){
 	<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">Drop key file here</div>
 	<table style="width:100%;" >
 		<tr>
+			<th>Date</th>
 			<th>Data</th>
 			<th>Amount</th>
+			<th>For Camper</th>
+			<th>Camp</th>
 			<th>Delete</th>
 		</tr>
 	<?php
 	global $wpdb;
-	$ccs = $wpdb->get_results("SELECT * FROM srbc_cc");
+	$ccs = $wpdb->get_results("SELECT * FROM srbc_cc ORDER BY payment_date DESC");
 	foreach ($ccs as $cc)
 	{
-		echo '<tr><td>' . $cc->data;
+		echo "<tr><td>" . $cc->payment_date;
+		echo '</td><td>' . $cc->data;
 		echo "</td><td>$" . $cc->amount;
+		echo "</td><td>" . $cc->camper_name;
+		echo "</td><td>" . $cc->camp;
 		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $cc->cc_id . '})}">Delete</button>';
 		echo "</td></tr>";
 	}
@@ -83,20 +89,20 @@ function listCamps($area)
 			<th>Waitlist</th>
 		</tr>';
 	global $wpdb;
-	$camps = $wpdb->get_results("SELECT * FROM srbc_camps WHERE area='$area' ORDER BY start_date");
+	$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_camps WHERE area='%s' ORDER BY start_date",$area));
 	foreach ($camps as $camp)
 	{
-		$waitlistsize = $wpdb->get_results("SELECT COUNT(camp_id)
+		$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										WHERE camp_id=$camp->camp_id AND NOT waitlist=0", ARRAY_N)[0][0]; 
-		$male_registered = $wpdb->get_results("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='male'", ARRAY_N)[0][0]; 
-		$female_registered = $wpdb->get_results("SELECT COUNT(camp_id)
+										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id), ARRAY_N)[0][0]; 
+		$male_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='female'", ARRAY_N)[0][0]; 
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id), ARRAY_N)[0][0]; 
+		$female_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+										FROM srbc_registration
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id), ARRAY_N)[0][0]; 
 		echo '<tr onclick="openModal(' . $camp->camp_id . ')"><td>' . $camp->camp_description;
 		echo "</td><td>" . $camp->start_date . "</td>";
 		echo "<td>" . $male_registered . "</td>";

@@ -29,7 +29,7 @@ function sendMail($to,$subject,$msg,$attachment = ""){
 	try {
 
 		//Recipients
-		$mail->setFrom('info@solidrockbiblecamp.com', 'Mailer');
+		$mail->setFrom('info@solidrockbiblecamp.com', 'Solid Rock Bible Camp');
 		$mail->addAddress($to);     // Add a recipient
 		//Attachments
 		if ($attachment != "")

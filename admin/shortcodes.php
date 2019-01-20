@@ -99,14 +99,14 @@ function srbc_camp_search($atts){
 		$finalText .=  '<tr><td>' . $camp->area . " " . $camp->camp_description . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
 		$finalText .=  "</td><td>$" . $camp->cost;
 		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date));
-		$total_registered = $wpdb->get_results("SELECT COUNT(camp_id)
+		$total_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										WHERE camp_id=$camp->camp_id AND waitlist=0", ARRAY_N)[0][0]; 
+										WHERE camp_id=%s AND waitlist=0",$camp->camp_id), ARRAY_N)[0][0]; 
 		$finalText .=  "</td><td>" . ($camp->overall_size - $total_registered); 
 		$finalText .=  "</td><td>";
-		$waitlistsize = $wpdb->get_results("SELECT COUNT(camp_id)
+		$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										WHERE camp_id=$camp->camp_id AND NOT waitlist=0", ARRAY_N)[0][0]; 
+										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id), ARRAY_N)[0][0]; 
 		$finalText .=  $camp->waiting_list_size - $waitlistsize . "</td></tr>";
 	}
 	$finalText .=  "</table> ";
@@ -129,10 +129,10 @@ function srbc_application_complete($atts){
 				if ($v != "")
 					$body .= $v . ", ";
 			}
-			$body .= "\r\n";
+			$body .= "<br>";
 	   }
 	   else
-			$body .= $keys[$i] . ": " . $val . "\r\n";
+			$body .= $keys[$i] . ": " . $val . "<br>";
 	   $i++;
    }
    //Email applicant
@@ -222,7 +222,7 @@ function srbc_registration( $atts )
 				if(isset($_GET['campid']))
 				{
 					$cmpid = $_GET['campid'];
-					$camp = $wpdb->get_row( "SELECT * FROM srbc_camps WHERE camp_id=$cmpid ");
+					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$cmpid));
 					echo '<option value="'.$cmpid.'" selected>' .$camp->area . " " . $camp->camp_description . '</option></select>';
 					echo '<input type="hidden" name="camp_desc" value = "' .$camp->area . " " . $camp->camp_description . '">'; 
 					if($camp->horse_opt != 0)
@@ -343,7 +343,7 @@ function srbc_registration( $atts )
 	
 	
 	<h3>Use a credit card:</h3>
-	Amount to pay: $ <input type="number" name="cc_amount" min="50"><br>
+	Amount to pay: $ <input type="number" name="cc_amount"><br>
 		<br>		
 		Name on Credit Card: <input type="text" name="cc_name">
 		Credit Card Billing Zip <input type="text" name="cc_zipcode">
@@ -481,24 +481,25 @@ function srbc_registration_complete($atts)
 	//If not then update how many people are registered for this camp
 	$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$campid));
 	//Check if they are already signed up for this camp:
-	$count = $wpdb->get_results("SELECT COUNT(camper_id) FROM srbc_registration WHERE camper_id=$camper_id AND camp_id=$campid", ARRAY_N)[0][0]; 
+	$count = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camper_id) FROM srbc_registration WHERE camper_id=%s AND camp_id=%s",$camper_id
+	,$campid), ARRAY_N)[0][0]; 
 	if ($count > 0)
 	{
 		error_msg("Sorry you are already registered for this camp");
 		return;
 	}
 	
-	$count = $wpdb->get_results("SELECT COUNT(camp_id) FROM srbc_registration WHERE camp_id=$campid AND waitlist=0", ARRAY_N); 
+	$count = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE camp_id=%s AND waitlist=0",$campid), ARRAY_N); 
 	//Check if this person is already signed up for a camp
 	if($count[0][0] < $camp->overall_size)
 	{
 		//This camp is not overall full check gender specific cap
 		if ($gender == "male")
 		{
-			$count = $wpdb->get_results("SELECT COUNT(camp_id)
+			$count = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=$campid AND waitlist=0 AND srbc_campers.gender='male'", ARRAY_N); 
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$campid), ARRAY_N); 
 			if ($count[0][0] >= $camp->boy_registration_size)
 			{
 				error_msg("Unfortunately we cannot register you because the boys section of this camp is full.");
@@ -507,10 +508,10 @@ function srbc_registration_complete($atts)
 		}
 		else if($gender == "female")
 		{
-			$count = $wpdb->get_results("SELECT COUNT(camp_id)
+			$count = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=$campid AND waitlist=0 AND srbc_campers.gender='female'", ARRAY_N); 
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$campid), ARRAY_N); 
 			if ($count[0][0] >= $camp->girl_registration_size)
 			{
 				error_msg("Unfortunately we cannot register you because the girls section of this camp is full.");
@@ -531,7 +532,7 @@ function srbc_registration_complete($atts)
 		
 		
 		//Count overall waitlist size for this camp
-		$waitlistsize = $wpdb->get_results("SELECT COUNT(camp_id) FROM srbc_registration WHERE NOT waitlist=0 AND camp_id=$campid", ARRAY_N)[0][0]; 
+		$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE NOT waitlist=0 AND camp_id=%s",$campid), ARRAY_N)[0][0]; 
 		//Check if the waiting list is full
 		if ($waitlistsize < $camp->waiting_list_size)
 		{
@@ -585,18 +586,25 @@ function srbc_registration_complete($atts)
 		fclose($fp);
 		openssl_get_publickey($pub_key);
 		openssl_public_encrypt($data,$edata,$pub_key);
+		$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 		$wpdb->insert(
 			'srbc_cc', 
 			array( 
 				'cc_id' =>0,
 				//Use base64 so the database can handle it properly since we are just using text
 				'data' => base64_encode($edata), 
-				'amount' => $_POST["cc_amount"]
+				'amount' => $_POST["cc_amount"],
+				'camper_name' => $camper_first_name . " " . $camper_last_name,
+				'camp' => ($camp->area . " " . $camp->camp_description),
+				'payment_date' => $date->format("m/j/Y")
 			), 
 			array( 
 				'%d',
 				'%s', 
-				'%d'			
+				'%d',
+				'%s',
+				'%s',
+				'%s'
 			) 
 			);
 		
@@ -632,14 +640,14 @@ function srbc_camps($atts){
 		$finalText .=  "</td><td>" . $camp->grade_range;
 		
 										
-		$boycount = $wpdb->get_results("SELECT COUNT(camp_id)
+		$boycount = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='male'", ARRAY_N)[0][0];
-		$girlcount = $wpdb->get_results("SELECT COUNT(camp_id)
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id), ARRAY_N)[0][0];
+		$girlcount = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=$camp->camp_id AND waitlist=0 AND srbc_campers.gender='female'", ARRAY_N)[0][0]; 
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id), ARRAY_N)[0][0]; 
 										
 		$total_registered = $boycount + $girlcount;
 		$finalText .=  "</td><td>";

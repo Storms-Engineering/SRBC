@@ -12,8 +12,8 @@ if (array_key_exists("deleteid",$obj))
 	//Delete the requested registration
 	$wpdb->delete( 'srbc_registration', array( 'registration_id' => $obj["deleteid"] ) );
 	//Check if deleting from waitlist
-	$registration = $wpdb->get_results("SELECT registration_id,waitlist FROM srbc_registration
-					WHERE NOT waitlist=0 AND camp_id=".$obj["camp_id"] . " ORDER BY waitlist ASC");
+	$registration = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM srbc_registration
+					WHERE NOT waitlist=0 AND camp_id=%s ORDER BY waitlist ASC",$obj["camp_id"]));
 	foreach($registration as $registration){
 		$wpdb->update( 
 		'srbc_registration', 
@@ -35,7 +35,7 @@ for($i = 0;$i < count($obj); $i++){
 	$key = $arrayKeys[$i];
 	//Add payment info to payment database
 	if ($obj[$key]["payment_type"] != "none"){
-		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d",$key));
+		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
 		$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 		$wpdb->insert(
 				'srbc_payments', 

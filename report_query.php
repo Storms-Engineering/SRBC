@@ -46,7 +46,7 @@ if ($start_date != "" && $end_date != ""){
 	array_push($values,$end_date);
 }
 if ($not_checked_in == "true"){
-	$query .= "AND NOT srbc_registration.checked_in=1";
+	$query .= "AND NOT srbc_registration.checked_in=1 ";
 }
 if ($not_payed == "true"){
 	$query .= "AND NOT srbc_registration.amount_due=0 ";
