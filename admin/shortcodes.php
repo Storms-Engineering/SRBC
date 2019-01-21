@@ -654,10 +654,10 @@ function srbc_camps($atts){
 		if (($camp->overall_size - $total_registered) == 0){
 			$finalText .= "Camp is full,<br> see if waitlist is full.";
 		}	
-		else if($boycount >= $camp->boy_registration_size){
-			$finalText .= "Boy's section is full,<br>girls can stil register!";
+		else if($boycount >= $camp->boy_registration_size && $camp->boy_registration_size != 0){
+			$finalText .= "Boy's section is full,<br>girls can still register!";
 		}
-		else if($girlcount >= $camp->girl_registration_size){
+		else if($girlcount >= $camp->girl_registration_size && $camp->girl_registration_size != 0){
 			$finalText .= "Girl's section is full,<br>boys can still register!.";
 		}
 		else
