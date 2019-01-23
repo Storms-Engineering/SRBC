@@ -252,7 +252,7 @@ function srbc_registration( $atts )
 				</select>
 				<br>
 				<br>
-				<p>The bus will depart from and return to the Sports Authority parking lot on the Old Seward Highway near Dimond Blvd. in Anchorage.
+				<p>The bus will depart from and return to the Duluth Trading Company parking lot at 8931 Old Seward Hwy., Suite A Anchorage, AK 99515.
 				The exact times will be sent you in your confirmation email or letter.</p>
 			</td>
 		</tr>
@@ -265,9 +265,11 @@ function srbc_registration( $atts )
 			<input type="radio" name="gender" value="male" checked> Male
 			<input type="radio" name="gender" value="female">Female
 			<select class="inputs" name="grade">
-				<option value="5-7yrs">5 to 7 years old</option>
+				<option value="5-7yrs">Kindergarten to 1st</option>
 				<option value="2nd to 3rd">Going into 2nd or 3rd Grade</option>
 				<option value="4th to 6th">Going into 4th to 6th Grade</option>
+				<option value="4th to 6th">Going into 7th to 8th Grade</option>
+				<option value="4th to 6th">Going into 9th to 12th Grade</option>
 				<option value="Adult">Adult</option>
 			</select>	
 			</td>
