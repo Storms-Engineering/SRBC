@@ -259,8 +259,8 @@ function srbc_registration( $atts )
 		<tr>
 			<td>Camper:</td>
 			<td>
-			<input class="inputs" type="text" name="camper_first_name" placeholder="First Name" required pattern="[A-Za-z]{1,}" title="Please enter only letters">
-			<input class="inputs" type="text" name="camper_last_name" placeholder="Last Name" required pattern="[A-Za-z]{1,}" title="Please enter only letters">
+			<input class="inputs" type="text" name="camper_first_name" placeholder="First Name" required>
+			<input class="inputs" type="text" name="camper_last_name" placeholder="Last Name" required>
 			Birthday: <input  type="date" name="birthday" required><br>Gender:
 			<input type="radio" name="gender" value="male" checked> Male
 			<input type="radio" name="gender" value="female">Female
@@ -277,8 +277,8 @@ function srbc_registration( $atts )
 		<tr>
 			<td>Parent/Guardian</td>
 			<td>
-			<input class="inputs" type="text" name="parent_first_name" required placeholder="First Name" pattern="[A-Za-z]{1,}" title="Please enter only letters">
-			<input class="inputs" type="text" name="parent_last_name" required placeholder="Last Name" pattern="[A-Za-z]{1,}" title="Please enter only letters">
+			<input class="inputs" type="text" name="parent_first_name" required placeholder="First Name">
+			<input class="inputs" type="text" name="parent_last_name" required placeholder="Last Name">
 			Email:<input type="email" name="email" required><br>
 			Phone including area code (Numbers only please):<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
 			</td>
