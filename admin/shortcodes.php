@@ -261,7 +261,7 @@ function srbc_registration( $atts )
 			<td>
 			<input class="inputs" type="text" name="camper_first_name" placeholder="First Name" required pattern="[A-Za-z]{1,}" title="Please enter only letters">
 			<input class="inputs" type="text" name="camper_last_name" placeholder="Last Name" required pattern="[A-Za-z]{1,}" title="Please enter only letters">
-			Birthday: <input  type="date" name="birthday"><br>Gender:
+			Birthday: <input  type="date" name="birthday" required><br>Gender:
 			<input type="radio" name="gender" value="male" checked> Male
 			<input type="radio" name="gender" value="female">Female
 			<select class="inputs" name="grade">
