@@ -31,7 +31,7 @@ function srbc_credit_cards(){
 		</tr>
 	<?php
 	global $wpdb;
-	$ccs = $wpdb->get_results("SELECT * FROM srbc_cc ORDER BY payment_date DESC");
+	$ccs = $wpdb->get_results("SELECT * FROM srbc_cc ORDER BY payment_date ASC");
 	foreach ($ccs as $cc)
 	{
 		echo "<tr><td>" . $cc->payment_date;
@@ -87,6 +87,7 @@ function listCamps($area)
 			<th>Girls Registered</th>
 			<th>Total Registered</th>
 			<th>Waitlist</th>
+			<th>Delete</th>
 		</tr>';
 	global $wpdb;
 	$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_camps WHERE area='%s' ORDER BY start_date",$area));
@@ -109,8 +110,7 @@ function listCamps($area)
 		echo "<td>" . $female_registered . "</td>";
 		echo "<td>" . ($male_registered + $female_registered) . "/" . $camp->overall_size . "</td>"; 
 		echo "<td>" . $waitlistsize ."/" . $camp->waiting_list_size;
-		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $camp->camp_id . '})}">Delete</button>';
-		echo "</td></tr>";
+		echo '</td><td><button onclick="deleteCamp(event,' . $camp->camp_id . ');">Delete</button></td></tr>';
 	}
 	echo "</table> ";
 }

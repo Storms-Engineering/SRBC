@@ -1,4 +1,16 @@
-
+function postAjax(obj) {
+	param = JSON.stringify(obj);
+	xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+		var txt = this.responseText;
+		location.reload();
+    }
+};
+xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_cc.php", true);
+xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xmlhttp.send("x=" + param);
+}
 
 function allowDrop(ev) {
   ev.preventDefault();
@@ -31,7 +43,7 @@ function drop(ev) {
 			alert("Bad password");
 			location.reload();
 		}
-		for (i = 0; i < cells.length; i+=3){
+		for (i = 1; i < cells.length; i+=3){
 			cells[i].innerText = crypt.decrypt(cells[i].innerText);
 		}
         };

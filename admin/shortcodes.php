@@ -265,9 +265,10 @@ function srbc_registration( $atts )
 			<input type="radio" name="gender" value="male" checked> Male
 			<input type="radio" name="gender" value="female">Female
 			<select class="inputs" name="grade">
-				<option value="2">Going into 2nd or 3rd Grade</option>
-				<option value="4">Going into 4th to 6th Grade</option>
-				<option value="7">Going into 7th Grade to 12th Grade</option>
+				<option value="5-7yrs">5 to 7 years old</option>
+				<option value="2nd to 3rd">Going into 2nd or 3rd Grade</option>
+				<option value="4th to 6th">Going into 4th to 6th Grade</option>
+				<option value="Adult">Adult</option>
 			</select>	
 			</td>
 		</tr>
@@ -578,7 +579,7 @@ function srbc_registration_complete($atts)
 		. "/" . $_POST["cc_year"] . "	" . $_POST["cc_zipcode"];
 		if ($waitlistsize > 0)
 		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it
-			$data .= 'USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
+			$data .= '   USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
 		}
 		//Encrypt using ssl
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
@@ -610,9 +611,10 @@ function srbc_registration_complete($atts)
 		
 	}
 	
-	$message = "Hi ". $camper_first_name . ",<br><br>Thanks for signing up for " . $_POST["camp_desc"] . "!  If you have any questions feel free to check ". 
+	$message = "Hi ". $parent_first_name . ",<br><br>Thanks for signing up " . $camper_first_name . " for " . $_POST["camp_desc"] . "!  Camp starts " .date("D M j",strtotime($camp->start_date)) . " and ends " . 
+	date("D M j",strtotime($camp->end_date)) . "!  If you have any questions feel free to check ". 
 	'our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.  If you want to know what your child should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>!'.
-	"<br> One last thing is that we ask that you print out this health form and fill it out to speed up the registration process.<br>Thanks!<br>-Solid Rock Bible Camp";
+	"<br> One last thing is that we ask that you print out this health form and fill it out to speed up the registration process.<br>Thanks!<br> -Solid Rock Bible Camp";
 	sendMail($email,"Thank you for signing up for a Solid Rock Camp!",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
 	return "Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. (If you don't see the email check your spam box and please mark it not spam)";
 }

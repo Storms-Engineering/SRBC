@@ -1,4 +1,13 @@
 var modal = document.getElementById('myModal');
+function deleteCamp(ev,cmpid)
+{
+	
+	if(confirm('Are you sure you want to delete?')){
+		postAjax({'deleteid': cmpid });
+	}
+	ev.stopPropagation();
+}
+
 //Opens modal showing the ability to edit a camp
 function openModal(cmp_id) {
 	var xhttp;
