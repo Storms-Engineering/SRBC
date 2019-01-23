@@ -14,24 +14,18 @@
 	<button class="save_button" style="float:right;" onclick="saveInfo();">Save Info & Close</button>
 			<div class="modal-body">
 			<?php
+				echo '<span style="visible:hidden" id="camper_id">' . $camper->camper_id . '</span>';
 				echo '<span class="info">Parent: ' . $camper->parent_first_name . ' ' . $camper->parent_last_name . '</span>';
 				echo '<span class="info">Phone: '. $camper->phone . '</span>';
 				echo '<span class="info">Email: '. $camper->email . '</span><br><br>';
 				echo '<span class="info">Birthday: '. $camper->birthday . '</span>';
-				$grade = $camper->grade;
-				echo '<span class="info">Grade: ';
-				if ($grade == 2)
-					echo "2nd to 3rd";
-				else if($grade == 4)
-					echo "4th to 6th";
-				else
-					echo "7th to 12th";				
+				echo '<span class="info">Grade: ' . $camper->grade;		
 				echo '</span>';
 				echo '<span class="info">Age: '. $camper->age . '</span>';
 				echo '<span class="info">Gender: '. $camper->gender . '</span><br><br>';
 				echo '<br><br><span class="info">Address: ';
 				echo $camper->address . ' ' . $camper->city . ' ' . $camper->state . ' ' . $camper->zipcode . '</span>';
-				
+				echo '<br><h3>Notes:<h3> <br><textarea id="notes" rows="4" cols="50">' . $camper->notes . '</textarea>';
 				echo '<h3>Camps signed up for:</h3><br>';
 				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_registration WHERE camper_id=%s",$camper->camper_id));
 				if (count($registrations) == 0)

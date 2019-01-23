@@ -29,6 +29,7 @@ function srbc_install() {
 		grade TINYTEXT NOT NULL,
 		gender TINYTEXT NOT NULL,
 		age TINYINT NOT NULL,
+		notes TEXT,
 		PRIMARY KEY (camper_id)
 		)  ENGINE=INNODB;";
 

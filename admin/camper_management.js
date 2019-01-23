@@ -96,6 +96,7 @@ function postAjax(obj) {
     if (this.readyState == 4 && this.status == 200) {
 		var txt = this.responseText;1
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
+		//TODO CHANGE THIS CAUSE THIS DOESN"T WORK GREAT
         if (txt.includes("Saved"))
 			showToast(txt);
 		else
@@ -145,6 +146,8 @@ function saveInfo()
 		}
 		info_child["amount_due"] = document.getElementById("amount_due").innerText;
 		info_child["payment_type"] = document.getElementById("payment_type").value;
+		info_child["notes"] = document.getElementById("notes").value;
+		info_child["camper_id"] = document.getElementById("camper_id").innerText;
 		info[registration_ids[i].innerText.toString()] = info_child;
 	}
 	

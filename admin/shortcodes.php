@@ -265,7 +265,7 @@ function srbc_registration( $atts )
 			<input type="radio" name="gender" value="male" checked> Male
 			<input type="radio" name="gender" value="female">Female
 			<select class="inputs" name="grade">
-				<option value="5-7yrs">Kindergarten to 1st</option>
+				<option value="Kindergarten to 1st">Kindergarten to 1st</option>
 				<option value="2nd to 3rd">Going into 2nd or 3rd Grade</option>
 				<option value="4th to 6th">Going into 4th to 6th Grade</option>
 				<option value="4th to 6th">Going into 7th to 8th Grade</option>

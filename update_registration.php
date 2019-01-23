@@ -89,7 +89,20 @@ for($i = 0;$i < count($obj); $i++){
 		array( '%d' ) 
 	);
 	}
-	
+	//Update Camper
+	//TODO MAKE THIS A LITTLE BETTER cause it will execute for every registration
+	//Eventually I will need this to update camper info anyways
+	$wpdb->update( 
+		'srbc_campers', 
+		array( 
+			'notes' => $obj[$key]["notes"],	
+		), 
+		array( 'camper_id' => $obj[$key]["camper_id"] ), 
+		array( 
+			'%s',	
+		), 
+		array( '%d' ) 
+	);
 	
 	$wpdb->update( 
 		'srbc_registration', 
@@ -102,7 +115,7 @@ for($i = 0;$i < count($obj); $i++){
 			'scholarship_amt' => $obj[$key]["scholarship_amt"],
 			'scholarship_type' => $obj[$key]["scholarship_type"],
 			'amount_due' => $obj[$key]["amount_due"],
-			'checked_in' => $obj[$key]["checked_in"]
+			'checked_in' => $obj[$key]["checked_in"],
 		), 
 		array( 'registration_id' => $key ), 
 		array( 
