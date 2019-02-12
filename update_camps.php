@@ -2,7 +2,6 @@
 //Makes camp edits or deletes or creates new ones them
 header("Content-Type: application/json; charset=UTF-8");
 $obj = json_decode( stripslashes($_POST["x"]), true);
-
 //Database shtuff
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 global $wpdb;
@@ -14,7 +13,7 @@ if (isset($obj["deleteid"])) {
 	exit;
 }
 else if (isset($obj["camp_id"])) {
-    //If this is set then we are deleting a camp
+    //If this is set then we are updating a camp
 	$wpdb->update( 
 	'srbc_camps', 
 	array( 

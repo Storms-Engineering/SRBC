@@ -68,7 +68,7 @@ function postAjax(obj) {
 };
 xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_camps.php", true);
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xmlhttp.send("x=" + param);
+xmlhttp.send("x=" + encodeURIComponent(param));
 }
 function saveInfo(cmp_id)
 {
