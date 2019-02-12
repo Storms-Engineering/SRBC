@@ -43,9 +43,12 @@ function drop(ev) {
 			alert("Bad password");
 			location.reload();
 		}
-		for (i = 1; i < cells.length; i+=3){
+		var progressBar = document.getElementById("progress");
+		for (i = 1; i < cells.length; i+=6){
 			cells[i].innerText = crypt.decrypt(cells[i].innerText);
+			progressBar.innerText = parseInt((i/cells.length)*100) + "%";
 		}
+		progressBar.innerText = "100%";
         };
       })(file);
 	  reader.readAsText(file);

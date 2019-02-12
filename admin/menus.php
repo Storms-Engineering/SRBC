@@ -18,7 +18,7 @@ function srbc_credit_cards(){
 	<script src="../wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/credit_card.js"></script>
 	<h1>Credit Cards pending processing:</h1>
-	Password :  <input type="password" id="pwd"> 
+	Password :  <input type="password" id="pwd"> Decryption Progress <span id="progress">0%</span>
 	<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">Drop key file here</div>
 	<table style="width:100%;" >
 		<tr>
@@ -61,14 +61,7 @@ function srbc_camper_management()
 		<input id="search_button" type="submit" onclick="search();">
 		<div id="results">
 		</div>
-		<!--Modal box Example fom W3schools-->
-		<!-- The Modal -->
-		<div id="myModal" class="modal">
-			<!-- Modal content -->
-			<div id="modal-content" class="modal-content">
-				
-			</div>
-		</div>
+		<?php modalSetup() ?>
 		<!-- The toast notification from w3schools -->
 	<div id="snackbar"></div>
     </div>
@@ -213,14 +206,7 @@ function srbc_camps_management()
 			<button onclick="addNewCamp()" class="tablink" >Add New Camp</button>
 		</div> 
     </div>
-	<!--Modal box Example fom W3schools-->
-		<!-- The Modal -->
-		<div id="myModal" class="modal">
-			<!-- Modal content -->
-			<div id="modal-content" class="modal-content">
-				
-			</div>
-		</div>
+	<?php modalSetup() ?>
 	<div id="snackbar"></div>
 	<div id="error"></div>
 	<script src="../wp-content/plugins/SRBC/admin/camps_management.js"></script>

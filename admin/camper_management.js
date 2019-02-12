@@ -1,8 +1,4 @@
-//Modal Function
-// Get the modal
-//
-var modal = document.getElementById('myModal');
-// When the user clicks the button, open the modal 
+//Custom Modal Function
 function openModal(cmpr_id) {
 	var xhttp;
 	if (window.XMLHttpRequest) {
@@ -26,18 +22,6 @@ function openModal(cmpr_id) {
 	xhttp.open("GET", "/wp-content/plugins/SRBC/camper_modal_query.php?camper_id="+cmpr_id, true);
 	xhttp.send();
 	
-}
-
-// When the user clicks on <span> (x), close the modal
-function closeModal() {
-	modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-	if (event.target == document.getElementById('myModal')) {
-		modal.style.display = "none";
-	}
 }
 
 function search()
@@ -109,7 +93,7 @@ function postAjax(obj) {
 };
 xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_registration.php", true);
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xmlhttp.send("x=" + param);
+xmlhttp.send("x=" + encodeURIComponent(param));
 }
 
 
@@ -147,7 +131,7 @@ function saveInfo()
 		info_child["amount_due"] = document.getElementById("amount_due").innerText;
 		info_child["payment_type"] = document.getElementById("payment_type").value;
 		info_child["notes"] = document.getElementById("notes").value;
-		info_child["camper_id"] = document.getElementById("camper_id").innerText;
+		info_child["camper_id"] = document.getElementById("camper_id").innerHTML;
 		info[registration_ids[i].innerText.toString()] = info_child;
 	}
 	

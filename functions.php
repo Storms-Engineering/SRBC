@@ -45,4 +45,19 @@ function sendMail($to,$subject,$msg,$attachment = ""){
 	}
 	
 }
+
+function modalSetup(){	
+	echo '<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/modal.css">
+			
+		<!--Modal box Example fom W3schools-->
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
+			<!-- Modal content -->
+			<div id="modal-content" class="modal-content">
+				
+			</div>
+		</div>
+		 <script src="../wp-content/plugins/SRBC/admin/modal.js"></script>';
+	
+}
 ?>

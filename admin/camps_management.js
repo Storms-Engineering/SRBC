@@ -1,4 +1,3 @@
-var modal = document.getElementById('myModal');
 function deleteCamp(ev,cmpid)
 {
 	
@@ -28,16 +27,6 @@ function openModal(cmp_id) {
 	xhttp.send();
 	
 }
-// When the user clicks on <span> (x), close the modal
-function closeModal() {
-	modal.style.display = "none";
-}
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-	if (event.target == document.getElementById('myModal')) {
-		modal.style.display = "none";
-	}
-}
 //Toast Notification
 function showToast(text) {
     // Get the snackbar DIV
@@ -56,8 +45,10 @@ function postAjax(obj) {
     if (this.readyState == 4 && this.status == 200) {
 		var txt = this.responseText;1
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
-        if (txt.includes("Saved"))
+        if (txt.includes("Saved")){
 			showToast(txt);
+			location.reload();
+		}
 		else
 		{
 			showToast("Error occured, please let Website Administrator know");

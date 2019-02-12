@@ -14,7 +14,7 @@
 	<button class="save_button" style="float:right;" onclick="saveInfo();">Save Info & Close</button>
 			<div class="modal-body">
 			<?php
-				echo '<span style="visible:hidden" id="camper_id">' . $camper->camper_id . '</span>';
+				echo '<span style="visibility:hidden" id="camper_id">' . $camper->camper_id . '</span>';
 				echo '<span class="info">Parent: ' . $camper->parent_first_name . ' ' . $camper->parent_last_name . '</span>';
 				echo '<span class="info">Phone: '. $camper->phone . '</span>';
 				echo '<span class="info">Email: '. $camper->email . '</span><br><br>';
