@@ -18,7 +18,7 @@ function srbc_credit_cards(){
 	<script src="../wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/credit_card.js"></script>
 	<h1>Credit Cards pending processing:</h1>
-	Password :  <input type="password" id="pwd"> Decryption Progress <span id="progress">0%</span>
+	Password :  <input type="password" id="pwd"> Decryption Progress <progress value="0" id="progress"></progress>
 	<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">Drop key file here</div>
 	<table style="width:100%;" >
 		<tr>

@@ -81,7 +81,7 @@ function postAjax(obj) {
 		var txt = this.responseText;1
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
 		//TODO CHANGE THIS CAUSE THIS DOESN"T WORK GREAT
-        if (txt.includes("Saved"))
+        if (!txt.includes("error"))
 			showToast(txt);
 		else
 		{
