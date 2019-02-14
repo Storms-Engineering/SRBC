@@ -568,7 +568,7 @@ function srbc_registration_complete($atts)
 				'%s'
 			) 
 			);
-			
+	//Notify office that this parent is sending a check	
 	if (isset($_POST["using_check"])){
 		sendMail(srbc_email,"$parent_first_name $parent_last_name is sending a check ",
 		"Hi,\r\n$parent_first_name $parent_last_name is sending a check for $camper_first_name $camper_last_name<br>Thanks!<br>-Peter Hawke SRBC Ancilla");
@@ -576,8 +576,13 @@ function srbc_registration_complete($atts)
 	else
 	{
 		//Credit Card Stuff
+		//Make credit card easier to read
+		$cc_number = str_split($_POST["cc_number"]);
+		array_splice($cc_number,4,0,"-");
+		array_splice($cc_number,9,0,"-");
+		array_splice($cc_number,14,0,"-");
 		//Append all the data together so we only have to encrypt one string
-		$data = $_POST["cc_name"] . "	" . $_POST["cc_type"] . "	" . $_POST["cc_number"] . "	" . $_POST["cc_vcode"] . "	" . $_POST["cc_month"]
+		$data = $_POST["cc_name"] . "	" . $_POST["cc_type"] . "	" . implode($cc_number) . "	" . $_POST["cc_vcode"] . "	" . $_POST["cc_month"]
 		. "/" . $_POST["cc_year"] . "	" . $_POST["cc_zipcode"];
 		if ($waitlistsize > 0)
 		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it

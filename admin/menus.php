@@ -57,8 +57,24 @@ function srbc_camper_management()
     <div class="wrap">
         <h1>Camper Management</h1>
 		<br>
-		Search By First/Last Name<input id="search" type="search"> 
+		Search By First/Last Name<input id="search" list="suggestions" type="search"> 
 		<input id="search_button" type="submit" onclick="search();">
+		<datalist id="suggestions">
+		<option value="Lakeside">
+		<option value="Wagon Train">
+		<option value="Wilderness">
+		<option value="Workcrew">
+		<option value="Sports">
+		<option value="Fall Retreat">
+		<option value="Winter Camp">
+		<?php
+		global $wpdb;
+		$camps = $wpdb->get_results("SELECT area,camp_description FROM srbc_camps",ARRAY_N);
+		for ($i = 0;$i< count($camps);$i++){
+			echo '<option value="' . $camps[$i][0] . ' ' . $camps[$i][1] . '">';
+		}		
+		?>
+		</datalist>
 		<div id="results">
 		</div>
 		<?php modalSetup() ?>

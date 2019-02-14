@@ -7,7 +7,7 @@ require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 global $wpdb;
 //This query searches for first name or last name of the camper and orders it by first name
 //Also protected against sql injection by prepare
-
+//TODO ADD search queries for areas and specific camps.  Probably will use exact matching
 //See if they typed a first name and last name
 
 if (count($name) == 2){

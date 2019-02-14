@@ -30,12 +30,55 @@ if (array_key_exists("deleteid",$obj))
 	echo "Deleted Registration and Saved Sucessfully";
 	return;
 }
-for($i = 0;$i < count($obj); $i++){
+//Update Camper
+$wpdb->update( 
+	'srbc_campers', 
+	array( 
+		'camper_first_name' => $obj["camper"]["camper_first_name"], 
+		'camper_last_name' => $obj["camper"]["camper_last_name"],
+		'birthday' => $obj["camper"]["birthday"],
+		'age' => $obj["camper"]["age"],
+		'gender' => $obj["camper"]["gender"],
+		'grade' => $obj["camper"]["grade"],
+		'parent_first_name' => $obj["camper"]["parent_first_name"],
+		'parent_last_name' => $obj["camper"]["parent_last_name"],
+		'email' => $obj["camper"]["email"],
+		'phone' => $obj["camper"]["phone"],
+		'address' => $obj["camper"]["address"],
+		'city' => $obj["camper"]["city"],
+		'state' => $obj["camper"]["state"],
+		'zipcode' => $obj["camper"]["zipcode"],
+		'notes' => $obj["camper"]["notes"]
+	), 
+	array( 'camper_id' => $obj["camper"]["id"] ), 
+	array( 
+		'%s',
+		'%s', 
+		'%s',
+		'%d',
+		'%s',
+		'%s',
+		'%s',
+		'%s',
+		'%s',
+		'%s',
+		'%s',
+		'%s',
+		'%s',
+		'%s',
+		'%s'	
+	), 
+	array( '%d' ) 
+);
+//Update registrations
+//Make this one less because our last key is camper
+for($i = 0;$i < (count($obj)-1); $i++){
 	//Current key for database
 	$key = $arrayKeys[$i];
 	//Add payment info to payment database
 	if ($obj[$key]["payment_type"] != "none"){
 		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
+		//Get the current date time
 		$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 		$wpdb->insert(
 				'srbc_payments', 
@@ -89,21 +132,6 @@ for($i = 0;$i < count($obj); $i++){
 		array( '%d' ) 
 	);
 	}
-	//Update Camper
-	//TODO MAKE THIS A LITTLE BETTER cause it will execute for every registration
-	//Eventually I will need this to update camper info anyways
-	$wpdb->update( 
-		'srbc_campers', 
-		array( 
-			'notes' => $obj[$key]["notes"],	
-		), 
-		array( 'camper_id' => $obj[$key]["camper_id"] ), 
-		array( 
-			'%s',	
-		), 
-		array( '%d' ) 
-	);
-	
 	$wpdb->update( 
 		'srbc_registration', 
 		array( 
@@ -121,7 +149,7 @@ for($i = 0;$i < count($obj); $i++){
 		array( 
 			'%s',	
 			'%s',
-			'%d',	
+			'%s',	
 			'%s',	
 			'%d',
 			'%d',

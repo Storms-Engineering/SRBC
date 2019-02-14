@@ -16,7 +16,6 @@ function openModal(cmpr_id) {
 		//Calculate the totals because nothing has happened
 		addListeners();
 		calculate_totals();
-
 		}
 	};
 	xhttp.open("GET", "/wp-content/plugins/SRBC/camper_modal_query.php?camper_id="+cmpr_id, true);
@@ -81,7 +80,7 @@ function postAjax(obj) {
 		var txt = this.responseText;1
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
 		//TODO CHANGE THIS CAUSE THIS DOESN"T WORK GREAT
-        if (!txt.includes("error"))
+        if (!txt.includes("error") || !txt.includes("notice"))
 			showToast(txt);
 		else
 		{
@@ -103,6 +102,15 @@ function saveInfo()
 	//This is the JSON object that we will pass to the server to store in the database
 	//At the moment it will be a 2 dimensional array with the registration_id as the key to the registration data
 	var info = {};
+	//Insert camper data into json object
+	var info_c = {};
+	var inputs = document.getElementById("information").getElementsByTagName("input");
+	for (var j = 0; j < inputs.length; ++j) {
+		info_c[inputs[j].name] = inputs[j].value;
+	}
+	info_c["notes"] = document.getElementById("notes").value;
+	info_c["id"] = document.getElementById("camper_id").innerHTML;
+	info["camper"] = info_c;
 	//Get all the inputs for a camp
 	var containers = document.getElementsByClassName("content");
 	//Get the corresponding registration ids
@@ -130,8 +138,6 @@ function saveInfo()
 		}
 		info_child["amount_due"] = document.getElementById("amount_due").innerText;
 		info_child["payment_type"] = document.getElementById("payment_type").value;
-		info_child["notes"] = document.getElementById("notes").value;
-		info_child["camper_id"] = document.getElementById("camper_id").innerHTML;
 		info[registration_ids[i].innerText.toString()] = info_child;
 	}
 	

@@ -14,18 +14,22 @@
 	<button class="save_button" style="float:right;" onclick="saveInfo();">Save Info & Close</button>
 			<div class="modal-body">
 			<?php
-				echo '<span style="visibility:hidden" id="camper_id">' . $camper->camper_id . '</span>';
-				echo '<span class="info">Parent: ' . $camper->parent_first_name . ' ' . $camper->parent_last_name . '</span>';
-				echo '<span class="info">Phone: '. $camper->phone . '</span>';
-				echo '<span class="info">Email: '. $camper->email . '</span><br><br>';
-				echo '<span class="info">Birthday: '. $camper->birthday . '</span>';
-				echo '<span class="info">Grade: ' . $camper->grade;		
-				echo '</span>';
-				echo '<span class="info">Age: '. $camper->age . '</span>';
-				echo '<span class="info">Gender: '. $camper->gender . '</span><br><br>';
-				echo '<br><br><span class="info">Address: ';
-				echo $camper->address . ' ' . $camper->city . ' ' . $camper->state . ' ' . $camper->zipcode . '</span>';
-				echo '<br><h3>Notes:<h3> <br><textarea id="notes" rows="4" cols="50">' . $camper->notes . '</textarea>';
+				echo '<div id="information"><span style="display:none;" id="camper_id">' . $camper->camper_id . '</span>';
+				echo '<span class="info">Camper: <input type="text" name="camper_first_name" value="' . $camper->camper_first_name . '"> ';
+				echo '<input type="text" name="camper_last_name" value="' . $camper->camper_last_name . '"></span>';
+				echo '<span class="info">Parent: <input type="text" name="parent_first_name" value="' . $camper->parent_first_name . '"> ' 
+					. '<input type="text" name="parent_last_name" value="' . $camper->parent_last_name . '"></span>';
+				echo '<span class="info">Phone: <input type="text" name="phone" value="'. $camper->phone . '"></span>';
+				echo '<span class="info">Email: <input type="text" name="email" value="'. $camper->email . '"></span><br><br>';
+				echo '<span class="info">Birthday: <input type="text" name="birthday" value="'. $camper->birthday . '"></span>';
+				echo '<span class="info">Grade: <input type="text" class="financial" name="grade" value="' . $camper->grade . '"></span>';
+				echo '<span class="info">Age: <input type="text" class="financial" name="age" value="'. $camper->age . '"></span>';
+				echo '<span class="info">Gender: <input type="text" class="financial" name="gender" value="'. $camper->gender . '"></span><br><br>';
+				echo '<br><br><span class="info">Address: <input type="text" name="address" value="' . $camper->address . '">';
+				echo '<input type="text" name="city" value="' . $camper->city . '"> ' .
+					'<input type="text" name="state" class="financial" value="' . $camper->state . '"> ' .
+					'<input type="text" name="zipcode" value="' . $camper->zipcode . '"></span>';
+				echo '<br><h3>Notes:<h3> <br><textarea id="notes" rows="4" cols="50">' . $camper->notes . '</textarea></div>';
 				echo '<h3>Camps signed up for:</h3><br>';
 				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_registration WHERE camper_id=%s",$camper->camper_id));
 				if (count($registrations) == 0)
@@ -92,7 +96,7 @@
 					echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';
 					echo 'Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
 					echo 'Cabin: <input name="cabin" type="text" value="' . $registration->cabin . '"><br>';
-					echo '<span class="financial_info">(Put a zero here if you want to take them off the Horse Option) Horse Option Cost: $<input class="financial" name="horse_opt" type="text" value="' . $camp->horse_opt . '"></span>';
+					echo '<span class="financial_info">(Put a zero here if you want to take them off the Horse Option) Horse Option Cost: $<input class="financial" name="horse_opt" type="text" value="' . $registration->horse_opt . '"></span>';
 					echo '<span class="financial_info">Busride ' . $busride .  ': $<input class="financial" name="busride_cost" type="text" value="' . $busride_cost .'"></span>';
 					echo '<span class="financial_info">Discount: $<input class="financial" type="text" name="discount" value="' . $registration->discount . '"></span>';
 					echo '<span class="financial_info">Scholarship Amount: $<input class="financial" name="scholarship_amt" type="text" value="' . $registration->scholarship_amt . '"></span>';
