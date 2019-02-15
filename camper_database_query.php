@@ -31,7 +31,6 @@ foreach($camps as $camp){
 	if ($camp == $_GET['query']){
 		$specificQuery = true;
 		$q = explode("~",$camp);
-		print_r($q);
 		$campers = $wpdb->get_results(
 			$wpdb->prepare( "SELECT *
 							FROM ((srbc_registration 
