@@ -11,7 +11,7 @@ function srbc_volunteer_contact_form_email($atts){
 		return;
 	}
 	$body = $_POST['contact_name'] . " has some questions:<br>" . $_POST['questions'] . "<br>Contact info: " .
-		$_POST['contact_info'] . "<br><br>- Peter Hakwe SRBC Ancilla";
+		$_POST['phone'] . ' ' . $_POST['email'] . "<br><br>- Peter Hakwe SRBC Ancilla";
 	sendMail(srbc_email,
 	$_POST['contact_name'] . ' is interested at working at Solid Rock' ,$body);
 	return "<h1>Info Sent Sucessfully!</h1>";
@@ -281,6 +281,7 @@ function srbc_registration( $atts )
 			<input class="inputs" type="text" name="parent_last_name" required placeholder="Last Name">
 			Email:<input type="email" name="email" required><br>
 			Phone including area code (Numbers only please):<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
+			Secondary Phone: <input type="tel" pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone2">
 			</td>
 		</tr>
 		<tr>
@@ -339,7 +340,7 @@ function srbc_registration( $atts )
 		</tr>
 	</table> 
 	</div>
-	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received.</span><br>
+	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received.  (This $50 DOES go towards the cost of the camp)</span><br>
 	You must at least pay $50, but you may pay up to the full amount of the camp.  Any remaining amount will be due the day of registration.
 	<br>
 	<br>
@@ -410,6 +411,7 @@ function srbc_registration_complete($atts)
 	$parent_last_name = $_POST["parent_last_name"];
 	$email = $_POST["email"];
 	$phone = $_POST["phone"];
+	$phone2 = $_POST["phone2"];
 	$address = $_POST["address"];
 	$city = $_POST["city"];
 	$state = $_POST["state"];
@@ -454,6 +456,7 @@ function srbc_registration_complete($atts)
 		'parent_last_name' => $parent_last_name,
 		'email' => $email,
 		'phone' => $phone,
+		'phone2' => $phone2,
 		'address' => $address,
 		'city' => $city,
 		'state' => $state,
@@ -467,6 +470,7 @@ function srbc_registration_complete($atts)
 		'%d',
 		'%s',
 		'%d',
+		'%s',
 		'%s',
 		'%s',
 		'%s',

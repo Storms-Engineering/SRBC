@@ -26,6 +26,7 @@ function srbc_install() {
 		state TINYTEXT NOT NULL,
 		zipcode MEDIUMINT NOT NULL,
 		phone TINYTEXT NOT NULL,
+		phone2 TINYTEXT,
 		grade TINYTEXT NOT NULL,
 		gender TINYTEXT NOT NULL,
 		age TINYINT NOT NULL,

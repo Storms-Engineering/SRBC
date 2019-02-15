@@ -20,6 +20,7 @@
 				echo '<span class="info">Parent: <input type="text" name="parent_first_name" value="' . $camper->parent_first_name . '"> ' 
 					. '<input type="text" name="parent_last_name" value="' . $camper->parent_last_name . '"></span>';
 				echo '<span class="info">Phone: <input type="text" name="phone" value="'. $camper->phone . '"></span>';
+				echo '<span class="info">Phone2: <input type="text" name="phone2" value="'. $camper->phone2 . '"></span>';
 				echo '<span class="info">Email: <input type="text" name="email" value="'. $camper->email . '"></span><br><br>';
 				echo '<span class="info">Birthday: <input type="text" name="birthday" value="'. $camper->birthday . '"></span>';
 				echo '<span class="info">Grade: <input type="text" class="financial" name="grade" value="' . $camper->grade . '"></span>';
