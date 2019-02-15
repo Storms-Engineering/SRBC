@@ -11,7 +11,7 @@ function srbc_volunteer_contact_form_email($atts){
 		return;
 	}
 	$body = $_POST['contact_name'] . " has some questions:<br>" . $_POST['questions'] . "<br>Contact info: " .
-		$_POST['phone'] . ' ' . $_POST['email'] . "<br><br>- Peter Hakwe SRBC Ancilla";
+		$_POST['phone'] . ' ' . $_POST['email'] . "<br>Area of interest:" . $_POST['area_of_interest'] . "<br><br>- Peter Hakwe SRBC Ancilla";
 	sendMail(srbc_email,
 	$_POST['contact_name'] . ' is interested at working at Solid Rock' ,$body);
 	return "<h1>Info Sent Sucessfully!</h1>";
