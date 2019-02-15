@@ -71,7 +71,7 @@ function srbc_camper_management()
 		global $wpdb;
 		$camps = $wpdb->get_results("SELECT area,camp_description FROM srbc_camps",ARRAY_N);
 		for ($i = 0;$i< count($camps);$i++){
-			echo '<option value="' . $camps[$i][0] . ' ' . $camps[$i][1] . '">';
+			echo '<option value="' . $camps[$i][0] . '~' . $camps[$i][1] . '">';
 		}		
 		?>
 		</datalist>

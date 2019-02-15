@@ -1,30 +1,69 @@
 <?php 
 //This file searches for campers broadly and returns a table of campers matching the criteria
-$campers = NULL;
-$name = explode(" ",$_GET['name']);
+
 
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 global $wpdb;
-//This query searches for first name or last name of the camper and orders it by first name
-//Also protected against sql injection by prepare
-//TODO ADD search queries for areas and specific camps.  Probably will use exact matching
-//See if they typed a first name and last name
+$campers = NULL;
 
-if (count($name) == 2){
-	$fname = $name[0];
-	$campers = $wpdb->get_results(
-	$wpdb->prepare( "SELECT * FROM srbc_campers WHERE (camper_first_name 
-	LIKE %s AND camper_last_name LIKE %s )OR (parent_first_name LIKE %s AND parent_last_name LIKE %s)
-	ORDER BY camper_first_name", 
-	$name[0]."%",$name[1]."%",$name[0]."%",$name[1]."%"));
+//Search for campers in specific areas and specific camps. 
+$areas = array("Lakeside", "Wagon Train", "Wilderness", "Workcrew", "Sports", "Fall Retreat", "Winter Camp");
+$cs = $wpdb->get_results("SELECT area,camp_description FROM srbc_camps",ARRAY_N);
+$camps=NULL;
+$specificQuery = false;
+//Add all the camps and areas together seperated by ~
+for ($i = 0;$i< count($cs);$i++){
+	$camps[] = $cs[$i][0] . '~' . $cs[$i][1];
 }
-else{
-	$name = $name[0];
-	$campers = $wpdb->get_results(
-	$wpdb->prepare( "SELECT * FROM srbc_campers WHERE camper_first_name 
-	LIKE %s OR camper_last_name LIKE %s OR parent_first_name LIKE %s OR parent_last_name LIKE %s
-	ORDER BY camper_first_name", 
-	$name."%",$name."%",$name."%",$name."%"));
+foreach($areas as $area){
+	if ($area == $_GET['query']){
+		$specificQuery = true;
+		$campers = $wpdb->get_results(
+			$wpdb->prepare( "SELECT *
+							FROM ((srbc_registration 
+							INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
+							INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+							WHERE srbc_camps.area=%s",$area));
+	}
+}
+
+foreach($camps as $camp){
+	if ($camp == $_GET['query']){
+		$specificQuery = true;
+		$q = explode("~",$camp);
+		print_r($q);
+		$campers = $wpdb->get_results(
+			$wpdb->prepare( "SELECT *
+							FROM ((srbc_registration 
+							INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
+							INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+							WHERE srbc_camps.area=%s AND srbc_camps.camp_description=%s",$q[0],$q[1]));
+	}
+}
+
+if (!$specificQuery)
+{
+	$name = explode(" ",$_GET['query']);
+	
+	//This query searches for first name or last name of the camper and orders it by first name
+	//Also protected against sql injection by prepare
+	//See if they typed a first name and last name
+	if (count($name) == 2){
+		$fname = $name[0];
+		$campers = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM srbc_campers WHERE (camper_first_name 
+			LIKE %s AND camper_last_name LIKE %s )OR (parent_first_name LIKE %s AND parent_last_name LIKE %s)
+			ORDER BY camper_first_name", 
+			$name[0]."%",$name[1]."%",$name[0]."%",$name[1]."%"));
+	}
+	else{
+		$name = $name[0];
+		$campers = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM srbc_campers WHERE camper_first_name 
+			LIKE %s OR camper_last_name LIKE %s OR parent_first_name LIKE %s OR parent_last_name LIKE %s
+			ORDER BY camper_first_name", 
+			$name."%",$name."%",$name."%",$name."%"));
+	}
 }
 
 ?>

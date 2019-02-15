@@ -38,8 +38,8 @@ function search()
 		document.getElementById("results").innerHTML = this.responseText;
 		}
 	};
-	var name = document.getElementById("search").value;
-	xhttp.open("GET", "/wp-content/plugins/SRBC/camper_database_query.php?name="+name, true);
+	var query = document.getElementById("search").value;
+	xhttp.open("GET", "/wp-content/plugins/SRBC/camper_database_query.php?query="+query, true);
 	xhttp.send();
 }
 
