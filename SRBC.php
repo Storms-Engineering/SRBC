@@ -2,7 +2,7 @@
 /*
 Plugin Name: SRBC
 Description: Solid Rock Bible Camp Plugin for Registration and Displaying Users
-Version: 0.4
+Version: 0.5
 */
 //Require
 require("admin/shortcodes.php");

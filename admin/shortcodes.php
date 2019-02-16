@@ -158,26 +158,15 @@ function srbc_registration( $atts )
 	{
 		padding:2px;
 		margin:2px;
+		width:275px;
 	}
 	.registration_box
 	{
 		padding:10px;
 		margin:auto;
-		width:75%;
+		width:90%;
 		border: 2px solid #a6a6a6;
 		border-radius: 20px;
-	}
-	table, td
-	{
-		
-		border-collapse:collapse;
-		border-style:none;
-		
-	}
-	.inputs
-	{
-		width:50%;
-		float:left;
 	}
 	.lefting
 	{
@@ -193,6 +182,7 @@ function srbc_registration( $atts )
 	{
 		width:auto;
 	}
+
 	</style>
 	<script>
 	function validateForm(){
@@ -206,13 +196,9 @@ function srbc_registration( $atts )
 	}
 	</script>
 	<div class="registration_box">
-	<div style="overflow-x:auto;">
 	<form action="../registration-complete/" method="post" style="margin:auto;" onsubmit="return validateForm()">
-	 <table style="width:100%;">
-		<tr>
-			<td>Camp you wish to register for:</td>
-			<td>
-				<select class="inputs" name="campid">
+			<h4>Camp you wish to register for:
+				<select name="campid">
 				<?php
 				global $wpdb;
 				//Get list of camp ids and then populate the options box since the user just found this page
@@ -235,35 +221,26 @@ function srbc_registration( $atts )
 					echo "</select><br><br>";
 				error_msg("Please use the Camp Finder page to select a camp or go to the correct program area and find your camp there.  You should'nt acess this page directly");
 				}
-				
-				
-				//
 				?>
-
+				</h4>
 				<br>
-				<br>
-				<!--TODO make this responsive.  Not gonna worry about it right now.  Use w3schools responsive forms-->
-				<span style="float:left;">Busride:</span>
+				<span>Busride*:</span>
 				<select class="inputs" name="busride">
 					<option value="none" selected>No bus ride needed</option>
 					<option value="both">Round-Trip $60</option>
 					<option value="to">One-way to Camp $35</option>
 					<option value="from">One-way to Anchorage $35</option>
 				</select>
-				<br>
-				<br>
-				<p>The bus will depart from and return to the Duluth Trading Company parking lot at 8931 Old Seward Hwy., Suite A Anchorage, AK 99515.
+
+				<p>*The bus will depart from and return to the Duluth Trading Company parking lot at 8931 Old Seward Hwy., Suite A Anchorage, AK 99515.
 				The exact times will be sent you in your confirmation email or letter.</p>
-			</td>
-		</tr>
-		<tr>
-			<td>Camper:</td>
-			<td>
+			Camper:
 			<input class="inputs" type="text" name="camper_first_name" placeholder="First Name" required>
 			<input class="inputs" type="text" name="camper_last_name" placeholder="Last Name" required>
 			Birthday: <input  type="date" name="birthday" required><br>Gender:
 			<input type="radio" name="gender" value="male" required> Male
-			<input type="radio" name="gender" value="female" required>Female
+			<input type="radio" name="gender" value="female" required> Female<br>
+			Grade: 
 			<select class="inputs" name="grade">
 				<option value="Kindergarten to 1st">Kindergarten to 1st</option>
 				<option value="2nd to 3rd">Going into 2nd or 3rd Grade</option>
@@ -272,74 +249,50 @@ function srbc_registration( $atts )
 				<option value="4th to 6th">Going into 9th to 12th Grade</option>
 				<option value="Adult">Adult</option>
 			</select>	
-			</td>
-		</tr>
-		<tr>
-			<td>Parent/Guardian</td>
-			<td>
+			<br>
+			Parent/Guardian
 			<input class="inputs" type="text" name="parent_first_name" required placeholder="First Name">
-			<input class="inputs" type="text" name="parent_last_name" required placeholder="Last Name">
+			<input class="inputs" type="text" name="parent_last_name" required placeholder="Last Name"><br>
 			Email:<input type="email" name="email" required><br>
 			Phone including area code (Numbers only please):<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
-			Secondary Phone: <input type="tel" pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone2">
-			</td>
-		</tr>
-		<tr>
-			<td>Street Address:</td>
-			<td><textarea class="inputs" required name="address" rows="5" cols="20"></textarea>
-				City:<input type="text" required name="city"><br>
-				State:<input type="text" required name="state"><br>
-				Zipcode:<input type="text" required pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="zipcode" >
-			</td>
-		</tr>
-		<tr>
-			<td></td>
-			<td>Parental Notice and Release - Agreement is required for camper admittance</td>
-		</tr>
-		<tr>
-			<td>
-				<select required title="You must agree to register for camp" class="legal">
-					<option value="">Disagree</option>
-					<option value="agree">Agree</option>
-				</select>
-			</td>
-			<td>I/We, the undersigned, understand that while attending Solid Rock Bible Camp of Soldotna, Alaska (camp),
+			Secondary Phone: <input type="tel" pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone2"><br>
+			Street Address:
+				<textarea class="inputs" required name="address" rows="5" cols="34"></textarea>
+				City:<input type="text" required name="city">
+				State:<input type="text" required name="state">
+				Zipcode:<input type="text" required pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="zipcode" ><br>
+				<h3>Parental Notice and Release - Agreement is required for camper admittance</h3>
+				
+				<p>I/We, the undersigned, understand that while attending Solid Rock Bible Camp of Soldotna, Alaska (camp),
 			the below-named child may be involved in various activities including but not limited to: horseback riding,
 			water-skiing, the waterslide, swimming, boating, the Blob, riflery, archery, rope swing, the obstacle course,
 			and other traditional camp activities. I/We have familiarized ourselves with these programs and activities included in,
-			but not limited to, the Camp brochure.</td>
-		</tr>
-		<tr>
-			<td>
-			<select required title="You must agree to register for camp" class="legal">
-				<option value ="">Disagree</option>
-				<option value="agree">Agree</option>
-			</select>
-			</td>
-			<td>
+			but not limited to, the Camp brochure. 	<select required title="You must agree to register for camp" class="legal">
+					<option value="">Disagree</option>
+					<option value="agree">Agree</option>
+				</select></p>
+
+			
+			<p>
 			In consideration of Solid Rock Ministries, Inc. allowing the child to attend Camp for the period specified
 			and to participate in the activities of the Camp, I/we do hereby grant permission for the child to attend
 			and to participate fully in said activities. I/We understand and accept the risks and dangers involved in
 			such activities and do hereby release Solid Rock Ministries, Inc., its officers and directors, its employees,
 			agents, and the Camp staff, from any and all claims, demands, actions, causes of actions of any sort,
 			for injuries or death sustained by myself/ourselves or the child due to negligence or any other fault during 
-			the period covered by this release, whether such an injury occurred on or off the Camp property. 
-			</td>
-		</tr>
-		<tr>
-			<td>
+			the period covered by this release, whether such an injury occurred on or off the Camp property.
+			<select required title="You must agree to register for camp" class="legal">
+				<option value ="">Disagree</option>
+				<option value="agree">Agree</option>
+			</select> </p>
+			
+			<p>I/We have instructed my/our son/daughter to obey the rules of Solid Rock Bible Camp.
+				This waiver is effective only for the week(s) for which the camper is registered.
 			<select required title="You must agree to register for camp" class="legal">
 				<option value="">Disagree</option>
 				<option value="agree">Agree</option>
-			</select>
-			</td>
-			<td>
-				I/We have instructed my/our son/daughter to obey the rules of Solid Rock Bible Camp.
-				This waiver is effective only for the week(s) for which the camper is registered.
-			</td>		
-		</tr>
-	</table> 
-	</div>
+			</select></p>
+			
 	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received.  (This $50 DOES go towards the cost of the camp)</span><br>
 	You must at least pay $50, but you may pay up to the full amount of the camp.  Any remaining amount will be due the day of registration.
 	<br>
