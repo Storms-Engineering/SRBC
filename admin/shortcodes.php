@@ -154,7 +154,7 @@ function srbc_registration( $atts )
 	ob_start();
 	?> 
 	<style>
-	input[type="text"], input[type="email"], input[type="password"], input[type="search"], input[type="tel"], select, textarea
+	input[type="text"], input[type="email"], input[type="password"], input[type="search"], input[type="tel"]
 	{
 		padding:2px;
 		margin:2px;
@@ -198,7 +198,7 @@ function srbc_registration( $atts )
 	<div class="registration_box">
 	<form action="../registration-complete/" method="post" style="margin:auto;" onsubmit="return validateForm()">
 			<h4>Camp you wish to register for:
-				<select name="campid">
+				<select style="width:275px;" name="campid">
 				<?php
 				global $wpdb;
 				//Get list of camp ids and then populate the options box since the user just found this page
@@ -256,11 +256,11 @@ function srbc_registration( $atts )
 			Email:<input type="email" name="email" required><br>
 			Phone including area code (Numbers only please):<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
 			Secondary Phone: <input type="tel" pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone2"><br>
-			Street Address:
-				<textarea class="inputs" required name="address" rows="5" cols="34"></textarea>
-				City:<input type="text" required name="city">
-				State:<input type="text" required name="state">
-				Zipcode:<input type="text" required pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="zipcode" ><br>
+			Street Address:<br>
+				<textarea class="inputs" required name="address" rows="2" cols="30"></textarea>
+				City:<input type="text" style="width:100px;" required name="city">
+				State:<input type="text" style="width:50px;" required name="state">
+				Zipcode:<input type="text"  style="width:100px;" required pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="zipcode" ><br>
 				<h3>Parental Notice and Release - Agreement is required for camper admittance</h3>
 				
 				<p>I/We, the undersigned, understand that while attending Solid Rock Bible Camp of Soldotna, Alaska (camp),
@@ -303,7 +303,7 @@ function srbc_registration( $atts )
 	Amount to pay: $ <input type="number" name="cc_amount"><br>
 		<br>		
 		Name on Credit Card: <input type="text" name="cc_name">
-		Credit Card Billing Zip <input type="text" name="cc_zipcode">
+		Credit Card Billing Zip <input style="width:100px;" type="text" name="cc_zipcode">
 		Credit Card Type:
 		<select name="cc_type" size="1">
 			<option value="Visa" selected="">Visa</option>
