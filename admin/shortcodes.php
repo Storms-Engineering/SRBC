@@ -539,8 +539,8 @@ function srbc_registration_complete($atts)
 		array_splice($cc_number,9,0,"-");
 		array_splice($cc_number,14,0,"-");
 		//Append all the data together so we only have to encrypt one string
-		$data = $_POST["cc_name"] . "	" . $_POST["cc_type"] . "	" . implode($cc_number) . "	" . $_POST["cc_vcode"] . "	" . $_POST["cc_month"]
-		. "/" . $_POST["cc_year"] . "	" . $_POST["cc_zipcode"];
+		$data = $_POST["cc_name"] . "	" . $_POST["cc_type"] . "	" . implode($cc_number) . "	" . $_POST["cc_month"]
+		. "/" . $_POST["cc_year"] . "	" . $_POST["cc_vcode"] . "	" . $_POST["cc_zipcode"];
 		if ($waitlistsize > 0)
 		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it
 			$data .= '   USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
