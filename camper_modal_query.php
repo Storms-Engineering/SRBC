@@ -22,7 +22,7 @@
 				echo '<span class="info">Phone: <input type="text" name="phone" value="'. $camper->phone . '"></span>';
 				echo '<span class="info">Phone2: <input type="text" name="phone2" value="'. $camper->phone2 . '"></span>';
 				echo '<span class="info">Email: <input type="text" name="email" value="'. $camper->email . '"></span><br><br>';
-				echo '<span class="info">Birthday: <input type="text" name="birthday" value="'. $camper->birthday . '"></span>';
+				echo '<span class="info">Birthday: <input type="date" name="birthday" value="'. $camper->birthday . '"></span>';
 				echo '<span class="info">Grade: <input type="text" class="financial" name="grade" value="' . $camper->grade . '"></span>';
 				echo '<span class="info">Age: <input type="text" class="financial" name="age" value="'. $camper->age . '"></span>';
 				echo '<span class="info">Gender: <input type="text" class="financial" name="gender" value="'. $camper->gender . '"></span><br><br>';
