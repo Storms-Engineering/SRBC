@@ -138,12 +138,13 @@ function saveInfo()
 		}
 		info_child["amount_due"] = document.getElementById("amount_due").innerText;
 		info_child["payment_type"] = document.getElementById("payment_type").value;
+		info_child["fee_type"] = document.getElementById("fee_type").value;
 		info[registration_ids[i].innerText.toString()] = info_child;
 	}
 	
 	console.log(info);
 	postAjax(info);
-	closeModal();
+	document.getElementById("default").selected = true; 
 }
 
 //Add event listeners to all the fields we want to watch for calculate_totals

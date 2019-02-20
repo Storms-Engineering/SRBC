@@ -89,7 +89,8 @@ for($i = 0;$i < (count($obj)-1); $i++){
 					'payment_type' => $obj[$key]["payment_type"],
 					'payment_amt' => $obj[$key]["payment_amt"],
 					'payment_date' =>  $date->format("m/j/Y G:i"),
-					'note' =>  $obj[$key]["note"]
+					'note' =>  $obj[$key]["note"],
+					'fee_type' => $obj[$key]["fee_type"]
 				), 
 				array( 
 					'%d',
@@ -98,7 +99,8 @@ for($i = 0;$i < (count($obj)-1); $i++){
 					'%s',
 					'%d',
 					'%s',
-					'%s'
+					'%s',
+					'%s'				
 				) 
 			);
 		$paymentType = NULL;

@@ -11,7 +11,7 @@
 	?></h2>
 	
 	</div>
-	<button class="save_button" style="float:right;" onclick="saveInfo();">Save Info & Close</button>
+	<button class="save_button" style="float:right;" onclick="saveInfo();closeModal();">Save Info & Close</button>
 			<div class="modal-body">
 			<?php
 				echo '<div id="information"><span style="display:none;" id="camper_id">' . $camper->camper_id . '</span>';
@@ -111,24 +111,51 @@
 					$checked = "";
 					if ($registration->checked_in == 1)
 						$checked = "checked";
-					echo '<h3>Camper checked in:</h3><label class="switch"><input name="checked_in" type="checkbox" ' . $checked .'><span class="slider"></span></label>';
-					echo '<button onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button>';
+					echo '<h3 style="display:inline;">Camper checked in:</h3> <label class="switch"><input name="checked_in" type="checkbox" ' . $checked .'><span class="slider"></span></label>';
 					echo '<span><h2>Make a payment:</h3>Payment type: <select class="inputs" id="payment_type">
-					<option value="none" selected></option>
+					<option value="none" id="default" selected></option>
 					<option value="card">Credit Card</option>
 					<option value="check">Check</option>
 					<option value="cash">Cash</option>
 					</select>
 					Amount: $<input type="text" name="payment_amt"><br>
-					Note (Check # or Last 4 of CC): <input type="text" name="note"></span></div>';
+					Note (Check # or Last 4 of CC): <input type="text" name="note"></span>
+					<br>Fee Type<select class="inputs" id="fee_type">
+					<option value="Lakeside" selected>Lakeside</option>
+					<option value="Wagon Train">Wagon Train</option>
+					<option value="Wilderness">Wilderness</option>
+					<option value="Horse Fee">Horse Fee</option>
+					<option value="Bus Fee">Bus Fee</option>
+					<option value="Store">Store</option>
+					</select>';
+					
+					//Print out the different fees that have been payed
+					$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM srbc_payments WHERE camper_id=%s AND camp_id=%s",$camper->camper_id,$camp->camp_id));
+					//Add duplicate fees to this array
+					$f = array();
+					foreach($fees as $fee){
+						if (array_key_exists($fee->fee_type,$f))
+							$f[$fee->fee_type] += $fee->payment_amt;
+						else
+							$f[$fee->fee_type] = $fee->payment_amt;
+							
+					}
+					$finalText = NULL;
+					$keys = array_keys($f);
+					echo "<br><h3>Fees payed:</h3>";
+					for($i=0;$i<count($keys);$i++){
+						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
+					}
+					echo $finalText;
+					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button>	<button class="save_button" style="background:red" onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button></div>';
 				}
 				//Show payment history:
 				$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM srbc_payments WHERE camper_id=%s",$camper->camper_id));
 				$paymentHistory = NULL;
 				foreach ($payments as $payment) {
-					$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . "\r\n";
+					$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . " " . $payment->fee_type . "\r\n";
 				}
 				echo '<h3>Payment History</h3><br><textarea rows="4" cols="50">' . $paymentHistory . '</textarea>'
 			?>
 			</div>
-			<div class="modal-footer"><button onclick="saveInfo()" class="save_button">Save Info & Close</button></div>
+			<div class="modal-footer"><button onclick="saveInfo();closeModal();" class="save_button">Save Info & Close</button></div>
