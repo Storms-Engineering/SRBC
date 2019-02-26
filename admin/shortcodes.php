@@ -89,14 +89,14 @@ function srbc_camp_search($atts){
 	
 	$finalText = '<table style="width:100%;">
 				<tr style="background:#51d3ff;">
-				<th>Camp Description</th>
+				<th>Camp</th>
 				<th>Cost</th>
 				<th>Start Date</th>
 				<th>Camper Spots Available</th>
 				<th>Waitling List Spots Available</th> 
 				</tr>';				
 	foreach ($camps as $camp){
-		$finalText .=  '<tr><td>' . $camp->area . " " . $camp->camp_description . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
+		$finalText .=  '<tr><td>' . $camp->area . " " . $camp->name . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
 		$finalText .=  "</td><td>$" . $camp->cost;
 		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date));
 		$total_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
@@ -209,8 +209,8 @@ function srbc_registration( $atts )
 				{
 					$cmpid = $_GET['campid'];
 					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$cmpid));
-					echo '<option value="'.$cmpid.'" selected>' .$camp->area . " " . $camp->camp_description . '</option></select>';
-					echo '<input type="hidden" name="camp_desc" value = "' .$camp->area . " " . $camp->camp_description . '">'; 
+					echo '<option value="'.$cmpid.'" selected>' .$camp->area . " " . $camp->name . '</option></select>';
+					echo '<input type="hidden" name="camp_desc" value = "' .$camp->area . " " . $camp->name . '">'; 
 					if($camp->horse_opt != 0)
 					{
 						echo '<input type="checkbox" name="horse_opt" value="true"> Horse Option $' .$camp->horse_opt. '<br>';
@@ -560,7 +560,7 @@ function srbc_registration_complete($atts)
 				'data' => base64_encode($edata), 
 				'amount' => $_POST["cc_amount"],
 				'camper_name' => $camper_first_name . " " . $camper_last_name,
-				'camp' => ($camp->area . " " . $camp->camp_description),
+				'camp' => ($camp->area . " " . $camp->name),
 				'payment_date' => $date->format("m/j/Y")
 			), 
 			array( 
@@ -585,10 +585,10 @@ function srbc_registration_complete($atts)
 
 function srbc_camps($atts){
 	$query = $atts["area"];
-	$finalText = "*If a camp is full but there is still waitlist spots available then continue registration and it will put you on the waitlist";
-	$finalText .= '<table style="width:100%;">
+	
+	$finalText = '<table style="width:100%;">
 				<tr style="background:#51d3ff;">
-				<th>Camp Description</th>
+				<th>Camp </th>
 				<th>Cost</th>
 				<th>Start/End Date</th>
 				<th>Grade Range</th>
@@ -600,7 +600,7 @@ function srbc_camps($atts){
 	if (count($camps) == 0)
 		return "<h2>There is currently no camps scheduled for this area at this time.  Please check back later!</h2>";
 	foreach ($camps as $camp){
-		$finalText .=  '<tr><td>' . $camp->camp_description . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
+		$finalText .=  '<tr><td>' . $camp->name . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
 		$finalText .=  "</td><td>$" . $camp->cost;
 		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j - Y",strtotime($camp->end_date));
 		$finalText .=  "</td><td>" . $camp->grade_range;
@@ -634,7 +634,7 @@ function srbc_camps($atts){
 										WHERE camp_id=$camp->camp_id AND NOT waitlist=0", ARRAY_N)[0][0]; 
 		$finalText .=  ($camp->waiting_list_size - $waitlistsize) . "</td></tr>";
 	}
-	$finalText .=  "</table> ";
+	$finalText .=  "</table>*If a camp is full but there is still waitlist spots available then continue registration and it will put you on the waitlist";
 	return $finalText;
 }
 

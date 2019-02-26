@@ -8,7 +8,7 @@ $campers = NULL;
 
 //Search for campers in specific areas and specific camps. 
 $areas = array("Lakeside", "Wagon Train", "Wilderness", "Workcrew", "Sports", "Fall Retreat", "Winter Camp");
-$cs = $wpdb->get_results("SELECT area,camp_description FROM srbc_camps",ARRAY_N);
+$cs = $wpdb->get_results("SELECT area,name FROM srbc_camps",ARRAY_N);
 $camps=NULL;
 $specificQuery = false;
 //Add all the camps and areas together seperated by ~
@@ -36,7 +36,7 @@ foreach($camps as $camp){
 							FROM ((srbc_registration 
 							INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
 							INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-							WHERE srbc_camps.area=%s AND srbc_camps.camp_description=%s",$q[0],$q[1]));
+							WHERE srbc_camps.area=%s AND srbc_camps.name=%s",$q[0],$q[1]));
 	}
 }
 

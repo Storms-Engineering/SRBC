@@ -93,7 +93,7 @@
 					}
 					
 					
-					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->camp_description . $waitlist . '</button><div class="content">';
+					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $waitlist . '</button><div class="content">';
 					echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';
 					echo 'Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
 					echo 'Cabin: <input name="cabin" type="text" value="' . $registration->cabin . '"><br>';

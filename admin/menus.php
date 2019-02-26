@@ -69,7 +69,7 @@ function srbc_camper_management()
 		<option value="Winter Camp">
 		<?php
 		global $wpdb;
-		$camps = $wpdb->get_results("SELECT area,camp_description FROM srbc_camps",ARRAY_N);
+		$camps = $wpdb->get_results("SELECT area,name FROM srbc_camps",ARRAY_N);
 		for ($i = 0;$i< count($camps);$i++){
 			echo '<option value="' . $camps[$i][0] . '~' . $camps[$i][1] . '">';
 		}		
@@ -90,7 +90,7 @@ function listCamps($area)
 {
 	echo '<table style="width:100%;">
 		<tr>
-			<th>Camp Description</th>
+			<th>Camp</th>
 			<th>Start Date</th>
 			<th>Boys Registered</th>
 			<th>Girls Registered</th>
@@ -113,7 +113,7 @@ function listCamps($area)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
 										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id), ARRAY_N)[0][0]; 
-		echo '<tr onclick="openModal(' . $camp->camp_id . ')"><td>' . $camp->camp_description;
+		echo '<tr onclick="openModal(' . $camp->camp_id . ')"><td>' . $camp->name;
 		echo "</td><td>" . $camp->start_date . "</td>";
 		echo "<td>" . $male_registered . "</td>";
 		echo "<td>" . $female_registered . "</td>";
@@ -196,7 +196,7 @@ function srbc_camps_management()
 		</div>
 		
 		<div id="New" class="tabcontent">
-			Camp Area: <select class="inputs" name="area">
+			Area: <select class="inputs" name="area">
 					<option value="Lakeside">Lakeside</option>
 					<option value="Wagon Train">Wagon Train</option>
 					<option value="Wilderness">Wilderness</option>
@@ -205,9 +205,10 @@ function srbc_camps_management()
 					<option value="Fall Retreat">Fall Retreat</option>
 					<option value="Winter Camp">Winter Camp</option>
 					</select>
-			Camp Description: <input type="text" name="camp_description">
-			Camp Start Date:<input  type="date" name="start_date">
-			Camp End Date: <input  type="date" name="end_date"><br>
+			Camp: <input type="text" name="name">Start Date:<input  type="date" name="start_date">
+			End Date: <input  type="date" name="end_date"><br>
+			Description: <br><textarea id="camp_description" rows="2" cols="30"></textarea>
+			<br>
 			Grade Range (ex. 2nd to 3rd): <input type="text" name="grade_range"><br>
 			Cost: <input type="text" name="cost">
 			Horse Option cost (Put 0 if there is no horse option for this camp):<input type="text" name="horse_opt"><br>

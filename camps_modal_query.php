@@ -7,14 +7,14 @@
 	require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 	global $wpdb;
 	$camp = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id = %d",$_GET['camp_id'] ));
-	echo $camp->area . " " . $camp->camp_description;
+	echo $camp->area . " " . $camp->name;
 	echo "</h2></div>";
 	echo '<button class="save_button" style="float:right;" onclick="saveInfo(' . $camp->camp_id . ');">Save Info & Close</button>'
 	?>
 			<div class="modal-body">
 			<?php
 					echo 'Area: <input name="area" type="text" value="' . $camp->area . '">';
-					echo 'Description: <input name="camp_description" type="text" value="' . $camp->camp_description . '"><br>';
+					echo 'Description: <input name="name" type="text" value="' . $camp->name . '"><br>';
 					echo 'Start Date: <input name="start_date" type="date" value="' . $camp->start_date .'">';
 					echo 'End Date: <input type="date" name="end_date" value="' . $camp->end_date . '">';
 					echo 'Cost: $<input name="cost" type="text" value="' . $camp->cost . '">';

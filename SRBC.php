@@ -41,7 +41,7 @@ function srbc_install() {
     $sql = "CREATE TABLE IF NOT EXISTS srbc_camps (
 		camp_id INT AUTO_INCREMENT,
 		area TINYTEXT NOT NULL,
-		camp_description TEXT NOT NULL,
+		name TINYTEXT NOT NULL,
 		start_date DATE,
 		end_date DATE,
 		cost SMALLINT NOT NULL,
