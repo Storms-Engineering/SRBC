@@ -80,14 +80,12 @@ function postAjax(obj) {
 		var txt = this.responseText;1
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
 		//TODO CHANGE THIS CAUSE THIS DOESN"T WORK GREAT
-        if (!txt.includes("error") || !txt.includes("notice"))
-			showToast(txt);
-		else
-		{
-			showToast("Error occured, please let Website Administrator know");
+        if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
+			//showToast("Error occured, please let Website Administrator know");
 			document.getElementById("results").innerHTML = txt;
-		
 		}
+		else
+			showToast(txt);
     }
 };
 xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_registration.php", true);
@@ -136,9 +134,9 @@ function saveInfo()
 			else
 				info_child[inputs[j].name] = inputs[j].value;
 		}
-		info_child["amount_due"] = document.getElementById("amount_due").innerText;
-		info_child["payment_type"] = document.getElementById("payment_type").value;
-		info_child["fee_type"] = document.getElementById("fee_type").value;
+		info_child["amount_due"] = containers[i].getElementsByClassName("amount_due")[0].innerText;
+		info_child["payment_type"] = containers[i].getElementsByClassName("payment_type")[0].value;
+		info_child["fee_type"] = containers[i].getElementsByClassName("fee_type")[0].value;
 		info[registration_ids[i].innerText.toString()] = info_child;
 	}
 	
@@ -181,7 +179,7 @@ function calculate_totals()
 	var containers = document.getElementsByClassName("content");
 	//Get the corresponding registration ids
 	var campCosts = document.querySelectorAll("span[id=camp_cost]");
-	var amount_dues = document.querySelectorAll("span[id=amount_due]");
+	var amount_dues = document.querySelectorAll("span[class=amount_due]");
 	for (var i = 0; i < containers.length; ++i) 
 	{
 		var localAmountDue = -parseInt(campCosts[i].innerHTML); 

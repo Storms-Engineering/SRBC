@@ -105,14 +105,14 @@
 					echo '<span class="financial_info">Payed Check: $<input class="financial" name="payed_check" type="text" value="' . $registration->payed_check . '" readonly></span>';
 					echo '<span class="financial_info">Payed Cash: $<input class="financial" name="payed_cash" type="text" value="' . $registration->payed_cash . '" readonly></span>';
 					echo '<span class="financial_info">Payed Card: $<input class="financial" name="payed_card" type="text" value="' . $registration->payed_card . '" readonly></span>';
-					echo '<span class="financial_info"><h3>Amount Due: $<span id="amount_due">' . $registration->amount_due . '</span></h3></span>';
+					echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due">' . $registration->amount_due . '</span></h3></span>';
 					
 					
 					$checked = "";
 					if ($registration->checked_in == 1)
 						$checked = "checked";
 					echo '<h3 style="display:inline;">Camper checked in:</h3> <label class="switch"><input name="checked_in" type="checkbox" ' . $checked .'><span class="slider"></span></label>';
-					echo '<span><h2>Make a payment:</h3>Payment type: <select class="inputs" id="payment_type">
+					echo '<span><h2>Make a payment:</h3>Payment type: <select class="inputs payment_type">
 					<option value="none" id="default" selected></option>
 					<option value="card">Credit Card</option>
 					<option value="check">Check</option>
@@ -120,7 +120,7 @@
 					</select>
 					Amount: $<input type="text" name="payment_amt"><br>
 					Note (Check # or Last 4 of CC): <input type="text" name="note"></span>
-					<br>Fee Type<select class="inputs" id="fee_type">
+					<br>Fee Type<select class="inputs fee_type">
 					<option value="Lakeside" selected>Lakeside</option>
 					<option value="Wagon Train">Wagon Train</option>
 					<option value="Wilderness">Wilderness</option>

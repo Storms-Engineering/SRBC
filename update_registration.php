@@ -122,7 +122,7 @@ for($i = 0;$i < (count($obj)-1); $i++){
 			error_msg("Please notify admin that there was a problem with the payment type");
 			return;
 		}
-		$wpdb->update( 		
+		$wpdb->update( 
 		'srbc_registration', 
 		array( 
 			$paymentType => ($obj[$key]["payment_amt"] + $add),	

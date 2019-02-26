@@ -134,7 +134,7 @@ function srbc_overview_page()
     <div class="wrap">
         <h1><?= esc_html(get_admin_page_title()); ?></h1>
         <?php 
-		echo "Hello Peter";?>
+		echo "Hello Peter.... what does it look like? The shape in the glass?";?>
     </div>
     <?php
 }
