@@ -44,16 +44,16 @@ function postAjax(obj) {
     if (this.readyState == 4 && this.status == 200) {
 		var txt = this.responseText;1
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
-        //if (txt.includes("Saved")){
-		//	showToast(txt);
-		//	location.reload();
-		//}
-		//else
-		//{
+        if (txt.includes("Saved")){
+			showToast(txt);
+			location.reload();
+		}
+		else
+		{
 			showToast("Error occured, please let Website Administrator know");
 			document.getElementById("error").innerHTML = txt;
 			
-		//}
+		}
     }
 };
 xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_camps.php", true);
