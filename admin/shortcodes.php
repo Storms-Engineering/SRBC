@@ -639,7 +639,7 @@ function srbc_camps($atts){
 										WHERE camp_id=$camp->camp_id AND NOT waitlist=0", ARRAY_N)[0][0]; 
 		$finalText .=  ($camp->waiting_list_size - $waitlistsize) . "</td></tr>";
 		//Add a title to the description
-		$descriptions .= "<h3>".$camp->name.", ". date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)).", Grades ".$camp->grade_range."</h3>";
+		$descriptions .= "<h1>Camp Descriptions:</h1><h3>".$camp->name.", ". date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)).", Grades ".$camp->grade_range."</h3>";
 		$descriptions .= "<ul><li>".$camp->description."</li></ul>";
 	}
 	$finalText .=  "</table>*If a camp is full but there is still waitlist spots available then continue registration and it will put you on the waitlist";
