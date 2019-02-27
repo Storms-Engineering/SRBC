@@ -588,7 +588,7 @@ function srbc_camps($atts){
 	
 	$finalText = '<table style="width:100%;">
 				<tr style="background:#51d3ff;">
-				<th>Camp </th>
+				<th>Camp</th>
 				<th>Cost</th>
 				<th>Start/End Date</th>
 				<th>Grade Range</th>
@@ -597,12 +597,17 @@ function srbc_camps($atts){
 				</tr>';
 	global $wpdb;
 	$camps = $wpdb->get_results("SELECT * FROM srbc_camps WHERE area='$query' ORDER BY start_date");	
+	//If no camps then give a message
 	if (count($camps) == 0)
 		return "<h2>There is currently no camps scheduled for this area at this time.  Please check back later!</h2>";
+	
+	//Initialize variable for the html code after the table with descriptions of camps
+	$descriptions = NULL;
+	//Create the table of camps
 	foreach ($camps as $camp){
 		$finalText .=  '<tr><td>' . $camp->name . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
 		$finalText .=  "</td><td>$" . $camp->cost;
-		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j - Y",strtotime($camp->end_date));
+		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date));
 		$finalText .=  "</td><td>" . $camp->grade_range;
 		
 										
@@ -633,8 +638,12 @@ function srbc_camps($atts){
 										FROM srbc_registration
 										WHERE camp_id=$camp->camp_id AND NOT waitlist=0", ARRAY_N)[0][0]; 
 		$finalText .=  ($camp->waiting_list_size - $waitlistsize) . "</td></tr>";
+		//Add a title to the description
+		$descriptions .= "<h3>".$camp->name.", ". date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)).", Grades ".$camp->grade_range."</h3>";
+		$descriptions .= "<ul><li>".$camp->description."</li></ul>";
 	}
 	$finalText .=  "</table>*If a camp is full but there is still waitlist spots available then continue registration and it will put you on the waitlist";
+	$finalText .= "<br>$descriptions";
 	return $finalText;
 }
 

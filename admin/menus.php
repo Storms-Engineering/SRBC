@@ -207,7 +207,7 @@ function srbc_camps_management()
 					</select>
 			Camp: <input type="text" name="name">Start Date:<input  type="date" name="start_date">
 			End Date: <input  type="date" name="end_date"><br>
-			Description: <br><textarea id="camp_description" rows="2" cols="30"></textarea>
+			Description: <br><textarea class="description" rows="2" cols="30"></textarea>
 			<br>
 			Grade Range (ex. 2nd to 3rd): <input type="text" name="grade_range"><br>
 			Cost: <input type="text" name="cost">

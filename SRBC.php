@@ -2,7 +2,7 @@
 /*
 Plugin Name: SRBC
 Description: Solid Rock Bible Camp Plugin for Registration and Displaying Users
-Version: 0.6
+Version: 0.65
 */
 //Require
 require("admin/shortcodes.php");
@@ -42,6 +42,7 @@ function srbc_install() {
 		camp_id INT AUTO_INCREMENT,
 		area TINYTEXT NOT NULL,
 		name TINYTEXT NOT NULL,
+		description TEXT NOT NULL,
 		start_date DATE,
 		end_date DATE,
 		cost SMALLINT NOT NULL,

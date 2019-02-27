@@ -19,6 +19,7 @@ else if (isset($obj["camp_id"])) {
 	array( 
 		'area' => $obj["area"],	
 		'name' => $obj["name"],	
+		'description' => $obj["description"],	
 		'start_date' => $obj["start_date"],	
 		'end_date' => $obj["end_date"],	
 		'cost' => $obj["cost"],	
@@ -32,6 +33,7 @@ else if (isset($obj["camp_id"])) {
 	array( 'camp_id' => $obj["camp_id"]), 
 	array( 
 		'%s',	
+		'%s',
 		'%s',
 		'%s',	
 		'%s',	
@@ -55,6 +57,7 @@ $wpdb->insert(
 	array( 
 		'area' => $obj["area"],	
 		'name' => $obj["name"],	
+		'description' => $obj["description"],	
 		'start_date' => $obj["start_date"],	
 		'end_date' => $obj["end_date"],	
 		'cost' => $obj["cost"],	
@@ -67,6 +70,7 @@ $wpdb->insert(
 	), 
 	array( 
 		'%s',	
+		'%s',
 		'%s',
 		'%s',	
 		'%s',	
