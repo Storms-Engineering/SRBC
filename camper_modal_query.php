@@ -35,7 +35,13 @@
 				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_registration WHERE camper_id=%s",$camper->camper_id));
 				if (count($registrations) == 0)
 					echo "Camper is not signed up for any camps";
-			
+				//Create code for making a selection box
+				$camps = $wpdb->get_results("SELECT area,name,camp_id FROM srbc_camps");
+				$camp_selection = '<select id="~" name="camps"><option value="none">none</option>';
+				foreach ($camps as $camp){
+					$camp_selection .= '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
+				}
+				$camp_selection .= '</select>';
 				//Display each camp that they are registered for in a collapsible
 				foreach ($registrations as $registration)
 				{
@@ -91,13 +97,15 @@
 					{
 						$waitlist = ' <span style="color:red;">(Waitlisted)</span>';
 					}
-					
+					$horsefee = 0;
+					if ($registration->horse_opt > 0)
+						$horsefee = $camp->horse_opt;
 					
 					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $waitlist . '</button><div class="content">';
 					echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';
 					echo 'Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
 					echo 'Cabin: <input name="cabin" type="text" value="' . $registration->cabin . '"><br>';
-					echo '<span class="financial_info">(Put a zero here if you want to take them off the Horse Option) Horse Option Cost: $<input class="financial" name="horse_opt" type="text" value="' . $registration->horse_opt . '"></span>';
+					echo '<span class="financial_info">(Put a zero here if you want to take them off the Horse Option) Horse Option Cost: $<input class="financial" name="horse_opt" type="text" value="' . $horsefee . '"></span>';
 					echo '<span class="financial_info">Busride ' . $busride .  ': $<input class="financial" name="busride_cost" type="text" value="' . $busride_cost .'"></span>';
 					echo '<span class="financial_info">Discount: $<input class="financial" type="text" name="discount" value="' . $registration->discount . '"></span>';
 					echo '<span class="financial_info">Scholarship Amount: $<input class="financial" name="scholarship_amt" type="text" value="' . $registration->scholarship_amt . '"></span>';
@@ -147,7 +155,9 @@
 						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 					}
 					echo $finalText;
-					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button>	<button class="save_button" style="background:red" onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button></div>';
+					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button>	<button class="save_button" style="background:red" onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button>';
+					//Replace the id with a unique id for this option based on which registration
+					echo ' <button class="save_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>'.str_replace("~",$registration->registration_id,$camp_selection).'</div>';
 				}
 				//Show payment history:
 				$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM srbc_payments WHERE camper_id=%s",$camper->camper_id));

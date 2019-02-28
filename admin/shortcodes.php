@@ -605,7 +605,7 @@ function srbc_camps($atts){
 	$descriptions = NULL;
 	//Create the table of camps
 	foreach ($camps as $camp){
-		$finalText .=  '<tr><td>' . $camp->name . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
+		$finalText .=  '<tr><td>' . $camp->name . '		<a href="../register-for-a-camp/?campid='.$camp->camp_id .'">(Register)</a><a href="#'.$camp->camp_id.'"> (More Info)</a>';
 		$finalText .=  "</td><td>$" . $camp->cost;
 		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date));
 		$finalText .=  "</td><td>" . $camp->grade_range;
@@ -639,7 +639,7 @@ function srbc_camps($atts){
 										WHERE camp_id=$camp->camp_id AND NOT waitlist=0", ARRAY_N)[0][0]; 
 		$finalText .=  ($camp->waiting_list_size - $waitlistsize) . "</td></tr>";
 		//Add a title to the description
-		$descriptions .= "<h3>".$camp->name.", ". date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)).", Grades ".$camp->grade_range."</h3>";
+		$descriptions .= "<h3 id=".$camp->camp_id.">".$camp->name.", ". date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)).", Grades ".$camp->grade_range."</h3>";
 		$descriptions .= "<ul><li>".$camp->description."</li></ul>";
 	}
 	$finalText .=  "</table>*If a camp is full but there is still waitlist spots available then continue registration and it will put you on the waitlist";

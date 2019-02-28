@@ -2,7 +2,7 @@
 /*
 Plugin Name: SRBC
 Description: Solid Rock Bible Camp Plugin for Registration and Displaying Users
-Version: 0.65
+Version: 0.66
 */
 //Require
 require("admin/shortcodes.php");
@@ -96,7 +96,7 @@ function srbc_install() {
 	dbDelta( $sql );
 	
 	
-	//Database for encrypted cc
+	//Database keeping track of payments
 	$sql = "CREATE TABLE IF NOT EXISTS srbc_payments (
 		payment_id INT AUTO_INCREMENT,
 		camp_id INT NOT NULL,
@@ -105,6 +105,7 @@ function srbc_install() {
 		payment_amt SMALLINT NOT NULL,
 		payment_date TINYTEXT,
 		note TINYTEXT,
+		fee_type TINYTEXT,
 		PRIMARY KEY (payment_id)
 		)  ENGINE=INNODB;";
 

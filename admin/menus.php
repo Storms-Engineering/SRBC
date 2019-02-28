@@ -133,9 +133,22 @@ function srbc_overview_page()
     ?>
     <div class="wrap">
         <h1><?= esc_html(get_admin_page_title()); ?></h1>
-        <?php 
-		echo "Hello Peter.... what does it look like? The shape in the glass?";?>
+        <h2 id="typeity"></h2>
     </div>
+	<script>
+	var i = 0;
+	var txt = 'Hello Peter.... what does it look like? The shape in the glass?'; /* The text */
+	var speed = 80; /* The speed/duration of the effect in milliseconds */
+
+	function typeWriter() {
+	  if (i < txt.length) {
+		document.getElementById("typeity").innerHTML += txt.charAt(i);
+		i++;
+		setTimeout(typeWriter, speed);
+	  }
+	}
+	typeWriter();
+	</script>
     <?php
 }
 function srbc_camps_management()

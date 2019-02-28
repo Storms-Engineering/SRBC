@@ -92,7 +92,12 @@ xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_registration.php", true)
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 xmlhttp.send("x=" + encodeURIComponent(param));
 }
-
+function changeCamp(r_id,camper_id,old_id){
+	var info = {"change_to_id" : document.getElementById(r_id).value, "registration_id" : r_id,"camper_id":camper_id,"old_id":old_id};
+	console.log(info);
+	postAjax(info);
+	setTimeout(function(){ closeModal(); openModal(camper_id); }, 500);
+}
 
 function saveInfo()
 {
@@ -142,7 +147,11 @@ function saveInfo()
 	
 	console.log(info);
 	postAjax(info);
-	document.getElementById("default").selected = true; 
+	var selects = document.querySelectorAll("[id=defaults]");
+	for (var i=0;i<selects.length;i++){
+		selects[i].selected = true;
+	}
+	//document.getElementById("default").selected = true; 
 }
 
 //Add event listeners to all the fields we want to watch for calculate_totals
