@@ -31,6 +31,13 @@ if (isset($obj["deleteid"]))
 }
 else if(isset($obj["registration_id"])){
 	//Change registration to another camp
+	
+	//Check if they didn't actually change the camp
+	if ($obj["change_to_id"] == "none"){
+		echo "Please specify a camp to change to!";
+		return;
+	}
+	
 	$wpdb->update( 
 		'srbc_registration', 
 		array( 
