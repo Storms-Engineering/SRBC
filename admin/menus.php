@@ -81,8 +81,8 @@ function srbc_camper_management()
 		<!-- The toast notification from w3schools -->
 	<div id="snackbar"></div>
     </div>
-	
 	<script src="../wp-content/plugins/SRBC/admin/camper_management.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/camper_modal.js"></script>
     <?php
 }
 
@@ -259,22 +259,9 @@ function srbc_camp_reports()
 			}
 			
 		}
-		table, th, td
-		{
-			border: 1px solid black;
-			border-collapse: collapse;
-			background:white;
-		}
-		th
-		{
-			background-color:#5cb85c;
-			font-size:large;
-		}
-		td,th
-		{
-			padding:5px;
-		}
+		
 	</style>
+	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/camper_management.css">
 	<div id="dontprint">
 	<h1>Reports</h1>
 	<button style="float:right;" onclick="window.print()">Print Report</button>
@@ -306,7 +293,11 @@ function srbc_camp_reports()
 	</div>
 	<br><br>
 	<div id="results"></div>
+	<?php modalSetup(); ?>
+	<div id="snackbar"></div>
 	<script src="../wp-content/plugins/SRBC/admin/reports.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/camper_modal.js"></script>
+	
 <?php
 }
 ?>

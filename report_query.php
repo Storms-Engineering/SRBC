@@ -17,8 +17,10 @@ $query = "SELECT *
 		
 $values = array();
 //Setup table and then we will add headers based on the query
-echo "<table><tr><th>Name</th>";
 
+echo '<table id="report_table"><tr><th onclick="sortTable(0)">Name</th>';
+//Keeps track of how many sort headers we have
+$sortnum = 1;
 if ($area == "") {
 	$query .= "srbc_camps.area LIKE '%' ";
 }
@@ -29,16 +31,16 @@ else {
 
 if ($buslist != "all"){
 	$query .= "AND srbc_registration.busride='$buslist' ";
-	echo "<th>Busride</th>";
+	echo '<th onclick="sortTable('.$sortnum.')">Busride</th>';
 }
 
 if ($scholarship == "true"){
 	$query .= "AND NOT srbc_registration.scholarship_amt=0 ";
-	echo "<th>Scholarship Type</th><th>Scholarship Amount</th>";
+	echo '<th onclick="sortTable('.$sortnum.')>Scholarship Type</th><th onclick="sortTable('.$sortnum.')">Scholarship Amount</th>';
 }
 if ($discount == "true"){
 	$query .= "AND NOT srbc_registration.discount=0 ";
-	echo "<th>Discount</th>";
+	echo '<th onclick="sortTable('.$sortnum.')">Discount</th>';
 }
 if ($start_date != "" && $end_date != ""){
 	$query .= "AND srbc_camps.start_date BETWEEN '%s' AND '%s' ";
@@ -63,7 +65,7 @@ $information = $wpdb->get_results(
 	
 foreach ($information as $info){
 	//Start new row and put in name since that always happens
-	echo "<tr><td>" . $info->camper_first_name ." " . $info->camper_last_name . "</td>";
+	echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_first_name ." " . $info->camper_last_name . "</td>";
 
 	if ($buslist == "true"){
 		echo "<td>" . $info->busride . "</td>";
