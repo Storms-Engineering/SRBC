@@ -10,7 +10,7 @@ function resendEmail(r_id){
 	}
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-		document.getElementById("error").innerHTML = (this.responseText);
+		showToast(this.responseText);
 		}
 	};
 	xhttp.open("GET", "/wp-content/plugins/SRBC/resend_email.php?r_id="+r_id, true);
