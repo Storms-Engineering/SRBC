@@ -13,6 +13,16 @@ function srbc_credit_cards(){
 	word-wrap: break-word;
 	max-width: 800px;
 	}
+	@media print
+	{		
+		td:nth-child(6) {
+		   display: none;
+		}
+		th:nth-child(6) {
+		   display: none;
+		}
+			
+	}
 	</style>
 	<script src="../wp-content/plugins/SRBC/JSEncrypt/jsencrypt.min.js"></script>
 	<script src="../wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
