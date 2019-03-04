@@ -79,18 +79,6 @@ function collapsible_stuff(){
 	  });
 	}
 }
-// Get the input field
-var input = document.getElementById("search");
-
-// Execute a function when the user releases a key on the keyboard
-input.addEventListener("keydown", function(event) {
-  // Number 13 is the "Enter" key on the keyboard
-  if (event.keyCode === 13) {
-	// Trigger the button element with a click
-	document.getElementById("search_button").click();
-  }
-}); 
-
 
 function postAjax(obj) {
 	param = JSON.stringify(obj);
