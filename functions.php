@@ -46,20 +46,6 @@ function sendMail($to,$subject,$msg,$attachment = ""){
 	
 }
 
-function resendConfirmationEmail($registration_id){
-	global $wpdb;
-	$camper = $wpdb->get_results($wpdb->prepare( "SELECT *
-		FROM (srbc_registration 
-		INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id) WHERE registration_id=%d", $registration_id)); 
-		;
-			
-	$message = "Hi ". $parent_first_name . ",<br><br>Thanks for signing up " . $camper_first_name . " for " . $_POST["camp_desc"] . "!  Camp starts " .date("D M j",strtotime($camp->start_date)) . " and ends " . 
-	date("D M j",strtotime($camp->end_date)) . "!  If you have any questions feel free to check ". 
-	'our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.  If you want to know what your child should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>!'.
-	"<br> One last thing is that we ask that you print out this health form and fill it out to speed up the registration process.<br>Thanks!<br> -Solid Rock Bible Camp";
-	sendMail($email,"Thank you for signing up for a Solid Rock Camp!",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');	
-}
-
 function modalSetup(){	
 	echo '<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/modal.css">
 			

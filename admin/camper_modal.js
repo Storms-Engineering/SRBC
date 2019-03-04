@@ -1,3 +1,23 @@
+//Resend the confirmation email
+function resendEmail(r_id){
+	var xhttp;
+	if (window.XMLHttpRequest) {
+		// code for modern browsers
+		xhttp = new XMLHttpRequest();
+		} else {
+		// code for IE6, IE5
+		xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		document.getElementById("error").innerHTML = (this.responseText);
+		}
+	};
+	xhttp.open("GET", "/wp-content/plugins/SRBC/resend_email.php?r_id="+r_id, true);
+	xhttp.send();
+	
+}
+
 //Custom Modal Function
 function openModal(cmpr_id) {
 	var xhttp;

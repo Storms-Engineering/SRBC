@@ -80,6 +80,7 @@ function srbc_camper_management()
 		<?php modalSetup() ?>
 		<!-- The toast notification from w3schools -->
 	<div id="snackbar"></div>
+	<div id="error"></div>
     </div>
 	<script src="../wp-content/plugins/SRBC/admin/camper_management.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/camper_modal.js"></script>

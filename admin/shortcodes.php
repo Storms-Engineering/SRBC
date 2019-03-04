@@ -303,16 +303,10 @@ function srbc_registration( $atts )
 	Amount to pay: $ <input type="number" name="cc_amount"><br>
 		<br>		
 		Name on Credit Card: <input type="text" name="cc_name">
-		Credit Card Billing Zip <input style="width:100px;" type="text" name="cc_zipcode">
-		Credit Card Type:
-		<select name="cc_type" size="1">
-			<option value="Visa" selected="">Visa</option>
-			<option value="MasterCard">MasterCard</option>
-			<option value="Discover">Discover</option>
-		</select><br>
-		Credit Card # <input type="text" id="cc_number" name="cc_number">
-		Credit Card Verification Code: <input type="text" name="cc_vcode" style="width:5%">
-		Credit Card Expiration: <select name="cc_month" size="1">
+		Billing Zip <input style="width:100px;" type="text" name="cc_zipcode">
+		Credit Card # <input type="text" id="cc_number" name="cc_number"><br>
+		Verification Code: <input type="text" name="cc_vcode" style="width:5%">
+		Expiration: <select name="cc_month" size="1">
 									<option value="">Pick</option>
 									<option value="01">01</option>
 									<option value="02">02</option>
@@ -539,7 +533,7 @@ function srbc_registration_complete($atts)
 		array_splice($cc_number,9,0,"-");
 		array_splice($cc_number,14,0,"-");
 		//Append all the data together so we only have to encrypt one string
-		$data = $_POST["cc_name"] . "	" . $_POST["cc_type"] . "	" . implode($cc_number) . "	" . $_POST["cc_month"]
+		$data = $_POST["cc_name"] .	"	" . implode($cc_number) . "	" . $_POST["cc_month"]
 		. "/" . $_POST["cc_year"] . "	" . $_POST["cc_vcode"] . "	" . $_POST["cc_zipcode"];
 		if ($waitlistsize > 0)
 		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it
