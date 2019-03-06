@@ -9,13 +9,16 @@ onmessage = function(e) {
 	  var encrypted_data = e.data[2];
 	  
 	  
-	  decPKHex = KEYUTIL.getDecryptedKeyHex(data2, passphrase) 
+	  decPKHex = KEYUTIL.getDecryptedKeyHex(key, password) 
       // Convert to PEM format for JSEncrypt
 	  decPKPEM = KJUR.asn1.ASN1Util.getPEMStringFromHex(decPKHex);
 	  // Decrypt the tokenized data
 		
 	  crypt.setPrivateKey(decPKPEM);
-	  encrypted_data.map(function(text) {
-			postMessage(crypt.decrypt(text));
-		});
+	  j = 1;
+	  for (i = 0; i < encrypted_data.length; i++){
+			postMessage([crypt.decrypt(encrypted_data[i]),j]);
+			j+=6;
+	}
+	  
 }

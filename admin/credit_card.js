@@ -44,19 +44,18 @@ async function decryptCCs(data2) {
 		alert("Bad password");
 		location.reload();
 	}
-	var progressBar = document.getElementById("progress");
+	progressBar = document.getElementById("progress");
 	//Testing so that the broswer doesn't freeze
 	//TODO: this still isn't quite working
 	//var wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-	var encrypted_text = [];
-	var myWorker = new Worker('../wp-content/plugins/SRBC/admin/decrypter.js');
-	var i = 1;
+	encrypted_text = [];
+	myWorker = new Worker('../wp-content/plugins/SRBC/admin/decrypter.js');
 	myWorker.onmessage = function(e) {
 			console.log('Message received from worker');
 			console.log(e.data);
-			cells[i].innerText = e.data[0];
-		    i+=6;
-			progressBar.value = (i/cells.length)*100;
+			cells = document.getElementsByTagName("td")
+			cells[e.data[1]].innerText = e.data[0];
+			progressBar.value = (e.data[1]/cells.length)*100;
 		}
 	for (i = 1; i < cells.length; i+=6){
 		
