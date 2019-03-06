@@ -129,7 +129,8 @@
 					Amount: $<input type="text" name="payment_amt"><br>
 					Note (Check # or Last 4 of CC): <input type="text" name="note"></span>
 					<br>Fee Type<select class="inputs fee_type">
-					<option value="Lakeside" selected>Lakeside</option>
+					<option value="none" selected>None</option>
+					<option value="Lakeside" >Lakeside</option>
 					<option value="Wagon Train">Wagon Train</option>
 					<option value="Wilderness">Wilderness</option>
 					<option value="Horse Fee">Horse Fee</option>

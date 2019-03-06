@@ -35,27 +35,42 @@ function drop(ev) {
       })(file);
 	  reader.readAsText(file);
 }
+var crypt = new JSEncrypt();
 async function decryptCCs(data2) {
 	var passphrase = document.getElementById("pwd").value;
-	decPKHex = KEYUTIL.getDecryptedKeyHex(data2, passphrase) 
-	// Convert to PEM format for JSEncrypt
-	decPKPEM = KJUR.asn1.ASN1Util.getPEMStringFromHex(decPKHex);
-	// Decrypt the tokenized data
-	var crypt = new JSEncrypt();
-	crypt.setPrivateKey(decPKPEM);
+	
 	var cells = document.getElementsByTagName("td")
 	if (crypt.decrypt(cells[0].innerText) == false){
 		alert("Bad password");
 		location.reload();
 	}
 	var progressBar = document.getElementById("progress");
+	//Testing so that the broswer doesn't freeze
+	//TODO: this still isn't quite working
+	//var wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+	var encrypted_text = [];
+	var myWorker = new Worker('../wp-content/plugins/SRBC/admin/decrypter.js');
+	var i = 1;
+	myWorker.onmessage = function(e) {
+			console.log('Message received from worker');
+			console.log(e.data);
+			cells[i].innerText = e.data[0];
+		    i+=6;
+			progressBar.value = (i/cells.length)*100;
+		}
 	for (i = 1; i < cells.length; i+=6){
-		cells[i].innerText = await decrypt(crypt,cells[i].innerText);
-		progressBar.value = (i/cells.length);
+		
+		//cells[i].innerText = await decrypt(cells[i].innerText);
+		encrypted_text.push(cells[i].innerText);
+		//progressBar.value = (i/cells.length);
+		//encrypted_text.push(cells[i].innerText);
 	}
+	myWorker.postMessage([data2,passphrase,encrypted_text]);
+	//encrypted_text.reduce((p, i) => p.then(() => decrypt(i)).then(() => wait(5)),
+   //              Promise.resolve());
 	progressBar.value = 100;
 
 }
-async function decrypt(crypt,text) {
+async function decrypt(text) {
   return crypt.decrypt(text);
 }

@@ -89,7 +89,7 @@ function postAjax(obj) {
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
 		//TODO CHANGE THIS CAUSE THIS DOESN"T WORK GREAT
         if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
-			//showToast("Error occured, please let Website Administrator know");
+			showToast("Error occured, please let Website Administrator know");
 			document.getElementById("results").innerHTML = txt;
 		}
 		else
@@ -155,7 +155,7 @@ function saveInfo()
 	
 	console.log(info);
 	postAjax(info);
-	var selects = document.querySelectorAll("[id=defaults]");
+	var selects = document.querySelectorAll("option[id=default]");
 	for (var i=0;i<selects.length;i++){
 		selects[i].selected = true;
 	}

@@ -1,7 +1,10 @@
 <?php
 //Makes camp edits or deletes or creates new ones them
 header("Content-Type: application/json; charset=UTF-8");
+echo "DATA" . $_POST["x"];
 $obj = json_decode( stripslashes($_POST["x"]), true);
+echo "DATA2:";
+print_r($obj);
 //Database shtuff
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 global $wpdb;

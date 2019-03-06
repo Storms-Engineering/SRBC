@@ -83,6 +83,7 @@ function srbc_camp_search($atts){
 		array_push($values,$_GET['start_date']);
 		array_push($values,$_GET['end_date']);
 	}
+	//TODO: Add search functionality for grades... But might require database restructering
 	global $wpdb;
 	$camps = $wpdb->get_results(
 	$wpdb->prepare( $query, $values));
@@ -634,7 +635,7 @@ function srbc_camps($atts){
 		$finalText .=  ($camp->waiting_list_size - $waitlistsize) . "</td></tr>";
 		//Add a title to the description
 		$descriptions .= "<h3 id=".$camp->camp_id.">".$camp->name.", ". date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)).", Grades ".$camp->grade_range."</h3>";
-		$descriptions .= "<ul><li>".$camp->description."</li></ul>";
+		$descriptions .= "<ul><li>". urldecode($camp->description) ."</li></ul>";
 	}
 	$finalText .=  "</table>*If a camp is full but there is still waitlist spots available then continue registration and it will put you on the waitlist";
 	$finalText .= "<h1>Camp Descriptions:</h1><br>$descriptions";

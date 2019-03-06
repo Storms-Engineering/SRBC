@@ -44,16 +44,12 @@ function postAjax(obj) {
     if (this.readyState == 4 && this.status == 200) {
 		var txt = this.responseText;1
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
-        if (txt.includes("Saved")){
-			showToast(txt);
-			location.reload();
-		}
-		else
-		{
+        if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
 			showToast("Error occured, please let Website Administrator know");
 			document.getElementById("error").innerHTML = txt;
-			
 		}
+		else
+			showToast(txt);
     }
 };
 xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_camps.php", true);
@@ -70,7 +66,7 @@ function saveInfo(cmp_id)
 	var container = document.getElementsByClassName("modal-body");
 	// Find its child `input` elements
 	var inputs = container[0].getElementsByTagName('input');
-	info["description"] = container[0].getElementsByClassName("description")[0].value;
+	info["description"] = encodeURIComponent(container[0].getElementsByClassName("description")[0].value);
 	for (var j = 0; j < inputs.length; ++j) {
 			info[inputs[j].name] = inputs[j].value;
 	}
