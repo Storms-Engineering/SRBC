@@ -66,7 +66,7 @@ function saveInfo(cmp_id)
 	var container = document.getElementsByClassName("modal-body");
 	// Find its child `input` elements
 	var inputs = container[0].getElementsByTagName('input');
-	info["description"] = encodeURIComponent(container[0].getElementsByClassName("description")[0].value);
+	info["description"] = encodeURI(container[0].getElementsByClassName("description")[0].value);
 	for (var j = 0; j < inputs.length; ++j) {
 			info[inputs[j].name] = inputs[j].value;
 	}

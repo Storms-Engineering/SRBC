@@ -15,7 +15,9 @@
 			<?php
 					echo 'Area: <input name="area" type="text" value="' . $camp->area . '">';
 					echo 'Camp: <input name="name" type="text" value="' . $camp->name . '"><br>';
-					echo 'Description: <textarea class="description" rows="2" cols="30">' . $camp->description . '</textarea>';
+					//We need this url decode so that we can pass on data to the server and qoutes and spaces don't get all messed up.
+					//We need to decode it here so it isn't double encoded when they save it again and so they can read it properly
+					echo 'Description: <textarea class="description" rows="2" cols="30">' . rawurldecode($camp->description) . '</textarea>';
 					echo 'Start Date: <input name="start_date" type="date" value="' . $camp->start_date .'">';
 					echo 'End Date: <input type="date" name="end_date" value="' . $camp->end_date . '">';
 					echo 'Cost: $<input name="cost" type="text" value="' . $camp->cost . '">';
