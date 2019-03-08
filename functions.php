@@ -29,6 +29,7 @@ function sendMail($to,$subject,$msg,$attachment = ""){
 	try {
 
 		//Recipients
+		$mail->CharSet  = "UTF-8";
 		$mail->setFrom('info@solidrockbiblecamp.com', 'Solid Rock Bible Camp');
 		$mail->addAddress($to);     // Add a recipient
 		//Attachments
@@ -37,7 +38,7 @@ function sendMail($to,$subject,$msg,$attachment = ""){
 		//Content
 		$mail->isHTML(true);                                  // Set email format to HTML
 		$mail->Subject = $subject;
-		$mail->Body    = $msg;
+		$mail->Body    = stripslashes($msg);
 
 		$mail->send();
 	} catch (Exception $e) {

@@ -4,6 +4,7 @@
 -------------------------------------------------------------------------
 SHORTCODE HOOKS
 */
+//Email about volunteering
 function srbc_volunteer_contact_form_email($atts){
 	if (!isset($_POST['contact_name'])){
 		//They put nothing in so just exit.
@@ -123,7 +124,7 @@ function srbc_application_complete($atts){
    $i = 0;
    //Loop through all of the parameters and join them together in one big text block
    foreach ($_POST as $val){
-	   //Position is a nested array so we spit out stuff
+	   //Position is a nested array of values
 	   if ($keys[$i] == "Position"){
 		   $body .= $keys[$i] . ": ";
 			foreach ($val as $v){
@@ -133,7 +134,7 @@ function srbc_application_complete($atts){
 			$body .= "<br>";
 	   }
 	   else
-			$body .= $keys[$i] . ": " . $val . "<br>";
+			$body .= $keys[$i] . ": " . $val . "<br><br>";
 	   $i++;
    }
    //Email applicant
