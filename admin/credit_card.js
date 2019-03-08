@@ -51,11 +51,11 @@ async function decryptCCs(data2) {
 	encrypted_text = [];
 	myWorker = new Worker('../wp-content/plugins/SRBC/admin/decrypter.js');
 	myWorker.onmessage = function(e) {
-			console.log('Message received from worker');
-			console.log(e.data);
 			cells = document.getElementsByTagName("td")
 			cells[e.data[1]].innerText = e.data[0];
-			progressBar.value = (e.data[1]/cells.length)*100;
+			progressBar.value = (e.data[1]/cells.length);
+			if (cells.length == (e.data[1] + 5))
+				progressBar.value = 100;
 		}
 	for (i = 1; i < cells.length; i+=6){
 		
@@ -67,7 +67,6 @@ async function decryptCCs(data2) {
 	myWorker.postMessage([data2,passphrase,encrypted_text]);
 	//encrypted_text.reduce((p, i) => p.then(() => decrypt(i)).then(() => wait(5)),
    //              Promise.resolve());
-	progressBar.value = 100;
 
 }
 async function decrypt(text) {
