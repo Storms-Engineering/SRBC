@@ -13,7 +13,7 @@ function srbc_credit_cards(){
 	word-wrap: break-word;
 	max-width: 800px;
 	}
-	@media print
+	/*@media print
 	{		
 		td:nth-child(6) {
 		   display: none;
@@ -22,7 +22,7 @@ function srbc_credit_cards(){
 		   display: none;
 		}
 			
-	}
+	}*/
 	</style>
 	<script src="../wp-content/plugins/SRBC/JSEncrypt/jsencrypt.min.js"></script>
 	<script src="../wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
@@ -67,7 +67,7 @@ function srbc_camper_management()
     <div class="wrap">
         <h1>Camper Management</h1>
 		<br>
-		Search By First/Last Name<input id="search" list="suggestions" type="search"> 
+		Search <input id="search" style="width:250px;" list="suggestions" type="search"> 
 		<input id="search_button" type="submit" onclick="search();">
 		<datalist id="suggestions">
 		<option value="Lakeside">
@@ -233,8 +233,8 @@ function srbc_camps_management()
 			Description: <br><textarea class="description" rows="2" cols="30"></textarea>
 			<br>
 			Grade Range (ex. 2nd to 3rd): <input type="text" name="grade_range"><br>
-			Cost: <input type="text" name="cost">
-			Horse Option cost (Put 0 if there is no horse option for this camp):<input type="text" name="horse_opt"><br>
+			Cost(Must be whole number): $<input type="text" name="cost">
+			Horse Option cost (Put 0 if there is no horse option for this camp): $<input type="text" name="horse_opt"><br>
 			Waiting List Size:<input type="text" name="waiting_list_size"><br>
 			Number of Boy Campers allowed to Register:<input type="text" name="boy_registration_size"><br>
 			Number of Girl Campers allowed to Register:<input type="text" name="girl_registration_size"><br>
@@ -265,7 +265,7 @@ function srbc_camp_reports()
 		{		
 			#adminmenuwrap,#dontprint,#footer-thankyou,#footer-upgrade
 			{
-				visibility:hidden;
+				display:none;
 			}
 			
 		}
@@ -298,7 +298,7 @@ function srbc_camp_reports()
 		Start Date: <input id="start_date" type="date">
 		End Date: <input id="end_date" type="date">
 		Camper didn't check in <input id="not_checked_in" type="checkbox">
-		Hasn't paid in full <input id="not_payed" type="checkbox">
+		<!--These don't work correctly I believe: Hasn't paid in full <input id="not_payed" type="checkbox">-->
 		<button onclick="generateReport();">Generate Report</button>		
 	</div>
 	<br><br>

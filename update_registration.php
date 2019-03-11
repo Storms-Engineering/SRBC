@@ -2,6 +2,8 @@
 //Makes registration edits to campers
 header("Content-Type: application/json; charset=UTF-8");
 $obj = json_decode( stripslashes($_POST["x"]), true);
+echo "Error:";
+print_r($obj);
 $arrayKeys = array_keys($obj);
 //Database shtuff
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
@@ -118,6 +120,8 @@ else {
 			$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
 			//Get the current date time
 			$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
+			echo "PAYMENT:" . $obj[$key]["payment_amt"];
+			echo "PAYMENT2:" . floatval($obj[$key]["payment_amt"]);
 			$wpdb->insert(
 					'srbc_payments', 
 					array( 
@@ -135,7 +139,7 @@ else {
 						'%d', 
 						'%d',
 						'%s',
-						'%d',
+						'%f',
 						'%s',
 						'%s',
 						'%s'				
@@ -189,16 +193,13 @@ else {
 			array( 
 				'%s',	
 				'%s',
+				'%d',	
+				'%f',	
+				'%f',
+				'%f',
 				'%s',	
-				'%s',	
+				'%f',
 				'%d',
-				'%d',
-				'%s',	
-				'%d',
-				'%d',
-				'%d',
-				'%d',
-				'%d'
 			), 
 			array( '%d' ) 
 		);

@@ -562,7 +562,7 @@ function srbc_registration_complete($atts)
 			array( 
 				'%d',
 				'%s', 
-				'%d',
+				'%f',
 				'%s',
 				'%s',
 				'%s'

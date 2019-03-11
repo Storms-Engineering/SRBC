@@ -7,7 +7,8 @@ $discount = $_GET['discount'];
 $start_date = $_GET['start_date'];
 $end_date = $_GET['end_date'];
 $not_checked_in = $_GET['not_checked_in'];
-$not_payed = $_GET['not_payed'];
+//TODO: fix not payed code, probably haven't updated since payment database was added 
+$not_payed = NULL;//$_GET['not_payed'];
 
 //Combining all of the databases so that we can pull all the data that we need from it
 $query = "SELECT *
@@ -18,7 +19,7 @@ $query = "SELECT *
 $values = array();
 //Setup table and then we will add headers based on the query
 
-echo '<table id="report_table"><tr><th onclick="sortTable(0)">Name</th>';
+echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(0)">First Name</th>';
 //Keeps track of how many sort headers we have
 $sortnum = 1;
 if ($area == "") {
@@ -36,7 +37,7 @@ if ($buslist != "all"){
 
 if ($scholarship == "true"){
 	$query .= "AND NOT srbc_registration.scholarship_amt=0 ";
-	echo '<th onclick="sortTable('.$sortnum.')>Scholarship Type</th><th onclick="sortTable('.$sortnum.')">Scholarship Amount</th>';
+	echo '<th onclick="sortTable('.$sortnum.')">Scholarship Type</th><th onclick="sortTable('.$sortnum.')">Scholarship Amount</th>';
 }
 if ($discount == "true"){
 	$query .= "AND NOT srbc_registration.discount=0 ";
@@ -65,16 +66,16 @@ $information = $wpdb->get_results(
 	
 foreach ($information as $info){
 	//Start new row and put in name since that always happens
-	echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_first_name ." " . $info->camper_last_name . "</td>";
+	echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name . "</td>";
 
 	if ($buslist == "true"){
 		echo "<td>" . $info->busride . "</td>";
 	}
 	if ($scholarship == "true"){
-		echo "<td>" . $info->scholarship_type . "</td><td>" . $info->scholarship_amt . "</td>";
+		echo "<td>" . $info->scholarship_type . "</td><td>$" . $info->scholarship_amt . "</td>";
 	}
 	if ($discount == "true"){
-		echo "<td>" . $info->discount . "</td>";
+		echo "<td>$" . $info->discount . "</td>";
 	}
 	
 }

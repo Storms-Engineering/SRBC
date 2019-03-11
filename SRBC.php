@@ -2,7 +2,7 @@
 /*
 Plugin Name: SRBC
 Description: Solid Rock Bible Camp Plugin for Registration and Displaying Users
-Version: 0.66
+Version: 0.7
 */
 //Require
 require("admin/shortcodes.php");
@@ -68,13 +68,13 @@ function srbc_install() {
 		cabin TINYTEXT,
 		horse_opt TINYINT NOT NULL,
 		busride TINYTEXT NOT NULL,
-		discount SMALLINT,
-		scholarship_amt SMALLINT ,
+		discount FLOAT(6,2),
+		scholarship_amt FLOAT(6,2) ,
 		scholarship_type TINYTEXT,
-		payed_check SMALLINT,
-		payed_cash SMALLINT,
-		payed_card SMALLINT,
-		amount_due SMALLINT NOT NULL,
+		payed_check FLOAT(6,2),
+		payed_cash FLOAT(6,2),
+		payed_card FLOAT(6,2),
+		amount_due FLOAT(6,2) NOT NULL,
 		waitlist TINYTEXT NOT NULL,		
 		checked_in TINYINT NOT NULL,
 		PRIMARY KEY (registration_id)
@@ -86,7 +86,7 @@ function srbc_install() {
 	$sql = "CREATE TABLE IF NOT EXISTS srbc_cc (
 		cc_id INT AUTO_INCREMENT,
 		data TEXT NOT NULL,
-		amount SMALLINT NOT NULL,
+		amount FLOAT(6,2) NOT NULL,
 		camper_name TINYTEXT NOT NULL,
 		camp TINYTEXT NOT NULL,
 		payment_date TINYTEXT NOT NULL,
@@ -102,7 +102,7 @@ function srbc_install() {
 		camp_id INT NOT NULL,
 		camper_id INT NOT NULL,
 		payment_type TINYTEXT NOT NULL,
-		payment_amt SMALLINT NOT NULL,
+		payment_amt FLOAT(6,2) NOT NULL,
 		payment_date TINYTEXT,
 		note TINYTEXT,
 		fee_type TINYTEXT,

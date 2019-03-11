@@ -150,6 +150,12 @@ function saveInfo()
 		info_child["amount_due"] = containers[i].getElementsByClassName("amount_due")[0].innerText;
 		info_child["payment_type"] = containers[i].getElementsByClassName("payment_type")[0].value;
 		info_child["fee_type"] = containers[i].getElementsByClassName("fee_type")[0].value;
+		//Make sure they enetered a fee type but exclude payments from camps that they aren't enetering information for
+		if (info_child["fee_type"] == "none" && info_child["payment_type"] != "none")
+		{
+			alert("Please choose a fee type!");
+			return;
+		}
 		info[registration_ids[i].innerText.toString()] = info_child;
 	}
 	
@@ -159,7 +165,6 @@ function saveInfo()
 	for (var i=0;i<selects.length;i++){
 		selects[i].selected = true;
 	}
-	//document.getElementById("default").selected = true; 
 }
 
 //Add event listeners to all the fields we want to watch for calculate_totals
@@ -199,7 +204,7 @@ function calculate_totals()
 	var amount_dues = document.querySelectorAll("span[class=amount_due]");
 	for (var i = 0; i < containers.length; ++i) 
 	{
-		var localAmountDue = -parseInt(campCosts[i].innerHTML); 
+		var localAmountDue = -parseFloat(campCosts[i].innerHTML); 
 		// Find its child `input` elements
 		var inputs = containers[i].getElementsByTagName('input');
 		for (var j = 0; j < inputs.length; ++j) {
@@ -209,7 +214,7 @@ function calculate_totals()
 				inputs[j].name != "note" && inputs[j].value != "")
 			{				
 				if(inputs[j].name == "horse_opt")
-					localAmountDue -= parseInt(inputs[j].value);
+					localAmountDue -= parseFloat(inputs[j].value);
 				else if (inputs[j].name == "busride_cost")
 				{
 					var busride = document.querySelectorAll("select[name=busride]")[i].value;
@@ -219,13 +224,13 @@ function calculate_totals()
 						inputs[j].value = 60;
 					else
 						inputs[j].value = 35;
-					localAmountDue -= parseInt(inputs[j].value);
+					localAmountDue -= parseFloat(inputs[j].value);
 				}
 				else
-					localAmountDue += parseInt(inputs[j].value);
+					localAmountDue += parseFloat(inputs[j].value);
 			}
 		}
-		amount_dues[i].innerHTML = localAmountDue;
+		amount_dues[i].innerHTML = localAmountDue.toFixed(2);
 	}
 }
 //Toast Notification
