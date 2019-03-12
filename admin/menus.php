@@ -286,13 +286,15 @@ function srbc_camp_reports()
 			<option value="Fall Retreat">Fall Retreat</option>
 			<option value="Winter Camp">Winter Camp</option>
 		</select>
+		<!--TODO: Check if Kelly will even need to have this
 		Buslist <select class="inputs" id="buslist">
 			<option value="all">All</option>
 			<option value="none">No busride</option>
 			<option value="to">To Camp</option>
 			<option value="from">To Anchorage</option>
 			<option value="both">Both Ways</option>
-		</select><br>
+		</select><br>-->
+		Buslist <input id="buslist" type="checkbox">
 		Scholarships <input id="scholarship" type="checkbox">
 		Discounts <input id="discount" type="checkbox">
 		Start Date: <input id="start_date" type="date">

@@ -2,8 +2,6 @@
 //Makes registration edits to campers
 header("Content-Type: application/json; charset=UTF-8");
 $obj = json_decode( stripslashes($_POST["x"]), true);
-echo "Error:";
-print_r($obj);
 $arrayKeys = array_keys($obj);
 //Database shtuff
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
@@ -84,6 +82,7 @@ else {
 			'parent_last_name' => $obj["camper"]["parent_last_name"],
 			'email' => $obj["camper"]["email"],
 			'phone' => $obj["camper"]["phone"],
+			'phone2' => $obj["camper"]["phone2"],
 			'address' => $obj["camper"]["address"],
 			'city' => $obj["camper"]["city"],
 			'state' => $obj["camper"]["state"],
@@ -194,7 +193,7 @@ else {
 				'%s',	
 				'%s',
 				'%d',	
-				'%f',	
+				'%s',	
 				'%f',
 				'%f',
 				'%s',	
