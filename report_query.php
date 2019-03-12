@@ -93,7 +93,7 @@ foreach ($information as $info){
 		echo "<td>" . $info->phone. "</td>";
 		echo "<td>" . $info->phone2. "</td>";
 		echo "<td></td>";
-		echo "<td>$" . $busrides[$info->busride] . "</td>";
+		echo "<td>$" . $info->amount_due . "</td>";
 	}
 	if ($scholarship == "true"){
 		echo "<td>" . $info->scholarship_type . "</td><td>$" . $info->scholarship_amt . "</td>";
@@ -103,6 +103,9 @@ foreach ($information as $info){
 	}
 	
 }
-
+echo "</table>";
+if ($buslist == "true"){
+	echo "<br>Campers on Bus: " . count($information);
+}
 
 ?>
