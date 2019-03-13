@@ -1,4 +1,35 @@
 <?php
+//Import $wpdb for wordpress
+require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
+global $wpdb;
+
+//Check this value first because it doesn't follow a normal report query format
+if ($_GET["camp_numbers"] == true)
+{
+	$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
+	$date = $date->format("Y-m-d");
+	$camps = $wpdb->get_results("SELECT * FROM srbc_camps WHERE start_date >= '$date'");
+	foreach ($camps as $camp)
+	{
+		$male_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+										FROM srbc_registration
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id), ARRAY_N)[0][0]; 
+		$female_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+										FROM srbc_registration
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id), ARRAY_N)[0][0]; 
+		echo "<h3>" . $camp->area . " " . $camp->name . "</h3>			" . $camp->start_date . "<br>";
+		echo "		Male: " . $male_registered . "<br>";
+		echo "		Female: " . $female_registered . "<br>";
+		echo "		Total: " . ($male_registered + $female_registered) . "<br>"; 
+	}
+	exit;
+}
+
+
+
+
 //TODO:  This will probably be tore out and totally redone.  Might have to comb through and optimize
 //Probably gonna get rid of these too
 $area = $_GET['area'];
@@ -20,8 +51,13 @@ $query = "SELECT *
 		
 $values = array();
 //Setup table and then we will add headers based on the query
-
-echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
+//Only default for most queries.  Isn't for camp_numbers report_table
+if ($_GET["camp_numbers"] == "true"){
+	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
+}
+else {
+	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
+}
 //Keeps track of how many sort headers we have
 $sortnum = 2;
 if ($area == "") {
@@ -53,6 +89,9 @@ if ($buslist == "true"){
 if ($_GET["horsemanship"] == "true"){
 	$query .= "AND NOT srbc_registration.horse_opt=0 ";
 }
+if ($_GET["camp_numbers"] == "true"){
+	$query .= "AND NOT srbc_registration.horse_opt=0 ";
+}
 if ($scholarship == "true"){
 	$query .= "AND NOT srbc_registration.scholarship_amt=0 ";
 	echo '<th onclick="sortTable('.$sortnum.')">Scholarship Type</th><th onclick="sortTable('.$sortnum.')">Scholarship Amount</th>';
@@ -77,8 +116,6 @@ if ($not_payed == "true"){
 //close the row
 echo "</tr>";
 
-require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
-global $wpdb;
 
 $information = $wpdb->get_results(
 	$wpdb->prepare( $query, $values));
@@ -104,6 +141,5 @@ foreach ($information as $info){
 	
 }
 echo "</table>";
-	echo "<br>Campers Count: " . count($information);
-
+echo "<br>Campers Count: " . count($information);
 ?>

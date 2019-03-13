@@ -287,20 +287,21 @@ function srbc_camp_reports()
 			<option value="Winter Camp">Winter Camp</option>
 		</select>
 		<!--TODO: Check if Kelly will even need to have this-->
-		Buslist <select class="inputs" id="buslist_type">
+		Buslist type: <select class="inputs" id="buslist_type">
 			<!--<option value="all">All</option>
 			<option value="none">No busride</option>-->
 			<option value="to">To Camp</option>
 			<!--<option value="from">To Anchorage</option>
 			<option value="both">Both Ways</option>-->
 		</select><br>
-		Buslist <input id="buslist" type="checkbox">
+		Buslist <input id="buslist" type="checkbox">		
 		Horsesmanship <input id="horsemanship" type="checkbox">
+		Camp Numbers <input id="camp_numbers" type="checkbox">
 		Scholarships <input id="scholarship" type="checkbox">
 		Discounts <input id="discount" type="checkbox">
 		Start Date: <input id="start_date" type="date">
 		End Date: <input id="end_date" type="date">
-		Camper didn't check in <input id="not_checked_in" type="checkbox">
+		Camper didn't check in <input id="not_checked_in" type="checkbox"><br>
 		<!--These don't work correctly I believe: Hasn't paid in full <input id="not_payed" type="checkbox">-->
 		<button onclick="generateReport();">Generate Report</button>		
 	</div>
