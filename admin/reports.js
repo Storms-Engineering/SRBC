@@ -79,7 +79,8 @@ function generateReport()
 	}
 	var area = document.getElementById("area").value;
 	var buslist = document.getElementById("buslist").value;
-	xhttp.open("GET", "/wp-content/plugins/SRBC/report_query.php?buslist=" + buslist + "&area="+area+data, true);
+	var buslist_type = document.getElementById("buslist_type").value;
+	xhttp.open("GET", "/wp-content/plugins/SRBC/report_query.php?buslist=" + buslist + "&buslist_type="+buslist_type+ "&area="+area+data, true);
 	xhttp.send();
 }
 

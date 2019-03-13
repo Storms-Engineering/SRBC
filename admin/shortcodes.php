@@ -215,7 +215,7 @@ function srbc_registration( $atts )
 					echo '<input type="hidden" name="camp_desc" value = "' .$camp->area . " " . $camp->name . '">'; 
 					if($camp->horse_opt != 0)
 					{
-						echo '<input type="checkbox" name="horse_opt" value="true"> Horse Option $' .$camp->horse_opt. '<br>';
+						echo ' <input type="checkbox" name="horse_opt" value="true"> Horse Option $' .$camp->horse_opt. '<br>';
 					}
 				}
 				else
@@ -371,7 +371,6 @@ function srbc_registration_complete($atts)
 	$horse_opt = 0;
 	if (isset($_POST["horse_opt"]))
 		$horse_opt = 1;
-	$busride = $_POST["busride"];
 	
 	//Calculate the campers age
 	$d1 = new DateTime(date("Y/m/d"));
