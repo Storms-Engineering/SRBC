@@ -59,7 +59,7 @@ else {
 }
 //Keeps track of how many sort headers we have
 $sortnum = 2;
-if ($area == "") {
+if ($area == "null") {
 	$query .= "srbc_camps.area LIKE '%' ";
 }
 else {
@@ -114,7 +114,6 @@ if ($not_payed == "true"){
 }
 //close the row
 echo "</tr>";
-
 
 $information = $wpdb->get_results(
 	$wpdb->prepare( $query, $values));
