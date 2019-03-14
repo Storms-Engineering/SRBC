@@ -22,6 +22,8 @@
 					echo 'End Date: <input type="date" name="end_date" value="' . $camp->end_date . '">';
 					echo 'Cost: $<input name="cost" type="text" value="' . $camp->cost . '">';
 					echo 'Horse Option: $<input type="text" name="horse_opt" value="' . $camp->horse_opt . '"><br></span>';
+					echo 'Horse List Size: <input type="text" name="horse_list_size" value="' . $camp->horse_list_size . ' ">';
+					echo 'Horse Waiting List Size: <input type="text" name="horse_waiting_list_size" value="'.$camp->horse_waiting_list_size.'"><br>';
 					echo 'Waiting List Size: <input name="waiting_list_size" type="text" value="' . $camp->waiting_list_size . '">';
 					echo 'Boys Allowed to Register: <input name="boy_registration_size" type="text" value="' . $camp->boy_registration_size . '"><br>';
 					echo 'Girls Allowed to Register: <input name="girl_registration_size" type="text" value="' . $camp->girl_registration_size . '">';

@@ -70,7 +70,7 @@ function generateReport()
 		}
 	}
 	var inputs = document.querySelectorAll("input");
-	var data = "&";
+	var data = null;
 	for (var i = 0;i < inputs.length; i++) {
 		if (inputs[i].id == "start_date" || inputs[i].id == "end_date")
 			data += "&" + inputs[i].id + "=" + inputs[i].value;

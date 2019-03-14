@@ -235,6 +235,8 @@ function srbc_camps_management()
 			Grade Range (ex. 2nd to 3rd): <input type="text" name="grade_range"><br>
 			Cost(Must be whole number): $<input type="text" name="cost">
 			Horse Option cost (Put 0 if there is no horse option for this camp): $<input type="text" name="horse_opt"><br>
+			Horse List Size: <input type="text" name="horse_list_size">
+			Horse Waiting List Size: <input type="text" name="horse_waiting_list_size"><br>
 			Waiting List Size:<input type="text" name="waiting_list_size"><br>
 			Number of Boy Campers allowed to Register:<input type="text" name="boy_registration_size"><br>
 			Number of Girl Campers allowed to Register:<input type="text" name="girl_registration_size"><br>

@@ -445,10 +445,10 @@ function srbc_registration_complete($atts)
 	}
 	
 	$count = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE camp_id=%s AND waitlist=0",$campid), ARRAY_N); 
-	//Check if this person is already signed up for a camp
+	//Check if this camp is already full
 	if($count[0][0] < $camp->overall_size)
 	{
-		//This camp is not overall full check gender specific cap
+		//This camp is not overall full check gender specific caps
 		if ($gender == "male")
 		{
 			$count = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
@@ -492,7 +492,6 @@ function srbc_registration_complete($atts)
 		if ($waitlistsize < $camp->waiting_list_size)
 		{
 			error_msg("You have been put on the waiting list for this camp because registration is full.");	
-			$waitlistsize++;
 		}
 		else
 		{
@@ -509,7 +508,7 @@ function srbc_registration_complete($atts)
 				'camper_id' => $wpdb->insert_id,
 				'horse_opt' => $horse_opt,
 				'busride' => $busride,
-				'waitlist' => $waitlistsize
+				'waitlist' => 1
 			), 
 			array( 
 				'%d',
@@ -517,7 +516,7 @@ function srbc_registration_complete($atts)
 				'%d',
 				'%d',
 				'%s',
-				'%s'
+				'%d'
 			) 
 			);
 	//Notify office that this parent is sending a check	

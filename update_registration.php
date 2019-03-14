@@ -10,22 +10,26 @@ global $wpdb;
 if (isset($obj["deleteid"]))
 {
 	//Delete the requested registration
+	$iswaitlist = $wpdb->get_row( "SELECT waitlist FROM srbc_registration WHERE registration_id=" . $obj["deleteid"] )->waitlist;
 	$wpdb->delete( 'srbc_registration', array( 'registration_id' => $obj["deleteid"] ) );
-	//Check if deleting from waitlist
-	$registration = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM srbc_registration
-					WHERE NOT waitlist=0 AND camp_id=%s ORDER BY waitlist ASC",$obj["camp_id"]));
-	foreach($registration as $registration){
+	
+	//If this deleted registration was a camper not on the waitlist then we want to push a waitlisted person into this camp
+	if ($iswaitlist == 0)
+	{
+		$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM srbc_registration
+						WHERE NOT waitlist=0 AND camp_id=%s ORDER BY registration_id ASC",$obj["camp_id"]));
+		//Change the first registration	
 		$wpdb->update( 
-		'srbc_registration', 
-		array( 
-			'waitlist' => ($registration->waitlist - 1)
-		), 
-		array( 'registration_id' => $registration->registration_id ), 
-		array( 
-			'%d'	
-		), 
-		array( '%d' ) 
-		);
+			'srbc_registration', 
+			array( 
+				'waitlist' => 0
+			), 
+			array( 'registration_id' => $registrations[0]->registration_id ), 
+			array( 
+				'%d'	
+			), 
+			array( '%d' ) 
+			);
 	}
 	echo "Deleted Registration and Saved Sucessfully";
 }

@@ -2,7 +2,7 @@
 /*
 Plugin Name: SRBC
 Description: Solid Rock Bible Camp Plugin for Registration and Displaying Users
-Version: 0.7
+Version: 0.71
 */
 //Require
 require("admin/shortcodes.php");
@@ -47,6 +47,8 @@ function srbc_install() {
 		end_date DATE,
 		cost SMALLINT NOT NULL,
 		horse_opt TINYINT NOT NULL,
+		horse_list_size TINYINT NOT NULL,
+		horse_waiting_list_size TINYINT NOT NULL,
 		waiting_list_size SMALLINT NOT NULL,
 		boy_registration_size SMALLINT NOT NULL,
 		girl_registration_size SMALLINT NOT NULL,
@@ -60,6 +62,7 @@ function srbc_install() {
 	//Create a registration database that keeps track of individual registrations.
 	//Waitlist is 0 if they are not on the waitlist.  It will be an increasing number as each registration gets added to the
 	//Database that is on the waitlist for that camp.
+	//Horse_waiting list is the same as above ^
     $sql = "CREATE TABLE IF NOT EXISTS srbc_registration (
 		registration_id INT AUTO_INCREMENT,
 		camp_id INT NOT NULL,
@@ -75,7 +78,8 @@ function srbc_install() {
 		payed_cash FLOAT(6,2),
 		payed_card FLOAT(6,2),
 		amount_due FLOAT(6,2) NOT NULL,
-		waitlist TINYTEXT NOT NULL,		
+		waitlist TINYINT NOT NULL,	
+		horse_waitlist TINYINT NOT NULL,
 		checked_in TINYINT NOT NULL,
 		PRIMARY KEY (registration_id)
 		)  ENGINE=INNODB;";

@@ -98,7 +98,11 @@
 						$waitlist = ' <span style="color:red;">(Waitlisted)</span>';
 					}
 					$horsefee = 0;
-					if ($registration->horse_opt > 0)
+					//TODO: Make sure works properly
+					//If they are signed up for the horse option and are not on the horse waiting list.
+					//0 means they are not on the waiting list.  But this can also apply to people not signed up for horses
+					//So always check both values
+					if ($registration->horse_opt > 0 && $registration->horse_waitlist == 0)
 						$horsefee = $camp->horse_opt;
 					
 					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $waitlist . '</button><div class="content">';

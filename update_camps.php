@@ -1,11 +1,12 @@
 <?php
-//Makes camp edits or deletes or creates new ones them
+//Makes updates camps or deletes or creates new ones
 header("Content-Type: application/json; charset=UTF-8");
 $obj = json_decode( stripslashes($_POST["x"]), true);
+
 //Database shtuff
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 global $wpdb;
-//Check if we are deleting a camp
+
 if (isset($obj["deleteid"])) {
     //If this is set then we are deleting a camp
 	$wpdb->delete( 'srbc_camps', array( 'camp_id' => $obj["deleteid"] ) );
@@ -14,6 +15,12 @@ if (isset($obj["deleteid"])) {
 }
 else if (isset($obj["camp_id"])) {
     //If this is set then we are updating a camp
+	
+	//TODO: Need to add logic here to catch if they are increasing the size of horses waitlist
+	//And then magic shuffle the waitlist
+	echo "MAGICK SHUFFLE";
+	
+	
 	$wpdb->update( 
 	'srbc_camps', 
 	array( 
@@ -24,7 +31,9 @@ else if (isset($obj["camp_id"])) {
 		'end_date' => $obj["end_date"],	
 		'cost' => $obj["cost"],	
 		'horse_opt' => $obj["horse_opt"],
+		'horse_list_size' => $obj["horse_list_size"],
 		'waiting_list_size' => $obj["waiting_list_size"],
+		'horse_waiting_list_size' => $obj["horse_waiting_list_size"],
 		'boy_registration_size' => $obj["boy_registration_size"],
 		'girl_registration_size' => $obj["girl_registration_size"],
 		'overall_size' => $obj["overall_size"],
@@ -39,6 +48,8 @@ else if (isset($obj["camp_id"])) {
 		'%s',	
 		'%d',
 		'%d',
+		'%d',
+		'%d',	
 		'%d',	
 		'%d',
 		'%d',
@@ -62,7 +73,9 @@ $wpdb->insert(
 		'end_date' => $obj["end_date"],	
 		'cost' => $obj["cost"],	
 		'horse_opt' => $obj["horse_opt"],
+		'horse_list_size' => $obj["horse_list_size"],
 		'waiting_list_size' => $obj["waiting_list_size"],
+		'horse_waiting_list_size' => $obj["horse_waiting_list_size"],
 		'boy_registration_size' => $obj["boy_registration_size"],
 		'girl_registration_size' => $obj["girl_registration_size"],
 		'overall_size' => $obj["overall_size"],
@@ -76,6 +89,8 @@ $wpdb->insert(
 		'%s',	
 		'%d',
 		'%d',
+		'%d',	
+		'%d',	
 		'%d',	
 		'%d',
 		'%d',

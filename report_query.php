@@ -2,9 +2,8 @@
 //Import $wpdb for wordpress
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 global $wpdb;
-
 //Check this value first because it doesn't follow a normal report query format
-if ($_GET["camp_numbers"] == true)
+if ($_GET["camp_numbers"] == "true")
 {
 	$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 	$date = $date->format("Y-m-d");
