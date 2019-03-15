@@ -30,18 +30,18 @@ function srbc_credit_cards(){
 	<h1>Credit Cards pending processing:</h1>
 	Password :  <input type="password" id="pwd"> Decryption Progress <progress value="0" id="progress"></progress>
 	<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">Drop key file here</div>
-	<table style="width:100%;" >
+	<table id="cc_table" style="width:100%;" >
 		<tr>
-			<th>Date</th>
-			<th>Data</th>
-			<th>Amount</th>
-			<th>For Camper</th>
-			<th>Camp</th>
-			<th>Delete</th>
+			<th onclick="sortTable(0);">Date</th>
+			<th onclick="sortTable(1);">Data</th>
+			<th onclick="sortTable(2);">Amount</th>
+			<th onclick="sortTable(3);">For Camper</th>
+			<th onclick="sortTable(4);">Camp</th>
+			<th onclick="sortTable(5);">Delete</th>
 		</tr>
 	<?php
 	global $wpdb;
-	$ccs = $wpdb->get_results("SELECT * FROM srbc_cc ORDER BY payment_date ASC");
+	$ccs = $wpdb->get_results("SELECT * FROM srbc_cc ORDER BY cc_id ASC");
 	foreach ($ccs as $cc)
 	{
 		echo "<tr><td>" . $cc->payment_date;
