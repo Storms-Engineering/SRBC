@@ -432,6 +432,7 @@ function srbc_registration_complete($atts)
 	);
 	$camper_id = $wpdb->insert_id;
 	$waitlistsize = 0;
+	$waitlist = 0;
 	//Calculate if this camper needs to go on a waiting list
 	//If not then update how many people are registered for this camp
 	$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$campid));
@@ -488,10 +489,12 @@ function srbc_registration_complete($atts)
 		
 		//Count overall waitlist size for this camp
 		$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE NOT waitlist=0 AND camp_id=%s",$campid), ARRAY_N)[0][0]; 
+		echo "Number waitlisted:" .  $waitlistsize;
 		//Check if the waiting list is full
 		if ($waitlistsize < $camp->waiting_list_size)
 		{
 			error_msg("You have been put on the waiting list for this camp because registration is full.");	
+			$waitlist = 1;
 		}
 		else
 		{
@@ -508,7 +511,7 @@ function srbc_registration_complete($atts)
 				'camper_id' => $wpdb->insert_id,
 				'horse_opt' => $horse_opt,
 				'busride' => $busride,
-				'waitlist' => 1
+				'waitlist' => $waitlist
 			), 
 			array( 
 				'%d',
