@@ -246,6 +246,7 @@ function srbc_registration( $atts )
 			<input class="inputs" type="text" name="parent_first_name" required placeholder="First Name">
 			<input class="inputs" type="text" name="parent_last_name" required placeholder="Last Name"><br>
 			Email:<input type="email" name="email" required><br>
+			Retype Email: <input type="email" id="retyped_email" required><br>
 			Phone including area code (Numbers only please):<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
 			Secondary Phone: <input type="tel" pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone2"><br>
 			Street Address:<br>
@@ -338,7 +339,12 @@ function srbc_registration( $atts )
 	
 	function validateForm()
 	{
-		//alert(document.getElementById("use_check").checked);
+		
+		if (document.getElementById("retyped_email").value != document.getElementsByName("email")[0].value)
+		{
+			alert("Please check emails to make sure that they match!");
+			return false;
+		}
 		if (document.getElementById("use_check").checked)
 		{
 			return true;
@@ -347,7 +353,6 @@ function srbc_registration( $atts )
 		{
 			var numValidated = 0;
 			for (let name of names) {
-				console.log(name);
 					 if (document.getElementsByName(name)[0].value != "")
 					 {
 						  numValidated++;
