@@ -129,12 +129,12 @@ function srbc_application_complete($atts){
 		   $body .= $keys[$i] . ": ";
 			foreach ($val as $v){
 				if ($v != "")
-					$body .= $v . ", ";
+					$body .= '<b style="font-size:20px">' . $v . "</b> " . ", ";
 			}
 			$body .= "<br>";
 	   }
 	   else
-			$body .= $keys[$i] . ": " . $val . "<br><br>";
+			$body .= '<b style="font-size:20px">' . $keys[$i] . '</b>: ' . $val . "<br>";
 	   $i++;
    }
    //Email applicant
@@ -143,7 +143,8 @@ function srbc_application_complete($atts){
    <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
    <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp", "From: " . srbc_email);
    /* Set the mail message body. */
-	sendMail(srbc_email, 'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body);
+   echo "change email";
+	sendMail("armystorms@gmail.com", 'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body);
 
 echo "Application submitted sucessfully!
   You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!";
