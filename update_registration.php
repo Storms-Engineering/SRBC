@@ -123,8 +123,6 @@ else {
 			$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
 			//Get the current date time
 			$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
-			echo "PAYMENT:" . $obj[$key]["payment_amt"];
-			echo "PAYMENT2:" . floatval($obj[$key]["payment_amt"]);
 			$wpdb->insert(
 					'srbc_payments', 
 					array( 

@@ -186,17 +186,7 @@ function srbc_registration( $atts )
 	}
 
 	</style>
-	<script>
-	function validateForm(){
-		if (document.getElementById("cc_number").value != "" || document.getElementById("use_check").checked)
-			return true;
-		else
-		{
-			alert("Please use a credit card or check!");
-			return false;
-		}
-	}
-	</script>
+	
 	<div class="registration_box">
 	<form action="../registration-complete/" method="post" style="margin:auto;" onsubmit="return validateForm()">
 			<h4>Camp you wish to register for:
@@ -343,6 +333,38 @@ function srbc_registration( $atts )
 		<input type="submit" value="Submit">
 	</form> 
 	</div>
+	<script>
+	var names = ["cc_amount", "cc_number", "cc_name", "cc_zipcode", "cc_vcode", "cc_month", "cc_year" ];
+	
+	function validateForm()
+	{
+		//alert(document.getElementById("use_check").checked);
+		if (document.getElementById("use_check").checked)
+		{
+			return true;
+		}
+		else
+		{
+			var numValidated = 0;
+			for (let name of names) {
+				console.log(name);
+					 if (document.getElementsByName(name)[0].value != "")
+					 {
+						  numValidated++;
+					 }
+				}
+				if (numValidated == 7)
+				{
+					return true;
+				}
+				else 
+				{
+					alert("Please use a credit card or check!");
+					return false;
+				}
+			}
+		}
+	</script>
 	<?php
 	return ob_get_clean();
 }
@@ -489,7 +511,6 @@ function srbc_registration_complete($atts)
 		
 		//Count overall waitlist size for this camp
 		$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE NOT waitlist=0 AND camp_id=%s",$campid), ARRAY_N)[0][0]; 
-		echo "Number waitlisted:" .  $waitlistsize;
 		//Check if the waiting list is full
 		if ($waitlistsize < $camp->waiting_list_size)
 		{
