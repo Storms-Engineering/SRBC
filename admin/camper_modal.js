@@ -224,13 +224,8 @@ function calculate_totals()
 				inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].name != "payment_amt" &&
 				inputs[j].name != "note" && inputs[j].value != "")
 			{				
-				if(inputs[j].name == "horse_opt")
-				{
-					//Set the input to the value of the current select on horse_opt
-					inputs[j].value = document.querySelectorAll("select[name=horse_opt]")[i].value;
-					localAmountDue -= parseFloat(inputs[j].value);
-				}
-				else if (inputs[j].name == "busride_cost")
+				
+				if (inputs[j].name == "busride_cost")
 				{
 					var busride = document.querySelectorAll("select[name=busride]")[i].value;
 					if (busride == "none")
@@ -241,9 +236,16 @@ function calculate_totals()
 						inputs[j].value = 35;
 					localAmountDue -= parseFloat(inputs[j].value);
 				}
+				else if(inputs[j].name == "horse_opt")
+				{
+					//Set the input to the value of the current select on horse_opt
+					inputs[j].value = document.querySelectorAll("select[name=horse_opt]")[i].value;
+					localAmountDue -= parseFloat(inputs[j].value);
+				}
 				else
 					localAmountDue += parseFloat(inputs[j].value);
 			}
+			
 		}
 		amount_dues[i].innerHTML = localAmountDue.toFixed(2);
 	}
