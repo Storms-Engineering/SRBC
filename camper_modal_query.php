@@ -92,11 +92,29 @@
 					<option value="from">One-way to Anchorage $35</option>
 					</select>';
 					}
-					$waitlist = NULL;
+					
+					//TODO: do buslist like this
+					//An array for holding which option is selected
+					$horseSelector = array(null,null);
+					if($registration->horse_opt == 1 && $registration->horse_waitlist != 1)
+						$horseSelector[1] = "selected";
+					else
+						$horseSelector[0] = "selected";
+					
+					$horseHTML = '<select class="inputs" name="horse_opt">
+					<option value="0"' . $horseSelector[0] .'>No Horses</option>
+					<option value="'.$camp->horse_opt.'"'. $horseSelector[1].'>Horses $'. $camp->horse_opt.'</option>
+					</select>';
+					
+					//Shows a red waitlist
+					$campWaitlistHTML = NULL;
 					if ($registration->waitlist != 0)
-					{
-						$waitlist = ' <span style="color:red;">(Waitlisted)</span>';
-					}
+						$campWaitlistHTML = ' <span style="color:red;">(Waitlisted for Camp)</span>';
+
+					
+					$horsesWaitlistHTML = NULL;
+					if($registration->horse_waitlist == 1)
+						$horsesWaitlistHTML = ' <span style="color:red;"><b>(Waitlisted for Horses)</b></span>';						
 					$horsefee = 0;
 					//TODO: Make sure works properly
 					//If they are signed up for the horse option and are not on the horse waiting list.
@@ -105,12 +123,12 @@
 					if ($registration->horse_opt > 0 && $registration->horse_waitlist == 0)
 						$horsefee = $camp->horse_opt;
 					
-					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $waitlist . '</button><div class="content">';
+					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campWaitlistHTML . '</button><div class="content">';
 					echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';
 					echo 'Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
 					echo 'Cabin: <input name="cabin" type="text" value="' . $registration->cabin . '"><br>';
-					echo '<span class="financial_info">(Put a zero here if you want to take them off the Horse Option) Horse Option Cost: $<input class="financial" name="horse_opt" type="text" value="' . $horsefee . '"></span>';
-					echo '<span class="financial_info">Busride ' . $busride .  ': $<input class="financial" name="busride_cost" type="text" value="' . $busride_cost .'"></span>';
+					echo '<span class="financial_info">'.$horsesWaitlistHTML.'Horse Option '.$horseHTML.' $<input class="financial" name="horse_opt" type="text" value="' . $horsefee . '"readonly></span>';
+					echo '<span class="financial_info">Busride ' . $busride .  ': $<input class="financial" name="busride_cost" type="text" value="' . $busride_cost .'" readonly></span>';
 					echo '<span class="financial_info">Discount: $<input class="financial" type="text" name="discount" value="' . $registration->discount . '"></span>';
 					echo '<span class="financial_info">Scholarship Amount: $<input class="financial" name="scholarship_amt" type="text" value="' . $registration->scholarship_amt . '"></span>';
 					echo '<span class="financial_info">Scholarship Type: <input type="text" name="scholarship_type" value="' . $registration->scholarship_type . '"><br></span>';

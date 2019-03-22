@@ -139,10 +139,20 @@ function saveInfo()
 			}
 			else if(inputs[j].name == "checked_in"){
 				//Check the checked value
-				$value = 0;
+				checkd = 0;
 				if(inputs[j].checked)
-					$value = 1;
-				info_child[inputs[j].name] = $value;
+					checkd = 1;
+				info_child[inputs[j].name] = checkd;
+			}
+			//We don't actually use this input, it is merely here to remind us to grab the value of the select
+			else if(inputs[j].name == "horse_opt")
+			{
+				horseOption = document.querySelectorAll("select[name=horse_opt]")[i].value;
+				//If the horse option is greater than 0 we set it to 1 for the database
+				if (horseOption > 0)
+					info_child[inputs[j].name] = 1;
+				else
+					info_child[inputs[j].name] = 0;
 			}
 			else
 				info_child[inputs[j].name] = inputs[j].value;
@@ -173,8 +183,9 @@ function addListeners()
 	var containers = document.getElementsByClassName("content");
 	for (var i = 0; i < containers.length; ++i) 
 	{
-		//Special case for this select
+		//Special cases for thiese selects
 		document.querySelectorAll("select[name=busride]")[i].addEventListener("change", calculate_totals);
+		document.querySelectorAll("select[name=horse_opt]")[i].addEventListener("change", calculate_totals);
 		var inputs = containers[i].getElementsByTagName('input');
 		for (var j = 0; j < inputs.length; ++j) 
 		{
@@ -214,7 +225,11 @@ function calculate_totals()
 				inputs[j].name != "note" && inputs[j].value != "")
 			{				
 				if(inputs[j].name == "horse_opt")
+				{
+					//Set the input to the value of the current select on horse_opt
+					inputs[j].value = document.querySelectorAll("select[name=horse_opt]")[i].value;
 					localAmountDue -= parseFloat(inputs[j].value);
+				}
 				else if (inputs[j].name == "busride_cost")
 				{
 					var busride = document.querySelectorAll("select[name=busride]")[i].value;
