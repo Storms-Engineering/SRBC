@@ -178,9 +178,15 @@
 						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 					}
 					echo $finalText;
-					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button> <button class="save_button" style="background:#009933" onclick="resendEmail('.$registration->registration_id.');" >Resend Email</button>	<button class="save_button" style="background:red" onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button>';
+					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button> ';
 					//Replace the id with a unique id for this option based on which registration
-					echo ' <button class="save_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>'.str_replace("~",$registration->registration_id,$camp_selection).'</div>';
+					echo ' <button class="save_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>'
+					//Replace the ~ with the registration id
+					.str_replace("~",$registration->registration_id,$camp_selection);
+					
+					echo '<br><br><button class="save_button" style="background:#009933" onclick="resendEmail('.$registration->registration_id.');" >Resend Email</button>	<button class="save_button" style="background:red" onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button>';
+					//Modal end div
+					echo "</div>";
 				}
 				//Show payment history:
 				$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM srbc_payments WHERE camper_id=%s",$camper->camper_id));

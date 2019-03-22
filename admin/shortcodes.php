@@ -607,7 +607,7 @@ function srbc_registration_complete($atts)
 				'amount' => $_POST["cc_amount"],
 				'camper_name' => $camper_first_name . " " . $camper_last_name,
 				'camp' => ($camp->area . " " . $camp->name),
-				'payment_date' => $date->format("m/j/Y")
+				'payment_date' => $date->format("m/d/Y")
 			), 
 			array( 
 				'%d',
