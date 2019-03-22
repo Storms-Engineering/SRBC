@@ -528,7 +528,7 @@ function srbc_registration_complete($atts)
 			return;
 		}
 	}
-	//Initially set this to 0 and if they need to be put on the horses waitlist we can just update.
+	//Initially set this to 0 and if they need to be put on the horses waitlist we will update this to one
 	$horse_waitlist = 0;
 	if ($horse_opt == 1)
 	{
@@ -540,7 +540,12 @@ function srbc_registration_complete($atts)
 			if($waitlistsize < $camp->horse_waiting_list_size)
 			{
 				$horse_waitlist = 1;
-				error_msg("Unfortunately the horse option is full.  But you are still signed up for camp!  You have been put on a waiting list for horses.");
+				error_msg("Unfortunately the horse option is full.  You have been put on a waiting list for horses.");
+			}
+			else
+			{
+				$horse_opt = 0;
+				error_msg("Unfortunately the horse option is full.");
 			}
 		}
 			
