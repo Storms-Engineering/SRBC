@@ -8,6 +8,7 @@ if ($_GET["camp_numbers"] == "true")
 	$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 	$date = $date->format("Y-m-d");
 	$camps = $wpdb->get_results("SELECT * FROM srbc_camps WHERE start_date >= '$date'");
+	$totalRegistrations = 0;
 	foreach ($camps as $camp)
 	{
 		$male_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
@@ -22,7 +23,9 @@ if ($_GET["camp_numbers"] == "true")
 		echo "		Male: " . $male_registered . "<br>";
 		echo "		Female: " . $female_registered . "<br>";
 		echo "		Total: " . ($male_registered + $female_registered) . "<br>"; 
+		$totalRegistrations += $male_registered + $female_registered;
 	}
+	echo "<br><br>Overall Camp Total: " . $totalRegistrations;
 	exit;
 }
 
