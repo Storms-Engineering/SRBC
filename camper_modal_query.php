@@ -123,7 +123,8 @@
 					if ($registration->horse_opt > 0 && $registration->horse_waitlist == 0)
 						$horsefee = $camp->horse_opt;
 					
-					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campWaitlistHTML . '</button><div class="content">';
+					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campWaitlistHTML . 
+					'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
 					echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';
 					echo 'Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
 					echo 'Cabin: <input name="cabin" type="text" value="' . $registration->cabin . '"><br>';

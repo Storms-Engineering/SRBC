@@ -23,7 +23,7 @@ foreach($areas as $area){
 							FROM ((srbc_registration 
 							INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
 							INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-							WHERE srbc_camps.area=%s",$area));
+							WHERE srbc_camps.area=%s ORDER BY srbc_registration.registration_id ASC",$area));
 	}
 }
 
@@ -36,7 +36,7 @@ foreach($camps as $camp){
 							FROM ((srbc_registration 
 							INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
 							INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-							WHERE srbc_camps.area=%s AND srbc_camps.name=%s",$q[0],$q[1]));
+							WHERE srbc_camps.area=%s AND srbc_camps.name=%s ORDER BY srbc_registration.registration_id ASC",$q[0],$q[1]));
 	}
 }
 
@@ -52,7 +52,7 @@ if (!$specificQuery)
 		$campers = $wpdb->get_results(
 			$wpdb->prepare( "SELECT * FROM srbc_campers WHERE (camper_first_name 
 			LIKE %s AND camper_last_name LIKE %s )OR (parent_first_name LIKE %s AND parent_last_name LIKE %s)
-			ORDER BY camper_first_name", 
+			ORDER BY camper_id ASC", 
 			$name[0]."%",$name[1]."%",$name[0]."%",$name[1]."%"));
 	}
 	else{
@@ -60,7 +60,7 @@ if (!$specificQuery)
 		$campers = $wpdb->get_results(
 			$wpdb->prepare( "SELECT * FROM srbc_campers WHERE camper_first_name 
 			LIKE %s OR camper_last_name LIKE %s OR parent_first_name LIKE %s OR parent_last_name LIKE %s
-			ORDER BY camper_first_name", 
+			ORDER BY camper_id ASC", 
 			$name."%",$name."%",$name."%",$name."%"));
 	}
 }

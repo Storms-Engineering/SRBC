@@ -378,6 +378,8 @@ function srbc_registration( $atts )
 
 function srbc_registration_complete($atts)
 {
+	//TODO: Bleh this is messy I don't know why I did this
+	//TODO: GET RID OF THIS WASTED SPACE
 	$camper_first_name = $_POST["camper_first_name"];
 	$camper_last_name = $_POST["camper_last_name"];
 	$birthday = $_POST["birthday"];
@@ -550,12 +552,14 @@ function srbc_registration_complete($atts)
 		}
 			
 	}
+	$currentDate = new DateTime("now", new DateTimeZone('America/Anchorage'));
 	$wpdb->insert(
 			'srbc_registration', 
 			array( 
 				'registration_id' =>0,
 				'camp_id' => $_POST["campid"], 
 				'camper_id' => $wpdb->insert_id,
+				'date' => $currentDate->format("m/d/Y"),
 				'horse_opt' => $horse_opt,
 				'busride' => $busride,
 				'waitlist' => $waitlist,
@@ -565,6 +569,7 @@ function srbc_registration_complete($atts)
 				'%d',
 				'%d', 
 				'%d',
+				'%s',
 				'%d',
 				'%s',
 				'%d',
@@ -597,7 +602,6 @@ function srbc_registration_complete($atts)
 		fclose($fp);
 		openssl_get_publickey($pub_key);
 		openssl_public_encrypt($data,$edata,$pub_key);
-		$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 		$wpdb->insert(
 			'srbc_cc', 
 			array( 
@@ -607,7 +611,7 @@ function srbc_registration_complete($atts)
 				'amount' => $_POST["cc_amount"],
 				'camper_name' => $camper_first_name . " " . $camper_last_name,
 				'camp' => ($camp->area . " " . $camp->name),
-				'payment_date' => $date->format("m/d/Y")
+				'payment_date' => $currentDate->format("m/d/Y")
 			), 
 			array( 
 				'%d',
