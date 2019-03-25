@@ -19,8 +19,9 @@
 					//We need to decode it here so it isn't double encoded when they save it again and so they can read it properly
 					echo 'Description: <textarea class="description" rows="2" cols="30">' . rawurldecode($camp->description) . '</textarea>';
 					echo 'Start Date: <input name="start_date" type="date" value="' . $camp->start_date .'">';
-					echo 'End Date: <input type="date" name="end_date" value="' . $camp->end_date . '">';
+					echo 'End Date: <input type="date" name="end_date" value="' . $camp->end_date . '"><br>';
 					echo 'Cost: $<input name="cost" type="text" value="' . $camp->cost . '">';
+					echo 'Horse Cost: $<input name="horse_cost" type="text" value="' . $camp->horse_cost . '">';
 					echo 'Horse Option: $<input type="text" name="horse_opt" value="' . $camp->horse_opt . '"><br></span>';
 					echo 'Horse List Size: <input type="text" name="horse_list_size" value="' . $camp->horse_list_size . ' ">';
 					echo 'Horse Waiting List Size: <input type="text" name="horse_waiting_list_size" value="'.$camp->horse_waiting_list_size.'"><br>';

@@ -46,6 +46,7 @@ function srbc_install() {
 		start_date DATE,
 		end_date DATE,
 		cost SMALLINT NOT NULL,
+		horse_cost SMALLINT,
 		horse_opt TINYINT NOT NULL,
 		horse_list_size TINYINT NOT NULL,
 		horse_waiting_list_size TINYINT NOT NULL,

@@ -233,7 +233,8 @@ function srbc_camps_management()
 			Description: <br><textarea class="description" rows="2" cols="30"></textarea>
 			<br>
 			Grade Range (ex. 2nd to 3rd): <input type="text" name="grade_range"><br>
-			Cost(Must be whole number): $<input type="text" name="cost">
+			Cost(Must be whole number): $<input type="text" name="cost"><br>
+			Horse Cost(Only for Wagon Train camps - this is hidden to parents): $<input type="text" name="horse_cost"><br>
 			Horse Option cost (Put 0 if there is no horse option for this camp): $<input type="text" name="horse_opt"><br>
 			Horse List Size: <input type="text" name="horse_list_size">
 			Horse Waiting List Size: <input type="text" name="horse_waiting_list_size"><br>
@@ -288,16 +289,16 @@ function srbc_camp_reports()
 			<option value="Fall Retreat">Fall Retreat</option>
 			<option value="Winter Camp">Winter Camp</option>
 		</select>
-		<!--TODO: Check if Kelly will even need to have this-->
+		<!--TODO: Check if Kelly will even need to have this
 		Buslist type: <select class="inputs" id="buslist_type">
-			<!--<option value="all">All</option>
-			<option value="none">No busride</option>-->
+			<option value="all">All</option>
+			<option value="none">No busride</option>
 			<option value="to">To Camp</option>
-			<!--<option value="from">To Anchorage</option>
+			<option value="from">To Anchorage</option>
 			<option value="both">Both Ways</option>-->
 		</select><br>
 		Buslist <input id="buslist" type="checkbox">		
-		Horsesmanship <input id="horsemanship" type="checkbox">
+		Horsemanship <input id="horsemanship" type="checkbox">
 		Camp Numbers <input id="camp_numbers" type="checkbox">
 		Scholarships <input id="scholarship" type="checkbox">
 		Discounts <input id="discount" type="checkbox">
