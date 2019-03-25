@@ -129,8 +129,9 @@
 					echo '<span class="financial_info">Payed Check: $<input class="financial" name="payed_check" type="text" value="' . $registration->payed_check . '" readonly></span>';
 					echo '<span class="financial_info">Payed Cash: $<input class="financial" name="payed_cash" type="text" value="' . $registration->payed_cash . '" readonly></span>';
 					echo '<span class="financial_info">Payed Card: $<input class="financial" name="payed_card" type="text" value="' . $registration->payed_card . '" readonly></span>';
-					echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due">' . $registration->amount_due . '</span></h3></span>';
-					
+					echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due"></span></h3></span>';
+					//TODO we aren't really using amount due.  It was only for reports so I will need to restructure the database at somepoint
+					//. $registration->amount_due .
 					
 					$checked = "";
 					if ($registration->checked_in == 1)

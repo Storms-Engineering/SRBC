@@ -121,6 +121,37 @@ else {
 	for($i = 0;$i < (count($obj)-1); $i++){
 		//Current key for database
 		$key = $arrayKeys[$i];
+		//Update normal stuff
+		$wpdb->update( 
+			'srbc_registration', 
+			array( 
+				'counselor' => $obj[$key]["counselor"],	
+				'cabin' => $obj[$key]["cabin"],	
+				'horse_opt' => $obj[$key]["horse_opt"],	
+				'busride' => $obj[$key]["busride"],	
+				'discount_type' => $obj[$key]["discount_type"],	
+				'discount' => $obj[$key]["discount"],	
+				'scholarship_amt' => $obj[$key]["scholarship_amt"],
+				'scholarship_type' => $obj[$key]["scholarship_type"],
+				'amount_due' => $obj[$key]["amount_due"],
+				'checked_in' => $obj[$key]["checked_in"],
+			), 
+			array( 'registration_id' => $key ), 
+			array( 
+				'%s',	
+				'%s',
+				'%d',	
+				'%s',	
+				'%s',	
+				'%f',
+				'%f',
+				'%s',	
+				'%f',
+				'%d',
+			), 
+			array( '%d' ) 
+		);
+		
 		//Add payment info to payment database
 		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
 		if ($obj[$key]["payment_type"] != "none"){
@@ -171,45 +202,17 @@ else {
 			$wpdb->update( 
 			'srbc_registration', 
 			array( 
-				$paymentType => ($obj[$key]["payment_amt"] + $add),	
+				$paymentType => ($obj[$key]["payment_amt"] + $add)
 			), 
 			array( 'registration_id' => $key ), 
 			array( 
-				'%s',	
+				'%s'	
 			), 
 			array( '%d' ) 
 		);
 		}
 
-		$wpdb->update( 
-			'srbc_registration', 
-			array( 
-				'counselor' => $obj[$key]["counselor"],	
-				'cabin' => $obj[$key]["cabin"],	
-				'horse_opt' => $obj[$key]["horse_opt"],	
-				'busride' => $obj[$key]["busride"],	
-				'discount_type' => $obj[$key]["discount_type"],	
-				'discount' => $obj[$key]["discount"],	
-				'scholarship_amt' => $obj[$key]["scholarship_amt"],
-				'scholarship_type' => $obj[$key]["scholarship_type"],
-				'amount_due' => $obj[$key]["amount_due"],
-				'checked_in' => $obj[$key]["checked_in"],
-			), 
-			array( 'registration_id' => $key ), 
-			array( 
-				'%s',	
-				'%s',
-				'%d',	
-				'%s',	
-				'%s',	
-				'%f',
-				'%f',
-				'%s',	
-				'%f',
-				'%d',
-			), 
-			array( '%d' ) 
-		);
+		
 		//Check if we are taking someone off of the horses waitlist
 		//and if so then bump the next person into horses
 		if ($o->horse_opt == 1 && $obj[$key]["horse_opt"] == 0)

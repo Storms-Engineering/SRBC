@@ -215,7 +215,8 @@ function calculate_totals()
 	var amount_dues = document.querySelectorAll("span[class=amount_due]");
 	for (var i = 0; i < containers.length; ++i) 
 	{
-		var localAmountDue = -parseFloat(campCosts[i].innerHTML); 
+		//Amount due should be positive if they owe money
+		var localAmountDue = parseFloat(campCosts[i].innerHTML); 
 		// Find its child `input` elements
 		var inputs = containers[i].getElementsByTagName('input');
 		for (var j = 0; j < inputs.length; ++j) {
@@ -235,16 +236,16 @@ function calculate_totals()
 						inputs[j].value = 60;
 					else
 						inputs[j].value = 35;
-					localAmountDue -= parseFloat(inputs[j].value);
+					localAmountDue += parseFloat(inputs[j].value);
 				}
 				else if(inputs[j].name == "horse_opt")
 				{
 					//Set the input to the value of the current select on horse_opt
 					inputs[j].value = document.querySelectorAll("select[name=horse_opt]")[i].value;
-					localAmountDue -= parseFloat(inputs[j].value);
+					localAmountDue += parseFloat(inputs[j].value);
 				}
 				else
-					localAmountDue += parseFloat(inputs[j].value);
+					localAmountDue -= parseFloat(inputs[j].value);
 			}
 			
 		}
