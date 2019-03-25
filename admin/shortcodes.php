@@ -143,8 +143,7 @@ function srbc_application_complete($atts){
    <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
    <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp", "From: " . srbc_email);
    /* Set the mail message body. */
-   echo "change email";
-	sendMail("armystorms@gmail.com", 'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body);
+	sendMail(srbc_email, 'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body);
 
 echo "Application submitted sucessfully!
   You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!";
@@ -538,17 +537,16 @@ function srbc_registration_complete($atts)
 		//If we have to many people in horses
 		if($listsize >= $camp->horse_list_size)
 		{
-			$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE horse_waitlist=1 AND horse_opt=1 AND camp_id=%s ",$_POST["campid"]), ARRAY_N)[0][0]; 
+			//We have exceeded our horse list so turn this option to 0
+			$horse_opt = 0;
+			$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE horse_waitlist=1 AND camp_id=%s ",$_POST["campid"]), ARRAY_N)[0][0]; 
 			if($waitlistsize < $camp->horse_waiting_list_size)
 			{
 				$horse_waitlist = 1;
 				error_msg("Unfortunately the horse option is full.  You have been put on a waiting list for horses.");
 			}
 			else
-			{
-				$horse_opt = 0;
 				error_msg("Unfortunately the horse option is full.");
-			}
 		}
 			
 	}

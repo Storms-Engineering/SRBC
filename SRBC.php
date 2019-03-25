@@ -60,8 +60,7 @@ function srbc_install() {
 	dbDelta( $sql );
 	
 	//Create a registration database that keeps track of individual registrations.
-	//Waitlist is 0 if they are not on the waitlist.  It will be an increasing number as each registration gets added to the
-	//Database that is on the waitlist for that camp.
+	//Waitlist is 0 if they are not on the waitlist and a 1 if they are on the waitlist
 	//Horse_waiting list is the same as above ^
     $sql = "CREATE TABLE IF NOT EXISTS srbc_registration (
 		registration_id INT AUTO_INCREMENT,

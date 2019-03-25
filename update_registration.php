@@ -18,18 +18,22 @@ if (isset($obj["deleteid"]))
 	{
 		$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM srbc_registration
 						WHERE NOT waitlist=0 AND camp_id=%s ORDER BY registration_id ASC",$obj["camp_id"]));
-		//Change the first registration	
-		$wpdb->update( 
-			'srbc_registration', 
-			array( 
-				'waitlist' => 0
-			), 
-			array( 'registration_id' => $registrations[0]->registration_id ), 
-			array( 
-				'%d'	
-			), 
-			array( '%d' ) 
-			);
+		//Make sure we found registrations
+		if (count($registrations) > 0)
+		{
+			//Change the first registration	
+			$wpdb->update( 
+				'srbc_registration', 
+				array( 
+					'waitlist' => 0
+				), 
+				array( 'registration_id' => $registrations[0]->registration_id ), 
+				array( 
+					'%d'	
+				), 
+				array( '%d' ) 
+				);
+		}
 	}
 	echo "Deleted Registration and Saved Sucessfully";
 }
@@ -69,7 +73,6 @@ else if(isset($obj["registration_id"])){
 		);
 	}
 	echo "Change Successful";
-	//Also change over all the payments made for that camp
 }
 else {
 	//Update Camper
@@ -119,8 +122,8 @@ else {
 		//Current key for database
 		$key = $arrayKeys[$i];
 		//Add payment info to payment database
+		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
 		if ($obj[$key]["payment_type"] != "none"){
-			$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
 			//Get the current date time
 			$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 			$wpdb->insert(
@@ -177,6 +180,7 @@ else {
 			array( '%d' ) 
 		);
 		}
+
 		$wpdb->update( 
 			'srbc_registration', 
 			array( 
@@ -204,6 +208,31 @@ else {
 			), 
 			array( '%d' ) 
 		);
+		//Check if we are taking someone off of the horses waitlist
+		//and if so then bump the next person into horses
+		if ($o->horse_opt == 1 && $obj[$key]["horse_opt"] == 0)
+		{
+			$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,horse_waitlist FROM srbc_registration
+							WHERE horse_waitlist=1 AND camp_id=%s ORDER BY registration_id ASC",$o->camp_id));
+			//Make sure we actually found waitlisted users
+			if (count($registrations) > 0)
+			{	
+				//Change the first registration	
+				$wpdb->update( 
+					'srbc_registration', 
+					array( 
+						'horse_waitlist' => 0,
+						'horse_opt' => 1
+					), 
+					array( 'registration_id' => $registrations[0]->registration_id ), 
+					array( 
+						'%d',	
+						'%d'	
+					), 
+					array( '%d' ) 
+					);
+			}
+		}
 	}
 	echo "Data Saved Sucessfully";
 }

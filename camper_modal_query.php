@@ -96,11 +96,10 @@
 					//TODO: do buslist like this
 					//An array for holding which option is selected
 					$horseSelector = array(null,null);
-					if($registration->horse_opt == 1 && $registration->horse_waitlist != 1)
+					if($registration->horse_opt == 1)
 						$horseSelector[1] = "selected";
 					else
 						$horseSelector[0] = "selected";
-					
 					$horseHTML = '<select class="inputs" name="horse_opt">
 					<option value="0"' . $horseSelector[0] .'>No Horses</option>
 					<option value="'.$camp->horse_opt.'"'. $horseSelector[1].'>Horses $'. $camp->horse_opt.'</option>
@@ -115,13 +114,6 @@
 					$horsesWaitlistHTML = NULL;
 					if($registration->horse_waitlist == 1)
 						$horsesWaitlistHTML = ' <span style="color:red;"><b>(Waitlisted for Horses)</b></span>';						
-					$horsefee = 0;
-					//TODO: Make sure works properly
-					//If they are signed up for the horse option and are not on the horse waiting list.
-					//0 means they are not on the waiting list.  But this can also apply to people not signed up for horses
-					//So always check both values
-					if ($registration->horse_opt > 0 && $registration->horse_waitlist == 0)
-						$horsefee = $camp->horse_opt;
 					
 					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campWaitlistHTML . 
 					'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
