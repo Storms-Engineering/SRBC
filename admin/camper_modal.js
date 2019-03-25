@@ -220,7 +220,8 @@ function calculate_totals()
 		var inputs = containers[i].getElementsByTagName('input');
 		for (var j = 0; j < inputs.length; ++j) {
 			//We don't want to grab text fields and parseInt doesn't like empty strings
-			if(inputs[j].name != "scholarship_type" && inputs[j].name != "counselor" && 
+			//TODO: change this to loop  through an array or use a foreach this is terrible
+			if(inputs[j].name != "scholarship_type" && inputs[j].name != "discount_type" && inputs[j].name != "counselor" && 
 				inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].name != "payment_amt" &&
 				inputs[j].name != "note" && inputs[j].value != "")
 			{				

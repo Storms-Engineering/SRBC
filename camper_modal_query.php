@@ -123,6 +123,7 @@
 					echo '<span class="financial_info">'.$horsesWaitlistHTML.'Horse Option '.$horseHTML.' $<input class="financial" name="horse_opt" type="text" value="0" readonly></span>';
 					echo '<span class="financial_info">Busride ' . $busride .  ': $<input class="financial" name="busride_cost" type="text" value="' . $busride_cost .'" readonly></span>';
 					echo '<span class="financial_info">Discount: $<input class="financial" type="text" name="discount" value="' . $registration->discount . '"></span>';
+					echo '<span class="financial_info">Discount Type: <input type="text" name="discount_type" value="' . $registration->discount_type . '"></span>';
 					echo '<span class="financial_info">Scholarship Amount: $<input class="financial" name="scholarship_amt" type="text" value="' . $registration->scholarship_amt . '"></span>';
 					echo '<span class="financial_info">Scholarship Type: <input type="text" name="scholarship_type" value="' . $registration->scholarship_type . '"><br></span>';
 					echo '<span class="financial_info">Payed Check: $<input class="financial" name="payed_check" type="text" value="' . $registration->payed_check . '" readonly></span>';
