@@ -594,6 +594,16 @@ function srbc_registration_complete($atts)
 		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it
 			$data .= '   USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
 		}
+		//Show comments about buslist and horse option and horse_cost
+		$comments = "Camp Cost: $" . ($camp->cost - $camp->horse_cost) . ", Horse Cost: $" . $camp->horse_cost;
+		if ($_POST["busride"] == "both")
+			$comments .= ', Busride: $60';
+		else if($_POST["busride"] == "to" || $_POST["busride"] == "from")
+			$comments .= ', Busride: $35';
+		
+		if($horse_opt == 1)
+			$comments .= ', Horse Option: $' . $camp->horse_opt;
+		
 		//Encrypt using ssl
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
 		$pub_key=fread($fp,8192);
@@ -609,12 +619,14 @@ function srbc_registration_complete($atts)
 				'amount' => $_POST["cc_amount"],
 				'camper_name' => $camper_first_name . " " . $camper_last_name,
 				'camp' => ($camp->area . " " . $camp->name),
+				'comments' => $comments,
 				'payment_date' => $currentDate->format("m/d/Y")
 			), 
 			array( 
 				'%d',
 				'%s', 
 				'%f',
+				'%s',
 				'%s',
 				'%s',
 				'%s'

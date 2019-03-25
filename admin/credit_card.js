@@ -96,35 +96,24 @@ async function decryptCCs(data2) {
 	var passphrase = document.getElementById("pwd").value;
 	
 	var cells = document.getElementsByTagName("td")
-	if (crypt.decrypt(cells[0].innerText) == false){
+	if (crypt.decrypt(cells[1].innerText) == false){
 		alert("Bad password");
 		location.reload();
 	}
 	progressBar = document.getElementById("progress");
-	//Testing so that the broswer doesn't freeze
-	//TODO: this still isn't quite working
-	//var wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 	encrypted_text = [];
 	myWorker = new Worker('../wp-content/plugins/SRBC/admin/decrypter.js');
 	myWorker.onmessage = function(e) {
 			cells = document.getElementsByTagName("td")
 			cells[e.data[1]].innerText = e.data[0];
 			progressBar.value = (e.data[1]/cells.length);
-			if (cells.length == (e.data[1] + 5))
+			if (cells.length == (e.data[1] + 6))
 				progressBar.value = 100;
 		}
-	for (i = 1; i < cells.length; i+=6){
+	//7 is how many cells in a row
+	for (i = 1; i < cells.length; i+=7){
 		
-		//cells[i].innerText = await decrypt(cells[i].innerText);
 		encrypted_text.push(cells[i].innerText);
-		//progressBar.value = (i/cells.length);
-		//encrypted_text.push(cells[i].innerText);
 	}
 	myWorker.postMessage([data2,passphrase,encrypted_text]);
-	//encrypted_text.reduce((p, i) => p.then(() => decrypt(i)).then(() => wait(5)),
-   //              Promise.resolve());
-
-}
-async function decrypt(text) {
-  return crypt.decrypt(text);
 }

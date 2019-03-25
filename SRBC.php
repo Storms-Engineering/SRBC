@@ -96,6 +96,7 @@ function srbc_install() {
 		camper_name TINYTEXT NOT NULL,
 		camp TINYTEXT NOT NULL,
 		payment_date TINYTEXT NOT NULL,
+		comments TINYTEXT,
 		PRIMARY KEY (cc_id)
 		)  ENGINE=INNODB;";
 

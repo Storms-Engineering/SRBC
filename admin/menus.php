@@ -37,18 +37,26 @@ function srbc_credit_cards(){
 			<th onclick="sortTable(2);">Amount</th>
 			<th onclick="sortTable(3);">For Camper</th>
 			<th onclick="sortTable(4);">Camp</th>
-			<th onclick="sortTable(5);">Delete</th>
+			<th onclick="sortTable(5);">Comments</th>
+			<th>Delete</th>
 		</tr>
 	<?php
 	global $wpdb;
 	$ccs = $wpdb->get_results("SELECT * FROM srbc_cc ORDER BY cc_id ASC");
 	foreach ($ccs as $cc)
 	{
+		/*TODO: I would like to store this more efficiently but not right this moment
+		$camper = $wpdb->get_row($wpdb->prepare("SELECT *
+							FROM ((srbc_registration 
+							INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
+							INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+							WHERE ",$ccs->registration_id);*/
 		echo "<tr><td>" . $cc->payment_date;
 		echo '</td><td>' . $cc->data;
 		echo "</td><td>$" . $cc->amount;
 		echo "</td><td>" . $cc->camper_name;
 		echo "</td><td>" . $cc->camp;
+		echo "</td><td>" . $cc->comments;
 		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $cc->cc_id . '})}">Delete</button>';
 		echo "</td></tr>";
 	}
