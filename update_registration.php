@@ -18,22 +18,18 @@ if (isset($obj["deleteid"]))
 	{
 		$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM srbc_registration
 						WHERE NOT waitlist=0 AND camp_id=%s ORDER BY registration_id ASC",$obj["camp_id"]));
-		//Make sure we found registrations
-		if (count($registrations) > 0)
-		{
-			//Change the first registration	
-			$wpdb->update( 
-				'srbc_registration', 
-				array( 
-					'waitlist' => 0
-				), 
-				array( 'registration_id' => $registrations[0]->registration_id ), 
-				array( 
-					'%d'	
-				), 
-				array( '%d' ) 
-				);
-		}
+		//Change the first registration	
+		$wpdb->update( 
+			'srbc_registration', 
+			array( 
+				'waitlist' => 0
+			), 
+			array( 'registration_id' => $registrations[0]->registration_id ), 
+			array( 
+				'%d'	
+			), 
+			array( '%d' ) 
+			);
 	}
 	echo "Deleted Registration and Saved Sucessfully";
 }
@@ -73,6 +69,7 @@ else if(isset($obj["registration_id"])){
 		);
 	}
 	echo "Change Successful";
+	//Also change over all the payments made for that camp
 }
 else {
 	//Update Camper
@@ -121,40 +118,9 @@ else {
 	for($i = 0;$i < (count($obj)-1); $i++){
 		//Current key for database
 		$key = $arrayKeys[$i];
-		//Update normal stuff
-		$wpdb->update( 
-			'srbc_registration', 
-			array( 
-				'counselor' => $obj[$key]["counselor"],	
-				'cabin' => $obj[$key]["cabin"],	
-				'horse_opt' => $obj[$key]["horse_opt"],	
-				'busride' => $obj[$key]["busride"],	
-				'discount_type' => $obj[$key]["discount_type"],	
-				'discount' => $obj[$key]["discount"],	
-				'scholarship_amt' => $obj[$key]["scholarship_amt"],
-				'scholarship_type' => $obj[$key]["scholarship_type"],
-				'amount_due' => $obj[$key]["amount_due"],
-				'checked_in' => $obj[$key]["checked_in"],
-			), 
-			array( 'registration_id' => $key ), 
-			array( 
-				'%s',	
-				'%s',
-				'%d',	
-				'%s',	
-				'%s',	
-				'%f',
-				'%f',
-				'%s',	
-				'%f',
-				'%d',
-			), 
-			array( '%d' ) 
-		);
-		
 		//Add payment info to payment database
-		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
 		if ($obj[$key]["payment_type"] != "none"){
+			$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
 			//Get the current date time
 			$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 			$wpdb->insert(
@@ -202,42 +168,46 @@ else {
 			$wpdb->update( 
 			'srbc_registration', 
 			array( 
-				$paymentType => ($obj[$key]["payment_amt"] + $add)
+				$paymentType => ($obj[$key]["payment_amt"] + $add),	
 			), 
 			array( 'registration_id' => $key ), 
 			array( 
-				'%s'	
+				'%s',	
 			), 
 			array( '%d' ) 
 		);
 		}
-
-		
-		//Check if we are taking someone off of the horses waitlist
-		//and if so then bump the next person into horses
-		if ($o->horse_opt == 1 && $obj[$key]["horse_opt"] == 0)
+		else if(isset($obj[$key]["auto_payment"]))
 		{
-			$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,horse_waitlist FROM srbc_registration
-							WHERE horse_waitlist=1 AND camp_id=%s ORDER BY registration_id ASC",$o->camp_id));
-			//Make sure we actually found waitlisted users
-			if (count($registrations) > 0)
-			{	
-				//Change the first registration	
-				$wpdb->update( 
-					'srbc_registration', 
-					array( 
-						'horse_waitlist' => 0,
-						'horse_opt' => 1
-					), 
-					array( 'registration_id' => $registrations[0]->registration_id ), 
-					array( 
-						'%d',	
-						'%d'	
-					), 
-					array( '%d' ) 
-					);
-			}
+			echo "auto_payment";
 		}
+		$wpdb->update( 
+			'srbc_registration', 
+			array( 
+				'counselor' => $obj[$key]["counselor"],	
+				'cabin' => $obj[$key]["cabin"],	
+				'horse_opt' => $obj[$key]["horse_opt"],	
+				'busride' => $obj[$key]["busride"],	
+				'discount' => $obj[$key]["discount"],	
+				'scholarship_amt' => $obj[$key]["scholarship_amt"],
+				'scholarship_type' => $obj[$key]["scholarship_type"],
+				'amount_due' => $obj[$key]["amount_due"],
+				'checked_in' => $obj[$key]["checked_in"],
+			), 
+			array( 'registration_id' => $key ), 
+			array( 
+				'%s',	
+				'%s',
+				'%d',	
+				'%s',	
+				'%f',
+				'%f',
+				'%s',	
+				'%f',
+				'%d',
+			), 
+			array( '%d' ) 
+		);
 	}
 	echo "Data Saved Sucessfully";
 }
