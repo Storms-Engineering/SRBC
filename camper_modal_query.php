@@ -191,7 +191,7 @@
 				foreach ($payments as $payment) {
 					$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . " " . $payment->fee_type . "\r\n";
 				}
-				echo '<h3>Payment History</h3><br><textarea rows="4" cols="50">' . $paymentHistory . '</textarea>'
+				echo '<h3>Payment History</h3><br><textarea rows="4" cols="52">' . $paymentHistory . '</textarea>'
 			?>
 			</div>
 			<div class="modal-footer"><button onclick="saveInfo();closeModal();" class="save_button">Save Info & Close</button></div>
