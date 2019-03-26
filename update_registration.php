@@ -187,9 +187,8 @@ else {
 					$date->format("m/j/Y G:i"),$obj[$key]["note"],"LS Horsemanship");
 			}
 			
-			//@TODO This is still bad
-			
-			
+			//@todo This is still bad
+			//@body	this maybe should work?
 			if(($totalPayed - ($camp->cost + $camp->horse_opt)) < $camp->bus) 
 			{
 				//We still need to pay some on the horse option
