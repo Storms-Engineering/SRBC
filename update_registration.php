@@ -151,6 +151,12 @@ else {
 					$date->format("m/j/Y G:i"),$obj[$key]["note"],$obj[$key]["fee_type"]);
 			}
 			
+			//
+			if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
+			{
+				
+			}
+			
 		}
 		$wpdb->update( 
 			'srbc_registration', 
