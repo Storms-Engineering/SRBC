@@ -126,6 +126,8 @@ else {
 		}
 		else if($obj[$key]["auto_payment"] != "")
 		{
+			
+			//TODO: Ugh getting ugly might need to put this into a function or something
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 												FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
 			//Check if they have payed the base camp amount which is (camp cost - horse cost)
@@ -151,7 +153,7 @@ else {
 					$date->format("m/j/Y G:i"),$obj[$key]["note"],$obj[$key]["fee_type"]);
 			}
 			
-			//
+			//Check horse_cost (aka WT Horsemanship Fee
 			if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
 			{
 				//We still need to pay some on the base camp cost
@@ -165,8 +167,26 @@ else {
 					//They are the same amount
 					$paymentAmt = $obj[$key]["auto_payment"];
 				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
-					$date->format("m/j/Y G:i"),$obj[$key]["note"],$obj[$key]["fee_type"]);
+					$date->format("m/j/Y G:i"),$obj[$key]["note"],"WT Horsemanship");
 			}
+			
+			//Horse option check aka LS Horsemanship
+			if(($totalPayed - $camp->cost) < $camp->horse_opt) 
+			{
+				//We still need to pay some on the horse option
+				$needToPayAmount = ($totalPayed - $camp->cost) - $camp->horse_opt;
+				$paymentAmt = 0;
+				if ($obj[$key]["auto_payment"] < $needToPayAmount)
+					$paymentAmt = $needToPayAmount - $obj[$key]["auto_payment"];
+				else if($obj[$key]["auto_payment"] > $needToPayAmount)
+					$paymentAmt = $needToPayAmount;
+				else
+					//They are the same amount
+					$paymentAmt = $obj[$key]["auto_payment"];
+				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
+					$date->format("m/j/Y G:i"),$obj[$key]["note"],"LS Horsemanship");
+			}
+			
 			
 		}
 		$wpdb->update( 
