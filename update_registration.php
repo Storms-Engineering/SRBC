@@ -119,87 +119,22 @@ else {
 		//Current key for database
 		$key = $arrayKeys[$i];
 		//Add payment info to payment database
-		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
 		if ($obj[$key]["payment_type"] != "none"){
-			makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$obj[$key]["payment_amt"],
-				$date->format("m/j/Y G:i"),$obj[$key]["note"],$obj[$key]["fee_type"]);
-		}
-		else if($obj[$key]["auto_payment"] != "")
-		{
-			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-												FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
-			//Check if they have payed the base camp amount which is (camp cost - horse cost)
-			$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id");
-			$baseCampCost = $camp->cost - $camp->horse_cost;
-			if ($totalPayed < $baseCampCost)
-			{
-				//We still need to pay some on the base camp cost
-				$needToPayAmount = $baseCampCost - totalPayed;
-				$paymentAmt = 0;
-				if ($obj[$key]["auto_payment"] < $needToPayAmount)
-					$paymentAmt = $needToPayAmount - $obj[$key]["auto_payment"];
-				else if($obj[$key]["auto_payment"] > $needToPayAmount)
-					$paymentAmt = $needToPayAmount;
-				else
-					//They are the same amount
-					$paymentAmt = $obj[$key]["auto_payment"];
-				$area = $camp->area;
-				//For fees Sports should go to lakeside
-				if ($area == "Sports")
-					$area = "Lakeside";
-				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
-					$date->format("m/j/Y G:i"),$obj[$key]["note"],$obj[$key]["fee_type"]);
-			}
-			
-		}
-		$wpdb->update( 
-			'srbc_registration', 
-			array( 
-				'counselor' => $obj[$key]["counselor"],	
-				'cabin' => $obj[$key]["cabin"],	
-				'horse_opt' => $obj[$key]["horse_opt"],	
-				'busride' => $obj[$key]["busride"],	
-				'discount' => $obj[$key]["discount"],	
-				'scholarship_amt' => $obj[$key]["scholarship_amt"],
-				'scholarship_type' => $obj[$key]["scholarship_type"],
-				'amount_due' => $obj[$key]["amount_due"],
-				'checked_in' => $obj[$key]["checked_in"],
-			), 
-			array( 'registration_id' => $key ), 
-			array( 
-				'%s',	
-				'%s',
-				'%d',	
-				'%s',	
-				'%f',
-				'%f',
-				'%s',	
-				'%f',
-				'%d',
-			), 
-			array( '%d' ) 
-		);
-	}
-	echo "Data Saved Sucessfully";
-}
-
-//Puts a payment into the database and also updates payment_card payment_cash etc...
-function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment_amt,$payment_date,$note,$fee_type)
-{
-	//Get the current date time
+			$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
+			//Get the current date time
 			$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 			$wpdb->insert(
 					'srbc_payments', 
 					array( 
 						'payment_id' =>0,
-						'registration_id' => $registration_id,
-						'camp_id' => $camp_id, 
-						'camper_id' => $camper_id,
-						'payment_type' => $payment_type,
-						'payment_amt' => $payment_amt,
-						'payment_date' =>  $payment_date,
-						'note' => $note ,
-						'fee_type' => $fee_type
+						'registration_id' => $key,
+						'camp_id' => $o->camp_id, 
+						'camper_id' => $o->camper_id,
+						'payment_type' => $obj[$key]["payment_type"],
+						'payment_amt' => $obj[$key]["payment_amt"],
+						'payment_date' =>  $date->format("m/j/Y G:i"),
+						'note' =>  $obj[$key]["note"],
+						'fee_type' => $obj[$key]["fee_type"]
 					), 
 					array( 
 						'%d',
@@ -213,8 +148,6 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 						'%s'				
 					) 
 				);
-			//TODO: Should be getting rid of this code because we will simply be grabbing all of this from the payment database
-			//using SUM and searching by registration_id
 			$paymentType = NULL;
 			$add = 0;
 			if ($obj[$key]["payment_type"] == "card") {
@@ -245,5 +178,39 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 			), 
 			array( '%d' ) 
 		);
+		}
+		else if(isset($obj[$key]["auto_payment"]))
+		{
+			echo "auto_payment";
+		}
+		$wpdb->update( 
+			'srbc_registration', 
+			array( 
+				'counselor' => $obj[$key]["counselor"],	
+				'cabin' => $obj[$key]["cabin"],	
+				'horse_opt' => $obj[$key]["horse_opt"],	
+				'busride' => $obj[$key]["busride"],	
+				'discount' => $obj[$key]["discount"],	
+				'scholarship_amt' => $obj[$key]["scholarship_amt"],
+				'scholarship_type' => $obj[$key]["scholarship_type"],
+				'amount_due' => $obj[$key]["amount_due"],
+				'checked_in' => $obj[$key]["checked_in"],
+			), 
+			array( 'registration_id' => $key ), 
+			array( 
+				'%s',	
+				'%s',
+				'%d',	
+				'%s',	
+				'%f',
+				'%f',
+				'%s',	
+				'%f',
+				'%d',
+			), 
+			array( '%d' ) 
+		);
+	}
+	echo "Data Saved Sucessfully";
 }
 ?>
