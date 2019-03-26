@@ -177,6 +177,10 @@ else {
 			array( '%d' ) 
 		);
 		}
+		else if(isset($obj[$key]["auto_payment"]))
+		{
+			echo "auto_payment";
+		}
 		$wpdb->update( 
 			'srbc_registration', 
 			array( 
