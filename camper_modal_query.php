@@ -150,8 +150,9 @@
 					<option value="Lakeside" >Lakeside</option>
 					<option value="Wagon Train">Wagon Train</option>
 					<option value="Wilderness">Wilderness</option>
-					<option value="Horse Fee">Horse Fee</option>
-					<option value="Bus Fee">Bus Fee</option>
+					<option value="LS Horsemanship">LS Horsemanship</option>
+					<option value="WT Horsemanship">WT Horsemanship</option>
+					<option value="Bus">Bus</option>
 					<option value="Store">Store</option>
 					</select>';
 					
