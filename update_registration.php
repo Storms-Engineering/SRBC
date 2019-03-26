@@ -127,6 +127,7 @@ else {
 					'srbc_payments', 
 					array( 
 						'payment_id' =>0,
+						'registration_id' => $key,
 						'camp_id' => $o->camp_id, 
 						'camper_id' => $o->camper_id,
 						'payment_type' => $obj[$key]["payment_type"],
@@ -138,6 +139,7 @@ else {
 					array( 
 						'%d',
 						'%d', 
+						'%d',
 						'%d',
 						'%s',
 						'%f',
