@@ -178,7 +178,12 @@
 						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 					}
 					echo $finalText;
+<<<<<<< Updated upstream
 					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button> <button class="save_button" style="background:#009933" onclick="resendEmail('.$registration->registration_id.');" >Resend Email</button>	<button class="save_button" style="background:red" onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button>';
+=======
+					echo '<b>Auto split payment:</b> <input type="text" name="auto_payment">';
+					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button> ';
+>>>>>>> Stashed changes
 					//Replace the id with a unique id for this option based on which registration
 					echo ' <button class="save_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>'.str_replace("~",$registration->registration_id,$camp_selection).'</div>';
 				}
