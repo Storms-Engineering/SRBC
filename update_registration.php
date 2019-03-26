@@ -134,7 +134,7 @@ else {
 			if ($totalPayed < $baseCampCost)
 			{
 				//We still need to pay some on the base camp cost
-				$needToPayAmount = $baseCampCost - totalPayed;
+				$needToPayAmount = $baseCampCost - $totalPayed;
 				$paymentAmt = 0;
 				if ($obj[$key]["auto_payment"] < $needToPayAmount)
 					$paymentAmt = $needToPayAmount - $obj[$key]["auto_payment"];
@@ -154,7 +154,18 @@ else {
 			//
 			if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
 			{
-				
+				//We still need to pay some on the base camp cost
+				$needToPayAmount = ($totalPayed - $baseCampCost) - $camp->horse_cost;
+				$paymentAmt = 0;
+				if ($obj[$key]["auto_payment"] < $needToPayAmount)
+					$paymentAmt = $needToPayAmount - $obj[$key]["auto_payment"];
+				else if($obj[$key]["auto_payment"] > $needToPayAmount)
+					$paymentAmt = $needToPayAmount;
+				else
+					//They are the same amount
+					$paymentAmt = $obj[$key]["auto_payment"];
+				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
+					$date->format("m/j/Y G:i"),$obj[$key]["note"],$obj[$key]["fee_type"]);
 			}
 			
 		}
