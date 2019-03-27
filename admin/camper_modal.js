@@ -159,6 +159,7 @@ function saveInfo()
 		}
 		info_child["amount_due"] = containers[i].getElementsByClassName("amount_due")[0].innerText;
 		info_child["payment_type"] = containers[i].getElementsByClassName("payment_type")[0].value;
+		info_child["auto_payment_type"] = containers[i].getElementsByClassName("auto_payment_type")[0].value;
 		info_child["fee_type"] = containers[i].getElementsByClassName("fee_type")[0].value;
 		//Make sure they enetered a fee type but exclude payments from camps that they aren't enetering information for
 		if (info_child["fee_type"] == "none" && info_child["payment_type"] != "none")
@@ -224,6 +225,7 @@ function calculate_totals()
 			//TODO: change this to loop  through an array or use a foreach this is terrible
 			if(inputs[j].name != "scholarship_type" && inputs[j].name != "discount_type" && inputs[j].name != "counselor" && 
 				inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].name != "payment_amt" &&
+				inputs[j].name != "auto_payment_amt" && inputs[j].name != "auto_note" &&
 				inputs[j].name != "note" && inputs[j].value != "")
 			{				
 				

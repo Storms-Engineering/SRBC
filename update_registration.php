@@ -120,37 +120,87 @@ else {
 		$key = $arrayKeys[$i];
 		//Add payment info to payment database
 		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
-		if ($obj[$key]["payment_type"] != "none"){
-			makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$obj[$key]["payment_amt"],
-				$date->format("m/j/Y G:i"),$obj[$key]["note"],$obj[$key]["fee_type"]);
-		}
-		else if($obj[$key]["auto_payment"] != "")
+
+		if($obj[$key]["auto_payment"] != "")
 		{
+
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-												FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+			echo "Total Payed:$totalPayed" ;
 			//Check if they have payed the base camp amount which is (camp cost - horse cost)
 			$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id");
 			$baseCampCost = $camp->cost - $camp->horse_cost;
-			if ($totalPayed < $baseCampCost)
+			$needToPayAmount = 0;
+			$feeType = NULL;
+			$i = 0;
+			$autoPaymentAmt = $obj[$key]["auto_payment"];
+			//Calculate bus fee based on type of busride
+			$busfee = 0;
+			if ($o->busride == "both")
+				$busfee = 60;
+			else if($o->busride == "to" || $o->busride == "from")
+				$busfee = 35;
+			
+			$horseOpt = 0;
+			if ($o->horse_opt == 1)
+				$horseOpt = $camp->horse_opt;
+			//Create seperate payments based on different fees until autoPaymentAmt is used up
+			//or an overpayment happens which stores it in the database
+			while ($autoPaymentAmt != 0)
 			{
-				//We still need to pay some on the base camp cost
-				$needToPayAmount = $baseCampCost - totalPayed;
-				$paymentAmt = 0;
-				if ($obj[$key]["auto_payment"] < $needToPayAmount)
-					$paymentAmt = $needToPayAmount - $obj[$key]["auto_payment"];
-				else if($obj[$key]["auto_payment"] > $needToPayAmount)
-					$paymentAmt = $needToPayAmount;
+				if ($totalPayed < $baseCampCost)
+				{
+					//We still need to pay some on the base camp cost
+					$needToPayAmount = $baseCampCost - $totalPayed;
+					if ($camp->area == "Sports")
+						$feeType = "Lakeside";
+					else
+						$feeType = $camp->area;
+				}				
+				//Check horse_cost (aka WT Horsemanship Fee
+				else if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
+				{
+					//We still need to pay some on the base camp cost
+					$needToPayAmount = $camp->horse_cost - ($totalPayed - $baseCampCost);
+					$feeType = "WT Horsemanship";
+				}				
+				//Horse option check aka LS Horsemanship
+				else if(($totalPayed - $camp->cost) < $horseOpt) 
+				{
+					//We still need to pay some on the horse option
+					$needToPayAmount = $horseOpt - ($totalPayed - $camp->cost);
+					$feeType = "LS Horsemanship";
+				}
+				else if(($totalPayed - ($camp->cost + $horseOpt)) <$busfee) 
+				{
+					//We still need to pay some on the bus option
+					$needToPayAmount = $busfee - ($totalPayed - ($camp->cost + $horseOpt));
+					$feeType = "Bus";
+				}
 				else
-					//They are the same amount
-					$paymentAmt = $obj[$key]["auto_payment"];
-				$area = $camp->area;
-				//For fees Sports should go to lakeside
-				if ($area == "Sports")
-					$area = "Lakeside";
-				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
-					$date->format("m/j/Y G:i"),$obj[$key]["note"],$obj[$key]["fee_type"]);
+				{
+					//Overpayed
+					$needToPayAmount = $autoPaymentAmt;
+					$feeType= "Overpayed";
+				}
+				//Also updates autoPaymentAmt
+				list ($autoPaymentAmt,$payed) = calculatePaymentAmt($autoPaymentAmt,$needToPayAmount,$feeType);
+				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["auto_payment_type"],$payed,
+					$obj[$key]["auto_note"],$feeType);
+				$totalPayed += $payed;
+				$i++;
+				if ($i > 5)
+				{
+					error_msg("Error: Autopayment failed!  Infinite loop detected.... Please let Website administrator know. - Peter H.");
+					break;
+					
+				}
 			}
 			
+		}
+		else if ($obj[$key]["payment_type"] != "none"){
+			makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$obj[$key]["payment_amt"],
+				$obj[$key]["note"],$obj[$key]["fee_type"]);
 		}
 		$wpdb->update( 
 			'srbc_registration', 
@@ -182,12 +232,26 @@ else {
 	}
 	echo "Data Saved Sucessfully";
 }
+//Calculates how much they need to pay and makes the payment
+function calculatePaymentAmt($autoPaymentAmt, $needToPayAmount,$feeType)
+{
+	$paymentAmt = 0;
+	
+	if ($autoPaymentAmt <= $needToPayAmount)
+		$paymentAmt = $autoPaymentAmt;
+	else if($autoPaymentAmt > $needToPayAmount)
+		$paymentAmt = $needToPayAmount;
+	//this is how muhc money is left so subtract what we just payed
+	$autoPaymentAmt -= $paymentAmt;
+	return array($autoPaymentAmt,$paymentAmt);
+}
 
 //Puts a payment into the database and also updates payment_card payment_cash etc...
-function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment_amt,$payment_date,$note,$fee_type)
+function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment_amt,$note,$fee_type)
 {
 	//Get the current date time
 			$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
+			global $wpdb;
 			$wpdb->insert(
 					'srbc_payments', 
 					array( 
@@ -197,7 +261,7 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 						'camper_id' => $camper_id,
 						'payment_type' => $payment_type,
 						'payment_amt' => $payment_amt,
-						'payment_date' =>  $payment_date,
+						'payment_date' =>  $date->format("m/j/Y G:i"),
 						'note' => $note ,
 						'fee_type' => $fee_type
 					), 
@@ -215,7 +279,7 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 				);
 			//TODO: Should be getting rid of this code because we will simply be grabbing all of this from the payment database
 			//using SUM and searching by registration_id
-			$paymentType = NULL;
+			/*$paymentType = NULL;
 			$add = 0;
 			if ($obj[$key]["payment_type"] == "card") {
 				$paymentType = "payed_card";
@@ -244,6 +308,6 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 				'%s',	
 			), 
 			array( '%d' ) 
-		);
+		);*/
 }
 ?>
