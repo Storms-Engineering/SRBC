@@ -126,6 +126,7 @@ else {
 
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+			echo "Total Payed:$totalPayed" ;
 			//Check if they have payed the base camp amount which is (camp cost - horse cost)
 			$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id");
 			$baseCampCost = $camp->cost - $camp->horse_cost;
@@ -160,10 +161,10 @@ else {
 					$feeType = "WT Horsemanship";
 				}				
 				//Horse option check aka LS Horsemanship
-				else if(($totalPayed - $campCost) < $camp->horse_opt) 
+				else if(($totalPayed - $camp->cost) < $camp->horse_opt) 
 				{
 					//We still need to pay some on the horse option
-					$needToPayAmount = $camp->horse_op;
+					$needToPayAmount = $camp->horse_opt;
 					$feeType = "LS Horsemanship";
 				}
 				else if(($totalPayed - ($camp->cost + $camp->horse_opt)) <$busfee) 
