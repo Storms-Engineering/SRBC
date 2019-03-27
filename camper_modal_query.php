@@ -174,7 +174,7 @@
 						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 					}
 					echo $finalText;
-					echo '<b>Auto split payment (Currently in beta, sorry kelly):</b> $<input type="text" name="auto_payment" readonly>';
+					echo '<b>Auto split payment (Currently in beta, sorry kelly):</b> $<input type="text" name="auto_payment" >';
 					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button>';
 					//Replace the id with a unique id for this option based on which registration
 					echo ' <button class="save_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>'
@@ -191,7 +191,7 @@
 				foreach ($payments as $payment) {
 					$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . " " . $payment->fee_type . "\r\n";
 				}
-				echo '<h3>Payment History</h3><br><textarea rows="4" cols="52">' . $paymentHistory . '</textarea>'
+				echo '<h3>Payment History</h3><br><textarea rows="4" cols="55">' . $paymentHistory . '</textarea>'
 			?>
 			</div>
 			<div class="modal-footer"><button onclick="saveInfo();closeModal();" class="save_button">Save Info & Close</button></div>

@@ -120,19 +120,19 @@ else {
 		$key = $arrayKeys[$i];
 		//Add payment info to payment database
 		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
-		if ($obj[$key]["payment_type"] != "none"){
-			makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$obj[$key]["payment_amt"],
-				$date->format("m/j/Y G:i"),$obj[$key]["note"],$obj[$key]["fee_type"]);
-		}
-		else if($obj[$key]["auto_payment"] != "")
+
+		if($obj[$key]["auto_payment"] != "")
 		{
 			
 			//TODO: Ugh getting ugly might need to put this into a function or something
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 												FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+			echo "<br>Total Payed:" . $totalPayed;
 			//Check if they have payed the base camp amount which is (camp cost - horse cost)
 			$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id");
 			$baseCampCost = $camp->cost - $camp->horse_cost;
+			echo "<br>BaseCampCost:" . $baseCampCost;				
+			echo "<br> TotalPayed: $totalPayed";
 			if ($totalPayed < $baseCampCost)
 			{
 				//We still need to pay some on the base camp cost
@@ -150,7 +150,7 @@ else {
 				if ($area == "Sports")
 					$area = "Lakeside";
 				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
-					$date->format("m/j/Y G:i"),$obj[$key]["note"],$obj[$key]["fee_type"]);
+				$obj[$key]["note"],$area);
 			}
 			
 			//Check horse_cost (aka WT Horsemanship Fee
@@ -166,8 +166,7 @@ else {
 				else
 					//They are the same amount
 					$paymentAmt = $obj[$key]["auto_payment"];
-				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
-					$date->format("m/j/Y G:i"),$obj[$key]["note"],"WT Horsemanship");
+				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,$obj[$key]["note"],"WT Horsemanship");
 			}
 			
 			//Horse option check aka LS Horsemanship
@@ -184,7 +183,7 @@ else {
 					//They are the same amount
 					$paymentAmt = $obj[$key]["auto_payment"];
 				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
-					$date->format("m/j/Y G:i"),$obj[$key]["note"],"LS Horsemanship");
+					$obj[$key]["note"],"LS Horsemanship");
 			}
 			
 			
@@ -208,9 +207,13 @@ else {
 					//They are the same amount
 					$paymentAmt = $obj[$key]["auto_payment"];
 				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
-					$date->format("m/j/Y G:i"),$obj[$key]["note"],"LS Horsemanship");
+					$obj[$key]["note"],"LS Horsemanship");
 			}
 			
+		}
+		else if ($obj[$key]["payment_type"] != "none"){
+			makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$obj[$key]["payment_amt"],
+				$obj[$key]["note"],$obj[$key]["fee_type"]);
 		}
 		$wpdb->update( 
 			'srbc_registration', 
@@ -244,10 +247,11 @@ else {
 }
 
 //Puts a payment into the database and also updates payment_card payment_cash etc...
-function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment_amt,$payment_date,$note,$fee_type)
+function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment_amt,$note,$fee_type)
 {
 	//Get the current date time
 			$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
+			global $wpdb;
 			$wpdb->insert(
 					'srbc_payments', 
 					array( 
@@ -257,7 +261,7 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 						'camper_id' => $camper_id,
 						'payment_type' => $payment_type,
 						'payment_amt' => $payment_amt,
-						'payment_date' =>  $payment_date,
+						'payment_date' =>  $date->format("m/j/Y G:i"),
 						'note' => $note ,
 						'fee_type' => $fee_type
 					), 
@@ -275,7 +279,7 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 				);
 			//TODO: Should be getting rid of this code because we will simply be grabbing all of this from the payment database
 			//using SUM and searching by registration_id
-			$paymentType = NULL;
+			/*$paymentType = NULL;
 			$add = 0;
 			if ($obj[$key]["payment_type"] == "card") {
 				$paymentType = "payed_card";
@@ -304,6 +308,6 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 				'%s',	
 			), 
 			array( '%d' ) 
-		);
+		);*/
 }
 ?>
