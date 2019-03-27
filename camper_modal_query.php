@@ -51,7 +51,8 @@
 					//Calculate the busfee
 					$busride = $registration->busride;
 					$busride_cost = 0;
-					//TODO: UPDATE THIS
+					
+					//TODO change this buslist.  It is terrible
 					if($busride == "both")
 					{
 						$busride= '<select class="inputs" name="busride">
