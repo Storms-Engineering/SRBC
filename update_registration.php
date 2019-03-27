@@ -123,91 +123,74 @@ else {
 
 		if($obj[$key]["auto_payment"] != "")
 		{
-			
-			//TODO: Ugh getting ugly might need to put this into a function or something
+
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-												FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
-			echo "<br>Total Payed:" . $totalPayed;
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
 			//Check if they have payed the base camp amount which is (camp cost - horse cost)
 			$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id");
 			$baseCampCost = $camp->cost - $camp->horse_cost;
-			echo "<br>BaseCampCost:" . $baseCampCost;				
-			echo "<br> TotalPayed: $totalPayed";
-			if ($totalPayed < $baseCampCost)
-			{
-				//We still need to pay some on the base camp cost
-				$needToPayAmount = $baseCampCost - $totalPayed;
-				$paymentAmt = 0;
-				if ($obj[$key]["auto_payment"] < $needToPayAmount)
-					$paymentAmt = $needToPayAmount - $obj[$key]["auto_payment"];
-				else if($obj[$key]["auto_payment"] > $needToPayAmount)
-					$paymentAmt = $needToPayAmount;
-				else
-					//They are the same amount
-					$paymentAmt = $obj[$key]["auto_payment"];
-				$area = $camp->area;
-				//For fees Sports should go to lakeside
-				if ($area == "Sports")
-					$area = "Lakeside";
-				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
-				$obj[$key]["note"],$area);
-			}
-			
-			//Check horse_cost (aka WT Horsemanship Fee
-			if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
-			{
-				//We still need to pay some on the base camp cost
-				$needToPayAmount = ($totalPayed - $baseCampCost) - $camp->horse_cost;
-				$paymentAmt = 0;
-				if ($obj[$key]["auto_payment"] < $needToPayAmount)
-					$paymentAmt = $needToPayAmount - $obj[$key]["auto_payment"];
-				else if($obj[$key]["auto_payment"] > $needToPayAmount)
-					$paymentAmt = $needToPayAmount;
-				else
-					//They are the same amount
-					$paymentAmt = $obj[$key]["auto_payment"];
-				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,$obj[$key]["note"],"WT Horsemanship");
-			}
-			
-			//Horse option check aka LS Horsemanship
-			if(($totalPayed - $camp->cost) < $camp->horse_opt) 
-			{
-				//We still need to pay some on the horse option
-				$needToPayAmount = ($totalPayed - $camp->cost) - $camp->horse_opt;
-				$paymentAmt = 0;
-				if ($obj[$key]["auto_payment"] < $needToPayAmount)
-					$paymentAmt = $needToPayAmount - $obj[$key]["auto_payment"];
-				else if($obj[$key]["auto_payment"] > $needToPayAmount)
-					$paymentAmt = $needToPayAmount;
-				else
-					//They are the same amount
-					$paymentAmt = $obj[$key]["auto_payment"];
-				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
-					$obj[$key]["note"],"LS Horsemanship");
-			}
-			
-			
+			$needToPayAmount = 0;
+			$feeType = NULL;
+			$i = 0;
+			$autoPaymentAmt = $obj[$key]["auto_payment"];
+			//Calculate bus fee based on type of busride
 			$busfee = 0;
 			if ($o->busride == "both")
 				$busfee = 60;
 			else if($o->busride == "to" || $o->busride == "from")
 				$busfee = 35;
-			//@todo This is still bad so much code duplication
-			//Bus fee
-			if(($totalPayed - ($camp->cost + $camp->horse_opt)) <$busfee) 
+			//Create seperate payments based on different fees until autoPaymentAmt is used up
+			//or an overpayment happens which stores it in the database
+			while ($autoPaymentAmt != 0)
 			{
-				//We still need to pay some on the horse option
-				$needToPayAmount = ($totalPayed - ($camp->cost + $camp->horse_opt)) - $busfee;
-				$paymentAmt = 0;
-				if ($obj[$key]["auto_payment"] < $needToPayAmount)
-					$paymentAmt = $needToPayAmount - $obj[$key]["auto_payment"];
-				else if($obj[$key]["auto_payment"] > $needToPayAmount)
-					$paymentAmt = $needToPayAmount;
+				if ($totalPayed < $baseCampCost)
+				{
+					//We still need to pay some on the base camp cost
+					$needToPayAmount = $baseCampCost - $totalPayed;
+					if ($camp->area == "Sports")
+						$feeType = "Lakeside";
+					else
+						$feeType = $camp->area;
+				}				
+				//Check horse_cost (aka WT Horsemanship Fee
+				else if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
+				{
+					//We still need to pay some on the base camp cost
+					$needToPayAmount = $camp->horse_cost;
+					$feeType = "WT Horsemanship";
+				}				
+				//Horse option check aka LS Horsemanship
+				else if(($totalPayed - $campCost) < $camp->horse_opt) 
+				{
+					//We still need to pay some on the horse option
+					$needToPayAmount = $camp->horse_op;
+					$feeType = "LS Horsemanship";
+				}
+				else if(($totalPayed - ($camp->cost + $camp->horse_opt)) <$busfee) 
+				{
+					//We still need to pay some on the horse option
+					$needToPayAmount = $busfee;
+					$feeType = "Bus";
+					
+				}
 				else
-					//They are the same amount
-					$paymentAmt = $obj[$key]["auto_payment"];
-				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$paymentAmt,
-					$obj[$key]["note"],"LS Horsemanship");
+				{
+					//Overpayed
+					$needToPayAmount = $autoPaymentAmt;
+					$feeType= "Overpayed";
+				}
+				//Also updates autoPaymentAmt
+				list ($autoPaymentAmt,$payed) = calculatePaymentAmt($autoPaymentAmt,$needToPayAmount,$feeType);
+				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$payed,
+					$obj[$key]["note"],$feeType);
+				$totalPayed += $payed;
+				$i++;
+				if ($i > 5)
+				{
+					error_msg("Error: Autopayment failed!  Infinite loop detected.... Please let Website administrator know. - Peter H.");
+					break;
+					
+				}
 			}
 			
 		}
@@ -244,6 +227,21 @@ else {
 		);
 	}
 	echo "Data Saved Sucessfully";
+}
+//Calculates how much they need to pay and makes the payment
+function calculatePaymentAmt($autoPaymentAmt, $needToPayAmount,$feeType)
+{
+	echo "<br>Need to pay:$needToPayAmount";
+	$paymentAmt = 0;
+	
+	if ($autoPaymentAmt <= $needToPayAmount)
+		$paymentAmt = $autoPaymentAmt;
+	else if($autoPaymentAmt > $needToPayAmount)
+		$paymentAmt = $needToPayAmount;
+	
+	echo "Payment Amount for ".$feeType.": " . $paymentAmt. "<br>";
+	$autoPaymentAmt -= $paymentAmt;
+	return array($autoPaymentAmt,$paymentAmt);
 }
 
 //Puts a payment into the database and also updates payment_card payment_cash etc...
