@@ -187,12 +187,18 @@ else {
 					$date->format("m/j/Y G:i"),$obj[$key]["note"],"LS Horsemanship");
 			}
 			
-			//@todo This is still bad
-			//@body	this maybe should work?
-			if(($totalPayed - ($camp->cost + $camp->horse_opt)) < $camp->bus) 
+			
+			$busfee = 0;
+			if ($o->busride == "both")
+				$busfee = 60;
+			else if($o->busride == "to" || $o->busride == "from")
+				$busfee = 35;
+			//@todo This is still bad so much code duplication
+			//Bus fee
+			if(($totalPayed - ($camp->cost + $camp->horse_opt)) <$busfee) 
 			{
 				//We still need to pay some on the horse option
-				$needToPayAmount = ($totalPayed - $camp->cost) - $camp->horse_opt;
+				$needToPayAmount = ($totalPayed - ($camp->cost + $camp->horse_opt)) - $busfee;
 				$paymentAmt = 0;
 				if ($obj[$key]["auto_payment"] < $needToPayAmount)
 					$paymentAmt = $needToPayAmount - $obj[$key]["auto_payment"];
