@@ -32,6 +32,7 @@
 					'<input type="text" name="zipcode" value="' . $camper->zipcode . '"></span>';
 				echo '<br><h3>Notes:<h3> <br><textarea id="notes" rows="4" cols="50">' . $camper->notes . '</textarea></div>';
 				echo '<h3>Camps signed up for:</h3><br>';
+				//TODO: this registration loop could probably be redone better
 				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_registration WHERE camper_id=%s",$camper->camper_id));
 				if (count($registrations) == 0)
 					echo "Camper is not signed up for any camps";
@@ -115,6 +116,16 @@
 					if($registration->horse_waitlist == 1)
 						$horsesWaitlistHTML = ' <span style="color:red;"><b>(Waitlisted for Horses)</b></span>';						
 					
+					//TODO: Update code when database is updated
+					//@body currently backwards compatible with searching by camper ID and camp id, but in the future we should only be searching by
+					//registration id
+					$payedCard = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s AND payment_type='card'",$camp->camp_id,$camper->camper_id));
+					$payedCheck = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s AND payment_type='check'",$camp->camp_id,$camper->camper_id));
+					$payedCash = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s AND payment_type='cash'",$camp->camp_id,$camper->camper_id));
+					
 					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campWaitlistHTML . 
 					'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
 					echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';
@@ -126,9 +137,9 @@
 					echo '<span class="financial_info">Discount Type: <input type="text" name="discount_type" value="' . $registration->discount_type . '"></span>';
 					echo '<span class="financial_info">Scholarship Amount: $<input class="financial" name="scholarship_amt" type="text" value="' . $registration->scholarship_amt . '"></span>';
 					echo '<span class="financial_info">Scholarship Type: <input type="text" name="scholarship_type" value="' . $registration->scholarship_type . '"><br></span>';
-					echo '<span class="financial_info">Payed Check: $<input class="financial" name="payed_check" type="text" value="' . $registration->payed_check . '" readonly></span>';
-					echo '<span class="financial_info">Payed Cash: $<input class="financial" name="payed_cash" type="text" value="' . $registration->payed_cash . '" readonly></span>';
-					echo '<span class="financial_info">Payed Card: $<input class="financial" name="payed_card" type="text" value="' . $registration->payed_card . '" readonly></span>';
+					echo '<span class="financial_info">Payed Check: $<input class="financial" name="payed_check" type="text" value="' . $payedCheck . '" readonly></span>';
+					echo '<span class="financial_info">Payed Cash: $<input class="financial" name="payed_cash" type="text" value="' . $payedCash . '" readonly></span>';
+					echo '<span class="financial_info">Payed Card: $<input class="financial" name="payed_card" type="text" value="' . $payedCard . '" readonly></span>';
 					echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due"></span></h3></span>';
 					//TODO we aren't really using amount due.  It was only for reports so I will need to restructure the database at somepoint
 					//. $registration->amount_due .
@@ -156,6 +167,17 @@
 					<option value="Store">Store</option>
 					</select>';
 					
+					//Autopayment section
+					echo "<br><h3>Make Autopayment</h3>";
+					echo 'Payment type: <select class="inputs auto_payment_type">
+					<option value="none" id="default" selected></option>
+					<option value="card">Credit Card</option>
+					<option value="check">Check</option>
+					<option value="cash">Cash</option>
+					</select>';
+					echo 'Note (Check # or Last 4 of CC): <input type="text" name="auto_note"></span>';
+					echo '<br><b>Auto split payment (Currently in alpha, if you use please double check values that it worked correctly):</b> $<input type="text" name="auto_payment" >';
+					
 					//Print out the different fees that have been payed
 					$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM srbc_payments WHERE camper_id=%s AND camp_id=%s",$camper->camper_id,$camp->camp_id));
 					//Add duplicate fees to this array
@@ -174,7 +196,6 @@
 						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 					}
 					echo $finalText;
-					echo '<b>Auto split payment (Currently in beta, sorry kelly):</b> $<input type="text" name="auto_payment" >';
 					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button>';
 					//Replace the id with a unique id for this option based on which registration
 					echo ' <button class="save_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>'

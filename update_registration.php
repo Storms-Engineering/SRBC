@@ -140,6 +140,10 @@ else {
 				$busfee = 60;
 			else if($o->busride == "to" || $o->busride == "from")
 				$busfee = 35;
+			
+			$horseOpt = 0;
+			if ($o->horse_opt == 1)
+				$horseOpt = $camp->horse_opt;
 			//Create seperate payments based on different fees until autoPaymentAmt is used up
 			//or an overpayment happens which stores it in the database
 			while ($autoPaymentAmt != 0)
@@ -157,22 +161,21 @@ else {
 				else if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
 				{
 					//We still need to pay some on the base camp cost
-					$needToPayAmount = $camp->horse_cost;
+					$needToPayAmount = $camp->horse_cost - ($totalPayed - $baseCampCost);
 					$feeType = "WT Horsemanship";
 				}				
 				//Horse option check aka LS Horsemanship
-				else if(($totalPayed - $camp->cost) < $camp->horse_opt) 
+				else if(($totalPayed - $camp->cost) < $horseOpt) 
 				{
 					//We still need to pay some on the horse option
-					$needToPayAmount = $camp->horse_opt;
+					$needToPayAmount = $horseOpt - ($totalPayed - $camp->cost);
 					$feeType = "LS Horsemanship";
 				}
-				else if(($totalPayed - ($camp->cost + $camp->horse_opt)) <$busfee) 
+				else if(($totalPayed - ($camp->cost + $horseOpt)) <$busfee) 
 				{
-					//We still need to pay some on the horse option
-					$needToPayAmount = $busfee;
+					//We still need to pay some on the bus option
+					$needToPayAmount = $busfee - ($totalPayed - ($camp->cost + $horseOpt));
 					$feeType = "Bus";
-					
 				}
 				else
 				{
@@ -182,8 +185,8 @@ else {
 				}
 				//Also updates autoPaymentAmt
 				list ($autoPaymentAmt,$payed) = calculatePaymentAmt($autoPaymentAmt,$needToPayAmount,$feeType);
-				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$payed,
-					$obj[$key]["note"],$feeType);
+				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["auto_payment_type"],$payed,
+					$obj[$key]["auto_note"],$feeType);
 				$totalPayed += $payed;
 				$i++;
 				if ($i > 5)
@@ -232,15 +235,13 @@ else {
 //Calculates how much they need to pay and makes the payment
 function calculatePaymentAmt($autoPaymentAmt, $needToPayAmount,$feeType)
 {
-	echo "<br>Need to pay:$needToPayAmount";
 	$paymentAmt = 0;
 	
 	if ($autoPaymentAmt <= $needToPayAmount)
 		$paymentAmt = $autoPaymentAmt;
 	else if($autoPaymentAmt > $needToPayAmount)
 		$paymentAmt = $needToPayAmount;
-	
-	echo "Payment Amount for ".$feeType.": " . $paymentAmt. "<br>";
+	//this is how muhc money is left so subtract what we just payed
 	$autoPaymentAmt -= $paymentAmt;
 	return array($autoPaymentAmt,$paymentAmt);
 }
