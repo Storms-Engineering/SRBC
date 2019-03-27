@@ -118,6 +118,36 @@ else {
 	for($i = 0;$i < (count($obj)-1); $i++){
 		//Current key for database
 		$key = $arrayKeys[$i];
+		
+		//Update camper first - essential to payments since we check this stuff.  So make sure we write this stuff first
+		$wpdb->update( 
+			'srbc_registration', 
+			array( 
+				'counselor' => $obj[$key]["counselor"],	
+				'cabin' => $obj[$key]["cabin"],	
+				'horse_opt' => $obj[$key]["horse_opt"],	
+				'busride' => $obj[$key]["busride"],	
+				'discount' => $obj[$key]["discount"],	
+				'scholarship_amt' => $obj[$key]["scholarship_amt"],
+				'scholarship_type' => $obj[$key]["scholarship_type"],
+				'amount_due' => $obj[$key]["amount_due"],
+				'checked_in' => $obj[$key]["checked_in"],
+			), 
+			array( 'registration_id' => $key ), 
+			array( 
+				'%s',	
+				'%s',
+				'%d',	
+				'%s',	
+				'%f',
+				'%f',
+				'%s',	
+				'%f',
+				'%d',
+			), 
+			array( '%d' ) 
+		);
+		
 		//Add payment info to payment database
 		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
 
@@ -126,7 +156,6 @@ else {
 
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
-			echo "Total Payed:$totalPayed" ;
 			//Check if they have payed the base camp amount which is (camp cost - horse cost)
 			$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id");
 			$baseCampCost = $camp->cost - $camp->horse_cost;
@@ -202,33 +231,7 @@ else {
 			makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$obj[$key]["payment_amt"],
 				$obj[$key]["note"],$obj[$key]["fee_type"]);
 		}
-		$wpdb->update( 
-			'srbc_registration', 
-			array( 
-				'counselor' => $obj[$key]["counselor"],	
-				'cabin' => $obj[$key]["cabin"],	
-				'horse_opt' => $obj[$key]["horse_opt"],	
-				'busride' => $obj[$key]["busride"],	
-				'discount' => $obj[$key]["discount"],	
-				'scholarship_amt' => $obj[$key]["scholarship_amt"],
-				'scholarship_type' => $obj[$key]["scholarship_type"],
-				'amount_due' => $obj[$key]["amount_due"],
-				'checked_in' => $obj[$key]["checked_in"],
-			), 
-			array( 'registration_id' => $key ), 
-			array( 
-				'%s',	
-				'%s',
-				'%d',	
-				'%s',	
-				'%f',
-				'%f',
-				'%s',	
-				'%f',
-				'%d',
-			), 
-			array( '%d' ) 
-		);
+		
 	}
 	echo "Data Saved Sucessfully";
 }
