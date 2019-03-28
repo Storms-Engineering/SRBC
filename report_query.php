@@ -133,10 +133,15 @@ foreach ($information as $info){
 			echo "<td>" . $info->phone. "</td>";
 			echo "<td>" . $info->phone2. "</td>";
 			echo "<td></td>";
+			
+			//TODO camp_id and camper id dependence
+			//@body another backwards compatible dependency
+			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+			$cost = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
 			//TODO Buslist broken! -HIGH PRIORITY
 			//@body amount due needs to be in the buslist report
-			$amount_due = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
 			echo "<td>$" . $info->amount_due . "</td>";
 		}
 	}
