@@ -138,7 +138,9 @@ foreach ($information as $info){
 			//@body another backwards compatible dependency
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
-			$cost = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+			$cost = $wpdb->get_var($wpdb->prepare("
+									SET @horse_opt_cost = 0;
+									SELECT SUM(payment_amt) 
 									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
 			//TODO Buslist broken! -HIGH PRIORITY
 			//@body amount due needs to be in the buslist report
