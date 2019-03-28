@@ -112,9 +112,12 @@ if ($start_date != "" && $end_date != ""){
 if ($not_checked_in == "true"){
 	$query .= "AND NOT srbc_registration.checked_in=1 ";
 }
+//TODO amount_due deprecated
+//@bpdy needs to be redone with proper SQl query
+/*
 if ($not_payed == "true"){
 	$query .= "AND NOT srbc_registration.amount_due=0 ";
-}
+}*/
 //close the row
 echo "</tr>";
 
@@ -130,6 +133,10 @@ foreach ($information as $info){
 			echo "<td>" . $info->phone. "</td>";
 			echo "<td>" . $info->phone2. "</td>";
 			echo "<td></td>";
+			//TODO Buslist broken! -HIGH PRIORITY
+			//@body amount due needs to be in the buslist report
+			$amount_due = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
 			echo "<td>$" . $info->amount_due . "</td>";
 		}
 	}
