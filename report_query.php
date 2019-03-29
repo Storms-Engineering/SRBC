@@ -137,14 +137,23 @@ foreach ($information as $info){
 			//TODO camp_id and camper id dependence
 			//@body another backwards compatible dependency
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$info->camp_id,$info->camper_id));
 			$cost = $wpdb->get_var($wpdb->prepare("
-									SET @horse_opt_cost = 0;
-									SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+									SELECT SUM(srbc_camps.cost +
+									(CASE WHEN srbc_registration.horse_opt = 1 THEN srbc_camps.horse_opt
+									ELSE 0
+									END) +
+									(CASE WHEN srbc_registration.busride = 'to' THEN 35
+									WHEN srbc_registration.busride = 'from' THEN 35
+									WHEN srbc_registration.busride = 'both' THEN 60
+									ELSE 0
+									END))								
+									FROM srbc_registration 
+									INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id
+									WHERE srbc_registration.camp_id=%d AND srbc_registration.camper_id=%d",$info->camp_id,$info->camper_id));
 			//TODO Buslist broken! -HIGH PRIORITY
 			//@body amount due needs to be in the buslist report
-			echo "<td>$" . $info->amount_due . "</td>";
+			echo "<td>$" . ($cost - $totalPayed) . "</td>";
 		}
 	}
 	if ($scholarship == "true"){

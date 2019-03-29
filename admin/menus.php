@@ -305,7 +305,7 @@ function srbc_camp_reports()
 			<option value="from">To Anchorage</option>
 			<option value="both">Both Ways</option>-->
 		</select><br>
-		<!--	Buslist <input id="buslist" type="checkbox">		-->
+		Buslist <input id="buslist" type="checkbox">
 		Horsemanship <input id="horsemanship" type="checkbox">
 		Camp Numbers <input id="camp_numbers" type="checkbox">
 		Scholarships <input id="scholarship" type="checkbox">
