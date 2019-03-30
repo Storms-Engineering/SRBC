@@ -1,3 +1,5 @@
+//TODO: Put sort tables into its own javascript file
+//@body and just put a link to the file in each html page that we need
 //Sort table function from w3schools
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;

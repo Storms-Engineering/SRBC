@@ -1,17 +1,14 @@
 <?php
-//For testing so it will email me on the localsite
-//if ($_SERVER['SERVER_NAME'] == "127.0.0.1"  )
-//{
-    define('srbc_email', 'info@solidrockbiblecamp.com');
-//}
-//else
-//{
-//    define('srbc_email', 'srbc@alaska.net');
-//}
+//Collection of various random functions that come in handy
+define('srbc_email', 'info@solidrockbiblecamp.com');
 
+//MySql is picky how dates are formatted
+//This function makes the date the correct one
+function mysqlDate($oldDate)
+{
+	
+}
 
-
-//Collection of random functions that might come in handy
 //Echoes an error msg to the user with red
 function error_msg($msg)
 {
@@ -46,7 +43,7 @@ function sendMail($to,$subject,$msg,$attachment = ""){
 	}
 	
 }
-
+//Sets up the HTML necessary to use the modal as the javascript
 function modalSetup(){	
 	echo '<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/modal.css">
 			

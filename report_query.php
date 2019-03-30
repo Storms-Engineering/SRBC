@@ -33,7 +33,7 @@ if ($_GET["camp_numbers"] == "true")
 
 
 //TODO:  This will probably be tore out and totally redone.  Might have to comb through and optimize
-//Probably gonna get rid of these too
+//@body Probably gonna get rid of these too
 $area = $_GET['area'];
 $buslist = $_GET['buslist'];
 $buslist_type = $_GET['buslist_type'];
@@ -52,16 +52,23 @@ $query = "SELECT *
 		INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id) WHERE ";
 		
 $values = array();
+//Keeps track of how many sort headers we have
+$sortnum = 0;
 //Setup table and then we will add headers based on the query
 //Only default for most queries.  Isn't for camp_numbers report_table
-if ($_GET["camp_numbers"] == "true"){
+if ($_GET["backup_registration"] == "true"){
 	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
+	echo '<th onclick="sortTable(2)">Parent Name</th><th onclick="sortTable(3)">Camp</th>';
+	echo '<th onclick="sortTable(4)">Phone #</th><th onclick="sortTable(5)">Payed</th>';
+	echo '<th onclick="sortTable(6)">Amount Due</th><th>Payment Type</th><th>Payment Amount</th>';
+	$sortnum = 7;
 }
 else {
 	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
+	$sortnum = 2;
 }
-//Keeps track of how many sort headers we have
-$sortnum = 2;
+
+
 if ($area == "null") {
 	$query .= "srbc_camps.area LIKE '%' ";
 }
@@ -112,15 +119,18 @@ if ($start_date != "" && $end_date != ""){
 if ($not_checked_in == "true"){
 	$query .= "AND NOT srbc_registration.checked_in=1 ";
 }
+if ($_GET["backup_registration"] == "true"){
+	
+}
+
 //TODO amount_due deprecated
-//@bpdy needs to be redone with proper SQl query
+//@body needs to be redone with proper SQl query
 /*
 if ($not_payed == "true"){
 	$query .= "AND NOT srbc_registration.amount_due=0 ";
 }*/
 //close the row
 echo "</tr>";
-
 $information = $wpdb->get_results(
 	$wpdb->prepare( $query, $values));
 //Show the correct row based on what the user was searching for
@@ -156,10 +166,38 @@ foreach ($information as $info){
 			echo "<td>$" . ($cost - $totalPayed) . "</td>";
 		}
 	}
-	if ($scholarship == "true"){
+	else if ($_GET["backup_registration"] == "true"){
+		echo "<td>" . $info->parent_first_name . " " . $info->parent_last_name . "</td>";
+		echo "<td>" . $info->area . " ".  $info->name . "</td>";
+		echo "<td>" . $info->phone . "</td>";
+		//TODO camp_id and camper id dependence
+		//@body another backwards compatible dependency
+		$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+								FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$info->camp_id,$info->camper_id));
+		$cost = $wpdb->get_var($wpdb->prepare("
+								SELECT SUM(srbc_camps.cost +
+								(CASE WHEN srbc_registration.horse_opt = 1 THEN srbc_camps.horse_opt
+								ELSE 0
+								END) +
+								(CASE WHEN srbc_registration.busride = 'to' THEN 35
+								WHEN srbc_registration.busride = 'from' THEN 35
+								WHEN srbc_registration.busride = 'both' THEN 60
+								ELSE 0
+								END))								
+								FROM srbc_registration 
+								INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id
+								WHERE srbc_registration.camp_id=%d AND srbc_registration.camper_id=%d",$info->camp_id,$info->camper_id));
+		//Little hack so that is shows 0 if they are no payments
+		echo "<td>$" . number_format($totalPayed,2) . "</td>";
+		echo "<td>$" . number_format(($cost - $totalPayed),2) . "</td>";
+		//Empty cells
+		echo "<td></td><td></td>";
+		
+	}
+	else if ($scholarship == "true"){
 		echo "<td>" . $info->scholarship_type . "</td><td>$" . $info->scholarship_amt . "</td>";
 	}
-	if ($discount == "true"){
+	else if ($discount == "true"){
 		echo "<td>$" . $info->discount . "</td>";
 	}
 	

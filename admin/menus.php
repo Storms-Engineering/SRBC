@@ -310,10 +310,12 @@ function srbc_camp_reports()
 		Camp Numbers <input id="camp_numbers" type="checkbox">
 		Scholarships <input id="scholarship" type="checkbox">
 		Discounts <input id="discount" type="checkbox">
+		Backup Registrations <input id="backup_registration" type="checkbox">
 		Start Date: <input id="start_date" type="date">
 		End Date: <input id="end_date" type="date">
+		
 		Camper didn't check in <input id="not_checked_in" type="checkbox"><br>
-		<!--These don't work correctly I believe: Hasn't paid in full <input id="not_payed" type="checkbox">-->
+		<!--TODO: These don't work correctly I believe: Hasn't paid in full <input id="not_payed" type="checkbox">-->
 		<button onclick="generateReport();">Generate Report</button>		
 	</div>
 	<br><br>
