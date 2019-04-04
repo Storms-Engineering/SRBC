@@ -307,10 +307,11 @@ function srbc_camp_reports()
 		</select><br>
 		Buslist <input id="buslist" type="checkbox">
 		Horsemanship <input id="horsemanship" type="checkbox">
-		Camp Numbers <input id="camp_numbers" type="checkbox">
+		Camp Numbers <input id="camp_numbers" type="checkbox"><br>
 		Scholarships <input id="scholarship" type="checkbox">
-		Discounts <input id="discount" type="checkbox">
-		Backup Registrations <input id="backup_registration" type="checkbox">
+		Discounts <input id="discount" type="checkbox"><br>
+		Signout Sheets <input id="signout_sheets" type="checkbox">
+		Backup Registrations <input id="backup_registration" type="checkbox"><br>
 		Start Date: <input id="start_date" type="date">
 		End Date: <input id="end_date" type="date">
 		

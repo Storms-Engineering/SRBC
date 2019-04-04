@@ -11,6 +11,7 @@ if ($_GET["camp_numbers"] == "true")
 	$totalRegistrations = 0;
 	foreach ($camps as $camp)
 	{
+		//TODO change this to get_var
 		$male_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
@@ -28,6 +29,28 @@ if ($_GET["camp_numbers"] == "true")
 	echo "<br><br>Overall Camp Total: " . $totalRegistrations;
 	exit;
 }
+else if($_GET["signout_sheets"] == "true")
+{
+	$camps = $wpdb->get_results("SELECT srbc_registration.counselor,srbc_registration.cabin,srbc_campers.camper_first_name,
+								srbc_campers.camper_last_name,srbc_campers.parent_first_name,srbc_campers.parent_last_name,
+								
+								 FROM ((srbc_registration 
+								 INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
+								 INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+								 WHERE srbc_camps.start_date BETWEEN $_GET['start_date'] AND $_GET['end_date']
+								 ORDER BY srbc_registration.cabin");
+	foreach ($camps as $camp)
+	{
+		echo "<h3>" . $camp->area . " " . $camp->name . "</h3>			" . $camp->start_date . "<br>";
+		echo "		Male: " . $male_registered . "<br>";
+		echo "		Female: " . $female_registered . "<br>";
+		echo "		Total: " . ($male_registered + $female_registered) . "<br>"; 
+		$totalRegistrations += $male_registered + $female_registered;
+	}
+	echo "<br><br>Overall Camp Total: " . $totalRegistrations;
+	exit;
+}
+
 
 
 
@@ -193,7 +216,6 @@ foreach ($information as $info){
 		echo "<td>$" . number_format(($cost - $totalPayed),2) . "</td>";
 		//Empty cells
 		echo "<td></td><td></td>";
-		
 	}
 	else if ($scholarship == "true"){
 		echo "<td>" . $info->scholarship_type . "</td><td>$" . $info->scholarship_amt . "</td>";
