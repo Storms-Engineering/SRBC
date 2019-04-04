@@ -108,6 +108,8 @@ if ($scholarship == "true"){
 }
 if ($discount == "true"){
 	$query .= "AND NOT srbc_registration.discount=0 ";
+	echo '<th onclick="sortTable('.$sortnum.')">Discount Type</th>';
+	$sortnum++;
 	echo '<th onclick="sortTable('.$sortnum.')">Discount</th>';
 	$sortnum++;
 }
@@ -118,9 +120,6 @@ if ($start_date != "" && $end_date != ""){
 }
 if ($not_checked_in == "true"){
 	$query .= "AND NOT srbc_registration.checked_in=1 ";
-}
-if ($_GET["backup_registration"] == "true"){
-	
 }
 
 //TODO amount_due deprecated
@@ -163,8 +162,6 @@ foreach ($information as $info){
 									FROM srbc_registration 
 									INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id
 									WHERE srbc_registration.camp_id=%d AND srbc_registration.camper_id=%d",$info->camp_id,$info->camper_id));
-			//TODO Buslist broken! -HIGH PRIORITY
-			//@body amount due needs to be in the buslist report
 			echo "<td>$" . ($cost - $totalPayed) . "</td>";
 		}
 	}
@@ -202,6 +199,7 @@ foreach ($information as $info){
 		echo "<td>" . $info->scholarship_type . "</td><td>$" . $info->scholarship_amt . "</td>";
 	}
 	else if ($discount == "true"){
+		echo "<td>" . $info->discount_type . "</td>";
 		echo "<td>$" . $info->discount . "</td>";
 	}
 	
