@@ -31,23 +31,46 @@ if ($_GET["camp_numbers"] == "true")
 }
 else if($_GET["signout_sheets"] == "true")
 {
-	$camps = $wpdb->get_results("SELECT srbc_registration.counselor,srbc_registration.cabin,srbc_campers.camper_first_name,
-								srbc_campers.camper_last_name,srbc_campers.parent_first_name,srbc_campers.parent_last_name,
-								
-								 FROM ((srbc_registration 
+	//srbc_registration.counselor,srbc_registration.cabin,srbc_campers.camper_first_name,
+	//							srbc_campers.camper_last_name,srbc_campers.parent_first_name,srbc_campers.parent_last_name						 
+	$campers = $wpdb->get_results("SELECT *
+									FROM ((srbc_registration 
 								 INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
 								 INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-								 WHERE srbc_camps.start_date BETWEEN $_GET['start_date'] AND $_GET['end_date']
-								 ORDER BY srbc_registration.cabin");
-	foreach ($camps as $camp)
+								 WHERE srbc_camps.start_date BETWEEN '" . $_GET['start_date']."' AND '".$_GET['end_date'].
+								 "' ORDER BY srbc_registration.cabin");
+	//This variable keeps track of if we have changed cabin group
+	$oldCabin = NULL;
+	//print_r($campers);
+	foreach ($campers as $camper)
 	{
-		echo "<h3>" . $camp->area . " " . $camp->name . "</h3>			" . $camp->start_date . "<br>";
-		echo "		Male: " . $male_registered . "<br>";
-		echo "		Female: " . $female_registered . "<br>";
-		echo "		Total: " . ($male_registered + $female_registered) . "<br>"; 
-		$totalRegistrations += $male_registered + $female_registered;
+		//Start a new table
+		
+		/*if ($camper->cabin != $oldCabin)
+		{
+			//Don't do this for the first table, but do it for every new table
+			if($oldCabin != NULL)
+			{
+				//echo "</table>";
+				echo "<h3>$camper->cabin</h3>";
+				echo '<table id="report_table">';
+				echo "<tr><th>Camper</th><th>Parent/Guardian</th><th>Phone #</th><th>Signature</th></tr></table>";
+				
+			}
+			
+		}*/
+		echo "<h3>$camper->cabin</h3>";
+				echo '<table id="report_table">';
+				echo "<tr><th>Camper</th><th>Parent/Guardian</th><th>Phone #</th><th>Signature</th></tr></table>";
+		echo "<tr><td>". $camper->camper_first_name . " " . $camper->camper_last_name . "</td>";
+		echo "<td>". $camper->parent_first_name . " " . $camper->parent_last_name . "</td>";
+		echo "<td>". $camper->phone . "</td>";
+		echo "<td></td></tr>";
+		echo "</table>";
+		$oldCabin = $camper->cabin;
 	}
-	echo "<br><br>Overall Camp Total: " . $totalRegistrations;
+	//Close out the table
+	//echo "</table>";
 	exit;
 }
 
