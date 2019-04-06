@@ -46,31 +46,31 @@ else if($_GET["signout_sheets"] == "true")
 	{
 		//Start a new table
 		
-		/*if ($camper->cabin != $oldCabin)
+		if ($camper->cabin != $oldCabin)
 		{
 			//Don't do this for the first table, but do it for every new table
 			if($oldCabin != NULL)
 			{
-				//echo "</table>";
-				echo "<h3>$camper->cabin</h3>";
-				echo '<table id="report_table">';
-				echo "<tr><th>Camper</th><th>Parent/Guardian</th><th>Phone #</th><th>Signature</th></tr></table>";
-				
+				echo "</table>";	
 			}
+			echo "<h3>$camper->cabin</h3>";
+			echo '<table id="report_table">';
+			echo "<tr><th>Camper</th><th>Parent/Guardian</th><th>Phone #</th><th>Signature</th></tr>";
+				
 			
-		}*/
-		echo "<h3>$camper->cabin</h3>";
-				echo '<table id="report_table">';
-				echo "<tr><th>Camper</th><th>Parent/Guardian</th><th>Phone #</th><th>Signature</th></tr></table>";
+		}
+		else
+		//echo "<br><h3>$camper->cabin</h3>";
+		//		echo '<table id="report_table">';
+		//		echo "<tr><th>Camper</th><th>Parent/Guardian</th><th>Phone #</th><th>Signature</th></tr>";
 		echo "<tr><td>". $camper->camper_first_name . " " . $camper->camper_last_name . "</td>";
 		echo "<td>". $camper->parent_first_name . " " . $camper->parent_last_name . "</td>";
 		echo "<td>". $camper->phone . "</td>";
 		echo "<td></td></tr>";
-		echo "</table>";
 		$oldCabin = $camper->cabin;
 	}
 	//Close out the table
-	//echo "</table>";
+	echo "</table>";
 	exit;
 }
 
