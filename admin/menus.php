@@ -120,17 +120,17 @@ function listCamps($area)
 	$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_camps WHERE area='%s' ORDER BY start_date",$area));
 	foreach ($camps as $camp)
 	{
-		$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id), ARRAY_N)[0][0]; 
-		$male_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id), ARRAY_N)[0][0]; 
-		$female_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id)); 
+		$male_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id), ARRAY_N)[0][0]; 
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id)); 
+		$female_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+										FROM srbc_registration
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
 		echo '<tr onclick="openModal(' . $camp->camp_id . ')"><td>' . $camp->name;
 		echo "</td><td>" . $camp->start_date . "</td>";
 		echo "<td>" . $male_registered . "</td>";

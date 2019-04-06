@@ -101,14 +101,14 @@ function srbc_camp_search($atts){
 		$finalText .=  '<tr><td>' . $camp->area . " " . $camp->name . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
 		$finalText .=  "</td><td>$" . $camp->cost;
 		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date));
-		$total_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+		$total_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										WHERE camp_id=%s AND waitlist=0",$camp->camp_id), ARRAY_N)[0][0]; 
+										WHERE camp_id=%s AND waitlist=0",$camp->camp_id)); 
 		$finalText .=  "</td><td>" . ($camp->overall_size - $total_registered); 
 		$finalText .=  "</td><td>";
-		$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id), ARRAY_N)[0][0]; 
+										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id)); 
 		$finalText .=  $camp->waiting_list_size - $waitlistsize . "</td></tr>";
 	}
 	$finalText .=  "</table> ";
@@ -465,25 +465,25 @@ function srbc_registration_complete($atts)
 	//If not then update how many people are registered for this camp
 	$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$_POST["campid"]));
 	//Check if they are already signed up for this camp:
-	$count = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camper_id) FROM srbc_registration WHERE camper_id=%s AND camp_id=%s",$camper_id
-	,$_POST["campid"]), ARRAY_N)[0][0]; 
+	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camper_id) FROM srbc_registration WHERE camper_id=%s AND camp_id=%s",$camper_id
+	,$_POST["campid"])); 
 	if ($count > 0)
 	{
 		error_msg("Sorry you are already registered for this camp");
 		return;
 	}
 	//Check if this camp is already full
-	$count = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE camp_id=%s AND waitlist=0",$_POST["campid"]), ARRAY_N)[0][0]; 
+	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE camp_id=%s AND waitlist=0",$_POST["campid"])); 
 	if($count < $camp->overall_size)
 	{
 		//This camp is not overall full check gender specific caps
 		if ($gender == "male")
 		{
-			$count = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$_POST["campid"]), ARRAY_N); 
-			if ($count[0][0] >= $camp->boy_registration_size)
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$_POST["campid"])); 
+			if ($count >= $camp->boy_registration_size)
 			{
 				error_msg("Unfortunately we cannot register you because the boys section of this camp is full.");
 				goto waitinglist;
@@ -491,11 +491,11 @@ function srbc_registration_complete($atts)
 		}
 		else if($gender == "female")
 		{
-			$count = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$_POST["campid"]), ARRAY_N); 
-			if ($count[0][0] >= $camp->girl_registration_size)
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$_POST["campid"])); 
+			if ($count >= $camp->girl_registration_size)
 			{
 				error_msg("Unfortunately we cannot register you because the girls section of this camp is full.");
 				goto waitinglist;
@@ -515,7 +515,7 @@ function srbc_registration_complete($atts)
 		
 		
 		//Count overall waitlist size for this camp
-		$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE NOT waitlist=0 AND camp_id=%s",$_POST["campid"]), ARRAY_N)[0][0]; 
+		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE NOT waitlist=0 AND camp_id=%s",$_POST["campid"])); 
 		//Check if the waiting list is full
 		if ($waitlistsize < $camp->waiting_list_size)
 		{	
@@ -533,13 +533,13 @@ function srbc_registration_complete($atts)
 	$horse_waitlist = 0;
 	if ($horse_opt == 1)
 	{
-		$listsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE horse_waitlist=0 AND horse_opt=1 AND camp_id=%s ",$_POST["campid"]), ARRAY_N)[0][0]; 
+		$listsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE horse_waitlist=0 AND horse_opt=1 AND camp_id=%s ",$_POST["campid"])); 
 		//If we have to many people in horses
 		if($listsize >= $camp->horse_list_size)
 		{
 			//We have exceeded our horse list so turn this option to 0
 			$horse_opt = 0;
-			$waitlistsize = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE horse_waitlist=1 AND camp_id=%s ",$_POST["campid"]), ARRAY_N)[0][0]; 
+			$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE horse_waitlist=1 AND camp_id=%s ",$_POST["campid"])); 
 			if($waitlistsize < $camp->horse_waiting_list_size)
 			{
 				$horse_waitlist = 1;
