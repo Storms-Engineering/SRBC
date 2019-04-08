@@ -594,7 +594,11 @@ function srbc_registration_complete($atts)
 		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it
 			$data .= '   USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
 		}
+		$comments = "";
 		//Show comments about buslist and horse option and horse_cost
+		//TODO Autosplit for credit cards
+		//@body this needs to be implemented and show the apporpriate amount of money that should 
+		/*
 		$comments = "Camp Cost: $" . ($camp->cost - $camp->horse_cost) . ", Horse Cost: $" . $camp->horse_cost;
 		if ($_POST["busride"] == "both")
 			$comments .= ', Busride: $60';
@@ -603,7 +607,7 @@ function srbc_registration_complete($atts)
 		
 		if($horse_opt == 1)
 			$comments .= ', Horse Option: $' . $camp->horse_opt;
-		
+		*/
 		//Encrypt using ssl
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
 		$pub_key=fread($fp,8192);
