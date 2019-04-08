@@ -11,15 +11,14 @@ if ($_GET["camp_numbers"] == "true")
 	$totalRegistrations = 0;
 	foreach ($camps as $camp)
 	{
-		//TODO change this to get_var
-		$male_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+		$male_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id), ARRAY_N)[0][0]; 
-		$female_registered = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id)); 
+		$female_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id), ARRAY_N)[0][0]; 
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
 		echo "<h3>" . $camp->area . " " . $camp->name . "</h3>			" . $camp->start_date . "<br>";
 		echo "		Male: " . $male_registered . "<br>";
 		echo "		Female: " . $female_registered . "<br>";
