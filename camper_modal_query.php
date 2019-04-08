@@ -131,7 +131,25 @@
 					'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
 					echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';
 					echo 'Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
-					echo 'Cabin: <input name="cabin" type="text" value="' . $registration->cabin . '"><br>';
+					echo 'Logded in: <input name="cabin" list="lodging" type="text" value="' . $registration->cabin . '"><br>';
+					echo '<datalist id="lodging">
+							<option value="Girls Tent">
+							<option value="Guys Tent">
+							<option value="Spruce/Aspen">
+							<option value="Birch/Willow">
+							<option value="Tustumena">
+							<option value="Redoubt">
+							<option value="Wagon 1">
+							<option value="Wagon 2">
+							<option value="Wagon 3">
+							<option value="Wagon 4">
+							<option value="Susitna">
+							<option value="Spurr">
+							<option value="Illiamna">
+							<option value="Augustine">
+							<option value="Skilak">
+							<option value="Beluga">
+							</datalist>';
 					echo '<span class="financial_info">'.$horsesWaitlistHTML.'Horse Option '.$horseHTML.' $<input class="financial" name="horse_opt" type="text" value="0" readonly></span>';
 					echo '<span class="financial_info">Busride ' . $busride .  ': $<input class="financial" name="busride_cost" type="text" value="' . $busride_cost .'" readonly></span>';
 					echo '<span class="financial_info">Discount: $<input class="financial" type="text" name="discount" value="' . $registration->discount . '"></span>';
