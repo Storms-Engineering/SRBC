@@ -671,14 +671,14 @@ function srbc_camps($atts){
 		$finalText .=  "</td><td>" . $camp->grade_range;
 		
 										
-		$boycount = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+		$boycount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id), ARRAY_N)[0][0];
-		$girlcount = $wpdb->get_results($wpdb->prepare("SELECT COUNT(camp_id)
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id));
+		$girlcount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id), ARRAY_N)[0][0]; 
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
 										
 		$total_registered = $boycount + $girlcount;
 		$finalText .=  "</td><td>";
@@ -694,9 +694,9 @@ function srbc_camps($atts){
 		else
 			$finalText .= ($camp->overall_size - $total_registered); 
 		$finalText .=  "</td><td>";
-		$waitlistsize = $wpdb->get_results("SELECT COUNT(camp_id)
+		$waitlistsize = $wpdb->get_var("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										WHERE camp_id=$camp->camp_id AND NOT waitlist=0", ARRAY_N)[0][0]; 
+										WHERE camp_id=$camp->camp_id AND NOT waitlist=0"); 
 		$finalText .=  ($camp->waiting_list_size - $waitlistsize) . "</td></tr>";
 		//Add a title to the description
 		$descriptions .= "<h3 id=".$camp->camp_id.">".$camp->name.", ". date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)).", Grades ".$camp->grade_range."</h3>";
