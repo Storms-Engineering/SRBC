@@ -150,6 +150,10 @@ if ($scholarship == "true"){
 	echo '<th onclick="sortTable('.$sortnum.')">Scholarship Type</th><th onclick="sortTable('.($sortnum + 1).')">Scholarship Amount</th>';
 	$sortnum+= 2;
 }
+if ($_GET["camp"] != "none" && $_GET["camp_report"] != "true")
+{
+	$query .= "AND srbc_camps.camp_id=". $_GET["camp"];
+}
 if ($_GET["camp_report"] == "true")
 {
 	$query .= "AND srbc_camps.camp_id=". $_GET["camp"]. " AND srbc_registration.waitlist=0";
