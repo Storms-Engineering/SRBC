@@ -72,7 +72,7 @@ function generateReport()
 		}
 	}
 	var inputs = document.querySelectorAll("input");
-	var data = null;
+	var data = "";
 	for (var i = 0;i < inputs.length; i++) {
 		if (inputs[i].id == "start_date" || inputs[i].id == "end_date")
 			data += "&" + inputs[i].id + "=" + inputs[i].value;
@@ -81,9 +81,10 @@ function generateReport()
 	}
 	var area = document.getElementById("area").value;
 	var buslist = document.getElementById("buslist").value;
+	var camp = document.getElementById("camp").value;
 	//var buslist_type = document.getElementById("buslist_type").value;
 	buslist_type = null;
-	xhttp.open("GET", "/wp-content/plugins/SRBC/report_query.php?buslist=" + buslist + "&buslist_type="+buslist_type+ "&area="+area+data, true);
+	xhttp.open("GET", "/wp-content/plugins/SRBC/report_query.php?camp=" + camp + "&buslist=" + buslist + "&buslist_type="+buslist_type+ "&area="+area+data, true);
 	xhttp.send();
 }
 

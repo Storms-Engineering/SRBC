@@ -113,8 +113,7 @@ else {
 	$sortnum = 2;
 }
 
-
-if ($area == "null") {
+if ($area == "") {
 	$query .= "srbc_camps.area LIKE '%' ";
 }
 else {
@@ -148,8 +147,15 @@ if ($_GET["camp_numbers"] == "true"){
 }
 if ($scholarship == "true"){
 	$query .= "AND NOT srbc_registration.scholarship_amt=0 ";
-	echo '<th onclick="sortTable('.$sortnum.')">Scholarship Type</th><th onclick="sortTable('.$sortnum.')">Scholarship Amount</th>';
-	$sortnum++;
+	echo '<th onclick="sortTable('.$sortnum.')">Scholarship Type</th><th onclick="sortTable('.($sortnum + 1).')">Scholarship Amount</th>';
+	$sortnum+= 2;
+}
+if ($_GET["camp_report"] == "true")
+{
+	$query .= "AND srbc_camps.camp_id=". $_GET["camp"]. " AND srbc_registration.waitlist=0";
+	echo '<th onclick="sortTable('.$sortnum.')">Gender</th><th onclick="sortTable('.($sortnum + 1).')">Age</th>';
+	echo '<th onclick="sortTable('.($sortnum + 2).')">Counselor</th>';
+	$sortnum += 3;
 }
 if ($discount == "true"){
 	$query .= "AND NOT srbc_registration.discount=0 ";
@@ -239,6 +245,12 @@ foreach ($information as $info){
 		//Empty cells
 		echo "<td></td><td></td>";
 	}
+	else if($_GET["camp_report"] == "true")
+	{
+		echo "<td>" . $info->gender . "</td>";
+		echo "<td>" . $info->age . "</td>";
+		echo "<td>" . $info->counselor . "</td>";
+	}
 	else if ($scholarship == "true"){
 		echo "<td>" . $info->scholarship_type . "</td><td>$" . $info->scholarship_amt . "</td>";
 	}
@@ -246,7 +258,7 @@ foreach ($information as $info){
 		echo "<td>" . $info->discount_type . "</td>";
 		echo "<td>$" . $info->discount . "</td>";
 	}
-	
+	echo "</tr>";
 }
 echo "</table>";
 echo "<br>Campers Count: " . count($information);

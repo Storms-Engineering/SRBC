@@ -297,6 +297,15 @@ function srbc_camp_reports()
 			<option value="Fall Retreat">Fall Retreat</option>
 			<option value="Winter Camp">Winter Camp</option>
 		</select>
+	Camp: <?php 
+				global $wpdb;
+				$camps = $wpdb->get_results("SELECT * FROM srbc_camps ORDER BY area ASC");
+				echo '<select id="camp" name="camp"><option value="none">none</option>';
+				foreach ($camps as $camp){
+					echo '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
+				}
+				echo '</select>';
+		?>
 		<!--TODO: Check if Kelly will even need to have this
 		Buslist type: <select class="inputs" id="buslist_type">
 			<option value="all">All</option>
@@ -312,6 +321,7 @@ function srbc_camp_reports()
 		Discounts <input id="discount" type="checkbox"><br>
 		Signout Sheets <input id="signout_sheets" type="checkbox">
 		Backup Registrations <input id="backup_registration" type="checkbox"><br>
+		Camp Report <input id="camp_report" type="checkbox"><br>
 		Start Date: <input id="start_date" type="date">
 		End Date: <input id="end_date" type="date">
 		
