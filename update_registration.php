@@ -130,7 +130,6 @@ else {
 				'discount' => $obj[$key]["discount"],	
 				'scholarship_amt' => $obj[$key]["scholarship_amt"],
 				'scholarship_type' => $obj[$key]["scholarship_type"],
-				'amount_due' => $obj[$key]["amount_due"],
 				'checked_in' => $obj[$key]["checked_in"],
 			), 
 			array( 'registration_id' => $key ), 
@@ -142,7 +141,6 @@ else {
 				'%f',
 				'%f',
 				'%s',	
-				'%f',
 				'%d',
 			), 
 			array( '%d' ) 
@@ -280,37 +278,5 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 						'%s'				
 					) 
 				);
-			//TODO: Should be getting rid of this code because we will simply be grabbing all of this from the payment database
-			//using SUM and searching by registration_id
-			/*$paymentType = NULL;
-			$add = 0;
-			if ($obj[$key]["payment_type"] == "card") {
-				$paymentType = "payed_card";
-				$add = $o->payed_card;
-			}
-			else if($obj[$key]["payment_type"] == "check"){
-				$paymentType = "payed_check";
-				$add = $o->payed_check;
-			}
-			else if($obj[$key]["payment_type"] == "cash"){
-				$paymentType = "payed_cash";
-				$add = $o->payed_cash;
-			}
-			else 
-			{
-				error_msg("Please notify admin that there was a problem with the payment type");
-				return;
-			}
-			$wpdb->update( 
-			'srbc_registration', 
-			array( 
-				$paymentType => ($obj[$key]["payment_amt"] + $add),	
-			), 
-			array( 'registration_id' => $key ), 
-			array( 
-				'%s',	
-			), 
-			array( '%d' ) 
-		);*/
 }
 ?>
