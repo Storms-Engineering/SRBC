@@ -201,17 +201,27 @@ function srbc_registration( $atts )
 				{
 					$cmpid = $_GET['campid'];
 					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$cmpid));
-					echo '<option value="'.$cmpid.'" selected>' .$camp->area . " " . $camp->name . '</option></select>';
-					echo '<input type="hidden" name="camp_desc" value = "' .$camp->area . " " . $camp->name . '">'; 
-					if($camp->horse_opt != 0)
+					if ($camp == "")
 					{
-						echo ' <input type="checkbox" name="horse_opt" value="true"> Horse Option $' .$camp->horse_opt. '<br>';
+						echo "</select><br><br>";
+						error_msg("Please use the Camp Finder page to select a camp or go to the correct program area and find your camp
+						there.  You shouldn't acess this page directly");
+					}
+					else
+					{
+						echo '<option value="'.$cmpid.'" selected>' .$camp->area . " " . $camp->name . '</option></select>';
+						echo '<input type="hidden" name="camp_desc" value = "' .$camp->area . " " . $camp->name . '">'; 
+						if($camp->horse_opt != 0)
+						{
+							echo ' <input type="checkbox" name="horse_opt" value="true"> Horse Option $' .$camp->horse_opt. '<br>';
+						}
 					}
 				}
 				else
 				{
 					echo "</select><br><br>";
-				error_msg("Please use the Camp Finder page to select a camp or go to the correct program area and find your camp there.  You should'nt acess this page directly");
+					error_msg("Please use the Camp Finder page to select a camp or go to the correct program area and find your camp there.
+					You shouldn't acess this page directly");
 				}
 				?>
 				</h4>
