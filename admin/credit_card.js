@@ -105,6 +105,12 @@ async function decryptCCs(data2) {
 	myWorker = new Worker('../wp-content/plugins/SRBC/admin/decrypter.js');
 	myWorker.onmessage = function(e) {
 			cells = document.getElementsByTagName("td")
+			//Bad password
+			if(e.data[0] == false)
+			{
+				alert("Bad password");
+				location.reload();
+			}
 			cells[e.data[1]].innerText = e.data[0];
 			progressBar.value = (e.data[1]/cells.length);
 			if (cells.length == (e.data[1] + 6))
