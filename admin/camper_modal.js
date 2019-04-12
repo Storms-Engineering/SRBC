@@ -161,10 +161,15 @@ function saveInfo()
 		info_child["payment_type"] = containers[i].getElementsByClassName("payment_type")[0].value;
 		info_child["auto_payment_type"] = containers[i].getElementsByClassName("auto_payment_type")[0].value;
 		info_child["fee_type"] = containers[i].getElementsByClassName("fee_type")[0].value;
-		//Make sure they enetered a fee type but exclude payments from camps that they aren't enetering information for
+		//Make sure they entered a fee type but exclude payments from camps that they aren't entering information for
 		if (info_child["fee_type"] == "none" && info_child["payment_type"] != "none")
 		{
 			alert("Please choose a fee type!");
+			return;
+		}
+		else if(info_child["auto_payment_type"] == "none" && info_child["auto_payment_amt"] != 0)
+		{
+			alert("Please choose a payment type!");
 			return;
 		}
 		info[registration_ids[i].innerText.toString()] = info_child;
@@ -176,6 +181,7 @@ function saveInfo()
 	for (var i=0;i<selects.length;i++){
 		selects[i].selected = true;
 	}
+	setTimeout(function(){openModal(info_c["id"])},1000);
 }
 
 //Add event listeners to all the fields we want to watch for calculate_totals
