@@ -187,14 +187,16 @@ else {
 					else
 						$feeType = $camp->area;
 				}				
+				//$totalPayed comes first because this also checks that they have payed more than we are currently looking atan
+				//If we flip it then it becomes a negative number if the totalPayed is greater than the value we are checking
 				//Check horse_cost (aka WT Horsemanship Fee
-				else if(($totalPayed - $baseCampCost) <= $camp->horse_cost) 
+				else if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
 				{
-					echo "Horse cost" . ($totalPayed - $baseCampCost);
-					echo "Total payed" . $totalPayed;
-					echo "Basecampcost" . $baseCampCost;
+					echo "Horse cost:" . ($totalPayed - $baseCampCost);
+					echo "Total payed:" . $totalPayed;
+					echo "Basecampcost:" . $baseCampCost;
 					//We still need to pay some on the base camp cost
-					$needToPayAmount = $camp->horse_cost - ($totalPayed - $baseCampCost);
+					$needToPayAmount = $camp->horse_cost - ($baseCampCost - $totalPayed);
 					$feeType = "WT Horsemanship";
 				}				
 				//Horse option check aka LS Horsemanship
