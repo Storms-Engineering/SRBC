@@ -154,6 +154,8 @@ else {
 
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+			if($totalPayed == NULL)
+				$totalPayed = 0;
 			//Check if they have payed the base camp amount which is (camp cost - horse cost)
 			$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id");
 			$baseCampCost = $camp->cost - $camp->horse_cost;
@@ -177,6 +179,7 @@ else {
 			{
 				if ($totalPayed < $baseCampCost)
 				{
+					echo "Total payed:" . $totalPayed;
 					//We still need to pay some on the base camp cost
 					$needToPayAmount = $baseCampCost - $totalPayed;
 					if ($camp->area == "Sports")
@@ -185,8 +188,11 @@ else {
 						$feeType = $camp->area;
 				}				
 				//Check horse_cost (aka WT Horsemanship Fee
-				else if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
+				else if(($totalPayed - $baseCampCost) <= $camp->horse_cost) 
 				{
+					echo "Horse cost" . ($totalPayed - $baseCampCost);
+					echo "Total payed" . $totalPayed;
+					echo "Basecampcost" . $baseCampCost;
 					//We still need to pay some on the base camp cost
 					$needToPayAmount = $camp->horse_cost - ($totalPayed - $baseCampCost);
 					$feeType = "WT Horsemanship";
@@ -194,12 +200,14 @@ else {
 				//Horse option check aka LS Horsemanship
 				else if(($totalPayed - $camp->cost) < $horseOpt) 
 				{
+					echo "horse opt:" . ($totalPayed - $camp->cost);
 					//We still need to pay some on the horse option
 					$needToPayAmount = $horseOpt - ($totalPayed - $camp->cost);
 					$feeType = "LS Horsemanship";
 				}
-				else if(($totalPayed - ($camp->cost + $horseOpt)) <$busfee) 
+				else if(($totalPayed - ($camp->cost + $horseOpt)) < $busfee) 
 				{
+					echo "Bus fee" . ($totalPayed - ($camp->cost + $horseOpt));
 					//We still need to pay some on the bus option
 					$needToPayAmount = $busfee - ($totalPayed - ($camp->cost + $horseOpt));
 					$feeType = "Bus";
@@ -242,7 +250,7 @@ function calculatePaymentAmt($autoPaymentAmt, $needToPayAmount,$feeType)
 		$paymentAmt = $autoPaymentAmt;
 	else if($autoPaymentAmt > $needToPayAmount)
 		$paymentAmt = $needToPayAmount;
-	//this is how muhc money is left so subtract what we just payed
+	//this is how much money is left so subtract what we just payed
 	$autoPaymentAmt -= $paymentAmt;
 	return array($autoPaymentAmt,$paymentAmt);
 }
