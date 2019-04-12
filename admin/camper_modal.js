@@ -88,12 +88,12 @@ function postAjax(obj) {
 		var txt = this.responseText;1
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
 		//TODO CHANGE THIS CAUSE THIS DOESN"T WORK GREAT
-        //if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
-		//	showToast("Error occured, please let Website Administrator know");
+        if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
+			showToast("Error occured, please let Website Administrator know");
 			document.getElementById("results").innerHTML = txt;
-		//}
-		//else
-		//	showToast(txt);
+		}
+		else
+			showToast(txt);
     }
 };
 xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_registration.php", true);
@@ -161,10 +161,15 @@ function saveInfo()
 		info_child["payment_type"] = containers[i].getElementsByClassName("payment_type")[0].value;
 		info_child["auto_payment_type"] = containers[i].getElementsByClassName("auto_payment_type")[0].value;
 		info_child["fee_type"] = containers[i].getElementsByClassName("fee_type")[0].value;
-		//Make sure they enetered a fee type but exclude payments from camps that they aren't enetering information for
+		//Make sure they entered a fee type but exclude payments from camps that they aren't entering information for
 		if (info_child["fee_type"] == "none" && info_child["payment_type"] != "none")
 		{
 			alert("Please choose a fee type!");
+			return;
+		}
+		else if(info_child["auto_payment_type"] == "none" && info_child["auto_payment_amt"] != 0)
+		{
+			alert("Please choose a payment type!");
 			return;
 		}
 		info[registration_ids[i].innerText.toString()] = info_child;
@@ -176,6 +181,7 @@ function saveInfo()
 	for (var i=0;i<selects.length;i++){
 		selects[i].selected = true;
 	}
+	setTimeout(function(){openModal(info_c["id"])},1000);
 }
 
 //Add event listeners to all the fields we want to watch for calculate_totals
