@@ -157,6 +157,7 @@ function saveInfo()
 			else
 				info_child[inputs[j].name] = inputs[j].value;
 		}
+		//TODO This is depcrecated
 		info_child["amount_due"] = containers[i].getElementsByClassName("amount_due")[0].innerText;
 		info_child["payment_type"] = containers[i].getElementsByClassName("payment_type")[0].value;
 		info_child["auto_payment_type"] = containers[i].getElementsByClassName("auto_payment_type")[0].value;

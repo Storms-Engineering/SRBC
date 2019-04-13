@@ -218,7 +218,7 @@ else {
 					$feeType= "Overpayed";
 				}
 				//Also updates autoPaymentAmt
-				list ($autoPaymentAmt,$payed) = calculatePaymentAmt($autoPaymentAmt,$needToPayAmount,$feeType);
+				list ($autoPaymentAmt,$payed) = calculatePaymentAmt($autoPaymentAmt,$needToPayAmount);
 				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["auto_payment_type"],$payed,
 					$obj[$key]["auto_note"],$feeType);
 				$totalPayed += $payed;
@@ -241,7 +241,7 @@ else {
 	echo "Data Saved Sucessfully";
 }
 //Calculates how much they need to pay and makes the payment
-function calculatePaymentAmt($autoPaymentAmt, $needToPayAmount,$feeType)
+function calculatePaymentAmt($autoPaymentAmt, $needToPayAmount)
 {
 	$paymentAmt = 0;
 	
