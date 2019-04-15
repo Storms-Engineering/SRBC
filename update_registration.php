@@ -180,6 +180,7 @@ else {
 			//or an overpayment happens which stores it in the database
 			while ($autoPaymentAmt != 0)
 			{
+				echo "<br>Autopayment:" . $autoPaymentAmt;
 				if ($totalPayed < $baseCampCost)
 				{
 					//We still need to pay some on the base camp cost
@@ -194,6 +195,7 @@ else {
 				//Check horse_cost (aka WT Horsemanship Fee
 				else if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
 				{
+					echo "<br>horse_cost eval:($totalPayed - $baseCampCost)";
 					//We still need to pay some on the base camp cost
 					$needToPayAmount = $camp->horse_cost - ($baseCampCost - $totalPayed);
 					$feeType = "WT Horsemanship";
@@ -201,12 +203,14 @@ else {
 				//Horse option check aka LS Horsemanship
 				else if(($totalPayed - $camp->cost) < $horseOpt) 
 				{
+					echo "<br>horseOpt eval:($totalPayed - $camp->cost)";
 					//We still need to pay some on the horse option
 					$needToPayAmount = $horseOpt - ($totalPayed - $camp->cost);
 					$feeType = "LS Horsemanship";
 				}
 				else if(($totalPayed - ($camp->cost + $horseOpt)) < $busfee) 
 				{
+					echo "<br>horseOpt eval:($totalPayed - $camp->cost)";
 					//We still need to pay some on the bus option
 					$needToPayAmount = $busfee - ($totalPayed - ($camp->cost + $horseOpt));
 					$feeType = "Bus";
@@ -225,6 +229,7 @@ else {
 				$i++;
 				if ($i > 5)
 				{
+					echo "<br>Inifinite: $i";
 					error_msg("Error: Autopayment failed!  Infinite loop detected.... Please let Website administrator know. - Peter H.");
 					break;
 					
