@@ -118,7 +118,6 @@ else {
 	for($i = 0;$i < (count($obj)-1); $i++){
 		//Current registration key for database
 		$key = $arrayKeys[$i];
-		echo "<br>i:$i";
 		//Update camper first - essential to payments since we check this stuff.  So make sure we write this stuff first
 		$wpdb->update( 
 			'srbc_registration', 
