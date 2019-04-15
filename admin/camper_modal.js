@@ -95,10 +95,10 @@ function postAjax(obj) {
 		//else
 		//	showToast(txt);
     }
-};
-xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_registration.php", true);
-xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xmlhttp.send("x=" + encodeURIComponent(param));
+	};
+	xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_registration.php", true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.send("x=" + encodeURIComponent(param));
 }
 function changeCamp(r_id,camper_id,old_id){
 	var info = {"change_to_id" : document.getElementById(r_id).value, "registration_id" : r_id,"camper_id":camper_id,"old_id":old_id};
@@ -168,7 +168,7 @@ function saveInfo()
 			alert("Please choose a fee type!");
 			return;
 		}
-		else if(info_child["auto_payment_type"] == "none" && info_child["auto_payment_amt"] != 0)
+		else if(info_child["auto_payment_type"] == "none" && info_child["auto_payment_amt"] != "")
 		{
 			alert("Please choose a payment type!");
 			return;
@@ -232,7 +232,7 @@ function calculate_totals()
 			//TODO: change this to loop  through an array or use a foreach this is terrible
 			if(inputs[j].name != "scholarship_type" && inputs[j].name != "discount_type" && inputs[j].name != "counselor" && 
 				inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].name != "payment_amt" &&
-				inputs[j].name != "auto_payment_amt" && inputs[j].name != "auto_note" &&
+				inputs[j].name != "auto_note" &&
 				inputs[j].name != "note" && inputs[j].value != "")
 			{				
 				

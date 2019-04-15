@@ -195,7 +195,7 @@
 					<option value="cash">Cash</option>
 					</select>';
 					echo 'Note (Check # or Last 4 of CC): <input type="text" name="auto_note"></span>';
-					echo '<br><b>Auto split payment (Currently in alpha, if you use please double check values that it worked correctly):</b> $<input type="text" name="auto_payment" >';
+					echo '<br><b>Auto split payment (Currently in alpha, if you use please double check values that it worked correctly):</b> $<input type="text" name="auto_payment_amt" >';
 					
 					//Print out the different fees that have been payed
 					$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM srbc_payments WHERE camper_id=%s AND camp_id=%s",$camper->camper_id,$camp->camp_id));
