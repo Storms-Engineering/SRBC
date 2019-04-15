@@ -88,12 +88,12 @@ function postAjax(obj) {
 		var txt = this.responseText;1
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
 		//TODO CHANGE THIS CAUSE THIS DOESN"T WORK GREAT
-        //if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
-		//	showToast("Error occured, please let Website Administrator know");
+        if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
+			showToast("Error occured, please let Website Administrator know");
 			document.getElementById("results").innerHTML = txt;
-		//}
-		//else
-		//	showToast(txt);
+		}
+		else
+			showToast(txt);
     }
 	};
 	xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_registration.php", true);
