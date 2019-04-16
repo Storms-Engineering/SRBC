@@ -321,6 +321,7 @@ function srbc_camp_reports()
 		Discounts <input id="discount" type="checkbox"><br>
 		Signout Sheets <input id="signout_sheets" type="checkbox">
 		Backup Registrations <input id="backup_registration" type="checkbox"><br>
+		Registration Day Report (Use start date for registration day)<input id="registration_day" type="checkbox">
 		Camp Report <input id="camp_report" type="checkbox"><br>
 		Start Date: <input id="start_date" type="date">
 		End Date: <input id="end_date" type="date">

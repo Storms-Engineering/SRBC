@@ -269,7 +269,7 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 						'camper_id' => $camper_id,
 						'payment_type' => $payment_type,
 						'payment_amt' => $payment_amt,
-						'payment_date' =>  $date->format("m/j/Y G:i"),
+						'payment_date' =>  $date->format("m/d/Y G:i"),
 						'note' => $note ,
 						'fee_type' => $fee_type
 					), 
