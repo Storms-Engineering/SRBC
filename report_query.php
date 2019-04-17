@@ -81,16 +81,18 @@ else if ($_GET["registration_day"] == "true")
 													FROM ((srbc_payments 
 													INNER JOIN srbc_registration ON srbc_registration.registration_id=srbc_payments.registration_id)
 													INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-													WHERE srbc_payments.payment_date LIKE %s ORDER BY srbc_campers.camper_id ASC",$newFormat . "%"));
+													WHERE srbc_payments.payment_date LIKE %s 
+													ORDER BY srbc_campers.camper_id, srbc_payments.registration_id ASC",$newFormat . "%"));
+													
 	echo "<h3>Registration day fees collected:</h3>";
 	echo '<table id="report_table">';
 	echo "<tr><th>Last name</th><th>First Name</th><th>Camp fee</th><th>Program Area</th>
 			<th>Horse fee (WT)</th><th>Horse Option(LS)</th><th>Bus Fee</th><th>Store</th><th>Total</th></tr>";
 			
 	//Declare variables to sum up together in one row
-	$horse_fee = $horse_opt = $bus_fee = $camp_fee  = $program_area = $store = $last_id = $total = 0;
-	//Makes sure the first camper isn't repeated
-	$first_time = true;
+	$horse_fee = $horse_opt = $bus_fee = $camp_fee  = $program_area = $store = $next_id = $next_reg_id = $total = 0;
+	$pointer = 1;
+	//ID is for multiple campers that were payed for at once
 	foreach ($campers as $camper)
 	{
 		if ($camper->fee_type == "bus")
@@ -103,19 +105,34 @@ else if ($_GET["registration_day"] == "true")
 			$horse_fee += $camper->payment_amt;
 		else
 		{
+			echo $camp_fee;
 			$camp_fee += $camper->payment_amt;	
 			//IDK what do about Owen because his mom payed for two camps at the same time
 			//Unlikely situation but it will probably happen
-			$program_area .= $camper->fee_type;
+			if ($program_area != $camper->fee_type)
+				$program_area .= "," . $camper->fee_type;
+			else if($program_area == 0)
+				$program_area = $camper->fee_type;
 		}
 		
-		//Check if this is only one camper then display their info
-		//This might be overkill double check
-		if (($first_time != true && $last_id != $camper->camper_id) ||
-		($campers[count($campers) - 1]->camper_id == $camper->camper_id && $campers[count($campers) - 1]->payment_id == $camper->payment_id ))
+		$total += $camper->payment_amt;
+		$last_id = $camper->camper_id;
+		
+		if ($pointer < count($campers))
 		{
-			//Print out the row
-			echo "<tr><td>". $camper->camper_first_name . "</td><td>" . $camper->camper_last_name . "</td>";
+			$nextid = $campers[$pointer]->camper_id;
+			$next_reg_id = $campers[$pointer]->registration_id;
+		}
+		else 
+		{
+			//If this is the last camper then just force the row to print.
+			$nextid = 0;
+			$next_reg_id = 0;
+		}
+		if ($camper->camper_id != $nextid || $camper->registration_id != $next_reg_id)// ||
+		//($campers[count($campers) - 1]->camper_id == $camper->camper_id && $campers[count($campers) - 1]->payment_id == $camper->payment_id ))
+		{
+			echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_first_name . "</td><td>" . $camper->camper_last_name . "</td>";
 			echo "<td>". $camp_fee . "</td>";
 			echo "<td>". $program_area . "</td>";
 			echo "<td>". $horse_fee . "</td>";
@@ -127,11 +144,7 @@ else if ($_GET["registration_day"] == "true")
 			//Then reset the variables
 			$horse_fee = $horse_opt = $bus_fee = $camp_fee = $store = $last_id = $total = $program_area = 0;
 		}
-		
-		
-		$total += $camper->payment_amt;
-		$last_id = $camper->camper_id;
-		$first_time = false;
+		$pointer++;
 	}
 	//Close out the table
 	echo "</table>";
