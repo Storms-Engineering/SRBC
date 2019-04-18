@@ -92,12 +92,15 @@ else if ($_GET["registration_day"] == "true")
 	//Declare variables to sum up together in one row
 	$horse_fee = $horse_opt = $bus_fee = $camp_fee  = $program_area = $store = $next_id = $next_reg_id = $total = 0;
 	$pointer = 1;
+	$totals = ["card" => 0,"check" => 0, "cash" => 0];
 	//ID is for multiple campers that were payed for at once
 	foreach ($campers as $camper)
 	{
-		if ($camper->fee_type == "bus")
+		
+		$totals[$camper->payment_type] += $camper->payment_amt;
+		if ($camper->fee_type == "Bus")
 			$bus_fee += $camper->payment_amt;
-		else if($camper->fee_type == "store")
+		else if($camper->fee_type == "Store")
 			$store += $camper->payment_amt;
 		else if($camper->fee_type == "LS Horsemanship")
 			$horse_opt += $camper->payment_amt;
@@ -105,7 +108,6 @@ else if ($_GET["registration_day"] == "true")
 			$horse_fee += $camper->payment_amt;
 		else
 		{
-			echo $camp_fee;
 			$camp_fee += $camper->payment_amt;	
 			//IDK what do about Owen because his mom payed for two camps at the same time
 			//Unlikely situation but it will probably happen
@@ -148,6 +150,12 @@ else if ($_GET["registration_day"] == "true")
 	}
 	//Close out the table
 	echo "</table>";
+	echo "<h3>Total Cash:$";
+	echo (isset($totals["cash"]))?number_format($totals["cash"],2):'0';
+	echo "<h3>Total Check:$";
+	echo (isset($totals["check"]))?number_format($totals["check"],2):'0';
+	echo "<h3>Total Card:$";
+	echo (isset($totals["card"]))?number_format($totals["card"],2):'0';
 	exit;
 	
 }
