@@ -2,13 +2,6 @@
 //Collection of various random functions that come in handy
 define('srbc_email', 'info@solidrockbiblecamp.com');
 
-//MySql is picky how dates are formatted
-//This function makes the date the correct one
-function mysqlDate($oldDate)
-{
-	
-}
-
 //Echoes an error msg to the user with red
 function error_msg($msg)
 {

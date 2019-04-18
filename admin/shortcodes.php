@@ -141,7 +141,7 @@ function srbc_application_complete($atts){
    sendMail($_POST["email"], 'You applied to work at Solid Rock Bible Camp ',
    "Dear" . $_POST["Firstname"] . ",<br>Thanks for applying to work at Solid Rock Bible Camp!
    <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
-   <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp", "From: " . srbc_email);
+   <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
    /* Set the mail message body. */
 	sendMail(srbc_email, 'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body);
 
