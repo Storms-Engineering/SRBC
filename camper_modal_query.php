@@ -153,9 +153,37 @@
 					echo '<span class="financial_info">'.$horsesWaitlistHTML.'Horse Option '.$horseHTML.' $<input class="financial" name="horse_opt" type="text" value="0" readonly></span>';
 					echo '<span class="financial_info">Busride ' . $busride .  ': $<input class="financial" name="busride_cost" type="text" value="' . $busride_cost .'" readonly></span>';
 					echo '<span class="financial_info">Discount: $<input class="financial" type="text" name="discount" value="' . $registration->discount . '"></span>';
-					echo '<span class="financial_info">Discount Type: <input type="text" name="discount_type" value="' . $registration->discount_type . '"></span>';
+					$discountSelector = array(null,null,null);
+					if($registration->discount_type == "Multiple Child")
+						$discountSelector[1] = "selected";
+					else if($registration->discount_type == "Staff")
+						$discountSelector[2] = "selected";
+					else
+						$discountSelector[0] = "selected";
+					echo '<span class="financial_info">Discount Type:<select class="inputs discount_type">
+					<option value="" ' . $discountSelector[0] . '>None</option>
+					<option value="Multiple Child"' . $discountSelector[1] . '>Multiple Child</option>
+					<option value="Staff"' . $discountSelector[2] . '>Staff</option>
+					</select></span>';
 					echo '<span class="financial_info">Scholarship Amount: $<input class="financial" name="scholarship_amt" type="text" value="' . $registration->scholarship_amt . '"></span>';
-					echo '<span class="financial_info">Scholarship Type: <input type="text" name="scholarship_type" value="' . $registration->scholarship_type . '"><br></span>';
+					$scholSelector = array(null,null,null,null,null);
+					if($registration->scholarship_type == "Need")
+						$scholSelector[1] = "selected";
+					else if($registration->scholarship_type == "Workcrew/WIT")
+						$scholSelector[2] = "selected";
+					else if($registration->scholarship_type == "Trade")
+						$scholSelector[3] = "selected";
+					else if($registration->scholarship_type == "Volunteer")
+						$scholSelector[4] = "selected";
+					else
+						$scholSelector[0] = "selected";
+					echo '<span class="financial_info">Scholarship Type: <select class="inputs scholarship_type">
+					<option value="" ' . $scholSelector[0] . '>None</option>
+					<option value="Need"' . $scholSelector[1] . '>Need</option>
+					<option value="Workcrew/WIT"' . $scholSelector[2] . '>Workcrew/WIT</option>
+					<option value="Trade"' . $scholSelector[3] . '>Trade</option>
+					<option value="Volunteer"' . $scholSelector[4] . '>Volunteer</option>
+					</select><br></span>';
 					echo '<span class="financial_info">Payed Check: $<input class="financial" name="payed_check" type="text" value="' . $payedCheck . '" readonly></span>';
 					echo '<span class="financial_info">Payed Cash: $<input class="financial" name="payed_cash" type="text" value="' . $payedCash . '" readonly></span>';
 					echo '<span class="financial_info">Payed Card: $<input class="financial" name="payed_card" type="text" value="' . $payedCard . '" readonly></span>';

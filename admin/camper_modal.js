@@ -157,11 +157,16 @@ function saveInfo()
 			else
 				info_child[inputs[j].name] = inputs[j].value;
 		}
-		//TODO This is depcrecated
+		//TODO This is depcrecated make sure this doesn't break everything
+		//@body	Check php file for references to it
 		info_child["amount_due"] = containers[i].getElementsByClassName("amount_due")[0].innerText;
+		//TODO these selects are also becoming more numerous
+		//@body these should be put in the loop logic better
 		info_child["payment_type"] = containers[i].getElementsByClassName("payment_type")[0].value;
 		info_child["auto_payment_type"] = containers[i].getElementsByClassName("auto_payment_type")[0].value;
 		info_child["fee_type"] = containers[i].getElementsByClassName("fee_type")[0].value;
+		info_child["discount_type"] = containers[i].getElementsByClassName("discount_type")[0].value;
+		info_child["scholarship_type"] = containers[i].getElementsByClassName("scholarship_type")[0].value;
 		//Make sure they entered a fee type but exclude payments from camps that they aren't entering information for
 		if (info_child["fee_type"] == "none" && info_child["payment_type"] != "none")
 		{
