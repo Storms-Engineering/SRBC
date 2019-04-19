@@ -58,8 +58,7 @@ else if($_GET["signout_sheets"] == "true")
 				echo "<h3>$camper->cabin</h3>";
 			echo '<table id="report_table">';
 			echo '<tr><th>Camper</th><th>Parent/Guardian</th><th>Phone #</th><th style="width:200px;">Signature</th></tr>';			
-		}
-			
+		}			
 		echo "<tr><td>". $camper->camper_first_name . " " . $camper->camper_last_name . "</td>";
 		echo "<td>". $camper->parent_first_name . " " . $camper->parent_last_name . "</td>";
 		echo "<td>". $camper->phone . "</td>";

@@ -604,20 +604,11 @@ function srbc_registration_complete($atts)
 		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it
 			$data .= '   USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
 		}
-		$comments = "";
+	
 		//Show comments about buslist and horse option and horse_cost
 		//TODO Autosplit for credit cards
 		//@body this needs to be implemented and show the apporpriate amount of money that should 
-		/*
-		$comments = "Camp Cost: $" . ($camp->cost - $camp->horse_cost) . ", Horse Cost: $" . $camp->horse_cost;
-		if ($_POST["busride"] == "both")
-			$comments .= ', Busride: $60';
-		else if($_POST["busride"] == "to" || $_POST["busride"] == "from")
-			$comments .= ', Busride: $35';
-		
-		if($horse_opt == 1)
-			$comments .= ', Horse Option: $' . $camp->horse_opt;
-		*/
+		$comments = autoSplit($wpdb->insert_id;);
 		//Encrypt using ssl
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
 		$pub_key=fread($fp,8192);
@@ -656,7 +647,100 @@ function srbc_registration_complete($atts)
 	sendMail($email,"Thank you for signing up for a Solid Rock Camp!",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
 	return "Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. (If you don't see the email check your spam box and please mark it not spam)";
 }
-
+function autoSplit()
+{
+	$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+			
+	//Make the scholarships and discounts add to total payed so we take it out of the base camp fee
+	$totalPayed += $o->discount + $o->scholarship_amt;
+	if($totalPayed == NULL)
+		$totalPayed = 0;
+	//Check if they have payed the base camp amount which is (camp cost - horse cost)
+	$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id");
+	$baseCampCost = $camp->cost - $camp->horse_cost;
+	$needToPayAmount = 0;
+	$feeType = NULL;
+	//Counts how many times we looped through
+	$loops = 0;
+	$autoPaymentAmt = $obj[$key]["auto_payment_amt"];
+	//Calculate bus fee based on type of busride
+	$busfee = 0;
+	if ($o->busride == "both")
+		$busfee = 60;
+	else if($o->busride == "to" || $o->busride == "from")
+		$busfee = 35;
+	
+	$horseOpt = 0;
+	if ($o->horse_opt == 1)
+		$horseOpt = $camp->horse_opt;
+	//Create seperate payments based on different fees until autoPaymentAmt is used up
+	//or an overpayment happens which stores it in the database
+	while ($autoPaymentAmt != 0)
+	{
+		if ($totalPayed < $baseCampCost)
+		{
+			//We still need to pay some on the base camp cost
+			$needToPayAmount = $baseCampCost - $totalPayed;
+			if ($camp->area == "Sports")
+				$feeType = "Lakeside";
+			else
+				$feeType = $camp->area;
+		}				
+		//$totalPayed comes first because this also checks that they have payed more than we are currently looking atan
+		//If we flip it then it becomes a negative number if the totalPayed is greater than the value we are checking
+		//Check horse_cost (aka WT Horsemanship Fee
+		else if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
+		{
+			//We still need to pay some on the base camp cost
+			$needToPayAmount = $camp->horse_cost - ($baseCampCost - $totalPayed);
+			$feeType = "WT Horsemanship";
+		}				
+		//Horse option check aka LS Horsemanship
+		else if(($totalPayed - $camp->cost) < $horseOpt) 
+		{
+			//We still need to pay some on the horse option
+			$needToPayAmount = $horseOpt - ($totalPayed - $camp->cost);
+			$feeType = "LS Horsemanship";
+		}
+		else if(($totalPayed - ($camp->cost + $horseOpt)) < $busfee) 
+		{
+			//We still need to pay some on the bus option
+			$needToPayAmount = $busfee - ($totalPayed - ($camp->cost + $horseOpt));
+			$feeType = "Bus";
+		}
+		else
+		{
+			//Overpayed
+			$needToPayAmount = $autoPaymentAmt;
+			$feeType= "Overpayed";
+		}
+		//Also updates autoPaymentAmt
+		list ($autoPaymentAmt,$payed) = calculatePaymentAmt($autoPaymentAmt,$needToPayAmount);
+		makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["auto_payment_type"],$payed,
+			$obj[$key]["auto_note"],$feeType);
+		$totalPayed += $payed;
+		$loops++;
+		if ($loops > 5)
+		{
+			error_msg("Error: Autopayment failed!  Infinite loop detected.... Please let Website administrator know. - Peter H.");
+			break;
+			
+		}
+	}
+}
+//Calculates how much they need to pay and makes the payment
+function calculatePaymentAmt($autoPaymentAmt, $needToPayAmount)
+{
+	$paymentAmt = 0;
+	if ($autoPaymentAmt <= $needToPayAmount)
+		$paymentAmt = $autoPaymentAmt;
+	else if($autoPaymentAmt > $needToPayAmount)
+		$paymentAmt = $needToPayAmount;
+	//this is how much money is left so subtract what we just payed
+	$autoPaymentAmt -= $paymentAmt;
+	return array($autoPaymentAmt,$paymentAmt);
+}
 function srbc_camps($atts){
 	$query = $atts["area"];
 	

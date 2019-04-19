@@ -152,7 +152,7 @@ else {
 
 		if($obj[$key]["auto_payment_amt"] != "")
 		{
-
+			//TODO camp_id and camper_id backwards compatability
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
 			
