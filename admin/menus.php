@@ -24,9 +24,6 @@ function srbc_credit_cards(){
 			
 	}*/
 	</style>
-	<script src="../wp-content/plugins/SRBC/JSEncrypt/jsencrypt.min.js"></script>
-	<script src="../wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
-	<script src="../wp-content/plugins/SRBC/admin/credit_card.js"></script>
 	<h1>Credit Cards pending processing:</h1>
 	Password :  <input type="password" id="pwd"> Decryption Progress <progress value="0" id="progress"></progress>
 	<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">Drop key file here</div>
@@ -61,6 +58,12 @@ function srbc_credit_cards(){
 		echo "</td></tr>";
 	}
 	echo "</table> ";
+	?>
+	<script src="../wp-content/plugins/SRBC/JSEncrypt/jsencrypt.min.js"></script>
+	<script src="../wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/credit_card.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/sortTable.js"></script>
+	<?php
 }
 
 //Shows camper management page
@@ -101,6 +104,7 @@ function srbc_camper_management()
     </div>
 	<script src="../wp-content/plugins/SRBC/admin/camper_management.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/camper_modal.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/sortTable.js"></script>
     <?php
 }
 
@@ -336,7 +340,7 @@ function srbc_camp_reports()
 	<div id="snackbar"></div>
 	<script src="../wp-content/plugins/SRBC/admin/reports.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/camper_modal.js"></script>
-	
+	<script src="../wp-content/plugins/SRBC/admin/sortTable.js"></script>
 <?php
 }
 ?>

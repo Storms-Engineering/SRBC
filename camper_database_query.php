@@ -68,11 +68,11 @@ if (!$specificQuery)
 ?>
 	 <table style="width:100%;">
 		<tr>
-			<th>Firstname</th>
-			<th>Lastname</th>
-			<th>Age</th>
-			<th>Parent Name</th>
-			<th>Phone</th>
+			<th onclick="sortTable(0);">Firstname</th>
+			<th onclick="sortTable(1);">Lastname</th>
+			<th onclick="sortTable(2);">Age</th>
+			<th onclick="sortTable(3);">Parent Name</th>
+			<th onclick="sortTable(4);">Phone</th>
 		</tr>
 		<?php
 	foreach ($campers as $camper)
