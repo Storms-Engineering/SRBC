@@ -159,7 +159,15 @@ function srbc_overview_page()
     </div>
 	<script>
 	var i = 0;
-	var txt = 'Hello Peter.... what does it look like? The shape in the glass?'; /* The text */
+	var txt = "Hello Peter.... what does it look like? The shape in the glass?" +
+	"\rIn this hour of victory, we taste only defeat. I ask, why? We are Forerunners, guardians of all that exists." +
+	"The roots of the galaxy have grown deep under our careful tending. Where there is life, the wisdom of our countless " +
+	"generations has saturated the soil. Our strength is a luminous sun, towards which all intelligence blossoms... And the " + 
+	"impervious shelter beneath which it has prospered. I stand before you, accused of the sin of ensuring Forerunner ascendancy. "+ 
+	"Of attempting to save us from this fate where we are forced to... recede. Humanity stands as the greatest threat in the galaxy."+
+	" Refusing to eradicate them is a fool's gambit. We squander eons in the darkness, while they seize our triumphs for their own."+
+	"The Mantle of responsibility for all things belongs to Forerunners alone. Think of my acts as you will. But do not doubt the reality:" +
+	" the Reclamation... has already begun. And we are hopeless to stop it."; /* The text */
 	var speed = 80; /* The speed/duration of the effect in milliseconds */
 
 	function typeWriter() {
