@@ -1,6 +1,8 @@
 <?php
 //Load wordpress database to use wpdb
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
+//Security check - kinda
+if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
 global $wpdb;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

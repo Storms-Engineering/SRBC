@@ -1,8 +1,9 @@
 <?php 
 //This file searches for campers broadly and returns a table of campers matching the criteria
-
-
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
+//Security check - kinda
+if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
+
 global $wpdb;
 $campers = NULL;
 

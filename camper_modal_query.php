@@ -5,6 +5,8 @@
 	<?php
 	//This returns the data for one specific camper.
 	require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
+	//Security check - kinda
+	if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
 	global $wpdb;
 	$camper = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_campers WHERE camper_id = %d",$_GET['camper_id'] ));
 	echo "Camper info for " . $camper->camper_first_name . " " . $camper->camper_last_name;

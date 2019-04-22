@@ -1,6 +1,8 @@
 <?php
 //Import $wpdb for wordpress
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
+//Security check - kinda
+if (!is_user_logged_in() && $_GET["camp_numbers"] != "true") exit("Thus I refute thee.... P.H.");
 global $wpdb;
 //Check this value first because it doesn't follow a normal report query format
 if ($_GET["camp_numbers"] == "true")
@@ -329,7 +331,6 @@ foreach ($information as $info){
 									INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id
 									WHERE srbc_registration.camp_id=%d AND srbc_registration.camper_id=%d",$info->camp_id,$info->camper_id));
 		//Little hack so that is shows 0 if they are no payments
-		echo "$cost<br>";
 		if ($totalPayed == NULL)
 			$totalPayed = 0;
 		echo "<td>$" . number_format($totalPayed,2) . "</td>";
