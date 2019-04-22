@@ -85,6 +85,7 @@ function srbc_install() {
 	dbDelta( $sql );
 	
 	//Database for encrypted credit card storage
+	//TODO I should consolidate these into one tracked id (registration_id) - ugh I wasn't expecting to use this so much
 	$sql = "CREATE TABLE IF NOT EXISTS srbc_cc (
 		cc_id INT AUTO_INCREMENT,
 		data TEXT NOT NULL,
