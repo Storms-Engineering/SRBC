@@ -20,8 +20,10 @@ if (isset($obj["deleteid"]))
 	{
 		$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM srbc_registration
 						WHERE NOT waitlist=0 AND camp_id=%s ORDER BY registration_id ASC",$obj["camp_id"]));
-		//Change the first registration	
-		$wpdb->update( 
+		//Change the first registration	and check that there are actually people on the waitlist
+		if (count($registrations) != 0)
+		{
+			$wpdb->update( 
 			'srbc_registration', 
 			array( 
 				'waitlist' => 0
@@ -32,6 +34,7 @@ if (isset($obj["deleteid"]))
 			), 
 			array( '%d' ) 
 			);
+		}
 	}
 	echo "Deleted Registration and Saved Sucessfully";
 }
