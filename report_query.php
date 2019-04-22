@@ -133,13 +133,13 @@ else if ($_GET["registration_day"] == "true")
 		//($campers[count($campers) - 1]->camper_id == $camper->camper_id && $campers[count($campers) - 1]->payment_id == $camper->payment_id ))
 		{
 			echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_first_name . "</td><td>" . $camper->camper_last_name . "</td>";
-			echo "<td>". $camp_fee . "</td>";
+			echo "<td>$". $camp_fee . "</td>";
 			echo "<td>". $program_area . "</td>";
-			echo "<td>". $horse_fee . "</td>";
-			echo "<td>". $horse_opt . "</td>";
-			echo "<td>". $bus_fee . "</td>";
-			echo "<td>". $store . "</td>";
-			echo "<td>". $total . "</td>";
+			echo "<td>$". $horse_fee . "</td>";
+			echo "<td>$". $horse_opt . "</td>";
+			echo "<td>$". $bus_fee . "</td>";
+			echo "<td>$". $store . "</td>";
+			echo "<td>$". $total . "</td>";
 			echo "</tr>";
 			//Then reset the variables
 			$horse_fee = $horse_opt = $bus_fee = $camp_fee = $store = $last_id = $total = $program_area = 0;
