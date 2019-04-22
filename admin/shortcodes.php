@@ -607,8 +607,8 @@ function srbc_registration_complete($atts)
 	
 		//Show comments about buslist and horse option and horse_cost
 		//TODO Autosplit for credit cards
-		//@body this needs to be implemented and show the apporpriate amount of money that should 
-		$comments = autoSplit($wpdb->insert_id;);
+		//@body this needs to be implemented and show the appropriate amount of money that should 
+		$comments = autoSplit($_POST["cc_amount"],$camp->camp_id,$wpdb->insert_id,$busride,$horse_opt);
 		//Encrypt using ssl
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
 		$pub_key=fread($fp,8192);
@@ -647,33 +647,37 @@ function srbc_registration_complete($atts)
 	sendMail($email,"Thank you for signing up for a Solid Rock Camp!",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
 	return "Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. (If you don't see the email check your spam box and please mark it not spam)";
 }
-function autoSplit()
+//TODO camper & camp id dependence
+function autoSplit($cc_amount,$campid,$camperid,$busride,$horseOpt)
 {
+	global $wpdb;
 	$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$campid,$camperid));
 			
 	//Make the scholarships and discounts add to total payed so we take it out of the base camp fee
-	$totalPayed += $o->discount + $o->scholarship_amt;
+	//Not using this because this is the first time they are signing up for the camp
+	//$totalPayed += $o->discount + $o->scholarship_amt;
 	if($totalPayed == NULL)
 		$totalPayed = 0;
 	//Check if they have payed the base camp amount which is (camp cost - horse cost)
-	$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id");
+	$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$campid");
 	$baseCampCost = $camp->cost - $camp->horse_cost;
 	$needToPayAmount = 0;
 	$feeType = NULL;
 	//Counts how many times we looped through
 	$loops = 0;
-	$autoPaymentAmt = $obj[$key]["auto_payment_amt"];
+	$autoPaymentAmt = $cc_amount;
 	//Calculate bus fee based on type of busride
 	$busfee = 0;
-	if ($o->busride == "both")
+	if ($busride == "both")
 		$busfee = 60;
-	else if($o->busride == "to" || $o->busride == "from")
+	else if($busride == "to" || $busride == "from")
 		$busfee = 35;
 	
-	$horseOpt = 0;
-	if ($o->horse_opt == 1)
+	if ($horseOpt == 1)
 		$horseOpt = $camp->horse_opt;
+	
+	$comments = "";
 	//Create seperate payments based on different fees until autoPaymentAmt is used up
 	//or an overpayment happens which stores it in the database
 	while ($autoPaymentAmt != 0)
@@ -716,9 +720,8 @@ function autoSplit()
 			$feeType= "Overpayed";
 		}
 		//Also updates autoPaymentAmt
-		list ($autoPaymentAmt,$payed) = calculatePaymentAmt($autoPaymentAmt,$needToPayAmount);
-		makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["auto_payment_type"],$payed,
-			$obj[$key]["auto_note"],$feeType);
+		list ($autoPaymentAmt,$payed) = calcPaymentAmt($autoPaymentAmt,$needToPayAmount);
+		$comments .= $feeType . ":$" . $payed . ",";
 		$totalPayed += $payed;
 		$loops++;
 		if ($loops > 5)
@@ -728,9 +731,12 @@ function autoSplit()
 			
 		}
 	}
+	return $comments;
 }
+//TODO this seems to be redeclared when I run update_registration
+//@body Fatal error</b>: Cannot redeclare calculatePaymentAmt() (previously declared in E:\xampp\htdocs\wp-content\plugins\SRBC\update_registration.php:246) in <b>E:\xampp\htdocs\wp-content\plugins\SRBC\admin\shortcodes.php</b> on line <b>747</b><br />
 //Calculates how much they need to pay and makes the payment
-function calculatePaymentAmt($autoPaymentAmt, $needToPayAmount)
+function calcPaymentAmt($autoPaymentAmt, $needToPayAmount)
 {
 	$paymentAmt = 0;
 	if ($autoPaymentAmt <= $needToPayAmount)
