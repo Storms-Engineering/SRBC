@@ -72,7 +72,8 @@ if (!$specificQuery)
 			<th onclick="sortTable(1);">Lastname</th>
 			<th onclick="sortTable(2);">Age</th>
 			<th onclick="sortTable(3);">Parent Name</th>
-			<th onclick="sortTable(4);">Phone</th>
+			<th onclick="sortTable(4);">Email</th>
+			<th onclick="sortTable(5);">Phone</th>
 		</tr>
 		<?php
 	foreach ($campers as $camper)
@@ -92,6 +93,7 @@ if (!$specificQuery)
 			echo $camps->camp_description . "<br>";
 		}*/
 		echo "</td><td>" . $camper->parent_first_name ." ". $camper->parent_last_name . "</td>";
+		echo "<td>" . $camper->email . "</td>";
 		echo "<td>" . $camper->phone . "</td>";
 		echo "</td></tr>";
 	}
