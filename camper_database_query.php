@@ -93,7 +93,7 @@ if (!$specificQuery)
 			echo $camps->camp_description . "<br>";
 		}*/
 		echo "</td><td>" . $camper->parent_first_name ." ". $camper->parent_last_name . "</td>";
-		echo "<td>" . $camper->email . "</td>";
+		echo '<td><a href="mailto:' . $camper->email . '">'.$camper->email.'</a></td>';
 		echo "<td>" . $camper->phone . "</td>";
 		echo "</td></tr>";
 	}
