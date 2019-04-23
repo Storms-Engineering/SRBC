@@ -29,7 +29,11 @@ function sendMail($to,$subject,$msg,$attachment = ""){
 		$mail->isHTML(true);                                  // Set email format to HTML
 		$mail->Subject = $subject;
 		$mail->Body    = stripslashes($msg);
-
+		$mail->DKIM_domain = "solidrockbiblecamp.com";
+		$mail->DKIM_private = $_SERVER['DOCUMENT_ROOT']. '/files/emailkeys.prv'; //path to file on the disk.
+		$mail->DKIM_selector = "mainkey";// change this to whatever you set during step 2
+		$mail->DKIM_passphrase = "";
+		$mail->DKIM_identifier = $mail->From;
 		$mail->send();
 	} catch (Exception $e) {
 		echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
