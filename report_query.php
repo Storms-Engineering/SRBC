@@ -88,8 +88,10 @@ else if ($_GET["registration_day"] == "true")
 	echo "<tr><th>Last name</th><th>First Name</th><th>Camp fee</th><th>Program Area</th>
 			<th>Horse fee (WT)</th><th>Horse Option(LS)</th><th>Bus Fee</th><th>Store</th><th>Total</th></tr>";
 			
+	//Set this to default Because some camps are free so we say none for program area
+	$program_area = "None";
 	//Declare variables to sum up together in one row
-	$horse_fee = $horse_opt = $bus_fee = $camp_fee  = $program_area = $store = $next_id = $next_reg_id = $total = 0;
+	$horse_fee = $horse_opt = $bus_fee = $camp_fee  = $store = $next_id = $next_reg_id = $total = 0;
 	$pointer = 1;
 	$totals = ["card" => 0,"check" => 0, "cash" => 0];
 	//ID is for multiple campers that were payed for at once
