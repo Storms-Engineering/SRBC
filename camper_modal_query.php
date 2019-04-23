@@ -46,8 +46,11 @@
 				}
 				$camp_selection .= '</select>';
 				//Display each camp that they are registered for in a collapsible
+				$registration_ids = [];
 				foreach ($registrations as $registration)
 				{
+					$registration_ids[] = $registration->registration_id;
+					
 					//Grab the camp since we need some info from it
 					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$registration->camp_id));
 					echo '<span id="registration_id" style="display: none;">' . $registration->registration_id . '</span>';
@@ -123,11 +126,11 @@
 					//@body currently backwards compatible with searching by camper ID and camp id, but in the future we should only be searching by
 					//registration id
 					$payedCard = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s AND payment_type='card'",$camp->camp_id,$camper->camper_id));
+									FROM srbc_payments WHERE registration_id=%s AND payment_type='card'",$registration->registration_id));
 					$payedCheck = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s AND payment_type='check'",$camp->camp_id,$camper->camper_id));
+									FROM srbc_payments WHERE registration_id=%s AND payment_type='check'",$registration->registration_id));
 					$payedCash = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s AND payment_type='cash'",$camp->camp_id,$camper->camper_id));
+									FROM srbc_payments WHERE registration_id=%s AND payment_type='cash'",$registration->registration_id));
 					
 					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campWaitlistHTML . 
 					'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
@@ -228,7 +231,7 @@
 					echo '<br><b>Auto split payment (Currently in alpha, if you use please double check values that it worked correctly):</b> $<input type="text" name="auto_payment_amt" >';
 					
 					//Print out the different fees that have been payed
-					$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM srbc_payments WHERE camper_id=%s AND camp_id=%s",$camper->camper_id,$camp->camp_id));
+					$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM srbc_payments WHERE registration_id=%s",$registration->registration_id));
 					//Add duplicate fees to this array
 					$f = array();
 					foreach($fees as $fee){
@@ -255,8 +258,18 @@
 					//Modal end div
 					echo "</div>";
 				}
+				//Thanks to coderwarll for this: https://coderwall.com/p/zepnaw/sanitizing-queries-with-in-clauses-with-wpdb-on-wordpress
+				// how many entries will we select?
+				$how_many = count($registration_ids);
+				// prepare the right amount of placeholders
+				// if you're looing for strings, use '%s' instead
+				$placeholders = array_fill(0, $how_many, '%d');
+
+				// glue together all the placeholders...
+				// $format = '%d, %d, %d, %d, %d, [...]'
+				$format = implode(', ', $placeholders);
 				//Show payment history:
-				$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM srbc_payments WHERE camper_id=%s",$camper->camper_id));
+				$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM srbc_payments WHERE registration_id IN($format)",$registration_ids));
 				$paymentHistory = NULL;
 				foreach ($payments as $payment) {
 					$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . " " . $payment->fee_type . "\r\n";

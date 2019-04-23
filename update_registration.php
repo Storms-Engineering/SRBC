@@ -161,7 +161,7 @@ else {
 		{
 			//TODO camp_id and camper_id backwards compatability
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$o->camp_id,$o->camper_id));
+									FROM srbc_payments WHERE registration_id=%s",$key));
 			
 			//Make the scholarships and discounts add to total payed so we take it out of the base camp fee
 			$totalPayed += $o->discount + $o->scholarship_amt;

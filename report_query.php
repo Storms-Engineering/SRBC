@@ -42,12 +42,12 @@ else if($_GET["signout_sheets"] == "true")
 								 "' ORDER BY srbc_registration.cabin DESC");
 	//This variable keeps track of if we have changed cabin group
 	//Initialized to 0 so we don't compare to null and get true
-	$oldCabin = NULL;
+	$oldCabin = 0;
 	//echo '<table id="report_table">';
 	foreach ($campers as $camper)
 	{
 		//Start a new table
-		if ($camper->cabin != $oldCabin)
+		if ($camper->cabin != $oldCabin || $oldCabin === 0)
 		{
 			//Don't do this for the first table, but do it for every new table
 			if($oldCabin != NULL)
@@ -292,11 +292,8 @@ foreach ($information as $info){
 			echo "<td>" . $info->phone. "</td>";
 			echo "<td>" . $info->phone2. "</td>";
 			echo "<td></td>";
-			
-			//TODO camp_id and camper id dependence
-			//@body another backwards compatible dependency
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$info->camp_id,$info->camper_id));
+									FROM srbc_payments WHERE registration_id=%s",$info->registration_id));
 			$cost = $wpdb->get_var($wpdb->prepare("
 									SELECT SUM(srbc_camps.cost +
 									(CASE WHEN srbc_registration.horse_opt = 1 THEN srbc_camps.horse_opt
@@ -319,10 +316,8 @@ foreach ($information as $info){
 		echo "<td>" . $info->parent_first_name . " " . $info->parent_last_name . "</td>";
 		echo "<td>" . $info->area . " ".  $info->name . "</td>";
 		echo "<td>" . $info->phone . "</td>";
-		//TODO camp_id and camper id dependence
-		//@body another backwards compatible dependency
 		$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-								FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$info->camp_id,$info->camper_id));
+								FROM srbc_payments WHERE registration_id=%s",$info->registration_id));
 		$cost = $wpdb->get_var($wpdb->prepare("
 								SELECT SUM(srbc_camps.cost +
 									(CASE WHEN srbc_registration.horse_opt = 1 THEN srbc_camps.horse_opt

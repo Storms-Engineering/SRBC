@@ -566,7 +566,7 @@ function srbc_registration_complete($atts)
 			array( 
 				'registration_id' =>0,
 				'camp_id' => $_POST["campid"], 
-				'camper_id' => $wpdb->insert_id,
+				'camper_id' => $camper_id,
 				'date' => $currentDate->format("m/d/Y"),
 				'horse_opt' => $horse_opt,
 				'busride' => $busride,
@@ -647,12 +647,13 @@ function srbc_registration_complete($atts)
 	sendMail($email,"Thank you for signing up for a Solid Rock Camp!",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
 	return "Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. (If you don't see the email check your spam box and please mark it not spam)";
 }
-//TODO camper & camp id dependence
-function autoSplit($cc_amount,$campid,$camperid,$busride,$horseOpt)
+
+
+function autoSplit($cc_amount,$campid,$registration_id,$busride,$horseOpt)
 {
 	global $wpdb;
 	$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE camp_id=%s AND camper_id=%s",$campid,$camperid));
+									FROM srbc_payments WHERE registration_id=%s",$registration_id));
 			
 	//Make the scholarships and discounts add to total payed so we take it out of the base camp fee
 	//Not using this because this is the first time they are signing up for the camp
