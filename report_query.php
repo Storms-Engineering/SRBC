@@ -311,8 +311,9 @@ foreach ($information as $info){
 									WHEN srbc_registration.busride = 'both' THEN 60
 									ELSE 0
 									END) 
-									- srbc_registration.discount
-									- srbc_registration.scholarship_amt)								
+									- IF(srbc_registration.discount IS NULL,0,srbc_registration.discount)
+									- IF(srbc_registration.scholarship_amt IS NULL,0,srbc_registration.scholarship_amt)		
+									)								
 									FROM srbc_registration 
 									INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id
 									WHERE srbc_registration.camp_id=%d AND srbc_registration.camper_id=%d",$info->camp_id,$info->camper_id));
