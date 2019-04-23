@@ -245,6 +245,11 @@ if ($_GET["camp"] != "none" && $_GET["camp_report"] != "true")
 }
 if ($_GET["camp_report"] == "true")
 {
+	if ($_GET["camp"] == "none")
+	{
+		error_msg("Please select a camp you would like a report for.  THaaanks");
+		exit(0);
+	}
 	$query .= "AND srbc_camps.camp_id=". $_GET["camp"]. " AND srbc_registration.waitlist=0";
 	echo '<th onclick="sortTable('.$sortnum.')">Gender</th><th onclick="sortTable('.($sortnum + 1).')">Age</th>';
 	echo '<th onclick="sortTable('.($sortnum + 2).')">Counselor</th>';
