@@ -139,7 +139,7 @@ function srbc_overview()
         'manage_options',
         'srbc_overview',
 		'srbc_overview_page',
-		plugin_dir_url(__FILE__) . 'images\SRBC-logo.jpg',
+		plugin_dir_url(__FILE__) . 'images\SRBC-logo.png',
         50
     );
 }
@@ -197,7 +197,6 @@ function credit_cards()
     );
 }
 add_action('admin_menu', 'credit_cards');
-
 //Shortcodes
 add_shortcode( 'srbc_registration', 'srbc_registration' );
 add_shortcode( 'srbc_registration_complete', 'srbc_registration_complete' );

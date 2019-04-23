@@ -39,7 +39,7 @@
 				if (count($registrations) == 0)
 					echo "Camper is not signed up for any camps";
 				//Create code for making a selection box
-				$camps = $wpdb->get_results("SELECT area,name,camp_id FROM srbc_camps");
+				$camps = $wpdb->get_results("SELECT area,name,camp_id FROM srbc_camps ORDER BY area ASC");
 				$camp_selection = '<select id="~" name="camps"><option value="none">none</option>';
 				foreach ($camps as $camp){
 					$camp_selection .= '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';

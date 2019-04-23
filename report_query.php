@@ -194,6 +194,9 @@ if ($_GET["backup_registration"] == "true"){
 	echo '<th onclick="sortTable(6)">Amount Due</th><th>Payment Type</th><th>Payment Amount</th>';
 	$sortnum = 7;
 }
+else if($_GET["emails"] == "true")
+	//Do nothing
+	echo "";
 else {
 	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
 	$sortnum = 2;
@@ -275,6 +278,12 @@ $information = $wpdb->get_results(
 	$wpdb->prepare( $query, $values));
 //Show the correct row based on what the user was searching for
 foreach ($information as $info){
+	//If emails we don't need any of the tables
+	if($_GET["emails"] == "true")
+	{
+		echo $info->email . ",<br>";
+		continue;
+	}
 	//Start new row and put in name since that always happens
 	echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name . "</td>";
 

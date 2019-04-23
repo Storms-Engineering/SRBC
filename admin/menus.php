@@ -1,4 +1,5 @@
 <?php 
+
 function srbc_credit_cards(){
 	// check user capabilities
     if (!current_user_can('manage_options')) {
@@ -335,6 +336,7 @@ function srbc_camp_reports()
 		Backup Registrations <input id="backup_registration" type="checkbox"><br>
 		Registration Day Report (Use start date for registration day)<input id="registration_day" type="checkbox">
 		Camp Report <input id="camp_report" type="checkbox"><br>
+		Emails <input id="emails" type="checkbox"><br>
 		Start Date: <input id="start_date" type="date">
 		End Date: <input id="end_date" type="date">
 		
