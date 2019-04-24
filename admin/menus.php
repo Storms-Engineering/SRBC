@@ -279,6 +279,8 @@ function srbc_camps_management()
 
 function srbc_camp_reports()
 {
+	//TODO I might make reports more flexible by adding columns that the user can pick from
+	//and the type of data that they would want to sort by.  I think this should be fine for now, but might remkae in the future.
 	// check user capabilities
     if (!current_user_can('manage_options')) {
         return;
@@ -293,7 +295,21 @@ function srbc_camp_reports()
 			}
 			
 		}
-		
+		button {
+			background-color: #6699ff;
+			color: white;
+			cursor: pointer;
+			padding: 12px;
+			border: none;
+			text-align: left;
+			outline: none;
+			font-size: 15px;
+			margin:2px;
+		}
+		button:hover
+		{
+			background-color: #99bbff;
+		}
 	</style>
 	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/camper_management.css">
 	<div id="dontprint">
