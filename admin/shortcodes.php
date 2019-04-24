@@ -754,8 +754,7 @@ function srbc_camps($atts){
 				<th>Cost</th>
 				<th>Start/End Date</th>
 				<th>Grade Range</th>
-				<th>Spots Available</th>
-				<th>Waiting List Spots Available*</th> 
+				<th>Camp Availability</th>
 				</tr>';
 	global $wpdb;
 	$camps = $wpdb->get_results("SELECT * FROM srbc_camps WHERE area='$query' ORDER BY start_date");	
@@ -794,12 +793,8 @@ function srbc_camps($atts){
 			$finalText .= "Girl's section is full,<br>boys can still register!.";
 		}
 		else
-			$finalText .= ($camp->overall_size - $total_registered); 
-		$finalText .=  "</td><td>";
-		$waitlistsize = $wpdb->get_var("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										WHERE camp_id=$camp->camp_id AND NOT waitlist=0"); 
-		$finalText .=  ($camp->waiting_list_size - $waitlistsize) . "</td></tr>";
+			$finalText .= "Camp is open for registrations"; 
+		$finalText .=  "</td>";
 		//Add a title to the description
 		$descriptions .= "<h3 id=".$camp->camp_id.">".$camp->name.", ". date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)).", Grades ".$camp->grade_range."</h3>";
 		$descriptions .= "<ul><li>". urldecode($camp->description) ."</li></ul>";
