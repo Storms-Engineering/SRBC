@@ -296,10 +296,10 @@ function srbc_camp_reports()
 			
 		}
 		button {
-			background-color: #6699ff;
+			background-color: #11835a;
 			color: white;
 			cursor: pointer;
-			padding: 12px;
+			padding: 8px;
 			border: none;
 			text-align: left;
 			outline: none;
@@ -308,13 +308,16 @@ function srbc_camp_reports()
 		}
 		button:hover
 		{
-			background-color: #99bbff;
+			background-color: #21b17d;
 		}
+		
 	</style>
 	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/camper_management.css">
+	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/tooltip.css">
 	<div id="dontprint">
 	<h1>Reports</h1>
 	<button style="float:right;" onclick="window.print()">Print Report</button>
+	
 	Program Area:
 		<select class="inputs" id="area">
 			<option value="">All</option>
@@ -325,8 +328,35 @@ function srbc_camp_reports()
 			<option value="Sports">Sports Camp</option>
 			<option value="Fall Retreat">Fall Retreat</option>
 			<option value="Winter Camp">Winter Camp</option>
+		</select><br>
+<br>
+		<h2 style="display:inline">General Reports</h2> <div class="tooltip">?
+			<span class="tooltiptext">These general reports can also be narrowed to a specific camp or program area, except for camp numbers</span>
+		</div> 
+		<br>
+		<button onclick="generateReport('scholarship')">Scholarships </button>
+		<button onclick="generateReport('discount')">Discounts </button>
+		<button onclick="generateReport('emails')">Emails </button>
+		<button onclick="generateReport('camp_numbers')">Camp Numbers </button>
+		<button onclick="generateReport('not_checked_in')">Camper didn't check in </button><br>
+		<hr>
+		<h2 style="display:inline;">Date specific reports</h2> <div class="tooltip">?
+			<span class="tooltiptext">Please choose the same date twice if you are doing a report for all camps starting on that day.
+		For buslists pick the starting date(Earlier starting date first)for two camps as as there will be some campers going both ways</span>
+		</div> 
+		Camp Dates between <input id="start_date" type="date"> & <input id="end_date" type="date"> 
+		<br>
+		<button onclick="generateReport('buslist')">Buslist </button><select class="inputs" id="buslist_type">
+			<option value="to">To Camp</option>
+			<option value="from">To Anchorage</option>
 		</select>
-	Camp: <?php 
+		<button onclick="generateReport('horsemanship')">LS Horsemanship </button>
+		<button onclick="generateReport('backup_registration')">Backup Registrations </button><br>
+		<button onclick="generateReport('signout_sheets')">Signout Sheets</button>
+		<button onclick="generateReport('registration_day')">Registration Day Report</button>
+		<hr>
+		<h2 style="display:inline;">Camp Specific Reports</h2>
+		<?php 
 				global $wpdb;
 				$camps = $wpdb->get_results("SELECT * FROM srbc_camps ORDER BY area ASC");
 				echo '<select id="camp" name="camp"><option value="none">none</option>';
@@ -334,31 +364,11 @@ function srbc_camp_reports()
 					echo '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
 				}
 				echo '</select>';
-		?>
-		<!--TODO: Check if Kelly will even need to have this
-		Buslist type: <select class="inputs" id="buslist_type">
-			<option value="all">All</option>
-			<option value="none">No busride</option>
-			<option value="to">To Camp</option>
-			<option value="from">To Anchorage</option>
-			<option value="both">Both Ways</option>-->
-		</select><br>
-		Buslist <input id="buslist" type="checkbox">
-		Horsemanship <input id="horsemanship" type="checkbox">
-		Camp Numbers <input id="camp_numbers" type="checkbox"><br>
-		Scholarships <input id="scholarship" type="checkbox">
-		Discounts <input id="discount" type="checkbox"><br>
-		Signout Sheets <input id="signout_sheets" type="checkbox">
-		Backup Registrations <input id="backup_registration" type="checkbox"><br>
-		Registration Day Report (Use start date for registration day)<input id="registration_day" type="checkbox">
-		Camp Report <input id="camp_report" type="checkbox"><br>
-		Emails <input id="emails" type="checkbox"><br>
-		Start Date: <input id="start_date" type="date">
-		End Date: <input id="end_date" type="date">
-		
-		Camper didn't check in <input id="not_checked_in" type="checkbox"><br>
+		?><br>
+		<button onclick="generateReport('camp_report')">Camp Report </button>		
+		<!--<a href="/wp-content/plugins/SRBC/report_query.php?mailing_list=true">Mailing List</a>-->
+
 		<!--TODO: These don't work correctly I believe: Hasn't paid in full <input id="not_payed" type="checkbox">-->
-		<button onclick="generateReport();">Generate Report</button>		
 	</div>
 	<br><br>
 	<div id="results"></div>

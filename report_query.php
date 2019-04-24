@@ -2,10 +2,30 @@
 //Import $wpdb for wordpress
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 //Security check - kinda
-if (!is_user_logged_in() && $_GET["camp_numbers"] != "true") exit("Thus I refute thee.... P.H.");
+if (!is_user_logged_in() && isset($_GET["camp_numbers"])) exit("Thus I refute thee.... P.H.");
 global $wpdb;
-//Check this value first because it doesn't follow a normal report query format
-if ($_GET["camp_numbers"] == "true")
+//Check these values first because it doesn't follow a normal report query format
+if(isset($_GET["mailing_list"]))
+{
+	header("Content-type: text/csv");
+	header("Cache-Control: no-store, no-cache");
+	header('Content-Disposition: attachment; filename="content.csv"');
+	
+	$list = array (
+    array('aaa', 'bbb', 'ccc', 'dddd'),
+    array('123', '456', '789'),
+    array('"aaa"', '"bbb"')
+	);
+
+	$file = fopen('php://output','w');
+
+	foreach ($list as $fields) {
+		fputcsv($file, $fields);
+	}
+	fclose($file);
+	exit();
+}
+else if (isset($_GET["camp_numbers"]))
 {
 	$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 	$date = $date->format("Y-m-d");
@@ -30,7 +50,7 @@ if ($_GET["camp_numbers"] == "true")
 	echo "<br><br>Overall Camp Total: " . $totalRegistrations;
 	exit;
 }
-else if($_GET["signout_sheets"] == "true")
+else if(isset($_GET["signout_sheets"]))
 {
 	//srbc_registration.counselor,srbc_registration.cabin,srbc_campers.camper_first_name,
 	//							srbc_campers.camper_last_name,srbc_campers.parent_first_name,srbc_campers.parent_last_name		
@@ -71,7 +91,7 @@ else if($_GET["signout_sheets"] == "true")
 	echo "</table>";
 	exit;
 }
-else if ($_GET["registration_day"] == "true")
+else if (isset($_GET["registration_day"]))
 {
 	$newFormat = date("m/d/Y",strtotime( $_GET["start_date"]));
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
@@ -159,20 +179,6 @@ else if ($_GET["registration_day"] == "true")
 	
 }
 
-
-
-
-
-//TODO:  This will probably be tore out and totally redone.  Might have to comb through and optimize
-//@body Probably gonna get rid of these too
-$area = $_GET['area'];
-$buslist = $_GET['buslist'];
-$buslist_type = $_GET['buslist_type'];
-$scholarship = $_GET['scholarship'];
-$discount = $_GET['discount'];
-$start_date = $_GET['start_date'];
-$end_date = $_GET['end_date'];
-$not_checked_in = $_GET['not_checked_in'];
 //TODO: fix not payed code, probably haven't updated since payment database was added 
 $not_payed = NULL;//$_GET['not_payed'];
 
@@ -187,14 +193,14 @@ $values = array();
 $sortnum = 0;
 //Setup table and then we will add headers based on the query
 //Only default for most queries.  Isn't for camp_numbers report_table
-if ($_GET["backup_registration"] == "true"){
+if (isset($_GET["backup_registration"])){
 	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
 	echo '<th onclick="sortTable(2)">Parent Name</th><th onclick="sortTable(3)">Camp</th>';
 	echo '<th onclick="sortTable(4)">Phone #</th><th onclick="sortTable(5)">Payed</th>';
 	echo '<th onclick="sortTable(6)">Amount Due</th><th>Payment Type</th><th>Payment Amount</th>';
 	$sortnum = 7;
 }
-else if($_GET["emails"] == "true")
+else if(isset($_GET["emails"]))
 	//Do nothing
 	echo "";
 else {
@@ -202,72 +208,65 @@ else {
 	$sortnum = 2;
 }
 
-if ($area == "") {
+if (isset($_GET['area']) && $_GET["area"] == "") {
 	$query .= "srbc_camps.area LIKE '%' ";
 }
 else {
-	$values = array($area);
+	$values = array($_GET['area']);
 	$query .= "srbc_camps.area='%s' ";
 }
 
-/*
-Old Buslist
-if ($buslist != "all"){
-	$query .= "AND srbc_registration.busride='$buslist' ";
-	echo '<th onclick="sortTable('.$sortnum.')">Busride</th>';
-	$sortnum++;
-}*/
-
 //New Buslist grabs all campers heading to anchorage or camp and also selects campers that are going both ways
 //Puts them into both reports
-if ($buslist == "true"){
-	$query .= "AND srbc_registration.busride='$buslist_type' OR srbc_registration.busride='both' ";
-	echo '<th onclick="sortTable('.$sortnum.')">Primary Phone</th>';
-	echo '<th onclick="sortTable('.$sortnum.')">Secondary Phone</th>';
-	echo '<th onclick="sortTable('.$sortnum.')">Parent/Guardian Signature</th>';
-	echo '<th onclick="sortTable('.$sortnum.')">Total Due</th>';
-	$sortnum++;
+if (isset($_GET['buslist'])){
+	$query .= "AND srbc_registration.busride='".$_GET['buslist_type']."' OR srbc_registration.busride='both' ";
+	echo '<th onclick="sortTable('.($sortnum).')">Primary Phone</th>';
+	echo '<th onclick="sortTable('.($sortnum + 1).')">Secondary Phone</th>';
+	echo '<th onclick="sortTable('.($sortnum + 2).')">Parent/Guardian Signature</th>';
+	echo '<th onclick="sortTable('.($sortnum + 3).')">Total Due</th>';
+	$sortnum += 4;
 }
-if ($_GET["horsemanship"] == "true"){
+if (isset($_GET["horsemanship"])){
 	$query .= "AND NOT srbc_registration.horse_opt=0 ";
 }
-if ($_GET["camp_numbers"] == "true"){
+if (isset($_GET["camp_numbers"])){
 	$query .= "AND NOT srbc_registration.horse_opt=0 ";
 }
-if ($scholarship == "true"){
+if (isset($_GET['scholarship'])){
 	$query .= "AND NOT srbc_registration.scholarship_amt=0 ";
 	echo '<th onclick="sortTable('.$sortnum.')">Scholarship Type</th><th onclick="sortTable('.($sortnum + 1).')">Scholarship Amount</th>';
 	$sortnum+= 2;
 }
-if ($_GET["camp"] != "none" && $_GET["camp_report"] != "true")
-{
-	$query .= "AND srbc_camps.camp_id=". $_GET["camp"];
-}
-if ($_GET["camp_report"] == "true")
+
+if (isset($_GET["camp_report"]))
 {
 	if ($_GET["camp"] == "none")
 	{
 		error_msg("Please select a camp you would like a report for.  THaaanks");
 		exit(0);
 	}
-	$query .= "AND srbc_camps.camp_id=". $_GET["camp"]. " AND srbc_registration.waitlist=0";
+	$query .= "AND srbc_camps.camp_id=". $_GET["camp"]. " AND srbc_registration.waitlist=0 ";
 	echo '<th onclick="sortTable('.$sortnum.')">Gender</th><th onclick="sortTable('.($sortnum + 1).')">Age</th>';
 	echo '<th onclick="sortTable('.($sortnum + 2).')">Counselor</th>';
 	$sortnum += 3;
 }
-if ($discount == "true"){
+else if (isset($_GET["camp"]) && $_GET["camp"] != "none")
+{
+	$query .= "AND srbc_camps.camp_id=". $_GET["camp"]. " ";
+}
+if (isset($_GET['discount'])){
 	$query .= "AND NOT srbc_registration.discount=0 ";
 	echo '<th onclick="sortTable('.$sortnum.')">Discount Type</th>';
 	$sortnum++;
 	echo '<th onclick="sortTable('.$sortnum.')">Discount</th>';
 	$sortnum++;
 }
-if ($start_date != "" && $end_date != ""){
+if ( isset($_GET['start_date']) && $_GET["start_date"] != "" && isset($_GET["end_date"]) && $_GET["end_date"] != ""){
 	$query .= "AND srbc_camps.start_date BETWEEN '%s' AND '%s' ";
-	array_push($values,$start_date);
-	array_push($values,$end_date);
+	array_push($values,$_GET['start_date']);
+	array_push($values,$_GET['end_date']);
 }
-if ($not_checked_in == "true"){
+if (isset($_GET['not_checked_in'])){
 	$query .= "AND NOT srbc_registration.checked_in=1 ";
 }
 
@@ -284,16 +283,16 @@ $information = $wpdb->get_results(
 //Show the correct row based on what the user was searching for
 foreach ($information as $info){
 	//If emails we don't need any of the tables
-	if($_GET["emails"] == "true")
+	if(isset($_GET["emails"]))
 	{
 		echo $info->email . ",<br>";
 		continue;
 	}
 	//Start new row and put in name since that always happens
 	echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name . "</td>";
-
-	if ($buslist == "true"){
-		if($info->busride == $buslist_type || $info->busride == "both"){
+	//We don't need a isset for this because it is always being sent
+	if (isset($_GET['buslist'])){
+		if($info->busride == $_GET['buslist_type'] || $info->busride == "both"){
 			echo "<td>" . $info->phone. "</td>";
 			echo "<td>" . $info->phone2. "</td>";
 			echo "<td></td>";
@@ -318,7 +317,7 @@ foreach ($information as $info){
 			echo "<td>$" . ($cost - $totalPayed) . "</td>";
 		}
 	}
-	else if ($_GET["backup_registration"] == "true"){
+	else if (isset($_GET["backup_registration"])){
 		echo "<td>" . $info->parent_first_name . " " . $info->parent_last_name . "</td>";
 		echo "<td>" . $info->area . " ".  $info->name . "</td>";
 		echo "<td>" . $info->phone . "</td>";
@@ -348,16 +347,16 @@ foreach ($information as $info){
 		//Empty cells
 		echo "<td></td><td></td>";
 	}
-	else if($_GET["camp_report"] == "true")
+	else if(isset($_GET["camp_report"]))
 	{
 		echo "<td>" . $info->gender . "</td>";
 		echo "<td>" . $info->age . "</td>";
 		echo "<td>" . $info->counselor . "</td>";
 	}
-	else if ($scholarship == "true"){
+	else if (isset($_GET['scholarship'])){
 		echo "<td>" . $info->scholarship_type . "</td><td>$" . $info->scholarship_amt . "</td>";
 	}
-	else if ($discount == "true"){
+	else if (isset($_GET['discount'])){
 		echo "<td>" . $info->discount_type . "</td>";
 		echo "<td>$" . $info->discount . "</td>";
 	}

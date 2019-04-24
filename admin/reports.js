@@ -1,4 +1,4 @@
-function generateReport()
+function generateReport(data)
 {
 	var xhttp;
 	if (window.XMLHttpRequest) {
@@ -14,19 +14,22 @@ function generateReport()
 		}
 	}
 	var inputs = document.querySelectorAll("input");
-	var data = "";
+	dataInputs = "&"
 	for (var i = 0;i < inputs.length; i++) {
 		if (inputs[i].id == "start_date" || inputs[i].id == "end_date")
 			data += "&" + inputs[i].id + "=" + inputs[i].value;
 		else
 			data += "&" + inputs[i].id + "=" + inputs[i].checked;
 	}
+	//TODO reimplement code above for this?
 	var area = document.getElementById("area").value;
-	var buslist = document.getElementById("buslist").value;
 	var camp = document.getElementById("camp").value;
-	//var buslist_type = document.getElementById("buslist_type").value;
-	buslist_type = null;
-	xhttp.open("GET", "/wp-content/plugins/SRBC/report_query.php?camp=" + camp + "&buslist=" + buslist + "&buslist_type="+buslist_type+ "&area="+area+data, true);
+	//var start_date = document.getElementById("camp").value;
+	//var end_Date = document.getElementById("camp").value;
+	var buslist_type = document.getElementById("buslist_type").value;
+	
+	//buslist_type = null;
+	xhttp.open("GET", "/wp-content/plugins/SRBC/report_query.php?camp=" + camp + "&buslist_type="+buslist_type+ "&area="+area+"&"+data + dataInputs, true);
 	xhttp.send();
 }
 
