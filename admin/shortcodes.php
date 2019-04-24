@@ -641,7 +641,7 @@ function srbc_registration_complete($atts)
 	date("D M j",strtotime($camp->end_date)) . "!  If you have any questions feel free to check ". 
 	'our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.  If you want to know what your child should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>!'.
 	"<br> One last thing is that we ask that you print out this health form and fill it out to speed up the registration process.<br>Thanks!<br> -Solid Rock Bible Camp";
-	sendMail($email,"Thank you for signing up for a Solid Rock Camp!",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
+	sendMail($email,"Registration Confirmation",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
 	return "Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. (If you don't see the email check your spam box and please mark it not spam)";
 }
 
