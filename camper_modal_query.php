@@ -34,7 +34,6 @@
 					'<input type="text" name="zipcode" value="' . $camper->zipcode . '"></span>';
 				echo '<br><h3>Notes:<h3> <br><textarea id="notes" rows="4" cols="50">' . $camper->notes . '</textarea></div>';
 				echo '<h3>Camps signed up for:</h3><br>';
-				//TODO: this registration loop could probably be redone better
 				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_registration WHERE camper_id=%s",$camper->camper_id));
 				if (count($registrations) == 0)
 					echo "Camper is not signed up for any camps";
@@ -58,47 +57,27 @@
 					$busride = $registration->busride;
 					$busride_cost = 0;
 					
-					//TODO change this buslist.  It is terrible
-					if($busride == "both")
+					$busSelector = array(null,null,null,null);
+					if($busride == "none")
+						$busSelector[0] = "selected";
+					else if($busride == "both")
+						$busSelector[1] = "selected";
+					else if($busride == "to")
+						$busSelector[2] = "selected";
+					else if($busride == "from")
+						$busSelector[3] = "selected";
+					else 
 					{
-						$busride= '<select class="inputs" name="busride">
-					<option value="none">No bus ride needed</option>
-					<option value="both" selected>Round-Trip $60</option>
-					<option value="to">One-way to Camp $35</option>
-					<option value="from">One-way to Anchorage $35</option>
+						error_msg("Seems like you don't have a valid bus status....");
+					}
+					
+					$busride = '<select class="inputs" name="busride">
+					<option value="none"' . $busSelector[0] . '>No bus ride needed</option>
+					<option value="both"' . $busSelector[1] . '>Round-Trip $60</option>
+					<option value="to"' . $busSelector[2] . '>One-way to Camp $35</option>
+					<option value="from"' . $busSelector[3] . '>One-way to Anchorage $35</option>
 					</select>';
-						$busride_cost = 60;
-					}
-					else if(!($busride == "none"))
-					{
-						if($busride == "to"){
-							$busride= '<select class="inputs" name="busride">
-							<option value="none">No bus ride needed</option>
-							<option value="both">Round-Trip $60</option>
-							<option value="to" selected>One-way to Camp $35</option>
-							<option value="from">One-way to Anchorage $35</option>
-							</select>';
-						}
-						else
-						{
-							$busride= '<select class="inputs" name="busride">
-							<option value="none">No bus ride needed</option>
-							<option value="both">Round-Trip $60</option>
-							<option value="to">One-way to Camp $35</option>
-							<option value="from" selected>One-way to Anchorage $35</option>
-							</select>';
-						}
-						$busride_cost = 35;
-					}
-					else
-					{
-						$busride= '<select class="inputs" name="busride">
-					<option value="none"selected>No bus ride needed</option>
-					<option value="both">Round-Trip $60</option>
-					<option value="to">One-way to Camp $35</option>
-					<option value="from">One-way to Anchorage $35</option>
-					</select>';
-					}
+					
 					
 					//TODO: do buslist like this
 					//An array for holding which option is selected

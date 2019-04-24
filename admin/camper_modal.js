@@ -157,9 +157,6 @@ function saveInfo()
 			else
 				info_child[inputs[j].name] = inputs[j].value;
 		}
-		//TODO This is depcrecated make sure this doesn't break everything
-		//@body	Check php file for references to it
-		info_child["amount_due"] = containers[i].getElementsByClassName("amount_due")[0].innerText;
 		//TODO these selects are also becoming more numerous
 		//@body these should be put in the loop logic better
 		info_child["payment_type"] = containers[i].getElementsByClassName("payment_type")[0].value;
