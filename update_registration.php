@@ -12,8 +12,6 @@ global $wpdb;
 if (isset($obj["deleteid"]))
 {
 	//Delete the requested registration
-	//TODO need to check if there is even a waitlist.
-	//@body that is why there is an error 
 	$iswaitlist = $wpdb->get_row( "SELECT waitlist FROM srbc_registration WHERE registration_id=" . $obj["deleteid"] )->waitlist;
 	$wpdb->delete( 'srbc_registration', array( 'registration_id' => $obj["deleteid"] ) );
 	
@@ -159,7 +157,6 @@ else {
 
 		if($obj[$key]["auto_payment_amt"] != "")
 		{
-			//TODO camp_id and camper_id backwards compatability
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM srbc_payments WHERE registration_id=%s",$key));
 			

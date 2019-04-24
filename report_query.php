@@ -74,8 +74,6 @@ else if($_GET["signout_sheets"] == "true")
 else if ($_GET["registration_day"] == "true")
 {
 	$newFormat = date("m/d/Y",strtotime( $_GET["start_date"]));
-	//$newFormat = date_create_from_format('Y-m-d G:i', $_GET["start_date"]);
-	//TODO Code Upgrade - Might do this in sql?
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 													FROM ((srbc_payments 
 													INNER JOIN srbc_registration ON srbc_registration.registration_id=srbc_payments.registration_id)

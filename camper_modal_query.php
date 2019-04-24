@@ -77,10 +77,7 @@
 					<option value="to"' . $busSelector[2] . '>One-way to Camp $35</option>
 					<option value="from"' . $busSelector[3] . '>One-way to Anchorage $35</option>
 					</select>';
-					
-					
-					//TODO: do buslist like this
-					//An array for holding which option is selected
+
 					$horseSelector = array(null,null);
 					if($registration->horse_opt == 1)
 						$horseSelector[1] = "selected";
@@ -101,9 +98,6 @@
 					if($registration->horse_waitlist == 1)
 						$horsesWaitlistHTML = ' <span style="color:red;"><b>(Waitlisted for Horses)</b></span>';						
 					
-					//TODO: Update code when database is updated
-					//@body currently backwards compatible with searching by camper ID and camp id, but in the future we should only be searching by
-					//registration id
 					$payedCard = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM srbc_payments WHERE registration_id=%s AND payment_type='card'",$registration->registration_id));
 					$payedCheck = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 

@@ -84,7 +84,6 @@ function srbc_camp_search($atts){
 		array_push($values,$_GET['start_date']);
 		array_push($values,$_GET['end_date']);
 	}
-	//TODO: Add search functionality for grades... But might require database restructering
 	global $wpdb;
 	$camps = $wpdb->get_results(
 	$wpdb->prepare( $query, $values));
@@ -606,8 +605,6 @@ function srbc_registration_complete($atts)
 		}
 	
 		//Show comments about buslist and horse option and horse_cost
-		//TODO Autosplit for credit cards
-		//@body this needs to be implemented and show the appropriate amount of money that should 
 		$comments = autoSplit($_POST["cc_amount"],$camp->camp_id,$wpdb->insert_id,$busride,$horse_opt);
 		//Encrypt using ssl
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");

@@ -19,8 +19,7 @@ else if (isset($obj["camp_id"])) {
     //If this is set then we are updating a camp
 	
 	//TODO: Need to add logic here to catch if they are increasing the size of horses waitlist
-	//And then magic shuffle the waitlist
-	//echo "MAGICK SHUFFLE";
+	//BODY: And then magic shuffle the waitlist
 	
 	
 	$wpdb->update( 
