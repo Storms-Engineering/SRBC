@@ -650,12 +650,21 @@ function srbc_registration_complete($atts)
 			);
 		
 	}
-	
+	if ($waitlist == 1)
+	{
+		$message = "Hi ". $parent_first_name . ",<br><br>This is an email letting you know that you sucessfully put" . $camper_first_name . " on the waitlist for " . $_POST["camp_desc"] . "." . 
+		"<br>We will email you and let you know if a spot opens up for the camp.<br>Thanks!<br> Solid Rock Bible Camp";
+		sendMail($email,"Waitlist Confirmation",$message);
+	}
+	else
+	{
 	$message = "Hi ". $parent_first_name . ",<br><br>Thanks for signing up " . $camper_first_name . " for " . $_POST["camp_desc"] . "!  Camp starts " .date("D M j",strtotime($camp->start_date)) . " and ends " . 
 	date("D M j",strtotime($camp->end_date)) . "!  If you have any questions feel free to check ". 
 	'our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.  If you want to know what your child should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>!'.
 	"<br> One last thing is that we ask that you print out this health form and fill it out to speed up the registration process.<br>Thanks!<br> -Solid Rock Bible Camp";
 	sendMail($email,"Registration Confirmation",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
+	}
+	
 	return "Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. (If you don't see the email check your spam box and please mark it not spam)";
 }
 

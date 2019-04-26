@@ -18,6 +18,7 @@ if (isset($obj["deleteid"]))
 	//If this deleted registration was a camper not on the waitlist then we want to push a waitlisted person into this camp
 	if ($iswaitlist == 0)
 	{
+		
 		$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM srbc_registration
 						WHERE NOT waitlist=0 AND camp_id=%s ORDER BY registration_id ASC",$obj["camp_id"]));
 		//Change the first registration	and check that there are actually people on the waitlist
@@ -35,6 +36,9 @@ if (isset($obj["deleteid"]))
 			array( '%d' ) 
 			);
 		}
+		//Resend email
+		$_GET["r_id"] = $registrations[0]->registration_id;
+		include 'resend_email.php';
 	}
 	echo "Deleted Registration and Saved Sucessfully";
 }

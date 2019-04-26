@@ -6,8 +6,7 @@ if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
 global $wpdb;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-//require 'PHPMailer/src/Exception.php';
-//require 'PHPMailer/src/PHPMailer.php';
+//TODO move this to the functions file I think and then I can just call it from here
 global $wpdb;
 
 	$info = $wpdb->get_results($wpdb->prepare( $query = "SELECT *
@@ -16,6 +15,7 @@ global $wpdb;
 		INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id) WHERE srbc_registration.registration_id=%d", $_GET["r_id"])); 	
 	//We only need the first object
 	$info = $info[0];
+	print_r($info);
 	$msg = "Hi ". $info->parent_first_name . ",<br><br>Thanks for signing up " . $info->camper_first_name . " for " . $info->area . ' ' . $info->name . "!  Camp starts " .date("D M j",strtotime($info->start_date)) . " and ends " . 
 	date("D M j",strtotime($info->end_date)) . "!  If you have any questions feel free to check ". 
 	'our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.  If you want to know what your child should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>!'.
