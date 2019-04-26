@@ -93,22 +93,36 @@ function srbc_camp_search($atts){
 				<th>Camp</th>
 				<th>Cost</th>
 				<th>Start Date</th>
-				<th>Camper Spots Available</th>
-				<th>Waitling List Spots Available</th> 
+				<th>Camp Availability</th>
 				</tr>';				
 	foreach ($camps as $camp){
 		$finalText .=  '<tr><td>' . $camp->area . " " . $camp->name . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
 		$finalText .=  "</td><td>$" . $camp->cost;
 		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date));
-		$total_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+		$boycount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										WHERE camp_id=%s AND waitlist=0",$camp->camp_id)); 
-		$finalText .=  "</td><td>" . ($camp->overall_size - $total_registered); 
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id));
+		$girlcount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+										FROM srbc_registration
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
+										
+		$total_registered = $boycount + $girlcount;
 		$finalText .=  "</td><td>";
-		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id)); 
-		$finalText .=  $camp->waiting_list_size - $waitlistsize . "</td></tr>";
+		if (($camp->overall_size - $total_registered) == 0){
+			$finalText .= "Camp is full,<br> register to be put on waiting list";
+		}	
+		else if($boycount >= $camp->boy_registration_size && $camp->boy_registration_size != 0){
+			$finalText .= "Boy's section is full,<br>girls can still register!";
+		}
+		else if($girlcount >= $camp->girl_registration_size && $camp->girl_registration_size != 0){
+			$finalText .= "Girl's section is full,<br>boys can still register!.";
+		}
+		else
+			$finalText .= "Camp is open for registrations"; 
+		$finalText .=  "</td>";
+		$finalText .=  "</tr>";
 	}
 	$finalText .=  "</table> ";
 	return $finalText;
