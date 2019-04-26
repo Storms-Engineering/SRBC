@@ -14,10 +14,15 @@ function generateReport(data)
 		}
 	}
 	var inputs = document.querySelectorAll("input");
-	dataInputs = "&"
+	dataInputs = "&";
+	hasStartDate = false;
 	for (var i = 0;i < inputs.length; i++) {
 		if (inputs[i].id == "start_date" || inputs[i].id == "end_date")
+		{
 			data += "&" + inputs[i].id + "=" + inputs[i].value;
+			if (inputs[i].id == "start_date" && inputs[i].value !== "")
+				hasStartDate = true;
+		}
 		else
 			data += "&" + inputs[i].id + "=" + inputs[i].checked;
 	}
@@ -27,10 +32,19 @@ function generateReport(data)
 	//var start_date = document.getElementById("camp").value;
 	//var end_Date = document.getElementById("camp").value;
 	var buslist_type = document.getElementById("buslist_type").value;
-	
-	//buslist_type = null;
-	xhttp.open("GET", "/wp-content/plugins/SRBC/report_query.php?camp=" + camp + "&buslist_type="+buslist_type+ "&area="+area+"&"+data + dataInputs, true);
+	url =  "/wp-content/plugins/SRBC/report_query.php?camp=" + camp + "&buslist_type="+buslist_type+ "&area="+area+"&"+data + dataInputs;
+	if (data.includes("mailing_list") && hasStartDate )
+		window.open(url, '_blank');
+	else if(data.includes("mailing_list"))
+	{
+		alert("Please pick a start date");
+		return;
+	}
+	else
+	{
+	xhttp.open("GET",url, true);
 	xhttp.send();
+	}
 }
 
 //Toast Notification

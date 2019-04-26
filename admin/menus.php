@@ -354,6 +354,7 @@ function srbc_camp_reports()
 		<button onclick="generateReport('backup_registration')">Backup Registrations </button><br>
 		<button onclick="generateReport('signout_sheets')">Signout Sheets</button>
 		<button onclick="generateReport('registration_day')">Registration Day Report</button>
+		<button onclick="generateReport('mailing_list')">Mailing List</button>
 		<hr>
 		<h2 style="display:inline;">Camp Specific Reports</h2>
 		<?php 
@@ -366,9 +367,9 @@ function srbc_camp_reports()
 				echo '</select>';
 		?><br>
 		<button onclick="generateReport('camp_report')">Camp Report </button>		
-		<!--<a href="/wp-content/plugins/SRBC/report_query.php?mailing_list=true">Mailing List</a>-->
-
-		<!--TODO: These don't work correctly I believe: Hasn't paid in full <input id="not_payed" type="checkbox">-->
+		<!--<a href="/wp-content/plugins/SRBC/report_query.php?mailing_list=true">Mailing List</a>
+		<a style="color:white;text-decoration:none;" href="/wp-content/plugins/SRBC/report_query.php?mailing_list=true&start_date=2019/06/12">Mailing List</a>
+		TODO: These don't work correctly I believe: Hasn't paid in full <input id="not_payed" type="checkbox">-->
 	</div>
 	<br><br>
 	<div id="results"></div>

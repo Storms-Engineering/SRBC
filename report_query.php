@@ -7,19 +7,27 @@ global $wpdb;
 //Check these values first because it doesn't follow a normal report query format
 if(isset($_GET["mailing_list"]))
 {
+	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+		FROM ((srbc_registration 
+		INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
+		INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id) WHERE 
+		srbc_camps.start_date='%s'",$_GET["start_date"]));
+	$csvArray = array();
+	
+	$csvArray[] = array("First_name","Last_name","Address","City","State","Zipcode");
+	foreach($campers as $camper)
+	{
+		//Remove any line breaks from an address
+		$csvArray[] = array($camper->camper_first_name,$camper->camper_last_name,preg_replace( "/\r|\n/", "", $camper->address) ,$camper->city,$camper->state,$camper->zipcode);
+	}
+
 	header("Content-type: text/csv");
 	header("Cache-Control: no-store, no-cache");
 	header('Content-Disposition: attachment; filename="content.csv"');
-	
-	$list = array (
-    array('aaa', 'bbb', 'ccc', 'dddd'),
-    array('123', '456', '789'),
-    array('"aaa"', '"bbb"')
-	);
-
+	//I think this is some kind of temp stream
 	$file = fopen('php://output','w');
 
-	foreach ($list as $fields) {
+	foreach ($csvArray as $fields) {
 		fputcsv($file, $fields);
 	}
 	fclose($file);
