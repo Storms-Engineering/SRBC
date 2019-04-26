@@ -1,5 +1,4 @@
-<div class="modal-header">
-
+<div class="modal-header">>
 <span onclick="closeModal();" class="close">&times;</span>
 	<h2>
 	<?php
@@ -172,7 +171,11 @@
 					$checked = "";
 					if ($registration->checked_in == 1)
 						$checked = "checked";
-					echo '<h3 style="display:inline;">Camper checked in:</h3> <label class="switch"><input name="checked_in" type="checkbox" ' . $checked .'><span class="slider"></span></label>';
+					echo '<h3 style="display:inline;">Camper checked in:</h3> <input class="srbc_checkbox" name="checked_in" type="checkbox" ' . $checked .'>';
+					$checked = "";
+					if ($registration->health_form == 1)
+						$checked = "checked";
+					echo '<h3 style="display:inline;">Camper has health form:</h3> <input class="srbc_checkbox" name="health_form" type="checkbox" ' . $checked .'>';
 					echo '<span><h2>Make a payment:</h3>Payment type: <select class="inputs payment_type">
 					<option value="none" id="default" selected></option>
 					<option value="card">Credit Card</option>

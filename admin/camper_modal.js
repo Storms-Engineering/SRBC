@@ -137,7 +137,8 @@ function saveInfo()
 				//We just want to store the busride to, from or both
 				info_child["busride"] = document.querySelectorAll("select[name=busride]")[i].value;
 			}
-			else if(inputs[j].name == "checked_in"){
+			//TODO change this to check for a type instead duhhh
+			else if(inputs[j].name == "checked_in" || inputs[j].name=="health_form"){
 				//Check the checked value
 				checkd = 0;
 				if(inputs[j].checked)

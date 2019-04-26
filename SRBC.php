@@ -79,6 +79,7 @@ function srbc_install() {
 		waitlist TINYINT NOT NULL,	
 		horse_waitlist TINYINT NOT NULL,
 		checked_in TINYINT NOT NULL,
+		health_form TINYINT NOT NULL,
 		PRIMARY KEY (registration_id)
 		)  ENGINE=INNODB;";
 

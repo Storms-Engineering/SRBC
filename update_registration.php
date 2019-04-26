@@ -136,6 +136,7 @@ else {
 				'scholarship_amt' => $obj[$key]["scholarship_amt"],
 				'scholarship_type' => $obj[$key]["scholarship_type"],
 				'checked_in' => $obj[$key]["checked_in"],
+				'health_form' => $obj[$key]["health_form"],
 			), 
 			array( 'registration_id' => $key ), 
 			array( 
@@ -148,6 +149,7 @@ else {
 				'%f',
 				'%s',	
 				'%d',
+				'%d'
 			), 
 			array( '%d' ) 
 		);
