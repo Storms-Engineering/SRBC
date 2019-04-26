@@ -14,11 +14,12 @@ if(isset($_GET["mailing_list"]))
 		srbc_camps.start_date='%s'",$_GET["start_date"]));
 	$csvArray = array();
 	
-	$csvArray[] = array("First_name","Last_name","Address","City","State","Zipcode");
+	$csvArray[] = array("First_name","Last_name","Address","City","State","Zipcode","Cabin");
 	foreach($campers as $camper)
 	{
 		//Remove any line breaks from an address
-		$csvArray[] = array($camper->camper_first_name,$camper->camper_last_name,preg_replace( "/\r|\n/", "", $camper->address) ,$camper->city,$camper->state,$camper->zipcode);
+		$csvArray[] = array($camper->camper_first_name,$camper->camper_last_name,preg_replace( "/\r|\n/", "", $camper->address)
+		,$camper->city,$camper->state,$camper->zipcode,$camper->cabin);
 	}
 
 	header("Content-type: text/csv");
