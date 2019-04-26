@@ -1,4 +1,4 @@
-<div class="modal-header">>
+<div class="modal-header">
 <span onclick="closeModal();" class="close">&times;</span>
 	<h2>
 	<?php

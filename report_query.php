@@ -128,12 +128,11 @@ else if (isset($_GET["registration_day"]))
 		else
 		{
 			$camp_fee += $camper->payment_amt;	
-			//IDK what do about Owen because his mom payed for two camps at the same time
-			//Unlikely situation but it will probably happen
+			
+			if($program_area == "None")
+				$program_area = $camper->fee_type;
 			if ($program_area != $camper->fee_type)
 				$program_area .= "," . $camper->fee_type;
-			else if($program_area == 0)
-				$program_area = $camper->fee_type;
 		}
 		
 		$total += $camper->payment_amt;
@@ -163,7 +162,8 @@ else if (isset($_GET["registration_day"]))
 			echo "<td>$". $total . "</td>";
 			echo "</tr>";
 			//Then reset the variables
-			$horse_fee = $horse_opt = $bus_fee = $camp_fee = $store = $last_id = $total = $program_area = 0;
+			$horse_fee = $horse_opt = $bus_fee = $camp_fee = $store = $last_id = $total = 0;
+			$program_area = "None";
 		}
 		$pointer++;
 	}
