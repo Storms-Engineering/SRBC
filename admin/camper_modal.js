@@ -233,9 +233,10 @@ function calculate_totals()
 		for (var j = 0; j < inputs.length; ++j) {
 			//We don't want to grab text fields and parseInt doesn't like empty strings
 			//TODO: change this to loop  through an array or use a foreach this is terrible
+			//TODO just check the type too duhhh
 			if(inputs[j].name != "scholarship_type" && inputs[j].name != "discount_type" && inputs[j].name != "counselor" && 
 				inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].name != "payment_amt" &&
-				inputs[j].name != "auto_note" &&
+				inputs[j].name != "auto_note" && inputs[j].name != "health_form" && 
 				inputs[j].name != "note" && inputs[j].value != "")
 			{				
 				
