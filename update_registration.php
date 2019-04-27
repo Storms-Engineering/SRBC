@@ -35,10 +35,12 @@ if (isset($obj["deleteid"]))
 			), 
 			array( '%d' ) 
 			);
+			//Resend confirmation email
+			$_GET["r_id"] = $registrations[0]->registration_id;
+			include 'resend_email.php';
 		}
-		//Resend email
-		$_GET["r_id"] = $registrations[0]->registration_id;
-		include 'resend_email.php';
+		
+		
 	}
 	echo "Deleted Registration and Saved Sucessfully";
 }

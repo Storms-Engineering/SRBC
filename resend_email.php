@@ -15,7 +15,6 @@ global $wpdb;
 		INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id) WHERE srbc_registration.registration_id=%d", $_GET["r_id"])); 	
 	//We only need the first object
 	$info = $info[0];
-	print_r($info);
 	$msg = "Hi ". $info->parent_first_name . ",<br><br>Thanks for signing up " . $info->camper_first_name . " for " . $info->area . ' ' . $info->name . "!  Camp starts " .date("D M j",strtotime($info->start_date)) . " and ends " . 
 	date("D M j",strtotime($info->end_date)) . "!  If you have any questions feel free to check ". 
 	'our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.  If you want to know what your child should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>!'.
