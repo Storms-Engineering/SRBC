@@ -226,7 +226,7 @@ function srbc_registration( $atts )
 						echo '<input type="hidden" name="camp_desc" value = "' .$camp->area . " " . $camp->name . '">'; 
 						if($camp->horse_opt != 0)
 						{
-							echo ' <input type="checkbox" name="horse_opt" value="true"> Horse Option $' .$camp->horse_opt. '<br>';
+							echo ' <input type="checkbox" id="horse_opt" onchange="calculateTotal();" name="horse_opt" value="true"> Horse Option $<span id="horse_opt_cost">' .$camp->horse_opt. '</span><br>';
 						}
 					}
 				}
@@ -240,7 +240,7 @@ function srbc_registration( $atts )
 				</h4>
 				<br>
 				<span>Busride*:</span>
-				<select class="inputs" name="busride">
+				<select onchange="calculateTotal();" class="inputs" id="busride" name="busride">
 					<option value="none" selected>No bus ride needed</option>
 					<option value="both">Round-Trip $60</option>
 					<option value="to">One-way to Camp $35</option>
@@ -308,7 +308,10 @@ function srbc_registration( $atts )
 				<option value="">Disagree</option>
 				<option value="agree">Agree</option>
 			</select></p>
-			
+	<?php
+	echo '<h1>Total: $<span id="total">'. $camp->cost . '</span></h2>';
+	echo '<span style="display:none" id="camp_cost">' . $camp->cost . '</span>';
+	?>
 	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received.  (This $50 DOES go towards the cost of the camp)</span><br>
 	You must at least pay $50, but you may pay up to the full amount of the camp.  Any remaining amount will be due the day of registration.
 	<br>
@@ -357,42 +360,7 @@ function srbc_registration( $atts )
 		<input type="submit" value="Submit">
 	</form> 
 	</div>
-	<script>
-	var names = ["cc_amount", "cc_number", "cc_name", "cc_zipcode", "cc_vcode", "cc_month", "cc_year" ];
-	
-	function validateForm()
-	{
-		
-		if (document.getElementById("retyped_email").value != document.getElementsByName("email")[0].value)
-		{
-			alert("Please check emails to make sure that they match!");
-			return false;
-		}
-		if (document.getElementById("use_check").checked)
-		{
-			return true;
-		}
-		else
-		{
-			var numValidated = 0;
-			for (let name of names) {
-					 if (document.getElementsByName(name)[0].value != "")
-					 {
-						  numValidated++;
-					 }
-				}
-				if (numValidated == 7)
-				{
-					return true;
-				}
-				else 
-				{
-					alert("Please use a credit card or check!");
-					return false;
-				}
-			}
-		}
-	</script>
+	<script src="../wp-content/plugins/SRBC/admin/registration.js"></script>
 	<?php
 	return ob_get_clean();
 }
