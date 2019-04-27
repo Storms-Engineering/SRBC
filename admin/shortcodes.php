@@ -168,38 +168,7 @@ function srbc_registration( $atts )
 {
 	ob_start();
 	?> 
-	<style>
-	input[type="text"], input[type="email"], input[type="password"], input[type="search"], input[type="tel"]
-	{
-		padding:2px;
-		margin:2px;
-		width:275px;
-	}
-	.registration_box
-	{
-		padding:10px;
-		margin:auto;
-		width:90%;
-		border: 2px solid #a6a6a6;
-		border-radius: 20px;
-	}
-	.lefting
-	{
-		float:left;
-	}
-	.bigtext
-	{
-		width:50%;
-		height:50%;
-		word-break: break-word;
-	}
-	textarea
-	{
-		width:auto;
-	}
-
-	</style>
-	
+	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/registration.css">
 	<div class="registration_box">
 	<form action="../registration-complete/" method="post" style="margin:auto;" onsubmit="return validateForm()">
 			<h4>Camp you wish to register for:
@@ -308,19 +277,33 @@ function srbc_registration( $atts )
 				<option value="">Disagree</option>
 				<option value="agree">Agree</option>
 			</select></p>
-	<?php
-	echo '<h1>Total: $<span id="total">'. $camp->cost . '</span></h2>';
+	<hr>
+	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received.  (This $50 DOES go towards the cost of the camp)</span><br>
+	You must pay $50, or pay the full amount of the camp, unless you a are registering for the waitlist then you don't have to pay a registration fee.  Any remaining amount will be due the day of registration.
+	<br>
+	<br>
+	<h2>Amount to pay: </h2>
+	<!--<input type="radio" name="cc_amount" value="50"> $50<br>
+	<input type="radio" name="gender" value="0"> $<span id="total"></span>
+	<br>	-->
+	<label class="container">$50
+		<input type="radio" name="cc_amount" checked="checked" value="50">
+		<span class="checkmark"></span>
+	</label>
+	<label class="container">$<span id="total"><?php
+	
+	echo $camp->cost;
+	echo '</span><input type="radio" name="cc_amount" id="cc_amount" value="'.$camp->cost.'">';
 	echo '<span style="display:none" id="camp_cost">' . $camp->cost . '</span>';
 	?>
-	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received.  (This $50 DOES go towards the cost of the camp)</span><br>
-	You must at least pay $50, but you may pay up to the full amount of the camp.  Any remaining amount will be due the day of registration.
-	<br>
-	<br>
-	
-	
-	<h3>Use a credit card:</h3>
-	Amount to pay: $ <input type="number" name="cc_amount"><br>
-		<br>		
+		<span class="checkmark"></span>
+	</label>
+	<label class="container">$0 Registering for waiting list
+		<input type="radio"  name="cc_amount" id="waitlist" value="">
+		<span class="checkmark"></span>
+	</label>
+	<hr>
+	<h2>Use a credit card:</h2>	
 		Name on Credit Card: <input type="text" name="cc_name">
 		Billing Zip <input style="width:100px;" type="text" name="cc_zipcode">
 		Credit Card # <input type="text" id="cc_number" name="cc_number"><br>
@@ -353,9 +336,8 @@ function srbc_registration( $atts )
 									<option value="27">2027</option>
 								</select>
 								<br>
-		<h2>OR</h2>
-		Send a check <input type="checkbox" id="use_check" name="using_check">
-		<br>
+		<h3>OR</h3>
+		<h2 style="display:inline">Send a check</h2> <input type="checkbox" id="use_check" name="using_check">
 		<br>
 		<input type="submit" value="Submit">
 	</form> 
@@ -542,6 +524,14 @@ function srbc_registration_complete($atts)
 			
 	}
 	$currentDate = new DateTime("now", new DateTimeZone('America/Anchorage'));
+	//Check that they aren't trying to cheat the system by saying they are signing up for a camp that isn't waitlisted and paying nothing
+	if($waitlist == 0 && $_POST["cc_amount"] == "")
+	{
+		error_msg("Please enter credit card information or check the 'Send a check' option.
+		This camp is not currently full and therefore you aren't being put on the waiting list.
+		Please hit the back button and try again. Thanks!");
+		exit();
+	}
 	$wpdb->insert(
 			'srbc_registration', 
 			array( 
@@ -570,7 +560,7 @@ function srbc_registration_complete($atts)
 		sendMail(srbc_email,"$parent_first_name $parent_last_name is sending a check ",
 		"Hi,\r\n$parent_first_name $parent_last_name is sending a check for $camper_first_name $camper_last_name<br>Thanks!<br>-Peter Hawke SRBC Ancilla");
 	}
-	else
+	else if($waitlist != 1 && $_POST["cc_amount"] != "")
 	{
 		//Credit Card Stuff
 		//Make credit card easier to read
@@ -585,7 +575,6 @@ function srbc_registration_complete($atts)
 		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it
 			$data .= '   USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
 		}
-	
 		//Show comments about buslist and horse option and horse_cost
 		$comments = autoSplit($_POST["cc_amount"],$camp->camp_id,$wpdb->insert_id,$busride,$horse_opt);
 		//Encrypt using ssl
@@ -618,6 +607,7 @@ function srbc_registration_complete($atts)
 			);
 		
 	}
+
 	if ($waitlist == 1)
 	{
 		$message = "Hi ". $parent_first_name . ",<br><br>This is an email letting you know that you sucessfully put" . $camper_first_name . " on the waitlist for " . $_POST["camp_desc"] . "." . 
