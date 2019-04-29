@@ -233,7 +233,7 @@ else {
 				}
 				//Also updates autoPaymentAmt
 				list ($autoPaymentAmt,$payed) = calculatePaymentAmt($autoPaymentAmt,$needToPayAmount);
-				makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["auto_payment_type"],$payed,
+				makePayment($key,$obj[$key]["auto_payment_type"],$payed,
 					$obj[$key]["auto_note"],$feeType);
 				$totalPayed += $payed;
 				$loops++;
@@ -247,7 +247,7 @@ else {
 			
 		}
 		else if ($obj[$key]["payment_type"] != "none"){
-			makePayment($key,$o->camp_id,$o->camper_id,$obj[$key]["payment_type"],$obj[$key]["payment_amt"],
+			makePayment($key,$obj[$key]["payment_type"],$obj[$key]["payment_amt"],
 				$obj[$key]["note"],$obj[$key]["fee_type"]);
 		}
 		
@@ -269,7 +269,7 @@ function calculatePaymentAmt($autoPaymentAmt, $needToPayAmount)
 }
 
 //Puts a payment into the database and also updates payment_card payment_cash etc...
-function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment_amt,$note,$fee_type)
+function makePayment($registration_id,$payment_type,$payment_amt,$note,$fee_type)
 {
 	//Get the current date time
 			$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
@@ -279,8 +279,6 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 					array( 
 						'payment_id' =>0,
 						'registration_id' => $registration_id,
-						'camp_id' => $camp_id, 
-						'camper_id' => $camper_id,
 						'payment_type' => $payment_type,
 						'payment_amt' => $payment_amt,
 						'payment_date' =>  $date->format("m/d/Y G:i"),
@@ -290,8 +288,6 @@ function makePayment($registration_id,$camp_id,$camper_id,$payment_type,$payment
 					array( 
 						'%d',
 						'%d', 
-						'%d',
-						'%d',
 						'%s',
 						'%f',
 						'%s',
