@@ -290,8 +290,8 @@ function srbc_registration( $atts )
 		<input type="radio" name="cc_amount" checked="checked" value="50">
 		<span class="checkmark"></span>
 	</label>
-	<label class="container">$<span id="total"><?php
-	
+	<label class="container">$<span id="total">
+	<?php
 	echo $camp->cost;
 	echo '</span><input type="radio" name="cc_amount" id="cc_amount" value="'.$camp->cost.'">';
 	echo '<span style="display:none" id="camp_cost">' . $camp->cost . '</span>';

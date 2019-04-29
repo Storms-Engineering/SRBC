@@ -34,18 +34,22 @@
 				echo '<br><h3>Notes:<h3> <br><textarea id="notes" rows="4" cols="50">' . $camper->notes . '</textarea></div>';
 				echo '<h3>Camps signed up for:</h3><br>';
 				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_registration WHERE camper_id=%s",$camper->camper_id));
+				//Check that they have registrations
 				if (count($registrations) == 0)
-					echo "Camper is not signed up for any camps";
-				//Create code for making a selection box
-				$camps = $wpdb->get_results("SELECT area,name,camp_id FROM srbc_camps ORDER BY area ASC");
-				$camp_selection = '<select id="~" name="camps"><option value="none">none</option>';
-				foreach ($camps as $camp){
-					$camp_selection .= '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
+					echo '<h1 style="text-align:center;color:red">Camper is not signed up for any camps</h1>';
+				else
+				{
+					//Create code for making a selection box
+					$camps = $wpdb->get_results("SELECT area,name,camp_id FROM srbc_camps ORDER BY area ASC");
+					$camp_selection = '<select id="~" name="camps"><option value="none">none</option>';
+					foreach ($camps as $camp){
+						$camp_selection .= '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
+					}
+					$camp_selection .= '</select>';
 				}
-				$camp_selection .= '</select>';
-				//Display each camp that they are registered for in a collapsible
 				$registration_ids = [];
-				foreach ($registrations as $registration)
+				//Display each camp that they are registered for in a collapsible
+				foreach ((array)$registrations as $registration)
 				{
 					$registration_ids[] = $registration->registration_id;
 					
@@ -234,22 +238,28 @@
 					//Modal end div
 					echo "</div>";
 				}
-				//Thanks to coderwarll for this: https://coderwall.com/p/zepnaw/sanitizing-queries-with-in-clauses-with-wpdb-on-wordpress
-				// how many entries will we select?
-				$how_many = count($registration_ids);
-				// prepare the right amount of placeholders
-				// if you're looing for strings, use '%s' instead
-				$placeholders = array_fill(0, $how_many, '%d');
-
-				// glue together all the placeholders...
-				// $format = '%d, %d, %d, %d, %d, [...]'
-				$format = implode(', ', $placeholders);
-				//Show payment history:
-				$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM srbc_payments WHERE registration_id IN($format)",$registration_ids));
+				
 				$paymentHistory = NULL;
-				foreach ($payments as $payment) {
-					$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . " " . $payment->fee_type . "\r\n";
+				if (count($registrations) != 0)
+				{
+					//Thanks to coderwarll for this: https://coderwall.com/p/zepnaw/sanitizing-queries-with-in-clauses-with-wpdb-on-wordpress
+					// how many entries will we select?
+					$how_many = count($registration_ids);
+					// prepare the right amount of placeholders
+					// if you're looing for strings, use '%s' instead
+					$placeholders = array_fill(0, $how_many, '%d');
+
+					// glue together all the placeholders...
+					// $format = '%d, %d, %d, %d, %d, [...]'
+					$format = implode(', ', $placeholders);
+					//Show payment history:
+					$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM srbc_payments WHERE registration_id IN($format)",$registration_ids));
+					
+					foreach ($payments as $payment) {
+						$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . " " . $payment->fee_type . "\r\n";
+					}
 				}
+
 				echo '<h3>Payment History</h3><br><textarea rows="4" cols="55">' . $paymentHistory . '</textarea>'
 			?>
 			</div>
