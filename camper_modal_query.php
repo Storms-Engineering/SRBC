@@ -112,7 +112,7 @@
 					'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
 					echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';
 					echo 'Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
-					echo 'Logded in: <input name="cabin" list="lodging" type="text" value="' . $registration->cabin . '"><br>';
+					echo 'Lodged in: <input name="cabin" list="lodging" type="text" value="' . $registration->cabin . '"><br>';
 					echo '<datalist id="lodging">
 							<option value="Girls Tent">
 							<option value="Guys Tent">
@@ -165,9 +165,9 @@
 					<option value="Trade"' . $scholSelector[3] . '>Trade</option>
 					<option value="Volunteer"' . $scholSelector[4] . '>Volunteer</option>
 					</select><br></span>';
-					echo '<span class="financial_info">Payed Check: $<input class="financial" name="payed_check" type="text" value="' . $payedCheck . '" readonly></span>';
-					echo '<span class="financial_info">Payed Cash: $<input class="financial" name="payed_cash" type="text" value="' . $payedCash . '" readonly></span>';
-					echo '<span class="financial_info">Payed Card: $<input class="financial" name="payed_card" type="text" value="' . $payedCard . '" readonly></span>';
+					echo '<span class="financial_info">Paid Check: $<input class="financial" name="payed_check" type="text" value="' . $payedCheck . '" readonly></span>';
+					echo '<span class="financial_info">Paid Cash: $<input class="financial" name="payed_cash" type="text" value="' . $payedCash . '" readonly></span>';
+					echo '<span class="financial_info">Paid Card: $<input class="financial" name="payed_card" type="text" value="' . $payedCard . '" readonly></span>';
 					echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due"></span></h3></span>';
 					//TODO we aren't really using amount due.  It was only for reports so I will need to restructure the database at somepoint
 					//. $registration->amount_due .
@@ -223,7 +223,7 @@
 					}
 					$finalText = NULL;
 					$keys = array_keys($f);
-					echo "<br><h3>Fees payed:</h3>";
+					echo "<br><h3>Fees paid:</h3>";
 					for($i=0;$i<count($keys);$i++){
 						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 					}
