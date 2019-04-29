@@ -187,6 +187,27 @@ else if (isset($_GET["registration_day"]))
 	exit;
 	
 }
+else if(isset($_GET["snackshop"]))
+{
+	echo "<h3>Snackshop (Store) fees collected:</h3>";
+	echo '<table id="report_table">';
+	echo "<tr><th>Last name</th><th>First Name</th><th>Amount</th></tr>";
+	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+													FROM ((srbc_payments 
+													INNER JOIN srbc_registration ON srbc_registration.registration_id=srbc_payments.registration_id)
+													INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+													WHERE srbc_payments.fee_type='Store' AND srbc_registration.camp_id=%d",$_GET["camp"]));
+	$totalFees = 0;
+	foreach ($campers as $camper)
+	{
+		echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_first_name 
+		. "</td><td>" . $camper->camper_last_name . "</td>";
+		echo "<td>$" . $camper->payment_amt . "</td></tr>";
+	}
+	echo "</table>";
+	echo "<br>Total fees: $" . $totalFees;
+	exit();
+}
 
 //TODO: fix not payed code, probably haven't updated since payment database was added 
 $not_payed = NULL;//$_GET['not_payed'];
@@ -213,8 +234,14 @@ else if(isset($_GET["emails"]))
 	//Do nothing
 	echo "";
 else {
-	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th><th>Waitlisted</th>';
+	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
 	$sortnum = 2;
+}
+
+if(isset($_GET["camper_report"]))
+{
+	echo '<th onclick="sortTable('.$sortnum.')">Waitlisted</th>';
+	$sortnum++;
 }
 
 if (isset($_GET['area']) && $_GET["area"] == "") {
