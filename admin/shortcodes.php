@@ -734,7 +734,7 @@ function srbc_camps($atts){
 				<th>Camp</th>
 				<th>Cost</th>
 				<th>Start/End Date</th>
-				<th>Grade Range</th>
+				<th>Going into Grades</th>
 				<th>Camp Availability</th>
 				</tr>';
 	global $wpdb;
