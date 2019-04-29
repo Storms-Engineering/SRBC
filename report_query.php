@@ -213,7 +213,7 @@ else if(isset($_GET["emails"]))
 	//Do nothing
 	echo "";
 else {
-	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
+	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th><th>Waitlisted</th>';
 	$sortnum = 2;
 }
 
@@ -298,8 +298,15 @@ foreach ($information as $info){
 		continue;
 	}
 	//Start new row and put in name since that always happens
-	echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name . "</td>";
-	//We don't need a isset for this because it is always being sent
+	echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+	if ($info->waitlist == 1) 
+	{
+		echo '<td class="stickout">(waitlisted)</td>';
+	}
+	else
+		echo "<td></td>";
+	echo "</tr>";
+	//We don't need a isset for this because it is always being sent?
 	if (isset($_GET['buslist'])){
 		if($info->busride == $_GET['buslist_type'] || $info->busride == "both"){
 			echo "<td>" . $info->phone. "</td>";

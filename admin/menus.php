@@ -310,7 +310,6 @@ function srbc_camp_reports()
 		{
 			background-color: #21b17d;
 		}
-		
 	</style>
 	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/camper_management.css">
 	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/tooltip.css">
@@ -367,6 +366,7 @@ function srbc_camp_reports()
 				echo '</select>';
 		?><br>
 		<button onclick="generateReport('camp_report')">Camp Report </button>		
+		<button onclick="generateReport('camper_report')">Camper Report </button>		
 		<!--<a href="/wp-content/plugins/SRBC/report_query.php?mailing_list=true">Mailing List</a>
 		<a style="color:white;text-decoration:none;" href="/wp-content/plugins/SRBC/report_query.php?mailing_list=true&start_date=2019/06/12">Mailing List</a>
 		TODO: These don't work correctly I believe: Hasn't paid in full <input id="not_payed" type="checkbox">-->
