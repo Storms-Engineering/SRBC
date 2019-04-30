@@ -273,6 +273,10 @@ if (isset($_GET['scholarship'])){
 	echo '<th onclick="sortTable('.$sortnum.')">Scholarship Type</th><th onclick="sortTable('.($sortnum + 1).')">Scholarship Amount</th>';
 	$sortnum+= 2;
 }
+if (isset($_GET['not_payed'])){
+	echo '<th onclick="sortTable('.$sortnum.')">Amount Due</th>';
+	$sortnum++;
+}
 
 if (isset($_GET["camp_report"]))
 {
@@ -324,21 +328,27 @@ foreach ($information as $info){
 		echo $info->email . ",<br>";
 		continue;
 	}
-	//Start new row and put in name since that always happens
-	echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
-	if ($info->waitlist == 1) 
+	
+	if(!isset($_GET["not_payed"]))
 	{
-		echo '<td class="stickout">(waitlisted)</td>';
+		//Start new row and put in name since that always happens - most of the time
+		echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+		if ($info->waitlist == 1) 
+		{
+			echo '<td class="stickout">(waitlisted)</td>';
+		}
+		else if(isset($_GET["camper_report"]))
+			echo "<td></td>";
 	}
-	else
-		echo "<td></td>";
-	echo "</tr>";
+	//echo "</tr>";
 	//We don't need a isset for this because it is always being sent?
 	if (isset($_GET['buslist'])){
 		if($info->busride == $_GET['buslist_type'] || $info->busride == "both"){
 			echo "<td>" . $info->phone. "</td>";
 			echo "<td>" . $info->phone2. "</td>";
 			echo "<td></td>";
+			//TODO put this code into a function?  
+			//BODY since we call it several times anyways
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM srbc_payments WHERE registration_id=%s",$info->registration_id));
 			$cost = $wpdb->get_var($wpdb->prepare("
@@ -389,6 +399,33 @@ foreach ($information as $info){
 		echo "<td>$" . number_format(($cost - $totalPayed),2) . "</td>";
 		//Empty cells
 		echo "<td></td><td></td>";
+	}
+	else if(isset($_GET["not_payed"]))
+	{
+		$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+									FROM srbc_payments WHERE registration_id=%s",$info->registration_id));
+		$cost = $wpdb->get_var($wpdb->prepare("
+									SELECT SUM(srbc_camps.cost +
+									(CASE WHEN srbc_registration.horse_opt = 1 THEN srbc_camps.horse_opt
+									ELSE 0
+									END) +
+									(CASE WHEN srbc_registration.busride = 'to' THEN 35
+									WHEN srbc_registration.busride = 'from' THEN 35
+									WHEN srbc_registration.busride = 'both' THEN 60
+									ELSE 0
+									END) 
+									- IF(srbc_registration.discount IS NULL,0,srbc_registration.discount)
+									- IF(srbc_registration.scholarship_amt IS NULL,0,srbc_registration.scholarship_amt)		
+									)								
+									FROM srbc_registration 
+									INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id
+									WHERE srbc_registration.camp_id=%d AND srbc_registration.camper_id=%d",$info->camp_id,$info->camper_id));
+		$amountDue = $cost - $totalPayed;
+		if($amountDue <= 0)
+			continue;
+		echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+		echo "<td>$" . $amountDue . "</td>";
+		
 	}
 	else if(isset($_GET["camp_report"]))
 	{

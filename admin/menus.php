@@ -337,7 +337,8 @@ function srbc_camp_reports()
 		<button onclick="generateReport('discount')">Discounts </button>
 		<button onclick="generateReport('emails')">Emails </button>
 		<button onclick="generateReport('camp_numbers')">Camp Numbers </button>
-		<button onclick="generateReport('not_checked_in')">Camper didn't check in </button><br>
+		<button onclick="generateReport('not_checked_in')">Camper didn't check in </button>
+		<button onclick="generateReport('not_payed')">Balance Due</button><br>
 		<hr>
 		<h2 style="display:inline;">Date specific reports</h2> <div class="tooltip">?
 			<span class="tooltiptext">Please choose the same date twice if you are doing a report for all camps starting on that day.
@@ -354,6 +355,7 @@ function srbc_camp_reports()
 		<button onclick="generateReport('signout_sheets')">Signout Sheets</button>
 		<button onclick="generateReport('registration_day')">Registration Day Report</button>
 		<button onclick="generateReport('mailing_list')">Mailing List</button>
+
 		<hr>
 		<h2 style="display:inline;">Camp Specific Reports</h2>
 		<?php 
@@ -368,8 +370,6 @@ function srbc_camp_reports()
 		<button onclick="generateReport('camp_report')">Camp Report </button>		
 		<button onclick="generateReport('camper_report')">Camper Report </button>		
 		<button onclick="generateReport('snackshop')">Snackshop</button>
-		<!--
-		TODO: These don't work correctly I believe: Hasn't paid in full <input id="not_payed" type="checkbox">-->
 	</div>
 	<br><br>
 	<div id="results"></div>
