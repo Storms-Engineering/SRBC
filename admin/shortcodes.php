@@ -610,7 +610,7 @@ function srbc_registration_complete($atts)
 
 	if ($waitlist == 1)
 	{
-		$message = "Hi ". $parent_first_name . ",<br><br>This is an email letting you know that you sucessfully put" . $camper_first_name . " on the waitlist for " . $_POST["camp_desc"] . "." . 
+		$message = "Hi ". $parent_first_name . ",<br><br>This is an email letting you know that you sucessfully put " . $camper_first_name . " on the waitlist for " . $_POST["camp_desc"] . "." . 
 		"<br>We will email you and let you know if a spot opens up for the camp.<br>Thanks!<br> Solid Rock Bible Camp";
 		sendMail($email,"Waitlist Confirmation",$message);
 	}
