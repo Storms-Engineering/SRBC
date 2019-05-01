@@ -738,7 +738,7 @@ function srbc_camps($atts){
 				<th>Camp Availability</th>
 				</tr>';
 	global $wpdb;
-	$camps = $wpdb->get_results("SELECT * FROM srbc_camps" . $GLOBALS['srbc_camps'] . " WHERE area='$query' ORDER BY start_date");	
+	$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='$query' ORDER BY start_date");	
 	//If no camps then give a message
 	if (count($camps) == 0)
 		return "<h2>There is currently no camps scheduled for this area at this time.  Please check back later!</h2>";
