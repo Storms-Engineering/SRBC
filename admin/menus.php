@@ -1,5 +1,100 @@
 <?php 
+function srbc_database()
+{
+	// check user capabilities
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+	if(isset($_POST["srbc_database_year"]))
+	{
+		update_option("srbc_database_year",$_POST["srbc_database_year"]);
+		$GLOBALS["srbc_camps"] . get_option("srbc_database_year");
+		$GLOBALS['srbc_payments'] = "srbc_payments" . get_option("srbc_database_year");
+		$GLOBALS['srbc_registration'] = "srbc_registration" . get_option("srbc_database_year");
+	}
+	if(isset($_POST["rename_database"]))
+	{
+		global $wpdb;
+		$wpdb->query("RENAME TABLE srbc_registration TO srbc_registration" . date("Y") .  ",
+		srbc_camps TO srbc_camps" . date("Y") . ", srbc_payments to srbc_payments" . date("Y") . ";");
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		//Create a table for Camps
+		$sql = "CREATE TABLE IF NOT EXISTS srbc_camps (
+		camp_id INT AUTO_INCREMENT,
+		area TINYTEXT NOT NULL,
+		name TINYTEXT NOT NULL,
+		description TEXT NOT NULL,
+		start_date DATE,
+		end_date DATE,
+		cost SMALLINT NOT NULL,
+		horse_cost SMALLINT,
+		horse_opt TINYINT NOT NULL,
+		horse_list_size TINYINT NOT NULL,
+		horse_waiting_list_size TINYINT NOT NULL,
+		waiting_list_size SMALLINT NOT NULL,
+		boy_registration_size SMALLINT NOT NULL,
+		girl_registration_size SMALLINT NOT NULL,
+		overall_size SMALLINT NOT NULL,
+		grade_range TINYTEXT NOT NULL,
+		PRIMARY KEY (camp_id)
+		)  ENGINE=INNODB;";
 
+		dbDelta( $sql );
+		//Registration Database
+		$sql = "CREATE TABLE IF NOT EXISTS srbc_registration (
+		registration_id INT AUTO_INCREMENT,
+		camp_id INT NOT NULL,
+		camper_id INT NOT NULL,
+		date TINYTEXT NOT NULL,
+		counselor TINYTEXT,
+		cabin TINYTEXT,
+		horse_opt TINYINT NOT NULL,
+		busride TINYTEXT NOT NULL,
+		discount_type TINYTEXT,
+		discount FLOAT(6,2),
+		scholarship_amt FLOAT(6,2) ,
+		scholarship_type TINYTEXT,
+		waitlist TINYINT NOT NULL,	
+		horse_waitlist TINYINT NOT NULL,
+		checked_in TINYINT NOT NULL,
+		health_form TINYINT NOT NULL,
+		PRIMARY KEY (registration_id)
+		)  ENGINE=INNODB;";
+
+		dbDelta( $sql );
+		//Database keeping track of payments
+		$sql = "CREATE TABLE IF NOT EXISTS srbc_payments (
+		payment_id INT AUTO_INCREMENT,
+		camp_id INT NOT NULL,
+		camper_id INT NOT NULL,
+		payment_type TINYTEXT NOT NULL,
+		payment_amt FLOAT(6,2) NOT NULL,
+		payment_date TINYTEXT,
+		note TINYTEXT,
+		fee_type TINYTEXT,
+		PRIMARY KEY (payment_id)
+		)  ENGINE=INNODB;";
+
+	dbDelta( $sql );
+	}
+	?>
+	<h1>Database Management</h1>
+	<form method="post">
+	Please choose which year you would like to pull data from: <input type="text" name="srbc_database_year" value="<?php echo get_option("srbc_database_year");?>">
+	  <input type="submit" value="Save">
+	  <br>
+	  	Clear the field and hit save to revert to the current database.
+	</form>
+	<br><br>
+	<form method="post">
+	  <input type="submit" name="rename_database" value="Archive All Current Data">
+	  <h2 style="color:red">Please Note that this will make all registrations and camps archived.  
+	  If you wish to access this data please enter the year that you archived the data.
+	  </h2>
+	</form>
+	<?php
+	
+}
 function srbc_credit_cards(){
 	// check user capabilities
     if (!current_user_can('manage_options')) {
@@ -91,7 +186,7 @@ function srbc_camper_management()
 		<option value="Winter Camp">
 		<?php
 		global $wpdb;
-		$camps = $wpdb->get_results("SELECT area,name FROM srbc_camps",ARRAY_N);
+		$camps = $wpdb->get_results("SELECT area,name FROM ". $GLOBALS['srbc_camps'], ARRAY_N);
 		for ($i = 0;$i< count($camps);$i++){
 			echo '<option value="' . $camps[$i][0] . '~' . $camps[$i][1] . '">';
 		}		
@@ -122,19 +217,19 @@ function listCamps($area)
 			<th>Delete</th>
 		</tr>';
 	global $wpdb;
-	$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_camps WHERE area='%s' ORDER BY start_date",$area));
+	$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='%s' ORDER BY start_date",$area));
 	foreach ($camps as $camp)
 	{
 		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM srbc_registration
+										FROM " . $GLOBALS['srbc_registration'] . "
 										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id)); 
 		$male_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										FROM " . $GLOBALS['srbc_registration'] . "
+										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
 										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id)); 
 		$female_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										FROM " . $GLOBALS['srbc_registration'] . "
+										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
 										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
 		echo '<tr onclick="openModal(' . $camp->camp_id . ')"><td>' . $camp->name;
 		echo "</td><td>" . $camp->start_date . "</td>";
@@ -360,7 +455,7 @@ function srbc_camp_reports()
 		<h2 style="display:inline;">Camp Specific Reports</h2>
 		<?php 
 				global $wpdb;
-				$camps = $wpdb->get_results("SELECT * FROM srbc_camps ORDER BY area ASC");
+				$camps = $wpdb->get_results("SELECT * FROM ".$GLOBALS['srbc_camps'] ." ORDER BY area ASC");
 				echo '<select id="camp" name="camp"><option value="none">none</option>';
 				foreach ($camps as $camp){
 					echo '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';

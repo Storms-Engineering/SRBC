@@ -10,9 +10,9 @@ use PHPMailer\PHPMailer\Exception;
 global $wpdb;
 
 	$info = $wpdb->get_results($wpdb->prepare( $query = "SELECT *
-		FROM ((srbc_registration 
-		INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
-		INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id) WHERE srbc_registration.registration_id=%d", $_GET["r_id"])); 	
+		FROM ((" . $GLOBALS['srbc_registration'] . " 
+		INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id)
+		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE " . $GLOBALS['srbc_registration'] . ".registration_id=%d", $_GET["r_id"])); 	
 	//We only need the first object
 	$info = $info[0];
 	$msg = "Hi ". $info->parent_first_name . ",<br><br>Thanks for signing up " . $info->camper_first_name . " for " . $info->area . ' ' . $info->name . "!  Camp starts " .date("D M j",strtotime($info->start_date)) . " and ends " . 

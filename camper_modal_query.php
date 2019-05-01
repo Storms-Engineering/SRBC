@@ -33,14 +33,14 @@
 					'<input type="text" name="zipcode" value="' . $camper->zipcode . '"></span>';
 				echo '<br><h3>Notes:<h3> <br><textarea id="notes" rows="4" cols="50">' . $camper->notes . '</textarea></div>';
 				echo '<h3>Camps signed up for:</h3><br>';
-				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM srbc_registration WHERE camper_id=%s",$camper->camper_id));
+				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE camper_id=%s",$camper->camper_id));
 				//Check that they have registrations
 				if (count($registrations) == 0)
 					echo '<h1 style="text-align:center;color:red">Camper is not signed up for any camps</h1>';
 				else
 				{
 					//Create code for making a selection box
-					$camps = $wpdb->get_results("SELECT area,name,camp_id FROM srbc_camps ORDER BY area ASC");
+					$camps = $wpdb->get_results("SELECT area,name,camp_id FROM " . $GLOBALS['srbc_camps'] . " ORDER BY area ASC");
 					$camp_selection = '<select id="~" name="camps"><option value="none">none</option>';
 					foreach ($camps as $camp){
 						$camp_selection .= '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
@@ -54,7 +54,7 @@
 					$registration_ids[] = $registration->registration_id;
 					
 					//Grab the camp since we need some info from it
-					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$registration->camp_id));
+					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE camp_id=%s",$registration->camp_id));
 					echo '<span id="registration_id" style="display: none;">' . $registration->registration_id . '</span>';
 					//Calculate the busfee
 					$busride = $registration->busride;
@@ -102,11 +102,11 @@
 						$horsesWaitlistHTML = ' <span style="color:red;"><b>(Waitlisted for Horses)</b></span>';						
 					
 					$payedCard = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE registration_id=%s AND payment_type='card'",$registration->registration_id));
+									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='card'",$registration->registration_id));
 					$payedCheck = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE registration_id=%s AND payment_type='check'",$registration->registration_id));
+									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='check'",$registration->registration_id));
 					$payedCash = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE registration_id=%s AND payment_type='cash'",$registration->registration_id));
+									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='cash'",$registration->registration_id));
 					
 					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campWaitlistHTML . 
 					'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
@@ -211,7 +211,7 @@
 					echo '<br><b>Auto split payment (Currently in alpha, if you use please double check values that it worked correctly):</b> $<input type="text" name="auto_payment_amt" >';
 					
 					//Print out the different fees that have been payed
-					$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM srbc_payments WHERE registration_id=%s",$registration->registration_id));
+					$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$registration->registration_id));
 					//Add duplicate fees to this array
 					$f = array();
 					foreach($fees as $fee){
@@ -253,7 +253,7 @@
 					// $format = '%d, %d, %d, %d, %d, [...]'
 					$format = implode(', ', $placeholders);
 					//Show payment history:
-					$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM srbc_payments WHERE registration_id IN($format)",$registration_ids));
+					$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id IN($format)",$registration_ids));
 					
 					foreach ($payments as $payment) {
 						$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . " " . $payment->fee_type . "\r\n";

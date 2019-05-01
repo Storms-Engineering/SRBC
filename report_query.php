@@ -8,10 +8,10 @@ global $wpdb;
 if(isset($_GET["mailing_list"]))
 {
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
-		FROM ((srbc_registration 
-		INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
-		INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id) WHERE 
-		srbc_camps.start_date='%s'",$_GET["start_date"]));
+		FROM ((" . $GLOBALS['srbc_registration'] . " 
+		INNER JOIN " . $GLOBALS["srbc_camps"] . " ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
+		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE 
+		" . $GLOBALS["srbc_camps"] . ".start_date='%s'",$_GET["start_date"]));
 	$csvArray = array();
 	
 	$csvArray[] = array("First_name","Last_name","Address","City","State","Zipcode","Cabin");
@@ -38,17 +38,17 @@ else if (isset($_GET["camp_numbers"]))
 {
 	$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 	$date = $date->format("Y-m-d");
-	$camps = $wpdb->get_results("SELECT * FROM srbc_camps WHERE start_date >= '$date'");
+	$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS["srbc_camps"] . " WHERE start_date >= '$date'");
 	$totalRegistrations = 0;
 	foreach ($camps as $camp)
 	{
 		$male_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										FROM " . $GLOBALS['srbc_registration'] . "
+										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
 										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id)); 
 		$female_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										FROM " . $GLOBALS['srbc_registration'] . "
+										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
 										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
 		echo "<h3>" . $camp->area . " " . $camp->name . "</h3>			" . $camp->start_date . "<br>";
 		echo "		Male: " . $male_registered . "<br>";
@@ -62,12 +62,14 @@ else if (isset($_GET["camp_numbers"]))
 else if(isset($_GET["signout_sheets"]))
 {
 	//srbc_registration.counselor,srbc_registration.cabin,srbc_campers.camper_first_name,
-	//							srbc_campers.camper_last_name,srbc_campers.parent_first_name,srbc_campers.parent_last_name		
+	//							srbc_campers.camper_last_name,srbc_campers.parent_first_name,srbc_campers.parent_last_name	
+	//TODO use wpdb prepare
 	$campers = $wpdb->get_results("SELECT *
-									FROM ((srbc_registration 
-								 INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
-								 INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-								 WHERE srbc_camps.start_date BETWEEN '" . $_GET['start_date']."' AND '".$_GET['end_date'].
+									FROM ((" . $GLOBALS['srbc_registration'] . "
+								 INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
+								 ".camp_id)
+								 INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+								 WHERE " . $GLOBALS["srbc_camps"] . ".start_date BETWEEN '" . $_GET['start_date']."' AND '".$_GET['end_date'].
 								 "' ORDER BY srbc_registration.cabin DESC");
 	//This variable keeps track of if we have changed cabin group
 	//Initialized to 0 so we don't compare to null and get true
@@ -104,11 +106,11 @@ else if (isset($_GET["registration_day"]))
 {
 	$newFormat = date("m/d/Y",strtotime( $_GET["start_date"]));
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
-													FROM ((srbc_payments 
-													INNER JOIN srbc_registration ON srbc_registration.registration_id=srbc_payments.registration_id)
+													FROM ((" . $GLOBALS['srbc_payments'] . " 
+													INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
 													INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-													WHERE srbc_payments.payment_date LIKE %s 
-													ORDER BY srbc_campers.camper_id, srbc_payments.registration_id ASC",$newFormat . "%"));
+													WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s 
+													ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
 													
 	echo "<h3>Registration day fees collected:</h3>";
 	echo '<table id="report_table">';
@@ -193,10 +195,10 @@ else if(isset($_GET["snackshop"]))
 	echo '<table id="report_table">';
 	echo "<tr><th>Last name</th><th>First Name</th><th>Amount</th></tr>";
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
-													FROM ((srbc_payments 
-													INNER JOIN srbc_registration ON srbc_registration.registration_id=srbc_payments.registration_id)
-													INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-													WHERE srbc_payments.fee_type='Store' AND srbc_registration.camp_id=%d",$_GET["camp"]));
+													FROM ((" . $GLOBALS['srbc_payments'] . " 
+													INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
+													INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+													WHERE " . $GLOBALS['srbc_payments'] . ".fee_type='Store' AND " . $GLOBALS['srbc_registration'] . ".camp_id=%d",$_GET["camp"]));
 	$totalFees = 0;
 	foreach ($campers as $camper)
 	{
@@ -213,10 +215,12 @@ else if(isset($_GET["snackshop"]))
 $not_payed = NULL;//$_GET['not_payed'];
 
 //Combining all of the databases so that we can pull all the data that we need from it
+//TODO this is an incredibly expensive query.
+//BODY Should make a dynamic column selection.
 $query = "SELECT *
-		FROM ((srbc_registration 
-		INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
-		INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id) WHERE ";
+		FROM ((" . $GLOBALS['srbc_registration'] . "
+		INNER JOIN " . $GLOBALS['srbc_camps']. " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
+		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE ";
 		
 $values = array();
 //Keeps track of how many sort headers we have
@@ -245,17 +249,17 @@ if(isset($_GET["camper_report"]))
 }
 
 if (isset($_GET['area']) && $_GET["area"] == "") {
-	$query .= "srbc_camps.area LIKE '%' ";
+	$query .= $GLOBALS['srbc_camps'] . ".area LIKE '%' ";
 }
 else {
 	$values = array($_GET['area']);
-	$query .= "srbc_camps.area='%s' ";
+	$query .= $GLOBAL['srbc_camps'] . ".area='%s' ";
 }
 
 //New Buslist grabs all campers heading to anchorage or camp and also selects campers that are going both ways
 //Puts them into both reports
 if (isset($_GET['buslist'])){
-	$query .= "AND srbc_registration.busride='".$_GET['buslist_type']."' OR srbc_registration.busride='both' ";
+	$query .= "AND (" . $GLOBALS['srbc_registration'] . ".busride='".$_GET['buslist_type']."' OR " . $GLOBALS['srbc_registration'] . ".busride='both') ";
 	echo '<th onclick="sortTable('.($sortnum).')">Primary Phone</th>';
 	echo '<th onclick="sortTable('.($sortnum + 1).')">Secondary Phone</th>';
 	echo '<th onclick="sortTable('.($sortnum + 2).')">Parent/Guardian Signature</th>';
@@ -263,13 +267,13 @@ if (isset($_GET['buslist'])){
 	$sortnum += 4;
 }
 if (isset($_GET["horsemanship"])){
-	$query .= "AND NOT srbc_registration.horse_opt=0 ";
+	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 ";
 }
 if (isset($_GET["camp_numbers"])){
-	$query .= "AND NOT srbc_registration.horse_opt=0 ";
+	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 ";
 }
 if (isset($_GET['scholarship'])){
-	$query .= "AND NOT srbc_registration.scholarship_amt=0 ";
+	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".scholarship_amt=0 ";
 	echo '<th onclick="sortTable('.$sortnum.')">Scholarship Type</th><th onclick="sortTable('.($sortnum + 1).')">Scholarship Amount</th>';
 	$sortnum+= 2;
 }
@@ -285,29 +289,29 @@ if (isset($_GET["camp_report"]))
 		error_msg("Please select a camp you would like a report for.  THaaanks");
 		exit(0);
 	}
-	$query .= "AND srbc_camps.camp_id=". $_GET["camp"]. " AND srbc_registration.waitlist=0 ";
+	$query .= "AND " . $GLOBALS['srbc_camps'] . ".camp_id=". $_GET["camp"]. " AND " . $GLOBALS['srbc_registration'] . ".waitlist=0 ";
 	echo '<th onclick="sortTable('.$sortnum.')">Gender</th><th onclick="sortTable('.($sortnum + 1).')">Age</th>';
 	echo '<th onclick="sortTable('.($sortnum + 2).')">Counselor</th>';
 	$sortnum += 3;
 }
 else if (isset($_GET["camp"]) && $_GET["camp"] != "none")
 {
-	$query .= "AND srbc_camps.camp_id=". $_GET["camp"]. " ";
+	$query .= "AND " . $GLOBALS['srbc_camps'] . ".camp_id=". $_GET["camp"]. " ";
 }
 if (isset($_GET['discount'])){
-	$query .= "AND NOT srbc_registration.discount=0 ";
+	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".discount=0 ";
 	echo '<th onclick="sortTable('.$sortnum.')">Discount Type</th>';
 	$sortnum++;
 	echo '<th onclick="sortTable('.$sortnum.')">Discount</th>';
 	$sortnum++;
 }
 if ( isset($_GET['start_date']) && $_GET["start_date"] != "" && isset($_GET["end_date"]) && $_GET["end_date"] != ""){
-	$query .= "AND srbc_camps.start_date BETWEEN '%s' AND '%s' ";
+	$query .= "AND " . $GLOBALS['srbc_camps'] . ".start_date BETWEEN '%s' AND '%s' ";
 	array_push($values,$_GET['start_date']);
 	array_push($values,$_GET['end_date']);
 }
 if (isset($_GET['not_checked_in'])){
-	$query .= "AND NOT srbc_registration.checked_in=1 ";
+	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".checked_in=1 ";
 }
 
 //TODO amount_due deprecated
@@ -350,23 +354,23 @@ foreach ($information as $info){
 			//TODO put this code into a function?  
 			//BODY since we call it several times anyways
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE registration_id=%s",$info->registration_id));
+									FROM " . $GLOBALS["srbc_payments"] . " WHERE registration_id=%s",$info->registration_id));
 			$cost = $wpdb->get_var($wpdb->prepare("
-									SELECT SUM(srbc_camps.cost +
-									(CASE WHEN srbc_registration.horse_opt = 1 THEN srbc_camps.horse_opt
+									SELECT SUM(" . $GLOBALS["srbc_camps"] . ".cost +
+									(CASE WHEN " . $GLOBALS["srbc_registration"] . ".horse_opt = 1 THEN srbc_camps.horse_opt
 									ELSE 0
 									END) +
-									(CASE WHEN srbc_registration.busride = 'to' THEN 35
-									WHEN srbc_registration.busride = 'from' THEN 35
-									WHEN srbc_registration.busride = 'both' THEN 60
+									(CASE WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'to' THEN 35
+									WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'from' THEN 35
+									WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'both' THEN 60
 									ELSE 0
 									END) 
-									- IF(srbc_registration.discount IS NULL,0,srbc_registration.discount)
-									- IF(srbc_registration.scholarship_amt IS NULL,0,srbc_registration.scholarship_amt)		
+									- IF(" . $GLOBALS['srbc_registration'] . ".discount IS NULL,0," . $GLOBALS['srbc_registration'] . ".discount)
+									- IF(" . $GLOBALS['srbc_registration'] . ".scholarship_amt IS NULL,0," . $GLOBALS['srbc_registration'] . ".scholarship_amt)		
 									)								
-									FROM srbc_registration 
-									INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id
-									WHERE srbc_registration.camp_id=%d AND srbc_registration.camper_id=%d",$info->camp_id,$info->camper_id));
+									FROM " . $GLOBALS['srbc_registration'] . "
+									INNER JOIN " . $GLOBALS["srbc_camps"] . " ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
+									WHERE " . $GLOBALS['srbc_registration'] . ".camp_id=%d AND " . $GLOBALS['srbc_registration'] . ".camper_id=%d",$info->camp_id,$info->camper_id));
 			echo "<td>$" . ($cost - $totalPayed) . "</td>";
 		}
 	}
@@ -375,23 +379,23 @@ foreach ($information as $info){
 		echo "<td>" . $info->area . " ".  $info->name . "</td>";
 		echo "<td>" . $info->phone . "</td>";
 		$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-								FROM srbc_payments WHERE registration_id=%s",$info->registration_id));
+								FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$info->registration_id));
 		$cost = $wpdb->get_var($wpdb->prepare("
 								SELECT SUM(srbc_camps.cost +
-									(CASE WHEN srbc_registration.horse_opt = 1 THEN srbc_camps.horse_opt
+									(CASE WHEN " . $GLOBALS['srbc_registration'] . ".horse_opt = 1 THEN " . $GLOBALS['srbc_camps'] . ".horse_opt
 									ELSE 0
 									END) +
-									(CASE WHEN srbc_registration.busride = 'to' THEN 35
-									WHEN srbc_registration.busride = 'from' THEN 35
-									WHEN srbc_registration.busride = 'both' THEN 60
+									(CASE WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'to' THEN 35
+									WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'from' THEN 35
+									WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'both' THEN 60
 									ELSE 0
 									END) 
-									- IF(srbc_registration.discount IS NULL,0,srbc_registration.discount)
-									- IF(srbc_registration.scholarship_amt IS NULL,0,srbc_registration.scholarship_amt)		
+									- IF(" . $GLOBALS['srbc_registration'] . ".discount IS NULL,0," . $GLOBALS['srbc_registration'] . ".discount)
+									- IF(" . $GLOBALS['srbc_registration'] . ".scholarship_amt IS NULL,0," . $GLOBALS['srbc_registration'] . ".scholarship_amt)		
 									)										
-									FROM srbc_registration 
-									INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id
-									WHERE srbc_registration.camp_id=%d AND srbc_registration.camper_id=%d",$info->camp_id,$info->camper_id));
+									FROM " . $GLOBALS['srbc_registration'] . " 
+									INNER JOIN srbc_camps ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
+									WHERE " . $GLOBALS['srbc_registration'] . ".camp_id=%d AND " . $GLOBALS['srbc_registration'] . ".camper_id=%d",$info->camp_id,$info->camper_id));
 		//Little hack so that is shows 0 if they are no payments
 		if ($totalPayed == NULL)
 			$totalPayed = 0;
@@ -403,23 +407,23 @@ foreach ($information as $info){
 	else if(isset($_GET["not_payed"]))
 	{
 		$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE registration_id=%s",$info->registration_id));
+									FROM " . $GLOBALS["srbc_payments"] . " WHERE registration_id=%s",$info->registration_id));
 		$cost = $wpdb->get_var($wpdb->prepare("
 									SELECT SUM(srbc_camps.cost +
-									(CASE WHEN srbc_registration.horse_opt = 1 THEN srbc_camps.horse_opt
+									(CASE WHEN " . $GLOBALS['srbc_registration'] . ".horse_opt = 1 THEN srbc_camps.horse_opt
 									ELSE 0
 									END) +
-									(CASE WHEN srbc_registration.busride = 'to' THEN 35
-									WHEN srbc_registration.busride = 'from' THEN 35
-									WHEN srbc_registration.busride = 'both' THEN 60
+									(CASE WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'to' THEN 35
+									WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'from' THEN 35
+									WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'both' THEN 60
 									ELSE 0
 									END) 
-									- IF(srbc_registration.discount IS NULL,0,srbc_registration.discount)
-									- IF(srbc_registration.scholarship_amt IS NULL,0,srbc_registration.scholarship_amt)		
+									- IF(" . $GLOBALS['srbc_registration'] . ".discount IS NULL,0," . $GLOBALS['srbc_registration'] . ".discount)
+									- IF(" . $GLOBALS['srbc_registration'] . ".scholarship_amt IS NULL,0," . $GLOBALS['srbc_registration'] . ".scholarship_amt)		
 									)								
-									FROM srbc_registration 
-									INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id
-									WHERE srbc_registration.camp_id=%d AND srbc_registration.camper_id=%d",$info->camp_id,$info->camper_id));
+									FROM " . $GLOBALS['srbc_registration'] . " 
+									INNER JOIN srbc_camps ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
+									WHERE " . $GLOBALS['srbc_registration'] . ".camp_id=%d AND " . $GLOBALS['srbc_registration'] . ".camper_id=%d",$info->camp_id,$info->camper_id));
 		$amountDue = $cost - $totalPayed;
 		if($amountDue <= 0)
 			continue;

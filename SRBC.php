@@ -198,6 +198,41 @@ function credit_cards()
     );
 }
 add_action('admin_menu', 'credit_cards');
+
+function database()
+{
+   add_submenu_page(
+        'srbc_overview',
+        'Database Management',
+        'Database Management',
+        'manage_options',
+        'srbc_database',
+		'srbc_database'
+    );
+}
+add_action('admin_menu', 'database');
+
+//Settings
+function register_my_setting() {
+    $args = array(
+            'type' => 'string', 
+            'default' => NULL,
+            );
+    register_setting( 'srbc_options_group', 'srbc_database_year', $args ); 
+} 
+add_action( 'admin_init', 'register_my_setting');
+
+//Notice for if they are currently in a different database year
+function database_notice(){
+	if (get_option("srbc_database_year") != "")
+	{
+         echo '<div class="notice notice-warning is-dismissible">
+             <p>Notice you are currently using the '. get_option("srbc_database_year") .' database.</p>
+         </div>';
+	}
+}
+add_action('admin_notices', 'database_notice');
+
 //Shortcodes
 add_shortcode( 'srbc_registration', 'srbc_registration' );
 add_shortcode( 'srbc_registration_complete', 'srbc_registration_complete' );

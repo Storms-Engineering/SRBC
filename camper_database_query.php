@@ -9,8 +9,8 @@ $campers = NULL;
 
 //Search for campers in specific areas and specific camps. 
 $areas = array("Lakeside", "Wagon Train", "Wilderness", "Workcrew", "Sports", "Fall Retreat", "Winter Camp");
-$cs = $wpdb->get_results("SELECT area,name FROM srbc_camps",ARRAY_N);
-$camps=NULL;
+$cs = $wpdb->get_results("SELECT area,name FROM " . $GLOBALS['srbc_camps'],ARRAY_N);
+$camps=array();
 $specificQuery = false;
 //Add all the camps and areas together seperated by ~
 for ($i = 0;$i< count($cs);$i++){
@@ -21,23 +21,25 @@ foreach($areas as $area){
 		$specificQuery = true;
 		$campers = $wpdb->get_results(
 			$wpdb->prepare( "SELECT *
-							FROM ((srbc_registration 
-							INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
-							INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-							WHERE srbc_camps.area=%s ORDER BY srbc_registration.registration_id ASC",$area));
+							FROM ((". $GLOBALS['srbc_registration'] . " 
+							INNER JOIN " . $GLOBALS['srbc_camps']." ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id)
+							INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+							WHERE " . $GLOBALS['srbc_camps'] . ".area=%s ORDER BY " . $GLBOALS['srbc_registration'] . ".registration_id ASC",$area));
 	}
 }
-
+//TODO doesn't like this when it is NULL
+//BODY aka an empty database
 foreach($camps as $camp){
 	if ($camp == $_GET['query']){
 		$specificQuery = true;
 		$q = explode("~",$camp);
 		$campers = $wpdb->get_results(
 			$wpdb->prepare( "SELECT *
-							FROM ((srbc_registration 
-							INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
-							INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-							WHERE srbc_camps.area=%s AND srbc_camps.name=%s ORDER BY srbc_registration.registration_id ASC",$q[0],$q[1]));
+							FROM ((" . $GLOBALS['srbc_registration'] . " 
+							INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS['srbc_registration'] . '.camp_id= ' . $GLOBALS['srbc_camps'] . '.camp_id)
+							INNER JOIN srbc_campers ON ' . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+							WHERE " . $GLOBALS['srbc_camps'] . ".area=%s AND " . $GLOBALS['srbc_camps'] . ".name=%s ORDER BY " .
+							$GLOBALS['srbc_registration'] . ".registration_id ASC",$q[0],$q[1]));
 	}
 }
 

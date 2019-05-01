@@ -12,20 +12,20 @@ global $wpdb;
 if (isset($obj["deleteid"]))
 {
 	//Delete the requested registration
-	$iswaitlist = $wpdb->get_row( "SELECT waitlist FROM srbc_registration WHERE registration_id=" . $obj["deleteid"] )->waitlist;
-	$wpdb->delete( 'srbc_registration', array( 'registration_id' => $obj["deleteid"] ) );
+	$iswaitlist = $wpdb->get_row( "SELECT waitlist FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=" . $obj["deleteid"] )->waitlist;
+	$wpdb->delete( $GLOBALS['srbc_registration'], array( 'registration_id' => $obj["deleteid"] ) );
 	
 	//If this deleted registration was a camper not on the waitlist then we want to push a waitlisted person into this camp
 	if ($iswaitlist == 0)
 	{
 		
-		$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM srbc_registration
+		$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM " . $GLOBALS['srbc_registration'] . "
 						WHERE NOT waitlist=0 AND camp_id=%s ORDER BY registration_id ASC",$obj["camp_id"]));
 		//Change the first registration	and check that there are actually people on the waitlist
 		if (count($registrations) != 0)
 		{
 			$wpdb->update( 
-			'srbc_registration', 
+			$GLOBALS['srbc_registration'], 
 			array( 
 				'waitlist' => 0
 			), 
@@ -54,7 +54,7 @@ else if(isset($obj["registration_id"])){
 	}
 	
 	$wpdb->update( 
-		'srbc_registration', 
+		$GLOBALS['srbc_registration'], 
 		array( 
 			'camp_id' => $obj["change_to_id"], 
 		), 
@@ -65,10 +65,10 @@ else if(isset($obj["registration_id"])){
 		array( '%d' ) 
 	);
 	//Get all the payment id's that are tied to this camp and change the camp_id's assosiated with it
-	$camps = $wpdb->get_results($wpdb->prepare("SELECT payment_id FROM srbc_payments WHERE camp_id=%d AND camper_id=%d",$obj["old_id"],$obj["camper_id"]));
+	$camps = $wpdb->get_results($wpdb->prepare("SELECT payment_id FROM " . $GLOBALS['srbc_payments'] . " WHERE camp_id=%d AND camper_id=%d",$obj["old_id"],$obj["camper_id"]));
 	foreach($camps as $camp){
 		$wpdb->update( 
-			'srbc_payments', 
+			$GLOBALS['srbc_payments'], 
 			array( 
 				'camp_id' => $obj["change_to_id"], 
 			), 
@@ -131,7 +131,7 @@ else {
 		$key = $arrayKeys[$i];
 		//Update camper first - essential to payments since we check this stuff.  So make sure we write this stuff first
 		$wpdb->update( 
-			'srbc_registration', 
+			$GLOBALS['srbc_registration'], 
 			array( 
 				'counselor' => $obj[$key]["counselor"],	
 				'cabin' => $obj[$key]["cabin"],	
@@ -161,19 +161,19 @@ else {
 		);
 		
 
-		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_registration WHERE registration_id=%d ",$key));
+		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d ",$key));
 
 		if($obj[$key]["auto_payment_amt"] != "")
 		{
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM srbc_payments WHERE registration_id=%s",$key));
+									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$key));
 			
 			//Make the scholarships and discounts add to total payed so we take it out of the base camp fee
 			$totalPayed += $o->discount + $o->scholarship_amt;
 			if($totalPayed == NULL)
 				$totalPayed = 0;
 			//Check if they have payed the base camp amount which is (camp cost - horse cost)
-			$camp = $wpdb->get_row("SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id");
+			$camp = $wpdb->get_row("SELECT * FROM " . $GLOBALS['srbc_camps'] ." WHERE camp_id=$o->camp_id");
 			$baseCampCost = $camp->cost - $camp->horse_cost;
 			$needToPayAmount = 0;
 			$feeType = NULL;
@@ -275,7 +275,7 @@ function makePayment($registration_id,$payment_type,$payment_amt,$note,$fee_type
 			$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
 			global $wpdb;
 			$wpdb->insert(
-					'srbc_payments', 
+					$GLOBALS['srbc_payments'], 
 					array( 
 						'payment_id' =>0,
 						'registration_id' => $registration_id,

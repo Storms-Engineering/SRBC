@@ -11,7 +11,7 @@ global $wpdb;
 
 if (isset($obj["deleteid"])) {
     //If this is set then we are deleting a camp
-	$wpdb->delete( 'srbc_camps', array( 'camp_id' => $obj["deleteid"] ) );
+	$wpdb->delete( $GLOBALS['srbc_camps'], array( 'camp_id' => $obj["deleteid"] ) );
 	echo "Camp Deleted and Data Saved Sucessfully";
 	exit;
 }
@@ -23,7 +23,7 @@ else if (isset($obj["camp_id"])) {
 	
 	
 	$wpdb->update( 
-	'srbc_camps', 
+	$GLOBALS['srbc_camps'], 
 	array( 
 		'area' => $obj["area"],	
 		'name' => $obj["name"],	
@@ -67,7 +67,7 @@ else if (isset($obj["camp_id"])) {
 
 //Current key for database
 $wpdb->insert( 
-	'srbc_camps', 
+	$GLOBALS['srbc_camps'], 
 	array( 
 		'area' => $obj["area"],	
 		'name' => $obj["name"],	
