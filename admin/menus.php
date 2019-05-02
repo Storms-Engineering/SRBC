@@ -1,20 +1,24 @@
 <?php 
 function srbc_database()
 {
+	
 	// check user capabilities
     if (!current_user_can('manage_options')) {
         return;
     }
+	global $wpdb;
 	if(isset($_POST["srbc_database_year"]))
 	{
 		update_option("srbc_database_year",$_POST["srbc_database_year"]);
+		//Test query - kinda lets the user know that this database doesn't exist
+		$wpdb->query("SELECT camp_id FROM srbc_camps" . get_option("srbc_database_year"));
 		$GLOBALS["srbc_camps"] = "srbc_camps" . get_option("srbc_database_year");
 		$GLOBALS['srbc_payments'] = "srbc_payments" . get_option("srbc_database_year");
 		$GLOBALS['srbc_registration'] = "srbc_registration" . get_option("srbc_database_year");
 	}
 	if(isset($_POST["rename_database"]))
 	{
-		global $wpdb;
+		//Rename databases and recreate new ones
 		$wpdb->query("RENAME TABLE srbc_registration TO srbc_registration" . date("Y") .  ",
 		srbc_camps TO srbc_camps" . date("Y") . ", srbc_payments to srbc_payments" . date("Y") . ";");
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -80,7 +84,8 @@ function srbc_database()
 	?>
 	<h1>Database Management</h1>
 	<form method="post">
-	Please choose which year you would like to pull data from: <input type="text" name="srbc_database_year" value="<?php echo get_option("srbc_database_year");?>">
+	Please choose which year you would like to pull data from: 
+	<input type="year"  pattern="[2][0-9][0-9][0-9]" placeholder="2019" title="Use a full year format like 2019" name="srbc_database_year" value="<?php echo get_option("srbc_database_year");?>">
 	  <input type="submit" value="Save">
 	  <br>
 	  	Clear the field and hit save to revert to the current database.
@@ -91,6 +96,14 @@ function srbc_database()
 	  <h2 style="color:red">Please Note that this will make all registrations and camps archived.  
 	  If you wish to access this data please enter the year that you archived the data.
 	  </h2>
+	  <p>
+	  When you archive data, it will use the current year to label the database.
+		So if you archive the database in 2019, and are trying to access it in 2020, just enter 2019 for the year.
+		If you archive the database in Nov of 2019, it will move all the camps, registrations, and payments to the 2019 database.
+		If you try to archive it again in lets say dec 2019, it will probably delete the old database or throw an error.
+		But after you archive it in Nov 2019, this database is 'New' and wiped clean.  Camper addresses and information will be retained through all
+		database archiving.
+	  </p>
 	</form>
 	<?php
 	
