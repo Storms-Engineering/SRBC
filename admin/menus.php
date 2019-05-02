@@ -8,7 +8,7 @@ function srbc_database()
 	if(isset($_POST["srbc_database_year"]))
 	{
 		update_option("srbc_database_year",$_POST["srbc_database_year"]);
-		$GLOBALS["srbc_camps"] . get_option("srbc_database_year");
+		$GLOBALS["srbc_camps"] = "srbc_camps" . get_option("srbc_database_year");
 		$GLOBALS['srbc_payments'] = "srbc_payments" . get_option("srbc_database_year");
 		$GLOBALS['srbc_registration'] = "srbc_registration" . get_option("srbc_database_year");
 	}
