@@ -80,7 +80,8 @@ function srbc_database()
 	?>
 	<h1>Database Management</h1>
 	<form method="post">
-	Please choose which year you would like to pull data from: <input type="text" name="srbc_database_year" value="<?php echo get_option("srbc_database_year");?>">
+	Please choose which year you would like to pull data from: 
+	<input type="year"  pattern="[2][0-9][0-9][0-9]" placeholder="2019" title="Use a full year format like 2019" name="srbc_database_year" value="<?php echo get_option("srbc_database_year");?>">
 	  <input type="submit" value="Save">
 	  <br>
 	  	Clear the field and hit save to revert to the current database.
@@ -91,6 +92,14 @@ function srbc_database()
 	  <h2 style="color:red">Please Note that this will make all registrations and camps archived.  
 	  If you wish to access this data please enter the year that you archived the data.
 	  </h2>
+	  <p>
+	  When you archive data, it will use the current year to label the database.
+		So if you archive the database in 2019, and are trying to access it in 2020, just enter 2019 for the year.
+		If you archive the database in Nov of 2019, it will move all the camps, registrations, and payments to the 2019 database.
+		If you try to archive it again in lets say dec 2019, it will probably delete the old database or throw an error.
+		But after you archive it in Nov 2019, this database is 'New' and wiped clean.  Camper addresses and information will be retained through all
+		database archiving.
+	  </p>
 	</form>
 	<?php
 	
