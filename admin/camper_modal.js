@@ -83,6 +83,9 @@ function postAjax(obj,camper_id) {
 	xmlhttp.send("x=" + encodeURIComponent(param));
 }
 function changeCamp(r_id,camper_id,old_id){
+	moveForward = confirm("Please note that all payments will also be changed over.	But if you are changing program areas, then the base camp fees will be assigned the wrong fee area.  Do you want to continue?");
+	if(!moveForward)
+		return;
 	var info = {"change_to_id" : document.getElementById(r_id).value, "registration_id" : r_id,"camper_id":camper_id,"old_id":old_id};
 	console.log(info);
 	postAjax(info,camper_id);
