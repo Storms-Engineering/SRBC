@@ -60,12 +60,14 @@ function collapsible_stuff(){
 	}
 }
 
-function postAjax(obj) {
+function postAjax(obj,camper_id) {
 	param = JSON.stringify(obj);
 	xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-		var txt = this.responseText;1
+		var txt = this.responseText;
+		if(camper_id !== 0)
+			openModal(camper_id);
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
 		//TODO CHANGE THIS CAUSE THIS DOESN"T WORK GREAT
         if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
@@ -83,8 +85,7 @@ function postAjax(obj) {
 function changeCamp(r_id,camper_id,old_id){
 	var info = {"change_to_id" : document.getElementById(r_id).value, "registration_id" : r_id,"camper_id":camper_id,"old_id":old_id};
 	console.log(info);
-	postAjax(info);
-	setTimeout(function(){ closeModal(); openModal(camper_id); }, 500);
+	postAjax(info,camper_id);
 }
 
 function saveInfo()
@@ -160,12 +161,11 @@ function saveInfo()
 	}
 	
 	console.log(info);
-	postAjax(info);
+	postAjax(info,info_c["id"]);
 	var selects = document.querySelectorAll("option[id=default]");
 	for (var i=0;i<selects.length;i++){
 		selects[i].selected = true;
 	}
-	setTimeout(function(){openModal(info_c["id"])},1000);
 }
 
 //Add event listeners to all the fields we want to watch for calculate_totals
@@ -193,9 +193,7 @@ function deleteRegistration(regid,camperid,campid)
 	var obj = {};
 	obj["deleteid"] = regid;
 	obj["camp_id"] = campid;
-	postAjax(obj);
-	showToast("Reloading data....");
-	setTimeout(function(){ closeModal(); openModal(camperid); }, 500);
+	postAjax(obj,camperid);
 }
 //Recalculate costs based on what fields have been populated
 function calculate_totals()
