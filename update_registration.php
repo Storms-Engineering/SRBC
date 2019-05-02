@@ -65,21 +65,6 @@ else if(isset($obj["registration_id"])){
 		), 
 		array( '%d' ) 
 	);
-	//Get all the payment id's that are tied to this camp and change the camp_id's assosiated with it
-	$camps = $wpdb->get_results($wpdb->prepare("SELECT payment_id FROM " . $GLOBALS['srbc_payments'] . " WHERE camp_id=%d AND camper_id=%d",$obj["old_id"],$obj["camper_id"]));
-	foreach($camps as $camp){
-		$wpdb->update( 
-			$GLOBALS['srbc_payments'], 
-			array( 
-				'camp_id' => $obj["change_to_id"], 
-			), 
-			array( 'payment_id' => $camp->payment_id ), 
-			array( 
-				'%d', 
-			), 
-			array( '%d' ) 
-		);
-	}
 	echo "Change Successful";
 	//Also change over all the payments made for that camp
 }
