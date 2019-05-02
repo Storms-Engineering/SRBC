@@ -228,6 +228,7 @@
 						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 					}
 					echo $finalText;
+					//TODO change the name of this button class.  It is really confusing
 					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button>';
 					//Replace the id with a unique id for this option based on which registration
 					echo ' <button class="save_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>'
