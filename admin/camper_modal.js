@@ -43,26 +43,6 @@ function openModal(cmpr_id) {
 	
 }
 
-function search()
-{
-	var xhttp;
-	if (window.XMLHttpRequest) {
-		// code for modern browsers
-		xhttp = new XMLHttpRequest();
-		} else {
-		// code for IE6, IE5
-		xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-		document.getElementById("results").innerHTML = this.responseText;
-		}
-	};
-	var query = document.getElementById("search").value;
-	xhttp.open("GET", "/wp-content/plugins/SRBC/camper_database_query.php?query="+query, true);
-	xhttp.send();
-}
-
 //Collapsible script
 function collapsible_stuff(){
 	var coll = document.getElementsByClassName("collapsible");
