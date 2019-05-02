@@ -64,13 +64,13 @@ else if(isset($_GET["signout_sheets"]))
 	//srbc_registration.counselor,srbc_registration.cabin,srbc_campers.camper_first_name,
 	//							srbc_campers.camper_last_name,srbc_campers.parent_first_name,srbc_campers.parent_last_name	
 	//TODO use wpdb prepare
-	$campers = $wpdb->get_results("SELECT *
+	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 									FROM ((" . $GLOBALS['srbc_registration'] . "
 								 INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
 								 ".camp_id)
 								 INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
-								 WHERE " . $GLOBALS["srbc_camps"] . ".start_date BETWEEN '" . $_GET['start_date']."' AND '".$_GET['end_date'].
-								 "' ORDER BY srbc_registration.cabin DESC");
+								 WHERE " . $GLOBALS["srbc_camps"] . ".start_date BETWEEN '%s' AND '%s' 
+								 ORDER BY srbc_registration.cabin DESC",$_GET['start_date'],$_GET['end_date']));
 	//This variable keeps track of if we have changed cabin group
 	//Initialized to 0 so we don't compare to null and get true
 	$oldCabin = 0;
