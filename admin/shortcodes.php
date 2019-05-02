@@ -616,7 +616,8 @@ function srbc_registration_complete($atts)
 	}
 	else
 	{
-	$message = "Hi ". $parent_first_name . ",<br><br>Thanks for signing up " . $camper_first_name . " for " . $_POST["camp_desc"] . "!  Camp starts " .date("D M j",strtotime($camp->start_date)) . " and ends " . 
+	$message = "Hi ". $parent_first_name . ",<br><br>Thanks for signing up " . $camper_first_name . " for <b>" . $_POST["camp_desc"] . "</b>!  <br><br>
+	<b>Camp start date</b>:" .date("l, M j,Y",strtotime($camp->start_date)) . "<br><b>Drop off time:</b>" . 
 	date("D M j",strtotime($camp->end_date)) . "!  If you have any questions feel free to check ". 
 	'our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.  If you want to know what your child should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>!'.
 	"<br> One last thing is that we ask that you print out this health form and fill it out to speed up the registration process.<br>Thanks!<br> -Solid Rock Bible Camp";
