@@ -337,7 +337,7 @@ foreach ($information as $info){
 	{
 		//Start new row and put in name since that always happens - most of the time
 		echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
-		if ($info->waitlist == 1) 
+		if ($info->waitlist == 1 && isset($_GET["camper_report"])) 
 		{
 			echo '<td class="stickout">(waitlisted)</td>';
 		}
