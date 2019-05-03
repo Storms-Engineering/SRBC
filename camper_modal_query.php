@@ -39,13 +39,16 @@
 					echo '<h1 style="text-align:center;color:red">Camper is not signed up for any camps</h1>';
 				else
 				{
+					//This is going away
 					//Create code for making a selection box
 					$camps = $wpdb->get_results("SELECT area,name,camp_id FROM " . $GLOBALS['srbc_camps'] . " ORDER BY area ASC");
-					$camp_selection = '<select id="~" name="camps"><option value="none">none</option>';
+					$camp_selection = '<div id="popup_camps_background"><div id="popup_camps">
+					Pick what camp to change to: <select style="margin:auto;" id="camps" name="camps"><option value="none">none</option>';
 					foreach ($camps as $camp){
 						$camp_selection .= '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
 					}
-					$camp_selection .= '</select>';
+					$camp_selection .= '</select><br><button id="popup_camps_button">OK</button></div></div>';
+					echo $camp_selection;
 				}
 				$registration_ids = [];
 				//Display each camp that they are registered for in a collapsible
@@ -231,9 +234,9 @@
 					//TODO change the name of this button class.  It is really confusing
 					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button>';
 					//Replace the id with a unique id for this option based on which registration
-					echo ' <button class="save_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>'
+					echo ' <button class="save_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>';
 					//Replace the ~ with the registration id
-					.str_replace("~",$registration->registration_id,$camp_selection);
+					//. str_replace("~",$registration->registration_id,$camp_selection);
 					
 					echo '<br><br><button class="save_button" style="background:#009933" onclick="resendEmail('.$registration->registration_id.');" >Resend Email</button>	<button class="save_button" style="background:red" onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button>';
 					//Modal end div

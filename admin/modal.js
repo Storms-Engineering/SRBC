@@ -12,4 +12,8 @@ window.onclick = function(event) {
 	if (event.target == document.getElementById('myModal')) {
 		modal.style.display = "none";
 	}
+	else if (event.target == document.getElementById('popup_camps_background')) {
+		document.getElementById('popup_camps_background').style.display = "none";
+	}
 }
+
