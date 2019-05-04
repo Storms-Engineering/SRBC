@@ -112,7 +112,7 @@
 	}
 		
 	/*Save button*/
-	.save_button {
+	.big_button {
     background-color: #6699ff;
     color: white;
     cursor: pointer;
@@ -122,4 +122,9 @@
     outline: none;
     font-size: 15px;
 	margin:2px;
+	}
+	
+	.big_button:hover
+	{
+		background-color: #8caef3;
 	}

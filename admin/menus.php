@@ -188,7 +188,7 @@ function srbc_camper_management()
         <h1>Camper Management</h1>
 		<br>
 		Search <input id="search" style="width:250px;" list="suggestions" type="search"> 
-		<input id="search_button" type="submit" onclick="search();">
+		<button id="search_button" class="big_button" style="padding:5px;" onclick="search();">Search</button>
 		<datalist id="suggestions">
 		<option value="Lakeside">
 		<option value="Wagon Train">
@@ -250,7 +250,7 @@ function listCamps($area)
 		echo "<td>" . $female_registered . "</td>";
 		echo "<td>" . ($male_registered + $female_registered) . "/" . $camp->overall_size . "</td>"; 
 		echo "<td>" . $waitlistsize ."/" . $camp->waiting_list_size;
-		echo '</td><td><button onclick="deleteCamp(event,' . $camp->camp_id . ');">Delete</button></td></tr>';
+		echo '</td><td><button class="big_button" style="padding:2px;" onclick="deleteCamp(event,' . $camp->camp_id . ');">Delete</button></td></tr>';
 	}
 	echo "</table> ";
 }

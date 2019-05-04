@@ -11,7 +11,7 @@ if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
 	$camp = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] ." WHERE camp_id = %d",$_GET['camp_id'] ));
 	echo $camp->area . " " . $camp->name;
 	echo "</h2></div>";
-	echo '<button class="save_button" style="float:right;" onclick="saveInfo(' . $camp->camp_id . ');">Save Info & Close</button>'
+	echo '<button class="big_button" style="float:right;" onclick="saveInfo(' . $camp->camp_id . ');">Save Info & Close</button>'
 	?>
 			<div class="modal-body">
 			<?php
@@ -34,4 +34,4 @@ if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
 					echo 'Grade Range: <input name="grade_range" type="text" value="' . $camp->grade_range . '">';
 			
 			echo "</div>";
-			echo '<div class="modal-footer"><button  onclick="saveInfo(' . $camp->camp_id . ');" class="save_button">Save Info & Close</button></div>';
+			echo '<div class="modal-footer"><button  onclick="saveInfo(' . $camp->camp_id . ');" class="big_button">Save Info & Close</button></div>';

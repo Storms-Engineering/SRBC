@@ -12,7 +12,7 @@
 	?></h2>
 	
 	</div>
-	<button class="save_button" style="float:right;" onclick="saveInfo();closeModal();">Save Info & Close</button>
+	<button class="big_button" style="float:right;" onclick="saveInfo();closeModal();">Save Info & Close</button>
 			<div class="modal-body">
 			<?php
 				echo '<div id="information"><span style="display:none;" id="camper_id">' . $camper->camper_id . '</span>';
@@ -47,7 +47,7 @@
 					foreach ($camps as $camp){
 						$camp_selection .= '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
 					}
-					$camp_selection .= '</select><br><button id="popup_camps_button">OK</button></div></div>';
+					$camp_selection .= '</select><br><button class="big_button" id="popup_camps_button">OK</button></div></div>';
 					echo $camp_selection;
 				}
 				$registration_ids = [];
@@ -172,7 +172,7 @@
 					echo '<span class="financial_info">Paid Cash: $<input class="financial" name="payed_cash" type="text" value="' . $payedCash . '" readonly></span>';
 					echo '<span class="financial_info">Paid Card: $<input class="financial" name="payed_card" type="text" value="' . $payedCard . '" readonly></span>';
 					echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due"></span></h3></span>';
-					//TODO we aren't really using amount due.  It was only for reports so I will need to restructure the database at somepoint
+					//TODO We aren't really using amount due.  It was only for reports so I will need to restructure the database at somepoint
 					//. $registration->amount_due .
 					
 					$checked = "";
@@ -231,14 +231,10 @@
 						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 					}
 					echo $finalText;
-					//TODO change the name of this button class.  It is really confusing
-					echo '<br><br><button class="save_button" onclick="saveInfo();" >Save</button>';
-					//Replace the id with a unique id for this option based on which registration
-					echo ' <button class="save_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>';
-					//Replace the ~ with the registration id
-					//. str_replace("~",$registration->registration_id,$camp_selection);
+					echo '<br><br><button class="big_button" onclick="saveInfo();" >Save</button>';
+					echo ' <button class="big_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>';
 					
-					echo '<br><br><button class="save_button" style="background:#009933" onclick="resendEmail('.$registration->registration_id.');" >Resend Email</button>	<button class="save_button" style="background:red" onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button>';
+					echo '<br><br><button class="big_button" style="background:#009933" onclick="resendEmail('.$registration->registration_id.');" >Resend Email</button>	<button class="big_button" style="background:red" onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button>';
 					//Modal end div
 					echo "</div>";
 				}
@@ -267,4 +263,4 @@
 				echo '<h3>Payment History</h3><br><textarea rows="4" cols="55">' . $paymentHistory . '</textarea>'
 			?>
 			</div>
-			<div class="modal-footer"><button onclick="saveInfo();closeModal();" class="save_button">Save Info & Close</button></div>
+			<div class="modal-footer"><button onclick="saveInfo();closeModal();" class="big_button">Save Info & Close</button></div>
