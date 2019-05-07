@@ -338,7 +338,7 @@ function srbc_registration( $atts )
 								<br>
 		<h3>OR</h3>
 		<h2 style="display:inline">Send a check</h2> <input type="checkbox" id="use_check" name="using_check">
-		<br>
+		<p>Please make checks out to Solid Rock Bible Camp and send to 36251 Solid Rock Road #1, Soldotna, Alaska 99669, with campers name in the memo.</p>
 		<input type="submit" value="Submit">
 	</form> 
 	</div>
