@@ -126,7 +126,7 @@ function saveInfo()
 				info_child["busride"] = document.querySelectorAll("select[name=busride]")[i].value;
 			}
 			//TODO change this to check for a type instead duhhh
-			else if(inputs[j].name == "checked_in" || inputs[j].name=="health_form"){
+			else if(inputs[j].name == "checked_in" || inputs[j].name=="health_form" || inputs[j].name == "waitlist" ){
 				//Check the checked value
 				checkd = 0;
 				if(inputs[j].checked)
@@ -221,7 +221,7 @@ function calculate_totals()
 			//TODO just check the type too duhhh
 			if(inputs[j].name != "scholarship_type" && inputs[j].name != "discount_type" && inputs[j].name != "counselor" && 
 				inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].name != "payment_amt" &&
-				inputs[j].name != "auto_note" && inputs[j].name != "health_form" && 
+				inputs[j].name != "auto_note" && inputs[j].name != "health_form" && inputs[j].name != "waitlist" && 
 				inputs[j].name != "note" && inputs[j].value != "")
 			{				
 				

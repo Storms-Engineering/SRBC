@@ -15,34 +15,6 @@ if (isset($obj["deleteid"]))
 	$iswaitlist = $wpdb->get_row( "SELECT waitlist FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=" . $obj["deleteid"] )->waitlist;
 	//Delete the requested registration
 	$wpdb->delete( $GLOBALS['srbc_registration'], array( 'registration_id' => $obj["deleteid"] ) );
-	
-	//If this deleted registration was a camper not on the waitlist then we want to push a waitlisted person into this camp
-	if ($iswaitlist == 0)
-	{
-		
-		$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM " . $GLOBALS['srbc_registration'] . "
-						WHERE NOT waitlist=0 AND camp_id=%s ORDER BY registration_id ASC",$obj["camp_id"]));
-		//Change the first registration	and check that there are actually people on the waitlist
-		if (count($registrations) != 0)
-		{
-			$wpdb->update( 
-			$GLOBALS['srbc_registration'], 
-			array( 
-				'waitlist' => 0
-			), 
-			array( 'registration_id' => $registrations[0]->registration_id ), 
-			array( 
-				'%d'	
-			), 
-			array( '%d' ) 
-			);
-			//Resend confirmation email
-			$_GET["r_id"] = $registrations[0]->registration_id;
-			include 'resend_email.php';
-		}
-		
-		
-	}
 	echo "Deleted Registration and Saved Sucessfully";
 }
 else if(isset($obj["registration_id"])){
@@ -129,6 +101,7 @@ else {
 				'scholarship_type' => $obj[$key]["scholarship_type"],
 				'checked_in' => $obj[$key]["checked_in"],
 				'health_form' => $obj[$key]["health_form"],
+				'waitlist' => $obj[$key]["waitlist"],
 			), 
 			array( 'registration_id' => $key ), 
 			array( 
@@ -141,12 +114,13 @@ else {
 				'%f',
 				'%s',	
 				'%d',
+				'%d',
 				'%d'
 			), 
 			array( '%d' ) 
 		);
 		
-
+		//TODO move this inside of the IF so we don't do a query every time
 		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d ",$key));
 
 		if($obj[$key]["auto_payment_amt"] != "")

@@ -15,42 +15,10 @@ if (isset($obj["deleteid"])) {
 	echo "Camp Deleted and Data Saved Sucessfully";
 	exit;
 }
+//If this is set then we are updating a camp
 else if (isset($obj["camp_id"])) {
-    //If this is set then we are updating a camp
+
 	
-	$registrations = $wpdb->get_results($wpdb->prepare("SELECT registration_id,waitlist FROM " . $GLOBALS['srbc_registration'] . "
-						WHERE waitlist=1 AND camp_id=%s ORDER BY registration_id ASC",$obj["camp_id"]));
-	$oldOverallSize = $wpdb->get_var($wpdb->prepare("SELECT overall_size FROM " . $GLOBALS["srbc_camps"] . " WHERE camp_id=%d",$obj["camp_id"]));
-	echo "Old size" . $oldOverallSize;
-	$howMany = $obj["overall_size"] - $oldOverallSize;
-	echo "How many:" . $howMany;
-	//Change the first registration	and check that there are actually people on the waitlist
-	if (count($registrations) != 0 && $obj["overall_size"] > $oldOverallSize)
-	{
-		$oldOverallSize = $wpdb->get_var($wpdb->prepare("SELECT overall_size FROM " . $GLOBALS["srbc_camps"] . " WHERE camp_id=%d",$obj["camp_id"]));
-		$howMany = $obj["overall_size"] - $oldOverallSize;
-		//So we don't go over how many spots we have available
-		if ($howMany > count($registrations))
-			$howMany = count($registrations);
-			
-		for ($i=0;$i<$howMany;$i++)
-		{
-			$wpdb->update( 
-			$GLOBALS['srbc_registration'], 
-			array( 
-				'waitlist' => 0
-			), 
-			array( 'registration_id' => $registrations[$i]->registration_id ), 
-			array( 
-				'%d'	
-			), 
-			array( '%d' ) 
-			);
-			//Resend confirmation email
-			$_GET["r_id"] = $registrations[$i]->registration_id;
-			include 'resend_email.php';
-		}
-	}
 	//Update database entry
 	$wpdb->update( 
 	$GLOBALS['srbc_camps'], 

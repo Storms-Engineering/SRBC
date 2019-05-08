@@ -183,6 +183,10 @@
 					if ($registration->health_form == 1)
 						$checked = "checked";
 					echo '<h3 style="display:inline;">Camper has health form:</h3> <input class="srbc_checkbox" name="health_form" type="checkbox" ' . $checked .'>';
+					$checked = "";
+					if ($registration->waitlist == 1)
+						$checked = "checked";
+					echo '<h3 style="display:inline;">On Waitlist</h3> <input name="waitlist" type="checkbox" ' . $checked .'>';
 					echo '<span><h2>Make a payment:</h3>Payment type: <select class="inputs payment_type">
 					<option value="none" id="default" selected></option>
 					<option value="card">Credit Card</option>
