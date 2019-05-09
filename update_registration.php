@@ -120,11 +120,9 @@ else {
 			array( '%d' ) 
 		);
 		
-		//TODO move this inside of the IF so we don't do a query every time
-		$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d ",$key));
-
 		if($obj[$key]["auto_payment_amt"] != "")
 		{
+			$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d ",$key));
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$key));
 			
