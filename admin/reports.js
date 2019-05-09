@@ -14,7 +14,6 @@ function generateReport(data)
 		}
 	}
 	var inputs = document.querySelectorAll("input");
-	dataInputs = "&";
 	hasStartDate = false;
 	for (var i = 0;i < inputs.length; i++) {
 		if (inputs[i].id == "start_date" || inputs[i].id == "end_date")
@@ -32,7 +31,7 @@ function generateReport(data)
 	//var start_date = document.getElementById("camp").value;
 	//var end_Date = document.getElementById("camp").value;
 	var buslist_type = document.getElementById("buslist_type").value;
-	url =  "/wp-content/plugins/SRBC/report_query.php?camp=" + camp + "&buslist_type="+buslist_type+ "&area="+area+"&"+data + dataInputs;
+	url =  "/wp-content/plugins/SRBC/report_query.php?camp=" + camp + "&buslist_type="+buslist_type+ "&area="+area+"&"+data;
 	if (data.includes("mailing_list") && hasStartDate )
 		window.open(url, '_blank');
 	else if(data.includes("mailing_list"))
