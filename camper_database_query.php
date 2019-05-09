@@ -27,8 +27,9 @@ foreach($areas as $area){
 							WHERE " . $GLOBALS['srbc_camps'] . ".area=%s ORDER BY " . $GLBOALS['srbc_registration'] . ".registration_id ASC",$area));
 	}
 }
-//TODO doesn't like this when it is NULL
-//BODY aka an empty database
+//Catches if we have an emtpy database
+if($cs == NULL)
+	error_msg("It seems that there is no campers in the database");
 foreach($camps as $camp){
 	if ($camp == $_GET['query']){
 		$specificQuery = true;
