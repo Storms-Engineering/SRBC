@@ -4,7 +4,6 @@
   display: inline-block;
   border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
-/*TODO: I would like to make this css more dynamic*/
 /* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
