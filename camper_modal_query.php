@@ -184,6 +184,10 @@
 					if ($registration->waitlist == 1)
 						$checked = "checked";
 					echo '<h3 style="display:inline;">On Waitlist</h3> <input name="waitlist" type="checkbox" ' . $checked .'>';
+					$checked = "";
+					if ($registration->horse_waitlist == 1)
+						$checked = "checked";
+					echo '<h3 style="display:inline;">Horse Waitlist</h3> <input name="horse_waitlist" type="checkbox" ' . $checked .'>';
 					echo '<span><h2>Make a payment:</h3>Payment type: <select name="payment_type" class="inputs payment_type">
 					<option value="none" id="default" selected></option>
 					<option value="card">Credit Card</option>
