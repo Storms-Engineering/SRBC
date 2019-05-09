@@ -486,6 +486,11 @@ function srbc_registration_complete($atts)
 		//Check that this camper isn't already on a waiting list
 		waitinglist:
 		
+		if ($camp->boy_registration_size == 0 && $_POST["gender"] == "male")
+		{
+			error_msg("Sorry this is a girls only camp!");
+			return;
+		}
 		
 		//Count overall waitlist size for this camp
 		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM " . $GLOBALS['srbc_registration'] . " WHERE NOT waitlist=0 AND camp_id=%s",$_POST["campid"])); 
