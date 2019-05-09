@@ -172,9 +172,6 @@
 					echo '<span class="financial_info">Paid Cash: $<input class="financial" name="payed_cash" type="text" value="' . $payedCash . '" readonly></span>';
 					echo '<span class="financial_info">Paid Card: $<input class="financial" name="payed_card" type="text" value="' . $payedCard . '" readonly></span>';
 					echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due"></span></h3></span>';
-					//TODO We aren't really using amount due.  It was only for reports so I will need to restructure the database at somepoint
-					//. $registration->amount_due .
-					
 					$checked = "";
 					if ($registration->checked_in == 1)
 						$checked = "checked";
