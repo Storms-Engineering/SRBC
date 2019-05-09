@@ -253,7 +253,7 @@ if (isset($_GET['area']) && $_GET["area"] == "") {
 }
 else {
 	$values = array($_GET['area']);
-	$query .= $GLOBAL['srbc_camps'] . ".area='%s' ";
+	$query .= $GLOBALS['srbc_camps'] . ".area='%s' ";
 }
 
 //New Buslist grabs all campers heading to anchorage or camp and also selects campers that are going both ways
