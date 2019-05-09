@@ -128,7 +128,7 @@ function saveInfo()
 					checkd = 1;
 				info_child[inputs[j].name] = checkd;
 			}
-			else
+			else if(inputs[j].name !== "" && inputs[j].name !== "busride_cost")
 				info_child[inputs[j].name] = inputs[j].value;
 		}
 		selects = containers[i].querySelectorAll("select");

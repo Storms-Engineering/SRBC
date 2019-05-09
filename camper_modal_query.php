@@ -168,9 +168,9 @@
 					<option value="Trade"' . $scholSelector[3] . '>Trade</option>
 					<option value="Volunteer"' . $scholSelector[4] . '>Volunteer</option>
 					</select><br></span>';
-					echo '<span class="financial_info">Paid Check: $<input class="financial" name="payed_check" type="text" value="' . $payedCheck . '" readonly></span>';
-					echo '<span class="financial_info">Paid Cash: $<input class="financial" name="payed_cash" type="text" value="' . $payedCash . '" readonly></span>';
-					echo '<span class="financial_info">Paid Card: $<input class="financial" name="payed_card" type="text" value="' . $payedCard . '" readonly></span>';
+					echo '<span class="financial_info">Paid Check: $<input class="financial" type="text" value="' . $payedCheck . '" readonly></span>';
+					echo '<span class="financial_info">Paid Cash: $<input class="financial" type="text" value="' . $payedCash . '" readonly></span>';
+					echo '<span class="financial_info">Paid Card: $<input class="financial" type="text" value="' . $payedCard . '" readonly></span>';
 					echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due"></span></h3></span>';
 					$checked = "";
 					if ($registration->checked_in == 1)
