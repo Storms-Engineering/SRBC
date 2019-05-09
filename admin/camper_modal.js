@@ -121,37 +121,21 @@ function saveInfo()
 		var inputs = containers[i].getElementsByTagName('input');
 		for (var j = 0; j < inputs.length; ++j) {
 			
-			if (inputs[j].name == "busride_cost"){
-				//We just want to store the busride to, from or both
-				info_child["busride"] = document.querySelectorAll("select[name=busride]")[i].value;
-			}
-			else if(inputs[j].type == "checkbox"){
+			if(inputs[j].type == "checkbox"){
 				//Check the checked value
 				checkd = 0;
 				if(inputs[j].checked)
 					checkd = 1;
 				info_child[inputs[j].name] = checkd;
 			}
-			//We don't actually use this input, it is merely here to remind us to grab the value of the select
-			else if(inputs[j].name == "horse_opt")
-			{
-				horseOption = document.querySelectorAll("select[name=horse_opt]")[i].value;
-				//If the horse option is greater than 0 we set it to 1 for the database
-				if (horseOption > 0)
-					info_child[inputs[j].name] = 1;
-				else
-					info_child[inputs[j].name] = 0;
-			}
 			else
 				info_child[inputs[j].name] = inputs[j].value;
 		}
-		//TODO these selects are also becoming more numerous
-		//@body these should be put in the loop logic better
-		info_child["payment_type"] = containers[i].getElementsByClassName("payment_type")[0].value;
-		info_child["auto_payment_type"] = containers[i].getElementsByClassName("auto_payment_type")[0].value;
-		info_child["fee_type"] = containers[i].getElementsByClassName("fee_type")[0].value;
-		info_child["discount_type"] = containers[i].getElementsByClassName("discount_type")[0].value;
-		info_child["scholarship_type"] = containers[i].getElementsByClassName("scholarship_type")[0].value;
+		selects = containers[i].querySelectorAll("select");
+		for (var j = 0; j < selects.length; ++j) {
+			info_child[selects[j].name] = selects[j].value;
+		}
+
 		//Make sure they entered a fee type but exclude payments from camps that they aren't entering information for
 		if (info_child["fee_type"] == "none" && info_child["payment_type"] != "none")
 		{

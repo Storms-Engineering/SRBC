@@ -144,7 +144,7 @@
 						$discountSelector[2] = "selected";
 					else
 						$discountSelector[0] = "selected";
-					echo '<span class="financial_info">Discount Type:<select class="inputs discount_type">
+					echo '<span class="financial_info">Discount Type:<select name="discount_type" class="inputs discount_type">
 					<option value="" ' . $discountSelector[0] . '>None</option>
 					<option value="Multiple Child"' . $discountSelector[1] . '>Multiple Child</option>
 					<option value="Staff"' . $discountSelector[2] . '>Staff</option>
@@ -161,7 +161,7 @@
 						$scholSelector[4] = "selected";
 					else
 						$scholSelector[0] = "selected";
-					echo '<span class="financial_info">Scholarship Type: <select class="inputs scholarship_type">
+					echo '<span class="financial_info">Scholarship Type: <select name="scholarship_type" class="inputs scholarship_type">
 					<option value="" ' . $scholSelector[0] . '>None</option>
 					<option value="Need"' . $scholSelector[1] . '>Need</option>
 					<option value="Workcrew/WIT"' . $scholSelector[2] . '>Workcrew/WIT</option>
@@ -184,7 +184,7 @@
 					if ($registration->waitlist == 1)
 						$checked = "checked";
 					echo '<h3 style="display:inline;">On Waitlist</h3> <input name="waitlist" type="checkbox" ' . $checked .'>';
-					echo '<span><h2>Make a payment:</h3>Payment type: <select class="inputs payment_type">
+					echo '<span><h2>Make a payment:</h3>Payment type: <select name="payment_type" class="inputs payment_type">
 					<option value="none" id="default" selected></option>
 					<option value="card">Credit Card</option>
 					<option value="check">Check</option>
@@ -192,7 +192,7 @@
 					</select>
 					Amount: $<input type="text" name="payment_amt"><br>
 					Note (Check # or Last 4 of CC): <input type="text" name="note"></span>
-					<br>Fee Type<select class="inputs fee_type">
+					<br>Fee Type<select name="fee_type" class="inputs fee_type">
 					<option value="none" selected>None</option>
 					<option value="Lakeside" >Lakeside</option>
 					<option value="Wagon Train">Wagon Train</option>
@@ -205,7 +205,7 @@
 					
 					//Autopayment section
 					echo "<br><h3>Make Autopayment</h3>";
-					echo 'Payment type: <select class="inputs auto_payment_type">
+					echo 'Payment type: <select name="auto_payment_type" class="inputs auto_payment_type">
 					<option value="none" id="default" selected></option>
 					<option value="card">Credit Card</option>
 					<option value="check">Check</option>
