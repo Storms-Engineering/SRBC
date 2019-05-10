@@ -138,12 +138,12 @@ function srbc_credit_cards(){
 	<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">Drop key file here</div>
 	<table id="cc_table" style="width:100%;" >
 		<tr>
-			<th onclick="sortTable(0);">Date</th>
-			<th onclick="sortTable(1);">Data</th>
-			<th onclick="sortTable(2);">Amount</th>
-			<th onclick="sortTable(3);">For Camper</th>
-			<th onclick="sortTable(4);">Camp</th>
-			<th onclick="sortTable(5);">Comments</th>
+			<th>Date</th>
+			<th>Data</th>
+			<th>Amount</th>
+			<th>For Camper</th>
+			<th>Camp</th>
+			<th>Comments</th>
 			<th>Delete</th>
 		</tr>
 	<?php
@@ -170,8 +170,8 @@ function srbc_credit_cards(){
 	?>
 	<script src="../wp-content/plugins/SRBC/JSEncrypt/jsencrypt.min.js"></script>
 	<script src="../wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
-	<script src="../wp-content/plugins/SRBC/admin/credit_card.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/sortTable.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/credit_card.js"></script>
 	<?php
 }
 
@@ -490,9 +490,10 @@ function srbc_camp_reports()
 	<div id="results"></div>
 	<?php modalSetup(); ?>
 	<div id="snackbar"></div>
+	<script src="../wp-content/plugins/SRBC/admin/sortTable.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/reports.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/camper_modal.js"></script>
-	<script src="../wp-content/plugins/SRBC/admin/sortTable.js"></script>
+
 <?php
 }
 ?>

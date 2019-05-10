@@ -223,29 +223,24 @@ $query = "SELECT *
 		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE ";
 		
 $values = array();
-//Keeps track of how many sort headers we have
-$sortnum = 0;
 //Setup table and then we will add headers based on the query
 //Only default for most queries.  Isn't for camp_numbers report_table
 if (isset($_GET["backup_registration"])){
-	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
-	echo '<th onclick="sortTable(2)">Parent Name</th><th onclick="sortTable(3)">Camp</th>';
-	echo '<th onclick="sortTable(4)">Phone #</th><th onclick="sortTable(5)">Payed</th>';
-	echo '<th onclick="sortTable(6)">Amount Due</th><th>Payment Type</th><th>Payment Amount</th>';
-	$sortnum = 7;
+	echo '<table id="report_table"><tr><th>Last Name</th><th>First Name</th>';
+	echo '<th>Parent Name</th><th>Camp</th>';
+	echo '<th>Phone #</th><th>Payed</th>';
+	echo '<th>Amount Due</th><th>Payment Type</th><th>Payment Amount</th>';
 }
 else if(isset($_GET["emails"]))
 	//Do nothing
 	echo "";
 else {
-	echo '<table id="report_table"><tr><th onclick="sortTable(0)">Last Name</th><th onclick="sortTable(1)">First Name</th>';
-	$sortnum = 2;
+	echo '<table id="report_table"><tr><th>Last Name</th><th>First Name</th>';
 }
 
 if(isset($_GET["camper_report"]))
 {
-	echo '<th onclick="sortTable('.$sortnum.')">Waitlisted</th>';
-	$sortnum++;
+	echo '<th>Waitlisted</th>';
 }
 
 if (isset($_GET['area']) && $_GET["area"] == "") {
@@ -260,11 +255,10 @@ else {
 //Puts them into both reports
 if (isset($_GET['buslist'])){
 	$query .= "AND (" . $GLOBALS['srbc_registration'] . ".busride='".$_GET['buslist_type']."' OR " . $GLOBALS['srbc_registration'] . ".busride='both') ";
-	echo '<th onclick="sortTable('.($sortnum).')">Primary Phone</th>';
-	echo '<th onclick="sortTable('.($sortnum + 1).')">Secondary Phone</th>';
-	echo '<th onclick="sortTable('.($sortnum + 2).')">Parent/Guardian Signature</th>';
-	echo '<th onclick="sortTable('.($sortnum + 3).')">Total Due</th>';
-	$sortnum += 4;
+	echo '<th>Primary Phone</th>';
+	echo '<th>Secondary Phone</th>';
+	echo '<th>Parent/Guardian Signature</th>';
+	echo '<th>Total Due</th>';
 }
 if (isset($_GET["horsemanship"])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 ";
@@ -274,12 +268,10 @@ if (isset($_GET["camp_numbers"])){
 }
 if (isset($_GET['scholarship'])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".scholarship_amt=0 ";
-	echo '<th onclick="sortTable('.$sortnum.')">Scholarship Type</th><th onclick="sortTable('.($sortnum + 1).')">Scholarship Amount</th>';
-	$sortnum+= 2;
+	echo '<th>Scholarship Type</th><th>Scholarship Amount</th>';
 }
 if (isset($_GET['not_payed'])){
-	echo '<th onclick="sortTable('.$sortnum.')">Amount Due</th>';
-	$sortnum++;
+	echo '<th>Amount Due</th>';
 }
 
 if (isset($_GET["camp_report"]))
@@ -290,9 +282,8 @@ if (isset($_GET["camp_report"]))
 		exit(0);
 	}
 	$query .= "AND " . $GLOBALS['srbc_camps'] . ".camp_id=". $_GET["camp"]. " AND " . $GLOBALS['srbc_registration'] . ".waitlist=0 ";
-	echo '<th onclick="sortTable('.$sortnum.')">Gender</th><th onclick="sortTable('.($sortnum + 1).')">Age</th>';
-	echo '<th onclick="sortTable('.($sortnum + 2).')">Counselor</th>';
-	$sortnum += 3;
+	echo '<th>Gender</th><th>Age</th>';
+	echo '<th>Counselor</th>';
 }
 else if (isset($_GET["camp"]) && $_GET["camp"] != "none")
 {
@@ -300,10 +291,8 @@ else if (isset($_GET["camp"]) && $_GET["camp"] != "none")
 }
 if (isset($_GET['discount'])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".discount=0 ";
-	echo '<th onclick="sortTable('.$sortnum.')">Discount Type</th>';
-	$sortnum++;
-	echo '<th onclick="sortTable('.$sortnum.')">Discount</th>';
-	$sortnum++;
+	echo '<th>Discount Type</th>';
+	echo '<th>Discount</th>';
 }
 if ( isset($_GET['start_date']) && $_GET["start_date"] != "" && isset($_GET["end_date"]) && $_GET["end_date"] != ""){
 	$query .= "AND " . $GLOBALS['srbc_camps'] . ".start_date BETWEEN '%s' AND '%s' ";

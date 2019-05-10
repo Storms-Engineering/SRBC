@@ -1,3 +1,5 @@
+window.onload = initSort();
+
 function postAjax(obj) {
 	param = JSON.stringify(obj);
 	xmlhttp = new XMLHttpRequest();
@@ -11,7 +13,6 @@ xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_cc.php", true);
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 xmlhttp.send("x=" + param);
 }
-
 function allowDrop(ev) {
   ev.preventDefault();
 }
