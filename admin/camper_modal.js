@@ -128,12 +128,21 @@ function saveInfo()
 					checkd = 1;
 				info_child[inputs[j].name] = checkd;
 			}
-			else if(inputs[j].name !== "" && inputs[j].name !== "busride_cost")
+			else if(inputs[j].name !== "" && inputs[j].name !== "busride_cost" && inputs[j].name !== "horse_opt")
 				info_child[inputs[j].name] = inputs[j].value;
+			//We only save a 1 or 0 for the horse option
+			else if(inputs[j].name == "horse_opt")
+			{
+				if (inputs[j].value > 0)
+					info_child[inputs[j].name] = 1;
+				else 
+					info_child[inputs[j].name] = 0;
+			}
 		}
 		selects = containers[i].querySelectorAll("select");
 		for (var j = 0; j < selects.length; ++j) {
-			info_child[selects[j].name] = selects[j].value;
+			if (selects[j].name !== "horse_opt")
+				info_child[selects[j].name] = selects[j].value;
 		}
 
 		//Make sure they entered a fee type but exclude payments from camps that they aren't entering information for
