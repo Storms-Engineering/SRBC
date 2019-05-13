@@ -18,68 +18,11 @@ function srbc_database()
 	}
 	if(isset($_POST["rename_database"]))
 	{
+		
 		//Rename databases and recreate new ones
 		$wpdb->query("RENAME TABLE srbc_registration TO srbc_registration" . date("Y") .  ",
 		srbc_camps TO srbc_camps" . date("Y") . ", srbc_payments to srbc_payments" . date("Y") . ";");
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		//Create a table for Camps
-		$sql = "CREATE TABLE IF NOT EXISTS srbc_camps (
-		camp_id INT AUTO_INCREMENT,
-		area TINYTEXT NOT NULL,
-		name TINYTEXT NOT NULL,
-		description TEXT NOT NULL,
-		start_date DATE,
-		end_date DATE,
-		cost SMALLINT NOT NULL,
-		horse_cost SMALLINT,
-		horse_opt TINYINT NOT NULL,
-		horse_list_size TINYINT NOT NULL,
-		horse_waiting_list_size TINYINT NOT NULL,
-		waiting_list_size SMALLINT NOT NULL,
-		boy_registration_size SMALLINT NOT NULL,
-		girl_registration_size SMALLINT NOT NULL,
-		overall_size SMALLINT NOT NULL,
-		grade_range TINYTEXT NOT NULL,
-		PRIMARY KEY (camp_id)
-		)  ENGINE=INNODB;";
-
-		dbDelta( $sql );
-		//Registration Database
-		$sql = "CREATE TABLE IF NOT EXISTS srbc_registration (
-		registration_id INT AUTO_INCREMENT,
-		camp_id INT NOT NULL,
-		camper_id INT NOT NULL,
-		date TINYTEXT NOT NULL,
-		counselor TINYTEXT,
-		cabin TINYTEXT,
-		horse_opt TINYINT NOT NULL,
-		busride TINYTEXT NOT NULL,
-		discount_type TINYTEXT,
-		discount FLOAT(6,2),
-		scholarship_amt FLOAT(6,2) ,
-		scholarship_type TINYTEXT,
-		waitlist TINYINT NOT NULL,	
-		horse_waitlist TINYINT NOT NULL,
-		checked_in TINYINT NOT NULL,
-		health_form TINYINT NOT NULL,
-		PRIMARY KEY (registration_id)
-		)  ENGINE=INNODB;";
-
-		dbDelta( $sql );
-		//Database keeping track of payments
-		$sql = "CREATE TABLE IF NOT EXISTS srbc_payments (
-		payment_id INT AUTO_INCREMENT,
-		camp_id INT NOT NULL,
-		camper_id INT NOT NULL,
-		payment_type TINYTEXT NOT NULL,
-		payment_amt FLOAT(6,2) NOT NULL,
-		payment_date TINYTEXT,
-		note TINYTEXT,
-		fee_type TINYTEXT,
-		PRIMARY KEY (payment_id)
-		)  ENGINE=INNODB;";
-
-	dbDelta( $sql );
+		srbc_install();
 	}
 	?>
 	<h1>Database Management</h1>

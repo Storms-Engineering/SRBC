@@ -176,8 +176,6 @@ function srbc_registration( $atts )
 				<?php
 				global $wpdb;
 				//Get list of camp ids and then populate the options box since the user just found this page
-				//$campids = $wpdb->get_col( "SELECT camp_id FROM srbc_camps");
-				//foreach ($campids as $cmpid)
 				$camp = NULL;
 				if(isset($_GET['campid']))
 				{

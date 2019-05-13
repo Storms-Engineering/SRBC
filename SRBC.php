@@ -104,8 +104,6 @@ function srbc_install() {
 	//Database keeping track of payments
 	$sql = "CREATE TABLE IF NOT EXISTS srbc_payments (
 		payment_id INT AUTO_INCREMENT,
-		camp_id INT NOT NULL,
-		camper_id INT NOT NULL,
 		payment_type TINYTEXT NOT NULL,
 		payment_amt FLOAT(6,2) NOT NULL,
 		payment_date TINYTEXT,
