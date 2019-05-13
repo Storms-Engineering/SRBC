@@ -26,12 +26,13 @@ function generateReport(data)
 		else
 			data += "&" + inputs[i].id + "=" + inputs[i].checked;
 	}
-	//TODO reimplement code above for this?
-	var area = document.getElementById("area").value;
-	var camp = document.getElementById("camp").value;
-	//var start_date = document.getElementById("camp").value;
-	//var end_Date = document.getElementById("camp").value;
-	var buslist_type = document.getElementById("buslist_type").value;
+	//Add all of selects to data
+	selects = document.querySelectorAll("select");
+	for (var i= 0;i < selects.length; i++)
+	{
+		data += "&" + selects[i].id + "=" + selects[i].value;
+	}
+	
 	url =  "/wp-content/plugins/SRBC/report_query.php?camp=" + camp + "&buslist_type="+buslist_type+ "&area="+area+"&"+data;
 	if (data.includes("mailing_list") && hasStartDate )
 		window.open(url, '_blank');
