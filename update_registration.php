@@ -102,7 +102,8 @@ else {
 				'checked_in' => $obj[$key]["checked_in"],
 				'health_form' => $obj[$key]["health_form"],
 				'waitlist' => $obj[$key]["waitlist"],
-				'horse_waitlist' => $obj[$key]["horse_waitlist"]
+				'horse_waitlist' => $obj[$key]["horse_waitlist"],
+				'packing_list_sent' => $obj[$key]["packing_list_sent"]
 			), 
 			array( 'registration_id' => $key ), 
 			array( 
@@ -114,6 +115,7 @@ else {
 				'%s',
 				'%f',
 				'%s',	
+				'%d',
 				'%d',
 				'%d',
 				'%d',

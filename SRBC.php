@@ -2,7 +2,7 @@
 /*
 Plugin Name: SRBC
 Description: Solid Rock Bible Camp Plugin for Registration and Displaying Users
-Version: 0.71
+Version: 0.8
 */
 //Require
 require("admin/shortcodes.php");
@@ -80,6 +80,7 @@ function srbc_install() {
 		horse_waitlist TINYINT NOT NULL,
 		checked_in TINYINT NOT NULL,
 		health_form TINYINT NOT NULL,
+		packing_list_sent TINYINT NOT NULL,
 		PRIMARY KEY (registration_id)
 		)  ENGINE=INNODB;";
 

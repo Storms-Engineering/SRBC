@@ -175,19 +175,23 @@
 					$checked = "";
 					if ($registration->checked_in == 1)
 						$checked = "checked";
-					echo '<h3 style="display:inline;">Camper checked in:</h3> <input class="srbc_checkbox" name="checked_in" type="checkbox" ' . $checked .'>';
+					echo '<br><h3 style="display:inline;">Camper checked in:</h3> <input class="srbc_checkbox" name="checked_in" type="checkbox" ' . $checked .'>';
 					$checked = "";
 					if ($registration->health_form == 1)
 						$checked = "checked";
-					echo '<h3 style="display:inline;">Camper has health form:</h3> <input class="srbc_checkbox" name="health_form" type="checkbox" ' . $checked .'>';
+					echo '<br><h3 style="display:inline;">Camper has health form:</h3> <input class="srbc_checkbox" name="health_form" type="checkbox" ' . $checked .'>';
 					$checked = "";
 					if ($registration->waitlist == 1)
 						$checked = "checked";
-					echo '<h3 style="display:inline;">On Waitlist</h3> <input name="waitlist" type="checkbox" ' . $checked .'>';
+					echo '<br><h3 style="display:inline;">On Waitlist</h3> <input name="waitlist" type="checkbox" ' . $checked .'>';
 					$checked = "";
 					if ($registration->horse_waitlist == 1)
 						$checked = "checked";
 					echo '<h3 style="display:inline;">Horse Waitlist</h3> <input name="horse_waitlist" type="checkbox" ' . $checked .'>';
+					$checked = "";
+					if ($registration->packing_list_sent == 1)
+						$checked = "checked";
+					echo '<br><h3 style="display:inline;">Packing List Sent</h3> <input name="packing_list_sent" type="checkbox" ' . $checked .'>';
 					echo '<span><h2>Make a payment:</h3>Payment type: <select name="payment_type" class="inputs payment_type">
 					<option value="none" id="default" selected></option>
 					<option value="card">Credit Card</option>
