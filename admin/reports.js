@@ -33,7 +33,7 @@ function generateReport(data)
 		data += "&" + selects[i].id + "=" + selects[i].value;
 	}
 	
-	url =  "/wp-content/plugins/SRBC/report_query.php?camp=" + camp + "&buslist_type="+buslist_type+ "&area="+area+"&"+data;
+	url =  "/wp-content/plugins/SRBC/report_query.php?" + data;
 	if (data.includes("mailing_list") && hasStartDate )
 		window.open(url, '_blank');
 	else if(data.includes("mailing_list"))
