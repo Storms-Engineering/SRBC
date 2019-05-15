@@ -191,9 +191,9 @@ function srbc_registration( $atts )
 					{
 						echo '<option value="'.$cmpid.'" selected>' .$camp->area . " " . $camp->name . '</option></select>';
 						echo '<input type="hidden" name="camp_desc" value = "' .$camp->area . " " . $camp->name . '">'; 
-						if($camp->horse_opt != 0)
+						if($camp->horse_opt_cost != 0)
 						{
-							echo ' <input type="checkbox" id="horse_opt" onchange="calculateTotal();" name="horse_opt" value="true"> Horse Option $<span id="horse_opt_cost">' .$camp->horse_opt. '</span><br>';
+							echo ' <input type="checkbox" id="horse_opt" onchange="calculateTotal();" name="horse_opt" value="true"> Horse Option $<span id="horse_opt_cost">' .$camp->horse_opt_cost. '</span><br>';
 						}
 					}
 				}

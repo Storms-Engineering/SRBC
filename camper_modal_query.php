@@ -93,7 +93,7 @@
 						$horseSelector[0] = "selected";
 					$horseHTML = '<select class="inputs" name="horse_opt">
 					<option value="0"' . $horseSelector[0] .'>No Horses</option>
-					<option value="'.$camp->horse_opt.'"'. $horseSelector[1].'>Horses $'. $camp->horse_opt.'</option>
+					<option value="'.$camp->horse_opt_cost.'"'. $horseSelector[1].'>Horses $'. $camp->horse_opt_cost.'</option>
 					</select>';
 					
 					//Shows a red waitlist

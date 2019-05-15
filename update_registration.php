@@ -152,7 +152,7 @@ else {
 			
 			$horseOpt = 0;
 			if ($o->horse_opt == 1)
-				$horseOpt = $camp->horse_opt;
+				$horseOpt = $camp->horse_opt_cost;
 			//Create seperate payments based on different fees until autoPaymentAmt is used up
 			//or an overpayment happens which stores it in the database
 			while ($autoPaymentAmt != 0)

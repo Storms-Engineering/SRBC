@@ -120,7 +120,7 @@ else if (isset($_GET["registration_day"]))
 	//Set this to default Because some camps are free so we say none for program area
 	$program_area = "None";
 	//Declare variables to sum up together in one row
-	$horse_fee = $horse_opt = $bus_fee = $camp_fee  = $store = $next_id = $next_reg_id = $total = 0;
+	$horse_fee = $horse_opt_cost = $bus_fee = $camp_fee  = $store = $next_id = $next_reg_id = $total = 0;
 	$pointer = 1;
 	$totals = ["card" => 0,"check" => 0, "cash" => 0];
 	//ID is for multiple campers that were payed for at once
@@ -133,7 +133,7 @@ else if (isset($_GET["registration_day"]))
 		else if($camper->fee_type == "Store")
 			$store += $camper->payment_amt;
 		else if($camper->fee_type == "LS Horsemanship")
-			$horse_opt += $camper->payment_amt;
+			$horse_opt_cost += $camper->payment_amt;
 		else if($camper->fee_type == "WT Horsemanship")
 			$horse_fee += $camper->payment_amt;
 		else
@@ -167,13 +167,13 @@ else if (isset($_GET["registration_day"]))
 			echo "<td>$". $camp_fee . "</td>";
 			echo "<td>". $program_area . "</td>";
 			echo "<td>$". $horse_fee . "</td>";
-			echo "<td>$". $horse_opt . "</td>";
+			echo "<td>$". $horse_opt_cost . "</td>";
 			echo "<td>$". $bus_fee . "</td>";
 			echo "<td>$". $store . "</td>";
 			echo "<td>$". $total . "</td>";
 			echo "</tr>";
 			//Then reset the variables
-			$horse_fee = $horse_opt = $bus_fee = $camp_fee = $store = $last_id = $total = 0;
+			$horse_fee = $horse_opt_cost = $bus_fee = $camp_fee = $store = $last_id = $total = 0;
 			$program_area = "None";
 		}
 		$pointer++;
@@ -212,7 +212,7 @@ else if(isset($_GET["snackshop"]))
 }
 
 //TODO: fix not payed code, probably haven't updated since payment database was added 
-$not_payed = NULL;//$_GET['not_payed'];
+//$not_payed = NULL;//$_GET['not_payed'];
 
 //Combining all of the databases so that we can pull all the data that we need from it
 //TODO this is an incredibly expensive query.
@@ -241,7 +241,7 @@ else {
 if(isset($_GET["camper_report"]))
 {
 	echo '<th>Waitlist</th>';
-	echo '<th>Horse Waitlist</th>';
+	echo '<th>Horses</th>';
 }
 
 if (isset($_GET['area']) && $_GET["area"] == "") {
@@ -271,6 +271,7 @@ if (isset($_GET['scholarship'])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".scholarship_amt=0 ";
 	echo '<th>Scholarship Type</th><th>Scholarship Amount</th>';
 }
+//TODO delete this?
 if (isset($_GET['not_payed'])){
 	echo '<th>Amount Due</th>';
 }
@@ -333,12 +334,16 @@ foreach ($information as $info){
 		}
 		else if(isset($_GET["camper_report"]))
 			echo "<td></td>";
+
 		if ($info->horse_waitlist == 1 && isset($_GET["camper_report"])) 
 		{
 			echo '<td class="stickout">(waitlisted)</td>';
 		}
+		else if($info->horse_opt == 1 && isset($_GET["camper_report"]))
+			echo "<td>Horses</td>";
 		else if(isset($_GET["camper_report"]))
 			echo "<td></td>";
+
 	}
 	//echo "</tr>";
 	//We don't need a isset for this because it is always being sent?
@@ -359,7 +364,7 @@ foreach ($information as $info){
 								FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$info->registration_id));
 		$cost = $wpdb->get_var($wpdb->prepare("
 								SELECT SUM(srbc_camps.cost +
-									(CASE WHEN " . $GLOBALS['srbc_registration'] . ".horse_opt = 1 THEN " . $GLOBALS['srbc_camps'] . ".horse_opt
+									(CASE WHEN " . $GLOBALS['srbc_registration'] . ".horse_opt = 1 THEN " . $GLOBALS['srbc_camps'] . ".horse_opt_cost
 									ELSE 0
 									END) +
 									(CASE WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'to' THEN 35
@@ -415,7 +420,7 @@ function amountDue($registration_id)
 									FROM " . $GLOBALS["srbc_payments"] . " WHERE registration_id=%s",$registration_id));
 	$cost = $wpdb->get_var($wpdb->prepare("
 							SELECT SUM(" . $GLOBALS["srbc_camps"] . ".cost +
-							(CASE WHEN " . $GLOBALS["srbc_registration"] . ".horse_opt = 1 THEN srbc_camps.horse_opt
+							(CASE WHEN " . $GLOBALS["srbc_registration"] . ".horse_opt = 1 THEN " . $GLOBALS["srbc_camps"] .".horse_opt_cost
 							ELSE 0
 							END) +
 							(CASE WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'to' THEN 35

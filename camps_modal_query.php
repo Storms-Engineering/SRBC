@@ -24,7 +24,7 @@ if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
 					echo 'End Date: <input type="date" name="end_date" value="' . $camp->end_date . '"><br>';
 					echo 'Cost: $<input name="cost" type="text" value="' . $camp->cost . '">';
 					echo 'Horse Cost: $<input name="horse_cost" type="text" value="' . $camp->horse_cost . '">';
-					echo 'Horse Option: $<input type="text" name="horse_opt" value="' . $camp->horse_opt . '"><br></span>';
+					echo 'Horse Option Cost: $<input type="text" name="horse_opt_cost" value="' . $camp->horse_opt_cost . '"><br></span>';
 					echo 'Horse List Size: <input type="text" name="horse_list_size" value="' . $camp->horse_list_size . ' ">';
 					echo 'Horse Waiting List Size: <input type="text" name="horse_waiting_list_size" value="'.$camp->horse_waiting_list_size.'"><br>';
 					echo 'Waiting List Size: <input name="waiting_list_size" type="text" value="' . $camp->waiting_list_size . '">';
