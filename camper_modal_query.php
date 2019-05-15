@@ -5,7 +5,7 @@
 	//This returns the data for one specific camper.
 	require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 	//Security check - kinda
-	if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
+	if (!is_user_logged_in() && check_admin_referer( 'update_camper_'.$_GET['camper_id'])) exit("Thus I refute thee.... P.H.");
 	global $wpdb;
 	$camper = $wpdb->get_row( $wpdb->prepare("SELECT * FROM srbc_campers WHERE camper_id = %d",$_GET['camper_id'] ));
 	echo "Camper info for " . $camper->camper_first_name . " " . $camper->camper_last_name;
@@ -20,6 +20,8 @@
 				$hidden = wp_get_current_user()->user_login === "Unixen" ? NULL : "display:none";
 				echo '<div id="information"><span style="' . $hidden . '" id="camper_id">' . $camper->camper_id . '</span>';
 				echo '<span class="info"><label class="name_label">Camper: </label><input type="text" name="camper_first_name" value="' . $camper->camper_first_name . '"> ';
+				//WP nonces for security, 
+				wp_nonce_field( 'update_camper_'.$_GET['camper_id']);
 				echo '<input type="text" name="camper_last_name" value="' . $camper->camper_last_name . '"></span>';
 				echo '<br><span class="info"><label class="name_label">Parent: </label><input type="text" name="parent_first_name" value="' . $camper->parent_first_name . '"> ' 
 					. '<input type="text" name="parent_last_name" value="' . $camper->parent_last_name . '"></span>';
