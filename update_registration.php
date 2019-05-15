@@ -15,6 +15,7 @@ if (isset($obj["deleteid"]))
 	$iswaitlist = $wpdb->get_row( "SELECT waitlist FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=" . $obj["deleteid"] )->waitlist;
 	//Delete the requested registration
 	$wpdb->delete( $GLOBALS['srbc_registration'], array( 'registration_id' => $obj["deleteid"] ) );
+	//TODO delete all payments associated with this registration.
 	echo "Deleted Registration and Saved Sucessfully";
 }
 else if(isset($obj["registration_id"])){

@@ -228,7 +228,7 @@ $values = array();
 if (isset($_GET["backup_registration"])){
 	echo '<table id="report_table"><tr><th>Last Name</th><th>First Name</th>';
 	echo '<th>Parent Name</th><th>Camp</th>';
-	echo '<th>Phone #</th><th>Payed</th>';
+	echo '<th>Phone #</th><th>Paid</th>';
 	echo '<th>Amount Due</th><th>Payment Type</th><th>Payment Amount</th>';
 }
 else if(isset($_GET["emails"]))

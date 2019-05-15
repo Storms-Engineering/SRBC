@@ -222,7 +222,7 @@
 					echo 'Note (Check # or Last 4 of CC): <input type="text" name="auto_note"></span>';
 					echo '<br><b>Auto split payment (Currently in alpha, if you use please double check values that it worked correctly):</b> $<input type="text" name="auto_payment_amt" >';
 					
-					//Print out the different fees that have been payed
+					//Print out the different fees that have been paid
 					$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$registration->registration_id));
 					//Add duplicate fees to this array
 					$f = array();

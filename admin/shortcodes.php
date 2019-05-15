@@ -706,7 +706,7 @@ function autoSplit($cc_amount,$campid,$registration_id,$busride,$horseOpt)
 		{
 			//Overpayed
 			$needToPayAmount = $autoPaymentAmt;
-			$feeType= "Overpayed";
+			$feeType= "Overpaid";
 		}
 		//Also updates autoPaymentAmt
 		list ($autoPaymentAmt,$payed) = calcPaymentAmt($autoPaymentAmt,$needToPayAmount);
