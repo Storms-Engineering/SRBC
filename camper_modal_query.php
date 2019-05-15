@@ -230,8 +230,9 @@
 					<option value="check">Check</option>
 					<option value="cash">Cash</option>
 					</select>';
+					echo '<b>Auto split payment (Beta):</b> $<input type="text" name="auto_payment_amt" ><br>';
 					echo 'Note (Check # or Last 4 of CC): <input type="text" name="auto_note"></span>';
-					echo '<br><b>Auto split payment (Beta):</b> $<input type="text" name="auto_payment_amt" >';
+					
 					
 					//Print out the different fees that have been paid
 					$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$registration->registration_id));
@@ -251,6 +252,9 @@
 						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 					}
 					echo $finalText;
+					//Snackshop
+
+					//Buttons
 					echo '<br><br><button class="big_button" onclick="saveInfo();" >Save</button>';
 					echo ' <button class="big_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>';
 					
