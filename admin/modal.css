@@ -106,7 +106,7 @@
 	}
 	.info
 	{
-		margin-right:50px;
+		margin-right:25px;
 		text-align:center;
 		font-size:medium;
 	}
@@ -127,4 +127,26 @@
 	.big_button:hover
 	{
 		background-color: #8caef3;
+	}
+	.name_label 
+	{
+	  display: inline-block;
+	  width: 80px;
+	  text-align: right;
+	  padding-right:5px;
+	}
+	.checkbox_header
+	{
+		display:inline;
+	}
+	fieldset
+	{
+	  display: inline;
+	  margin-left: 2px;
+	  margin-right: 4px;
+	  padding-top: 0.35em;
+	  padding-bottom: 0.625em;
+	  padding-left: 0.75em;
+	  padding-right: 0.75em;
+	  border: 2px groove grey;
 	}

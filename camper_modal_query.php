@@ -15,23 +15,25 @@
 	<button class="big_button" style="float:right;" onclick="saveInfo();closeModal();">Save Info & Close</button>
 			<div class="modal-body">
 			<?php
+				//TODO  I might not need this span class
+				//BODY Everything might be handled by the label now
 				echo '<div id="information"><span style="display:none;" id="camper_id">' . $camper->camper_id . '</span>';
-				echo '<span class="info">Camper: <input type="text" name="camper_first_name" value="' . $camper->camper_first_name . '"> ';
+				echo '<span class="info"><label class="name_label">Camper: </label><input type="text" name="camper_first_name" value="' . $camper->camper_first_name . '"> ';
 				echo '<input type="text" name="camper_last_name" value="' . $camper->camper_last_name . '"></span>';
-				echo '<span class="info">Parent: <input type="text" name="parent_first_name" value="' . $camper->parent_first_name . '"> ' 
+				echo '<br><span class="info"><label class="name_label">Parent: </label><input type="text" name="parent_first_name" value="' . $camper->parent_first_name . '"> ' 
 					. '<input type="text" name="parent_last_name" value="' . $camper->parent_last_name . '"></span>';
-				echo '<span class="info">Phone: <input type="text" name="phone" value="'. $camper->phone . '"></span>';
-				echo '<span class="info">Phone2: <input type="text" name="phone2" value="'. $camper->phone2 . '"></span>';
+				echo '<br><span class="info"><label class="name_label">Phone #\'s:</label><input type="text" name="phone" value="'. $camper->phone . '">';
+				echo ' <input type="text" name="phone2" value="'. $camper->phone2 . '"></span>';
 				echo '<span class="info">Email: <input type="text" name="email" value="'. $camper->email . '"></span><br><br>';
-				echo '<span class="info">Birthday: <input type="date" name="birthday" value="'. $camper->birthday . '"></span>';
+				echo '<span class="info"><label class="name_label">Birthday:</label> <input type="date" name="birthday" value="'. $camper->birthday . '"></span>';
 				echo '<span class="info">Grade: <input type="text" class="financial" name="grade" value="' . $camper->grade . '"></span>';
 				echo '<span class="info">Age: <input type="text" class="financial" name="age" value="'. $camper->age . '"></span>';
 				echo '<span class="info">Gender: <input type="text" class="financial" name="gender" value="'. $camper->gender . '"></span><br><br>';
-				echo '<br><br><span class="info">Address: <input type="text" name="address" value="' . $camper->address . '">';
-				echo '<input type="text" name="city" value="' . $camper->city . '"> ' .
+				echo '<span class="info"><label class="name_label">Address:</label> <input type="text" name="address" value="' . $camper->address . '">';
+				echo ' <input type="text" name="city" value="' . $camper->city . '"> ' .
 					'<input type="text" name="state" class="financial" value="' . $camper->state . '"> ' .
 					'<input type="text" name="zipcode" value="' . $camper->zipcode . '"></span>';
-				echo '<br><h3>Notes:<h3> <br><textarea id="notes" rows="4" cols="50">' . $camper->notes . '</textarea></div>';
+				echo '<br><h3>Camper Notes:<h3> <br><textarea id="notes" rows="4" cols="50">' . $camper->notes . '</textarea></div>';
 				echo '<h3>Camps signed up for:</h3><br>';
 				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE camper_id=%s",$camper->camper_id));
 				//Check that they have registrations
@@ -113,7 +115,7 @@
 					
 					echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campWaitlistHTML . 
 					'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
-					echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';
+					
 					echo 'Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
 					echo 'Lodged in: <input name="cabin" list="lodging" type="text" value="' . $registration->cabin . '"><br>';
 					echo '<datalist id="lodging">
@@ -134,6 +136,31 @@
 							<option value="Skilak">
 							<option value="Beluga">
 							</datalist>';
+							
+					//Checkboxes
+					$checked = "";
+					if ($registration->checked_in == 1)
+						$checked = "checked";
+					echo '<fieldset><legend>Registration Day</legend><h3 class="checkbox_header">Camper checked in:</h3> <input class="srbc_checkbox" name="checked_in" type="checkbox" ' . $checked .'>';
+					$checked = "";
+					if ($registration->health_form == 1)
+						$checked = "checked";
+					echo '<br><h3 class="checkbox_header">Camper has health form:</h3> <input class="srbc_checkbox" name="health_form" type="checkbox" ' . $checked .'></fieldset>';
+					$checked = "";
+					if ($registration->waitlist == 1)
+						$checked = "checked";
+					echo '<fieldset><legend>Office Use</legend><h3 class="checkbox_header">On Waitlist</h3> <input name="waitlist" type="checkbox" ' . $checked .'>';
+					$checked = "";
+					if ($registration->horse_waitlist == 1)
+						$checked = "checked";
+					echo '<h3 class="checkbox_header">Horse Waitlist</h3> <input name="horse_waitlist" type="checkbox" ' . $checked .'>';
+					$checked = "";
+					if ($registration->packing_list_sent == 1)
+						$checked = "checked";
+					echo '<br><h3 style="display:inline;">Packing List Sent</h3> <input name="packing_list_sent" type="checkbox" ' . $checked .'></fieldset>';		
+							
+					//Financial Inputs
+					echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';		
 					echo '<span class="financial_info">'.$horsesWaitlistHTML.'Horse Option '.$horseHTML.' $<input class="financial" name="horse_opt" type="text" value="0" readonly></span>';
 					echo '<span class="financial_info">Busride ' . $busride .  ': $<input class="financial" name="busride_cost" type="text" value="' . $busride_cost .'" readonly></span>';
 					echo '<span class="financial_info">Discount: $<input class="financial" type="text" name="discount" value="' . $registration->discount . '"></span>';
@@ -172,26 +199,10 @@
 					echo '<span class="financial_info">Paid Cash: $<input class="financial" type="text" value="' . $payedCash . '" readonly></span>';
 					echo '<span class="financial_info">Paid Card: $<input class="financial" type="text" value="' . $payedCard . '" readonly></span>';
 					echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due"></span></h3></span>';
-					$checked = "";
-					if ($registration->checked_in == 1)
-						$checked = "checked";
-					echo '<br><h3 style="display:inline;">Camper checked in:</h3> <input class="srbc_checkbox" name="checked_in" type="checkbox" ' . $checked .'>';
-					$checked = "";
-					if ($registration->health_form == 1)
-						$checked = "checked";
-					echo '<br><h3 style="display:inline;">Camper has health form:</h3> <input class="srbc_checkbox" name="health_form" type="checkbox" ' . $checked .'>';
-					$checked = "";
-					if ($registration->waitlist == 1)
-						$checked = "checked";
-					echo '<br><h3 style="display:inline;">On Waitlist</h3> <input name="waitlist" type="checkbox" ' . $checked .'>';
-					$checked = "";
-					if ($registration->horse_waitlist == 1)
-						$checked = "checked";
-					echo '<h3 style="display:inline;">Horse Waitlist</h3> <input name="horse_waitlist" type="checkbox" ' . $checked .'>';
-					$checked = "";
-					if ($registration->packing_list_sent == 1)
-						$checked = "checked";
-					echo '<br><h3 style="display:inline;">Packing List Sent</h3> <input name="packing_list_sent" type="checkbox" ' . $checked .'>';
+
+
+					
+					//Payment Section
 					echo '<span><h2>Make a payment:</h3>Payment type: <select name="payment_type" class="inputs payment_type">
 					<option value="none" id="default" selected></option>
 					<option value="card">Credit Card</option>
