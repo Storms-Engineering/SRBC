@@ -408,7 +408,7 @@ function srbc_camp_reports()
 			<option value="to">To Camp</option>
 			<option value="from">To Anchorage</option>
 		</select>
-		<button onclick="generateReport('horsemanship')">LS Horsemanship </button>
+
 		<button onclick="generateReport('backup_registration')">Backup Registrations </button><br>
 		<button onclick="generateReport('signout_sheets')">Signout Sheets</button>
 		<button onclick="generateReport('registration_day')">Registration Day Report</button>
@@ -428,6 +428,7 @@ function srbc_camp_reports()
 		<button onclick="generateReport('camp_report')">Camp Report </button>		
 		<button onclick="generateReport('camper_report')">Camper Report </button>		
 		<button onclick="generateReport('snackshop')">Snackshop</button>
+		<button onclick="generateReport('horsemanship')">LS Horsemanship </button>
 	</div>
 	<br><br>
 	<div id="results"></div>
