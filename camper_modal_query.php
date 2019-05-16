@@ -243,21 +243,24 @@
 							$f[$fee->fee_type] += $fee->payment_amt;
 						else
 							$f[$fee->fee_type] = $fee->payment_amt;
-							
 					}
 					$finalText = NULL;
 					$keys = array_keys($f);
+					$snackshopTotal = NULL;
 					echo "<br><h3>Fees paid:</h3>";
 					for($i=0;$i<count($keys);$i++){
+						if ($keys[$i] == "Store")
+							$snackshopTotal += $f[$keys[$i]];
 						$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 					}
 					echo $finalText;
 					//Snackshop
-
+					echo '<hr><h3>Snackshop: $' . $snackshopTotal . '</h3>';
+					echo 'Add to Snackshop: <input type="text" name="snackshop">';
+					
 					//Buttons
 					echo '<br><br><button class="big_button" onclick="saveInfo();" >Save</button>';
 					echo ' <button class="big_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>';
-					
 					echo '<br><br><button class="big_button" style="background:#009933" onclick="resendEmail('.$registration->registration_id.');" >Resend Email</button>	<button class="big_button" style="background:red" onclick="deleteRegistration(' . $registration->registration_id . ',' . $registration->camper_id . ',' . $registration->camp_id . ')">Delete Registration</button>';
 					//Modal end div
 					echo "</div>";

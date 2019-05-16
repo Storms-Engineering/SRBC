@@ -117,7 +117,7 @@ function saveInfo()
 	for (var i = 0; i < containers.length; ++i) 
 	{
 		var info_child = {};
-		// Find its child `input` elements
+		// Find each containers child `input` elements
 		var inputs = containers[i].getElementsByTagName('input');
 		for (var j = 0; j < inputs.length; ++j) {
 			

@@ -124,8 +124,12 @@ else {
 			), 
 			array( '%d' ) 
 		);
-		
-		if($obj[$key]["auto_payment_amt"] != "")
+		if ($obj[$key]["snackshop"] != "")
+		{
+			makePayment($key,"Cash",$obj[$key]["snackshop"],
+				"","Store");
+		}
+		else if($obj[$key]["auto_payment_amt"] != "")
 		{
 			$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d ",$key));
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
