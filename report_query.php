@@ -122,12 +122,14 @@ else if (isset($_GET["registration_day"]))
 	//Declare variables to sum up together in one row
 	$horse_fee = $horse_opt_cost = $bus_fee = $camp_fee  = $store = $next_id = $next_reg_id = $total = 0;
 	$pointer = 1;
-	$totals = ["card" => 0,"check" => 0, "cash" => 0];
+	$totals = ["card" => 0,"check" => 0, "cash" => 0, "Bus" => 0, "Store" => 0, "LS Horsemanship" => 0, "WT Horsemanship" => 0,
+	"Lakeside" => 0, "Wagon Train" => 0, "Wilderness" => 0, "None" => 0];
 	//ID is for multiple campers that were payed for at once
 	foreach ($campers as $camper)
 	{
 		
 		$totals[$camper->payment_type] += $camper->payment_amt;
+		$totals[$camper->fee_type] += $camper->payment_amt;
 		if ($camper->fee_type == "Bus")
 			$bus_fee += $camper->payment_amt;
 		else if($camper->fee_type == "Store")
@@ -160,8 +162,8 @@ else if (isset($_GET["registration_day"]))
 			$nextid = 0;
 			$next_reg_id = 0;
 		}
-		if ($camper->camper_id != $nextid || $camper->registration_id != $next_reg_id)// ||
-		//($campers[count($campers) - 1]->camper_id == $camper->camper_id && $campers[count($campers) - 1]->payment_id == $camper->payment_id ))
+		//Write out data
+		if ($camper->camper_id != $nextid || $camper->registration_id != $next_reg_id)
 		{
 			echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_first_name . "</td><td>" . $camper->camper_last_name . "</td>";
 			echo "<td>$". $camp_fee . "</td>";
@@ -180,12 +182,19 @@ else if (isset($_GET["registration_day"]))
 	}
 	//Close out the table
 	echo "</table>";
+	$keys = array_keys($totals);
+	for($i=0;$i<count($keys);$i++)
+	{
+		echo "<h3>Total ".$keys[$i]. ":$";
+		echo number_format($totals[$keys[$i]],2) . "</h3>";
+	}
+	/*
 	echo "<h3>Total Cash:$";
 	echo (isset($totals["cash"]))?number_format($totals["cash"],2):'0';
 	echo "<h3>Total Check:$";
 	echo (isset($totals["check"]))?number_format($totals["check"],2):'0';
 	echo "<h3>Total Card:$";
-	echo (isset($totals["card"]))?number_format($totals["card"],2):'0';
+	echo (isset($totals["card"]))?number_format($totals["card"],2):'0';*/
 	exit;
 	
 }

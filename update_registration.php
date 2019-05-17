@@ -11,8 +11,6 @@ global $wpdb;
 
 if (isset($obj["deleteid"]))
 {
-	//Get if the camper was waitlisted before deleting
-	$iswaitlist = $wpdb->get_row( "SELECT waitlist FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=" . $obj["deleteid"] )->waitlist;
 	//Delete the requested registration
 	$wpdb->delete( $GLOBALS['srbc_registration'], array( 'registration_id' => $obj["deleteid"] ) );
 	//TODO delete all payments associated with this registration.
