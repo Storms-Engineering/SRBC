@@ -17,7 +17,8 @@
 			<?php
 				//TODO  I might not need this span class
 				//BODY Everything might be handled by the label now
-				echo '<div id="information"><span style="display:none;" id="camper_id">' . $camper->camper_id . '</span>';
+				$hidden = wp_get_current_user()->user_login === "Unixen" ? NULL : "display:none";
+				echo '<div id="information"><span style="' . $hidden . '" id="camper_id">' . $camper->camper_id . '</span>';
 				echo '<span class="info"><label class="name_label">Camper: </label><input type="text" name="camper_first_name" value="' . $camper->camper_first_name . '"> ';
 				echo '<input type="text" name="camper_last_name" value="' . $camper->camper_last_name . '"></span>';
 				echo '<br><span class="info"><label class="name_label">Parent: </label><input type="text" name="parent_first_name" value="' . $camper->parent_first_name . '"> ' 
@@ -96,7 +97,8 @@ function campSection($registration,$camper,$inactive)
 	global $wpdb;
 	//Grab the camp since we need some info from it
 	$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE camp_id=%s",$registration->camp_id));
-	echo '<span id="registration_id">Registration ID:' . $registration->registration_id . '</span>';
+	$hidden = wp_get_current_user()->user_login === "Unixen" ? NULL : "display:none";
+	echo '<span id="registration_id" style="'.$hidden.'">' . $registration->registration_id . '</span>';
 	//Calculate the busfee
 	$busride = $registration->busride;
 	$busride_cost = 0;
