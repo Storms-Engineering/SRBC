@@ -9,12 +9,22 @@ require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
 global $wpdb;
 
-if (isset($obj["deleteid"]))
+
+if (isset($obj["reactivate_id"]))
 {
 	//Delete the requested registration
-	$wpdb->delete( $GLOBALS['srbc_registration'], array( 'registration_id' => $obj["deleteid"] ) );
-	//TODO delete all payments associated with this registration.
-	echo "Deleted Registration and Saved Sucessfully";
+	$wpdb->query($wpdb->prepare("INSERT INTO " . $GLOBALS['srbc_registration'] . " SELECT * FROM " . $GLOBALS['srbc_registration_inactive']. 
+	" WHERE registration_id=%d;",$obj["reactivate_id"]));
+	$wpdb->query($wpdb->prepare("DELETE FROM " . $GLOBALS['srbc_registration_inactive']. " WHERE registration_id=%d;",$obj["reactivate_id"]));
+	echo "Reactivated Registration and Saved Sucessfully";
+}
+else if (isset($obj["deactivate_id"]))
+{
+	//Delete the requested registration
+	$wpdb->query($wpdb->prepare("INSERT INTO " . $GLOBALS['srbc_registration_inactive']. " SELECT * FROM " .
+	$GLOBALS['srbc_registration']. "  WHERE registration_id=%d;",$obj["deactivate_id"]));
+	$wpdb->query($wpdb->prepare("DELETE FROM " . $GLOBALS['srbc_registration']. " WHERE registration_id=%d;",$obj["deactivate_id"]));
+	echo "Deactivated Registration and Saved Sucessfully";
 }
 else if(isset($obj["registration_id"])){
 	//Change registration to another camp

@@ -86,6 +86,30 @@ function srbc_install() {
 
 	dbDelta( $sql );
 	
+	//Inactive registrations table
+	$sql = "CREATE TABLE IF NOT EXISTS srbc_registration_inactive (
+		registration_id INT AUTO_INCREMENT,
+		camp_id INT NOT NULL,
+		camper_id INT NOT NULL,
+		date TINYTEXT NOT NULL,
+		counselor TINYTEXT,
+		cabin TINYTEXT,
+		horse_opt TINYINT NOT NULL,
+		busride TINYTEXT NOT NULL,
+		discount_type TINYTEXT,
+		discount FLOAT(6,2),
+		scholarship_amt FLOAT(6,2) ,
+		scholarship_type TINYTEXT,
+		waitlist TINYINT NOT NULL,	
+		horse_waitlist TINYINT NOT NULL,
+		checked_in TINYINT NOT NULL,
+		health_form TINYINT NOT NULL,
+		packing_list_sent TINYINT NOT NULL,
+		PRIMARY KEY (registration_id)
+		)  ENGINE=INNODB;";
+
+	dbDelta( $sql );
+	
 	//Database for encrypted credit card storage
 	//TODO I should consolidate these into one tracked id (registration_id) - ugh I wasn't expecting to use this so much
 	$sql = "CREATE TABLE IF NOT EXISTS srbc_cc (

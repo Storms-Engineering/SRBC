@@ -29,7 +29,7 @@ foreach($areas as $area){
 }
 //Catches if we have an emtpy database
 if($cs == NULL)
-	error_msg("It seems that there is no campers in the database");
+	error_msg("It seems that there is no camps in the database");
 foreach($camps as $camp){
 	if ($camp == $_GET['query']){
 		$specificQuery = true;

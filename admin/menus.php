@@ -15,13 +15,15 @@ function srbc_database()
 		$GLOBALS["srbc_camps"] = "srbc_camps" . get_option("srbc_database_year");
 		$GLOBALS['srbc_payments'] = "srbc_payments" . get_option("srbc_database_year");
 		$GLOBALS['srbc_registration'] = "srbc_registration" . get_option("srbc_database_year");
+		$GLOBALS['srbc_registration_inactive'] = "srbc_registration_inactive" . get_option("srbc_database_year");
 	}
 	if(isset($_POST["rename_database"]))
 	{
 		
 		//Rename databases and recreate new ones
 		$wpdb->query("RENAME TABLE srbc_registration TO srbc_registration" . date("Y") .  ",
-		srbc_camps TO srbc_camps" . date("Y") . ", srbc_payments to srbc_payments" . date("Y") . ";");
+		srbc_camps TO srbc_camps" . date("Y") . ", srbc_payments to srbc_payments" . date("Y") . ", srbc_registration_inactive TO srbc_registration_inactive".
+		date("Y") . ";");
 		srbc_install();
 	}
 	?>

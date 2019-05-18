@@ -184,14 +184,20 @@ function addListeners()
 	}
 	
 }
-
-function deleteRegistration(regid,camperid,campid)
+function reactivateRegistration(regid,camperid)
 {
-	if(!confirm("Are you sure you want to delete?"))
+	if(!confirm("Are you sure you want to reactivate this registration?"))
 		return;
 	var obj = {};
-	obj["deleteid"] = regid;
-	obj["camp_id"] = campid;
+	obj["reactivate_id"] = regid;
+	postAjax(obj,camperid);
+}
+function deactivateRegistration(regid,camperid)
+{
+	if(!confirm("Are you sure you want to deactivate this registration?"))
+		return;
+	var obj = {};
+	obj["deactivate_id"] = regid;
 	postAjax(obj,camperid);
 }
 //Recalculate costs based on what fields have been populated
