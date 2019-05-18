@@ -144,13 +144,13 @@ function campSection($registration,$camper,$inactive)
 	$horsesWaitlistHTML = NULL;
 	if($registration->horse_waitlist == 1)
 		$horsesWaitlistHTML = ' <span style="color:red;"><b>(Waitlisted for Horses)</b></span>';						
-	
+	//Don't include store type fees in these totals
 	$payedCard = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='card'",$registration->registration_id));
+					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='card' AND NOT fee_type='store'",$registration->registration_id));
 	$payedCheck = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='check'",$registration->registration_id));
+					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='check' AND NOT fee_type='store'",$registration->registration_id));
 	$payedCash = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='cash'",$registration->registration_id));
+					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='cash' AND NOT fee_type='store'",$registration->registration_id));
 	
 	echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campNote . 
 	'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
@@ -295,7 +295,12 @@ function campSection($registration,$camper,$inactive)
 	echo $finalText;
 	//Snackshop
 	echo '<hr><h3>Snackshop: $' . $snackshopTotal . '</h3>';
-	echo 'Add to Snackshop: <input type="text" name="snackshop">';
+	echo 'Add to Snackshop: <input type="text" name="snackshop">  <select name="snackshop_payment_type" class="inputs payment_type">
+	<option value="none" id="default" selected></option>
+	<option value="card">Credit Card</option>
+	<option value="check">Check</option>
+	<option value="cash">Cash</option>
+	</select>';
 	
 	//Buttons
 	echo '<br><br><button class="big_button" onclick="saveInfo();" >Save</button>';

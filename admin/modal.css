@@ -150,3 +150,8 @@
 	  padding-right: 0.75em;
 	  border: 2px groove grey;
 	}
+	select
+	{
+		/*This makes the selects level with inputs*/
+		margin-top:-2px;
+	}

@@ -134,7 +134,7 @@ else {
 		);
 		if ($obj[$key]["snackshop"] != "")
 		{
-			makePayment($key,"Cash",$obj[$key]["snackshop"],
+			makePayment($key,$obj[$key]['snackshop_payment_type'],$obj[$key]["snackshop"],
 				"","Store");
 		}
 		else if($obj[$key]["auto_payment_amt"] != "")

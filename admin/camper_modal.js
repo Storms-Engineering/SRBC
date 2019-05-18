@@ -215,11 +215,12 @@ function calculate_totals()
 		var inputs = containers[i].getElementsByTagName('input');
 		for (var j = 0; j < inputs.length; ++j) {
 			//We don't want to grab text fields and parseInt doesn't like empty strings
+			
+			//TODO just check the type if it a number and make sure it isn't disabled.
 			//TODO: change this to loop  through an array or use a foreach this is terrible
-			//TODO just check the type too duhhh
 			if(inputs[j].name != "scholarship_type" && inputs[j].name != "discount_type" && inputs[j].name != "counselor" && 
 				inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].name != "horse_waitlist" && inputs[j].name != "packing_list_sent" &&
-				inputs[j].name != "auto_note" && inputs[j].name != "health_form" && inputs[j].name != "waitlist" && 
+				inputs[j].name != "auto_note" && inputs[j].name != "health_form" && inputs[j].name != "waitlist" && inputs[j].name !== "snackshop" &&
 				inputs[j].name != "note" && inputs[j].value != "")
 			{				
 				
