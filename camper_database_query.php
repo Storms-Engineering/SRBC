@@ -51,7 +51,19 @@ if (!$specificQuery)
 	//This query searches for first name or last name of the camper and orders it by first name
 	//Also protected against sql injection by prepare
 	//See if they typed a first name and last name
-	if (count($name) == 2){
+	if(isset($_GET['inner']))
+	{
+		$name = $name[0];
+		$campers = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM srbc_campers
+			INNER JOIN srbc_registration ON srbc_campers.camper_id=srbc_registration.camper_id
+			WHERE (camper_first_name 
+			LIKE %s OR camper_last_name LIKE %s OR parent_first_name LIKE %s OR parent_last_name LIKE %s)
+			AND srbc_registration.camp_id=%d
+			ORDER BY srbc_campers.camper_last_name ASC", 
+			$name."%",$name."%",$name."%",$name."%",$_GET['camp_id']));
+	}
+	else if (count($name) == 2){
 		$fname = $name[0];
 		$campers = $wpdb->get_results(
 			$wpdb->prepare( "SELECT * FROM srbc_campers WHERE (camper_first_name 
@@ -68,38 +80,40 @@ if (!$specificQuery)
 			$name."%",$name."%",$name."%",$name."%"));
 	}
 }
-
-?>
-	 <table style="width:100%;">
+	echo ' <table style="width:100%;" id="results_table">
 		<tr>
 			<th>Firstname</th>
-			<th>Lastname</th>
-			<th>Age</th>
+			<th>Lastname</th>';
+		//Custom table
+		if (!isset($_GET['inner']))
+		{
+			echo '<th>Age</th>
 			<th>Parent Name</th>
 			<th>Email</th>
-			<th>Phone</th>
-		</tr>
-		<?php
+			<th>Phone</th>';
+		}
+		else
+			echo '<th>Select</th>';
+	echo '</tr>';
 	foreach ($campers as $camper)
 	{
-		echo '<tr onclick="openModal('.$camper->camper_id.')" class="'. $camper->gender .'">';
+		if(isset($_GET['inner']))
+			echo '<tr>';
+		else
+			echo '<tr onclick="openModal('.$camper->camper_id.')" class="'. $camper->gender .'">';
 		echo "<td>";
 		echo $camper->camper_first_name . "</td>";
 		echo "<td>" . $camper->camper_last_name . "</td>";
-		echo "<td>" . $camper->age . "</td>"; 
-		//Show camp descriptions
-		/*
-		$camp_ids = explode(",",$camper->camps);
-		echo "<td>";
-		foreach($camp_ids as $campid)
+		if(!isset($_GET['inner']))
 		{
-			$camps = $wpdb->get_row( "SELECT * FROM srbc_camps WHERE camp_id=$campid");
-			echo $camps->camp_description . "<br>";
-		}*/
+		echo "<td>" . $camper->age . "</td>"; 
 		echo "</td><td>" . $camper->parent_first_name ." ". $camper->parent_last_name . "</td>";
 		echo '<td><a style="color:#1043d5;" href="mailto:' . $camper->email . '">'.$camper->email.'</a></td>';
 		echo "<td>" . $camper->phone . "</td>";
-		echo "</td></tr>";
+		}
+		else
+			echo '<td><input type="radio" name="nameToAdd" value="' . $camper->registration_id . '"></td>';
+		echo "</tr>";
 	}
 	?>
 	</table> 

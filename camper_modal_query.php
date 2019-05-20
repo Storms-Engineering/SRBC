@@ -314,11 +314,6 @@ function campSection($registration,$camper,$inactive)
 			</datalist>';
 
 
-	
-
-	
-
-	
 	//End fieldset
 	echo '</fieldset>';	
 	

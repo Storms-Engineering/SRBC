@@ -1,10 +1,80 @@
 <?php 
-function srbc_database()
+function srbc_program_access()
 {
-	
 	// check user capabilities
     if (!current_user_can('manage_options')) {
         return;
+    }
+	?>
+	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/popup.css">
+	<style>
+	table
+	{
+		float:left;
+		margin:7px;
+	}
+	table, th, td
+	{
+		border: 1px solid black;
+		border-collapse: collapse;
+	}
+	th
+	{
+		font-size:large;
+	}
+	td,th
+	{
+		padding:5px;
+	}
+	</style>
+    <div class="wrap">
+        <h1>Program Access</h1>
+		<br>
+		Select Camp:
+		<?php
+		global $wpdb;
+				$camps = $wpdb->get_results("SELECT * FROM ".$GLOBALS['srbc_camps'] ." ORDER BY start_date ASC");
+				echo '<select id="camp" name="camp" onchange="showLodging()"><option value="none">none</option>';
+				foreach ($camps as $camp){
+					echo '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
+				}
+				echo '</select>';
+		?>
+		Please select your area
+		<select class="inputs" id="area" onchange="showLodging()">
+			<option value="Lakeside">Lakeside</option>
+			<option value="Wagon Train">Wagon Train</option>
+			<option value="Wilderness">Wilderness</option>
+			<!-- These might possibly be added later
+			<option value="Workcrew">Workcrew</option>
+			<option value="Sports">Sports Camp</option>
+			<option value="Fall Retreat">Fall Retreat</option>
+			<option value="Winter Camp">Winter Camp</option>-->
+		</select><br>
+		
+		
+		<div id="results">
+		</div>
+		<div id="popup_background"><div id="popup">
+		Search <input id="search" style="width:250px;" list="suggestions" type="search"> 
+		<button id="search_button" class="big_button" style="padding:5px;" onclick="search();">Search</button>
+		<div id="results_campers"></div>
+		<button id="popup_button" class="big_button" style="padding:5px;" >Ok</button>
+		</div></div>
+    </div>
+	<script src="../wp-content/plugins/SRBC/admin/popup.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/program_access.js"></script>
+	
+	
+	
+	<?php
+}
+
+function srbc_database()
+{
+	// check user capabilities
+    if (!current_user_can('manage_options') || in_array( 'program', (array) wp_get_current_user()->roles)) {
+         exit("Thus I refute thee.... P.H.");
     }
 	global $wpdb;
 	if(isset($_POST["srbc_database_year"]))
@@ -55,8 +125,8 @@ function srbc_database()
 }
 function srbc_credit_cards(){
 	// check user capabilities
-    if (!current_user_can('manage_options')) {
-        return;
+    if (!current_user_can('manage_options') || in_array( 'program', (array) wp_get_current_user()->roles)) {
+         exit("Thus I refute thee.... P.H.");
     }
 	?>
 	<style>
@@ -124,8 +194,8 @@ function srbc_credit_cards(){
 function srbc_camper_management()
 {
     // check user capabilities
-    if (!current_user_can('manage_options')) {
-        return;
+   if (!current_user_can('manage_options') || in_array( 'program', (array) wp_get_current_user()->roles)) {
+         exit("Thus I refute thee.... P.H.");
     }
     ?>
 	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/camper_management.css">
@@ -245,8 +315,8 @@ function srbc_overview_page()
 function srbc_camps_management()
 {
 	// check user capabilities
-    if (!current_user_can('manage_options')) {
-        return;
+    if (!current_user_can('manage_options') || in_array( 'program', (array) wp_get_current_user()->roles)) {
+         exit("Thus I refute thee.... P.H.");
     }
 	global $wpdb;
 	?>
@@ -342,8 +412,8 @@ function srbc_camp_reports()
 	//TODO I might make reports more flexible by adding columns that the user can pick from
 	//and the type of data that they would want to sort by.  I think this should be fine for now, but might remkae in the future.
 	// check user capabilities
-    if (!current_user_can('manage_options')) {
-        return;
+    if (!current_user_can('manage_options') || in_array( 'program', (array) wp_get_current_user()->roles)) {
+         exit("Thus I refute thee.... P.H.");
     }
 	?>
 	<style>
