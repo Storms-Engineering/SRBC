@@ -155,26 +155,7 @@ function campSection($registration,$camper,$inactive)
 	echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campNote . 
 	'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
 	
-	echo 'Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
-	echo 'Lodged in: <input name="cabin" list="lodging" type="text" value="' . $registration->cabin . '"><br>';
-	echo '<datalist id="lodging">
-			<option value="Girls Tent">
-			<option value="Guys Tent">
-			<option value="Spruce/Aspen">
-			<option value="Birch/Willow">
-			<option value="Tustumena">
-			<option value="Redoubt">
-			<option value="Wagon 1">
-			<option value="Wagon 2">
-			<option value="Wagon 3">
-			<option value="Wagon 4">
-			<option value="Susitna">
-			<option value="Spurr">
-			<option value="Illiamna">
-			<option value="Augustine">
-			<option value="Skilak">
-			<option value="Beluga">
-			</datalist>';
+	
 			
 	//Checkboxes
 	$checked = "";
@@ -184,19 +165,8 @@ function campSection($registration,$camper,$inactive)
 	$checked = "";
 	if ($registration->health_form == 1)
 		$checked = "checked";
-	echo '<br><h3 class="checkbox_header">Camper has health form:</h3> <input class="srbc_checkbox" name="health_form" type="checkbox" ' . $checked .'></fieldset>';
-	$checked = "";
-	if ($registration->waitlist == 1)
-		$checked = "checked";
-	echo '<fieldset><legend>Office Use</legend><h3 class="checkbox_header">On Waitlist</h3> <input name="waitlist" type="checkbox" ' . $checked .'>';
-	$checked = "";
-	if ($registration->horse_waitlist == 1)
-		$checked = "checked";
-	echo '<h3 class="checkbox_header">Horse Waitlist</h3> <input name="horse_waitlist" type="checkbox" ' . $checked .'>';
-	$checked = "";
-	if ($registration->packing_list_sent == 1)
-		$checked = "checked";
-	echo '<br><h3 style="display:inline;">Packing List Sent</h3> <input name="packing_list_sent" type="checkbox" ' . $checked .'></fieldset>';		
+	echo '<br><h3 class="checkbox_header">Camper has health form:</h3> <input class="srbc_checkbox" name="health_form" type="checkbox" ' . $checked .'>';
+	
 			
 	//Financial Inputs
 	echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';		
@@ -239,7 +209,66 @@ function campSection($registration,$camper,$inactive)
 	echo '<span class="financial_info">Paid Card: $<input class="financial" type="text" value="' . $payedCard . '" readonly></span>';
 	echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due"></span></h3></span>';
 
-
+	//Autopayment section
+	echo "<br><h3>Make Autopayment</h3>";
+	echo 'Payment type: <select name="auto_payment_type" class="inputs auto_payment_type">
+	<option value="none" id="default" selected></option>
+	<option value="card">Credit Card</option>
+	<option value="check">Check</option>
+	<option value="cash">Cash</option>
+	</select>';
+	echo '<b>Auto split payment (Beta):</b> $<input type="text" name="auto_payment_amt" ><br>';
+	echo 'Note (Check # or Last 4 of CC): <input type="text" name="auto_note"></span>';
+	
+	//Add up all the fees
+	//Print out the different fees that have been paid - but we are doing this below
+	$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$registration->registration_id));
+	//Add duplicate fees to this array
+	$f = array();
+	foreach($fees as $fee){
+		if (array_key_exists($fee->fee_type,$f))
+			$f[$fee->fee_type] += $fee->payment_amt;
+		else
+			$f[$fee->fee_type] = $fee->payment_amt;
+	}
+	$finalText = NULL;
+	$keys = array_keys($f);
+	$snackshopTotal = NULL;
+	for($i=0;$i<count($keys);$i++){
+		if ($keys[$i] == "Store")
+			$snackshopTotal += $f[$keys[$i]];
+		$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
+	}
+	echo "<br><h3>Fees paid:</h3>";
+	echo $finalText;
+	
+	
+	//Snackshop
+	echo '<br><h3>Snackshop: $' . $snackshopTotal . '</h3>';
+	echo 'Add to Snackshop: <input type="text" name="snackshop">  <select name="snackshop_payment_type" class="inputs payment_type">
+	<option value="none" id="default" selected></option>
+	<option value="card">Credit Card</option>
+	<option value="check">Check</option>
+	<option value="cash">Cash</option>
+	</select>
+	</fieldset>';
+	
+	//Begin office use fieldset
+	echo '<fieldset><legend>Office Use</legend>';
+	
+	//Office use checkboxes
+	$checked = "";
+	if ($registration->waitlist == 1)
+		$checked = "checked";
+	echo '<h3 class="checkbox_header">On Waitlist</h3> <input name="waitlist" type="checkbox" ' . $checked .'>';
+	$checked = "";
+	if ($registration->horse_waitlist == 1)
+		$checked = "checked";
+	echo '<h3 class="checkbox_header">Horse Waitlist</h3> <input name="horse_waitlist" type="checkbox" ' . $checked .'>';
+	$checked = "";
+	if ($registration->packing_list_sent == 1)
+		$checked = "checked";
+	echo '<br><h3 style="display:inline;">Packing List Sent</h3> <input name="packing_list_sent" type="checkbox" ' . $checked .'>';		
 	
 	//Payment Section
 	echo '<span><h2>Make a payment:</h3>Payment type: <select name="payment_type" class="inputs payment_type">
@@ -261,46 +290,37 @@ function campSection($registration,$camper,$inactive)
 	<option value="Store">Store</option>
 	</select>';
 	
-	//Autopayment section
-	echo "<br><h3>Make Autopayment</h3>";
-	echo 'Payment type: <select name="auto_payment_type" class="inputs auto_payment_type">
-	<option value="none" id="default" selected></option>
-	<option value="card">Credit Card</option>
-	<option value="check">Check</option>
-	<option value="cash">Cash</option>
-	</select>';
-	echo '<b>Auto split payment (Beta):</b> $<input type="text" name="auto_payment_amt" ><br>';
-	echo 'Note (Check # or Last 4 of CC): <input type="text" name="auto_note"></span>';
 	
+	//Lodging and counselor
+	echo '<br><br><br>Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
+	echo 'Lodged in: <input name="cabin" list="lodging" type="text" value="' . $registration->cabin . '"><br>';
+	echo '<datalist id="lodging">
+			<option value="Girls Tent">
+			<option value="Guys Tent">
+			<option value="Spruce/Aspen">
+			<option value="Birch/Willow">
+			<option value="Tustumena">
+			<option value="Redoubt">
+			<option value="Wagon 1">
+			<option value="Wagon 2">
+			<option value="Wagon 3">
+			<option value="Wagon 4">
+			<option value="Susitna">
+			<option value="Spurr">
+			<option value="Illiamna">
+			<option value="Augustine">
+			<option value="Skilak">
+			<option value="Beluga">
+			</datalist>';
+
+
 	
-	//Print out the different fees that have been paid
-	$fees = $wpdb->get_results( $wpdb->prepare("SELECT fee_type,payment_amt FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$registration->registration_id));
-	//Add duplicate fees to this array
-	$f = array();
-	foreach($fees as $fee){
-		if (array_key_exists($fee->fee_type,$f))
-			$f[$fee->fee_type] += $fee->payment_amt;
-		else
-			$f[$fee->fee_type] = $fee->payment_amt;
-	}
-	$finalText = NULL;
-	$keys = array_keys($f);
-	$snackshopTotal = NULL;
-	echo "<br><h3>Fees paid:</h3>";
-	for($i=0;$i<count($keys);$i++){
-		if ($keys[$i] == "Store")
-			$snackshopTotal += $f[$keys[$i]];
-		$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
-	}
-	echo $finalText;
-	//Snackshop
-	echo '<hr><h3>Snackshop: $' . $snackshopTotal . '</h3>';
-	echo 'Add to Snackshop: <input type="text" name="snackshop">  <select name="snackshop_payment_type" class="inputs payment_type">
-	<option value="none" id="default" selected></option>
-	<option value="card">Credit Card</option>
-	<option value="check">Check</option>
-	<option value="cash">Cash</option>
-	</select>';
+
+	
+
+	
+	//End fieldset
+	echo '</fieldset>';	
 	
 	//Buttons
 	echo '<br><br><button class="big_button" onclick="saveInfo();" >Save</button>';
