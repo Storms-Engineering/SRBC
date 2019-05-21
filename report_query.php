@@ -250,7 +250,6 @@ else {
 if(isset($_GET["camper_report"]))
 {
 	echo '<th>Waitlist</th>';
-	echo '<th>Horses</th>';
 }
 
 if (isset($_GET['area']) && $_GET["area"] == "") {
@@ -272,6 +271,7 @@ if (isset($_GET['buslist'])){
 }
 if (isset($_GET["horsemanship"])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 ";
+	echo '<th>Horses</th>';
 }
 if (isset($_GET["camp_numbers"])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 ";
@@ -344,13 +344,13 @@ foreach ($information as $info){
 		else if(isset($_GET["camper_report"]))
 			echo "<td></td>";
 
-		if ($info->horse_waitlist == 1 && isset($_GET["camper_report"])) 
+		if ($info->horse_waitlist == 1 && isset($_GET["horsemanship"])) 
 		{
 			echo '<td class="stickout">(waitlisted)</td>';
 		}
-		else if($info->horse_opt == 1 && isset($_GET["camper_report"]))
+		else if($info->horse_opt == 1 && isset($_GET["horsemanship"]))
 			echo "<td>Horses</td>";
-		else if(isset($_GET["camper_report"]))
+		else if(isset($_GET["horsemanship"]))
 			echo "<td></td>";
 
 	}
