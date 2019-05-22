@@ -69,6 +69,7 @@ function srbc_install() {
 		camper_id INT NOT NULL,
 		date TINYTEXT NOT NULL,
 		counselor TINYTEXT,
+		assistant_counselor TINYTEXT,
 		cabin TINYTEXT,
 		horse_opt TINYINT NOT NULL,
 		busride TINYTEXT NOT NULL,

@@ -5,6 +5,8 @@ function updateCamperLodging(lodge,counselorPos){
 		alert("Please enter a counselor for this cabin");
 		return;
 	}
+	assistant_counselor = document.getElementsByName("assistant_counselor")[counselorPos].value;
+	
 	popup.style.display = "block";
 	//Callback for getting the selected cameper
 	document.getElementById("popup_button").onclick = function(){
@@ -22,12 +24,12 @@ function updateCamperLodging(lodge,counselorPos){
 					}
 				}
 				//We are passing counselorPos to get which table
-				changeLodgingTo(lodge,camper_id,counselor,counselorPos,name);
+				changeLodgingTo(lodge,camper_id,counselor,assistant_counselor,counselorPos,name);
 				popup.style.display = "none";
 	};
 }
 
-function changeLodgingTo(lodge,camper_id,counselor,count,name)
+function changeLodgingTo(lodge,camper_id,counselor,assistant_counselor,count,name)
 {
 
 	var xhttp;
@@ -48,12 +50,15 @@ function changeLodgingTo(lodge,camper_id,counselor,count,name)
 		table = document.getElementsByName("cabins")[count];
 		row = table.insertRow(table.rows.length);
 		cell = row.insertCell(0);
+		cell.colSpan = 2;
 		cell.innerHTML = '<span style="color:blue;font-size:medium;">' + name + '</span>';
 		//Update the count using this magic number.
 		table.rows[2].cells[0].innerHTML = '<span style="color:red">Total: ' + (table.rows.length  - 4) + '</span>';
+		
 		}
 	};
-	xhttp.open("GET", "/wp-content/plugins/SRBC/update_lodging.php?lodge="+lodge + "&registration_id=" + camper_id +"&counselor=" + counselor, true);
+	xhttp.open("GET", "/wp-content/plugins/SRBC/update_lodging.php?lodge="+lodge + "&registration_id=" + camper_id +"&counselor=" + counselor 
+					+ "&assistant_counselor="+ assistant_counselor, true);
 	xhttp.send();
 }
 
