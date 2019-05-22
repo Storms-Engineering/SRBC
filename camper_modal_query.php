@@ -288,6 +288,7 @@ function campSection($registration,$camper,$inactive)
 	<option value="WT Horsemanship">WT Horsemanship</option>
 	<option value="Bus">Bus</option>
 	<option value="Store">Store</option>
+	<option value="Refund">Refund</option>
 	</select>';
 	
 	

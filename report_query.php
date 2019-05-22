@@ -123,7 +123,7 @@ else if (isset($_GET["registration_day"]))
 	$horse_fee = $horse_opt_cost = $bus_fee = $camp_fee  = $store = $next_id = $next_reg_id = $total = 0;
 	$pointer = 1;
 	$totals = ["card" => 0,"check" => 0, "cash" => 0, "Bus" => 0, "Store" => 0, "LS Horsemanship" => 0, "WT Horsemanship" => 0,
-	"Lakeside" => 0, "Wagon Train" => 0, "Wilderness" => 0, "None" => 0];
+	"Lakeside" => 0, "Wagon Train" => 0, "Wilderness" => 0, "None" => 0, "Refund" => 0];
 	//ID is for multiple campers that were payed for at once
 	foreach ($campers as $camper)
 	{
