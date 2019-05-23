@@ -57,11 +57,14 @@ foreach($lodgesCanHold as $lodgeCanHold)
 	//Show total in this lodge
 	echo '<tr><td style="color:red">Total: ' . count($campers) . "</td><td>Max:" . $lodgeCanHold ."</td></tr>";					
 	//Add camper button
-	echo '<tr><td colspan="2"><button style="display:block;margin:auto;" onclick="updateCamperLodging(\''. $lodgeNames[$count] . '\',' . $count . ')">Add Camper</button></td></tr>';	
+	echo '<tr><td colspan="2"><button class="big_button" style="display:block;margin:auto;" onclick="updateCamperLodging(\''. $lodgeNames[$count] . '\',' . $count . ')">Add Camper</button></td></tr>';	
 	
 	foreach($campers as $camper)
 	{
-		echo '<tr><td style="color:blue;font-size:medium;" colspan="2">' . $camper->camper_first_name . " " . $camper->camper_last_name . "</td></tr>";
+		//TODO I am cheating deleting campers out of a cabin
+		//BODY instead I am just deleting in javascript and assuming they will assign this camper somewhere else.  Make sure this works well 
+		echo '<tr><td style="color:blue;font-size:medium;">' . $camper->camper_first_name . " " . $camper->camper_last_name . '</td>
+			<td><button class="big_button" style="background:red;" onclick="removeCamper(this.parentNode.parentNode.rowIndex,this.parentNode.parentNode.parentNode.parentNode);">Delete</button></td></tr>';
 	}
 	
 	echo "</table>";

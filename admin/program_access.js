@@ -1,3 +1,9 @@
+function removeCamper(index,object)
+{
+	if(confirm("Are you sure you want to delete this camper from this lodge?"))
+		object.deleteRow(index);
+}
+
 function updateCamperLodging(lodge,counselorPos){
 	counselor = document.getElementsByName("counselor")[counselorPos].value;
 	if(counselor === "")

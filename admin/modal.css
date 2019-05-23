@@ -110,7 +110,8 @@
 		text-align:center;
 		font-size:medium;
 	}
-		
+	/*TODO: Consolidate theme into 1 css file
+	BODY:Possibly transfer this into somekind of main style stylesheet that I always call for styling on every page.*/
 	/*Save button*/
 	.big_button {
     background-color: #6699ff;

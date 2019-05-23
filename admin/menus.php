@@ -26,6 +26,22 @@ function srbc_program_access()
 	{
 		padding:5px;
 	}
+	.big_button {
+    background-color: #6699ff;
+    color: white;
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+	margin:2px;
+	}
+	
+	.big_button:hover
+	{
+		background-color: #8caef3;
+	}
 	</style>
     <div class="wrap">
         <h1>Program Access</h1>
