@@ -50,6 +50,7 @@ else if(isset($obj["registration_id"])){
 	//Also change over all the payments made for that camp
 }
 else {
+	//TODO: Use an array or something so I don't have to manually enter a new field everytime I add one
 	//Update Camper
 	$wpdb->update( 
 		'srbc_campers', 
@@ -100,6 +101,7 @@ else {
 		$wpdb->update( 
 			$GLOBALS['srbc_registration'], 
 			array( 
+				'assistant_counselor' => $obj[$key]["assistant_counselor"],	
 				'counselor' => $obj[$key]["counselor"],	
 				'cabin' => $obj[$key]["cabin"],	
 				'horse_opt' => $obj[$key]["horse_opt"],	
@@ -116,6 +118,7 @@ else {
 			), 
 			array( 'registration_id' => $key ), 
 			array( 
+				'%s',	
 				'%s',	
 				'%s',
 				'%d',	
