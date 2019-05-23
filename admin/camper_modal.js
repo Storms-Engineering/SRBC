@@ -221,7 +221,7 @@ function calculate_totals()
 			if(inputs[j].name != "scholarship_type" && inputs[j].name != "discount_type" && inputs[j].name != "counselor" && 
 				inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].name != "horse_waitlist" && inputs[j].name != "packing_list_sent" &&
 				inputs[j].name != "auto_note" && inputs[j].name != "health_form" && inputs[j].name != "waitlist" && inputs[j].name !== "snackshop" &&
-				inputs[j].name != "note" && inputs[j].value != "")
+				inputs[j].name != "note" && inputs[j].name != "assistant_counselor" && inputs[j].value != "")
 			{				
 				
 				if (inputs[j].name == "busride_cost")
