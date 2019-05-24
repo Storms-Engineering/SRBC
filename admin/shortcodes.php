@@ -664,7 +664,7 @@ function autoSplit($cc_amount,$campid,$registration_id,$busride,$horseOpt)
 		$busfee = 35;
 	
 	if ($horseOpt == 1)
-		$horseOpt = $camp->horse_opt;
+		$horseOpt = $camp->horse_opt_cost;
 	
 	$comments = "";
 	//Create seperate payments based on different fees until autoPaymentAmt is used up
