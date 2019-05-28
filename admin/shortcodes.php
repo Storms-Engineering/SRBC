@@ -549,7 +549,7 @@ function srbc_registration_complete($atts)
 				'registration_id' =>0,
 				'camp_id' => $_POST["campid"], 
 				'camper_id' => $camper_id,
-				'date' => $currentDate->format("m/d/Y"),
+				'date' => $currentDate->format("m/d/Y h:i A"),
 				'horse_opt' => $horse_opt,
 				'busride' => $busride,
 				'waitlist' => $waitlist,

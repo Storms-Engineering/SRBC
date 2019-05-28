@@ -153,7 +153,7 @@ function campSection($registration,$camper,$inactive)
 					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='cash' AND NOT fee_type='store'",$registration->registration_id));
 	
 	echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campNote . 
-	'<span style="float:right;">Registered:'. $registration->date . '</span></button><div class="content">';
+	'<span style="float:right;">Registered: '. $registration->date . '</span></button><div class="content">';
 	
 	
 			
