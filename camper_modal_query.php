@@ -58,8 +58,8 @@
 				{
 					$registration_ids[] = $registration->registration_id;
 					campSection($registration,$camper,false);
-					
 				}
+				
 				$inactiveRegistrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration_inactive'] . " WHERE camper_id=%s",$camper->camper_id));
 				foreach ((array)$inactiveRegistrations as $registration)
 				{
@@ -101,6 +101,7 @@ function campSection($registration,$camper,$inactive)
 	echo '<span id="registration_id" style="'.$hidden.'">' . $registration->registration_id . '</span>';
 	//Calculate the busfee
 	$busride = $registration->busride;
+	//TODO Check is busride_cost used?
 	$busride_cost = 0;
 	
 	$busSelector = array(null,null,null,null);
@@ -161,11 +162,16 @@ function campSection($registration,$camper,$inactive)
 	$checked = "";
 	if ($registration->checked_in == 1)
 		$checked = "checked";
-	echo '<fieldset><legend>Registration Day</legend><h3 class="checkbox_header">Camper checked in:</h3> <input class="srbc_checkbox" name="checked_in" type="checkbox" ' . $checked .'>';
+	echo '<fieldset><legend>Registration Day</legend>';
+	
+	echo ' <textarea style="float:right;" rows="2" cols="75" name="registration_notes">' . $registration->registration_notes . '</textarea><h3 style="float:right;">Registration Notes: </h3> ';
+	echo '<h3 class="checkbox_header">Camper checked in:</h3> <input class="srbc_checkbox" name="checked_in" type="checkbox" ' . $checked .'>';
 	$checked = "";
 	if ($registration->health_form == 1)
 		$checked = "checked";
 	echo '<br><h3 class="checkbox_header">Camper has health form:</h3> <input class="srbc_checkbox" name="health_form" type="checkbox" ' . $checked .'>';
+	
+	
 	
 			
 	//Financial Inputs

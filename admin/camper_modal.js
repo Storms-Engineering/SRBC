@@ -144,6 +144,9 @@ function saveInfo()
 			if (selects[j].name !== "horse_opt")
 				info_child[selects[j].name] = selects[j].value;
 		}
+		
+		//Grab text from textfield
+		info_child["registration_notes"] = document.getElementsByName("registration_notes")[i].value;
 
 		//Make sure they entered a fee type but exclude payments from camps that they aren't entering information for
 		if (info_child["fee_type"] == "none" && info_child["payment_type"] != "none")
