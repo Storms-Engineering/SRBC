@@ -224,11 +224,19 @@ function srbc_registration( $atts )
 			<input type="radio" name="gender" value="female" required> Female<br>
 			Grade: 
 			<select class="inputs" name="grade">
-				<option value="Kindergarten to 1st">Kindergarten to 1st</option>
-				<option value="2nd to 3rd">Going into 2nd or 3rd Grade</option>
-				<option value="4th to 6th">Going into 4th to 6th Grade</option>
-				<option value="4th to 6th">Going into 7th to 8th Grade</option>
-				<option value="4th to 6th">Going into 9th to 12th Grade</option>
+				<option value="K">Kindergarten</option>
+				<option value="1">1st</option>
+				<option value="2">2nd</option>
+				<option value="3">3rd</option>
+				<option value="4">4th</option>
+				<option value="5">5th</option>
+				<option value="6">6th</option>
+				<option value="7">7th</option>
+				<option value="8">8th</option>
+				<option value="9">9th</option>
+				<option value="10">10th</option>
+				<option value="11">11th</option>
+				<option value="12">12th</option>
 				<option value="Adult">Adult</option>
 			</select>	
 			<br>
@@ -416,7 +424,7 @@ function srbc_registration_complete($atts)
 		'%s',
 		'%d',
 		'%s',
-		'%d',
+		'%s',
 		'%s',
 		'%s',
 		'%s',
