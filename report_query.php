@@ -61,9 +61,6 @@ else if (isset($_GET["camp_numbers"]))
 }
 else if(isset($_GET["signout_sheets"]))
 {
-	//srbc_registration.counselor,srbc_registration.cabin,srbc_campers.camper_first_name,
-	//							srbc_campers.camper_last_name,srbc_campers.parent_first_name,srbc_campers.parent_last_name	
-	//TODO use wpdb prepare
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 									FROM ((" . $GLOBALS['srbc_registration'] . "
 								 INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
@@ -83,7 +80,7 @@ else if(isset($_GET["signout_sheets"]))
 			//Don't do this for the first table, but do it for every new table
 			if($oldCabin != NULL)
 			{
-				echo "</table>";	
+				echo "</table><br><br><br><br><br><br>";	
 			}
 			if($camper->cabin === "" || $camper->cabin === NULL)
 				echo "<h3>No Cabin Assigned</h3>";
@@ -96,6 +93,49 @@ else if(isset($_GET["signout_sheets"]))
 		echo "<td>". $camper->parent_first_name . " " . $camper->parent_last_name . "</td>";
 		echo "<td>". $camper->phone . "</td>";
 		echo "<td></td></tr>";
+		$oldCabin = $camper->cabin;
+	}
+	//Close out the table
+	echo "</table>";
+	exit;
+}
+else if(isset($_GET["program_camper_sheets"]))
+{
+	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+									FROM ((" . $GLOBALS['srbc_registration'] . "
+								 INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
+								 ".camp_id)
+								 INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+								 WHERE " . $GLOBALS["srbc_camps"] . ".camp_id=%d
+								 ORDER BY srbc_registration.cabin DESC",$_GET['camp']));
+	//This variable keeps track of if we have changed cabin group
+	//Initialized to 0 so we don't compare to null and get true
+	$oldCabin = 0;
+	//echo '<table id="report_table">';
+	foreach ($campers as $camper)
+	{
+		//Start a new table
+		if ($camper->cabin != $oldCabin || $oldCabin === 0)
+		{
+			//Don't do this for the first table, but do it for every new table
+			if($oldCabin != NULL)
+			{
+				echo "</table><br><br><br>";	
+			}
+			if($camper->cabin === "" || $camper->cabin === NULL)
+				echo "<h3>No Cabin Assigned</h3>";
+			else
+			{
+				echo '<h3 style="display:inline">' . $camper->cabin . '</h3><br><b>Counselor: ' . $camper->counselor . '</b>';
+				echo '&nbsp|&nbsp<b>Assistant Counselor: ' . $camper->assistant_counselor . '</b>';
+			}
+			echo '<table id="report_table">';
+			echo '<tr><th>Camper</th><th>Phone #</th><th style="width:300px;">Notes:</th></tr>';			
+		}			
+		echo "<tr><td>". $camper->camper_first_name . " " . $camper->camper_last_name . "</td>";
+		echo "<td>". $camper->phone . "</td>";
+		echo "<td>". $camper->registration_notes . "</td>";
+		echo "</tr>";
 		$oldCabin = $camper->cabin;
 	}
 	//Close out the table

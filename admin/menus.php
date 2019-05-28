@@ -518,6 +518,8 @@ function srbc_camp_reports()
 		<button onclick="generateReport('camper_report')">Camper Report </button>		
 		<button onclick="generateReport('snackshop')">Snackshop</button>
 		<button onclick="generateReport('horsemanship')">LS Horsemanship </button>
+		<button onclick="generateReport('program_camper_sheets')">Program Camper Sheets </button>
+		
 	</div>
 	<br><br>
 	<div id="results"></div>
