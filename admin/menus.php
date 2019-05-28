@@ -210,6 +210,7 @@ function srbc_credit_cards(){
 function srbc_camper_management()
 {
     // check user capabilities
+	//TODO Make a security function that can be called here?
    if (!current_user_can('manage_options') || in_array( 'program', (array) wp_get_current_user()->roles)) {
          exit("Thus I refute thee.... P.H.");
     }
