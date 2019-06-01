@@ -104,6 +104,7 @@ if (!$specificQuery)
 		echo "<td>";
 		echo $camper->camper_first_name . "</td>";
 		echo "<td>" . $camper->camper_last_name . "</td>";
+		//The inner value is for the program access 
 		if(!isset($_GET['inner']))
 		{
 		echo "<td>" . $camper->age . "</td>"; 

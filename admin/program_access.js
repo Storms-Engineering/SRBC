@@ -1,5 +1,29 @@
+function addNoteToCamper(registration_id)
+{
+	note = prompt("Enter a note for this camper");
+	var xhttp;
+	if (window.XMLHttpRequest) {
+		// code for modern browsers
+		xhttp = new XMLHttpRequest();
+		} else {
+		// code for IE6, IE5
+		xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		//TODO show snackbar for program acesss
+		//alert(this.responseText);
+		showLodging();
+		}
+	};
+	xhttp.open("GET", "/wp-content/plugins/SRBC/update_lodging.php?registration_id=" + registration_id +"&registration_notes=" + note, true);
+	xhttp.send();
+	
+}
+
 function removeCamper(index,object)
 {
+	//There is no ajax request because I assume they will be added to a different lodge which will overwrite this
 	if(confirm("Are you sure you want to delete this camper from this lodge?"))
 		object.deleteRow(index);
 }
@@ -34,7 +58,8 @@ function updateCamperLodging(lodge,counselorPos){
 				popup.style.display = "none";
 	};
 }
-
+//TODO change camper_id to registration_id?
+//BODY We are actually passing the registration_id I believe
 function changeLodgingTo(lodge,camper_id,counselor,assistant_counselor,count,name)
 {
 
@@ -48,22 +73,12 @@ function changeLodgingTo(lodge,camper_id,counselor,assistant_counselor,count,nam
 	}
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-		//document.getElementById("results").innerHTML = this.responseText;
+		//alert(this.responseText);
 		//TODO show snackbar for program acesss
-		//showLodging();
-		//Add the cell to a certain table
-		//Insert the new camper
-		table = document.getElementsByName("cabins")[count];
-		row = table.insertRow(table.rows.length);
-		cell = row.insertCell(0);
-		cell.colSpan = 2;
-		cell.innerHTML = '<span style="color:blue;font-size:medium;">' + name + '</span>';
-		//Update the count using this magic number.
-		table.rows[2].cells[0].innerHTML = '<span style="color:red">Total: ' + (table.rows.length  - 4) + '</span>';
-		
+		showLodging();
 		}
 	};
-	xhttp.open("GET", "/wp-content/plugins/SRBC/update_lodging.php?lodge="+lodge + "&registration_id=" + camper_id +"&counselor=" + counselor 
+	xhttp.open("GET", "/wp-content/plugins/SRBC/update_lodging.php?cabin="+lodge + "&registration_id=" + camper_id +"&counselor=" + counselor 
 					+ "&assistant_counselor="+ assistant_counselor, true);
 	xhttp.send();
 }
