@@ -13,18 +13,32 @@ global $wpdb;
 if (isset($obj["reactivate_id"]))
 {
 	//Delete the requested registration
-	$wpdb->query($wpdb->prepare("INSERT INTO " . $GLOBALS['srbc_registration'] . " SELECT * FROM " . $GLOBALS['srbc_registration_inactive']. 
+	$query = $wpdb->query($wpdb->prepare("INSERT INTO " . $GLOBALS['srbc_registration'] . " SELECT * FROM " . $GLOBALS['srbc_registration_inactive']. 
 	" WHERE registration_id=%d;",$obj["reactivate_id"]));
+	if($query === 0 || $query === false)
+	{
+		exit("Something went wrong with the moving query");
+	}
+	else
+	{
 	$wpdb->query($wpdb->prepare("DELETE FROM " . $GLOBALS['srbc_registration_inactive']. " WHERE registration_id=%d;",$obj["reactivate_id"]));
 	echo "Reactivated Registration and Saved Sucessfully";
+	}
 }
 else if (isset($obj["deactivate_id"]))
 {
 	//Delete the requested registration
-	$wpdb->query($wpdb->prepare("INSERT INTO " . $GLOBALS['srbc_registration_inactive']. " SELECT * FROM " .
+	$query = $wpdb->query($wpdb->prepare("INSERT INTO " . $GLOBALS['srbc_registration_inactive']. " SELECT * FROM " .
 	$GLOBALS['srbc_registration']. "  WHERE registration_id=%d;",$obj["deactivate_id"]));
+	if($query === false || $query === 0 )
+	{
+		exit("Something went wrong with the moving query");
+	}
+	else
+	{
 	$wpdb->query($wpdb->prepare("DELETE FROM " . $GLOBALS['srbc_registration']. " WHERE registration_id=%d;",$obj["deactivate_id"]));
 	echo "Deactivated Registration and Saved Sucessfully";
+	}
 }
 else if(isset($obj["registration_id"])){
 	//Change registration to another camp
