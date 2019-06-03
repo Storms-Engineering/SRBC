@@ -783,7 +783,7 @@ function srbc_camps($atts){
 										
 		$total_registered = $boycount + $girlcount;
 		$finalText .=  "</td><td>";
-		if (($camp->overall_size - $total_registered) == 0){
+		if (($camp->overall_size - $total_registered) <= 0){
 			$finalText .= "Camp is full,<br> register to be put on waiting list";
 		}	
 		else if($boycount >= $camp->boy_registration_size && $camp->boy_registration_size != 0){
