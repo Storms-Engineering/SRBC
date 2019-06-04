@@ -184,12 +184,15 @@ function campSection($registration,$camper,$inactive)
 		$discountSelector[1] = "selected";
 	else if($registration->discount_type == "Staff")
 		$discountSelector[2] = "selected";
+	else if($registration->discount_type == "Giftcard")
+		$discountSelector[3] = "selected";
 	else
 		$discountSelector[0] = "selected";
 	echo '<span class="financial_info">Discount Type:<select name="discount_type" class="inputs discount_type">
 	<option value="" ' . $discountSelector[0] . '>None</option>
 	<option value="Multiple Child"' . $discountSelector[1] . '>Multiple Child</option>
 	<option value="Staff"' . $discountSelector[2] . '>Staff</option>
+	<option value="Giftcard"' . $discountSelector[3] . '>Giftcard</option>
 	</select></span>';
 	echo '<span class="financial_info">Scholarship Amount: $<input class="financial" name="scholarship_amt" type="text" value="' . $registration->scholarship_amt . '"></span>';
 	$scholSelector = array(null,null,null,null,null);
