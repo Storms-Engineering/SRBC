@@ -311,7 +311,7 @@ if (isset($_GET['buslist'])){
 }
 if (isset($_GET["horsemanship"])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 ";
-	echo '<th>Horses</th>';
+	echo '<th>Horse WaitingList</th>';
 }
 if (isset($_GET["camp_numbers"])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 ";
@@ -368,6 +368,7 @@ if ($not_payed == "true"){
 echo "</tr>";
 $information = $wpdb->get_results(
 	$wpdb->prepare( $query, $values));
+//TODO redo this code.  It has gotten really confusing
 //Show the correct row based on what the user was searching for
 foreach ($information as $info){
 	//If emails we don't need any of the tables
@@ -388,14 +389,17 @@ foreach ($information as $info){
 		else if(isset($_GET["camper_report"]))
 			echo "<td></td>";
 
-		if ($info->horse_waitlist == 1 && isset($_GET["horsemanship"])) 
+		if($info->horse_opt == 1 && isset($_GET["horsemanship"]))
 		{
-			echo '<td class="stickout">(waitlisted)</td>';
+			if ($info->horse_waitlist == 1 && isset($_GET["horsemanship"])) 
+			{
+				echo '<td>(waitlisted)</td>';
+			}
+			else
+				echo '<td></td>';
 		}
-		else if($info->horse_opt == 1 && isset($_GET["horsemanship"]))
-			echo "<td>Horses</td>";
-		else if(isset($_GET["horsemanship"]))
-			echo "<td></td>";
+
+
 
 	}
 	//echo "</tr>";
