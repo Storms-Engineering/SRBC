@@ -222,7 +222,7 @@ function srbc_registration( $atts )
 			Birthday: <input  type="date" name="birthday" required><br>Gender:
 			<input type="radio" name="gender" value="male" required> Male
 			<input type="radio" name="gender" value="female" required> Female<br>
-			Grade: 
+			Going into Grade: 
 			<select class="inputs" name="grade">
 				<option value="K">Kindergarten</option>
 				<option value="1">1st</option>
