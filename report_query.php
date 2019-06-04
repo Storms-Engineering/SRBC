@@ -354,6 +354,10 @@ if (isset($_GET['not_checked_in'])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".checked_in=1 ";
 }
 
+if (isset($_GET['packing_list_sent'])){
+	echo '<th>Packing List Sent</th>';
+}
+
 //TODO amount_due deprecated
 //@body needs to be redone with proper SQl query
 /*
@@ -456,6 +460,11 @@ foreach ($information as $info){
 	else if (isset($_GET['discount'])){
 		echo "<td>" . $info->discount_type . "</td>";
 		echo "<td>$" . $info->discount . "</td>";
+	}
+	else if (isset($_GET['packing_list_sent']))
+	{
+		echo "<td>";
+		echo ($info->packing_list_sent == 1 ? "Sent" : "Not Sent"),"</td>";
 	}
 	echo "</tr>";
 }
