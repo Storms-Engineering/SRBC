@@ -310,12 +310,13 @@ if (isset($_GET['buslist'])){
 	echo '<th>Total Due</th>';
 }
 if (isset($_GET["horsemanship"])){
-	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 ";
+	$query .= "AND (NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 OR NOT " . $GLOBALS['srbc_registration'] . ".horse_waitlist=0)";
 	echo '<th>Horse WaitingList</th>';
 }
-if (isset($_GET["camp_numbers"])){
+//TODO this seems entirely unecessary and seems to be old code
+/*if (isset($_GET["camp_numbers"])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 ";
-}
+}*/
 if (isset($_GET['scholarship'])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".scholarship_amt=0 ";
 	echo '<th>Scholarship Type</th><th>Scholarship Amount</th>';
@@ -329,7 +330,7 @@ if (isset($_GET["camp_report"]))
 {
 	if ($_GET["camp"] == "none")
 	{
-		error_msg("Please select a camp you would like a report for.  THaaanks");
+		error_msg("Please select a camp you would like a report for.  Thanks - P.H.");
 		exit(0);
 	}
 	$query .= "AND " . $GLOBALS['srbc_camps'] . ".camp_id=". $_GET["camp"]. " AND " . $GLOBALS['srbc_registration'] . ".waitlist=0 ";
@@ -389,12 +390,10 @@ foreach ($information as $info){
 		else if(isset($_GET["camper_report"]))
 			echo "<td></td>";
 
-		if($info->horse_opt == 1 && isset($_GET["horsemanship"]))
+		if(($info->horse_opt == 1 || $info->horse_waitlist == 1) && isset($_GET["horsemanship"]))
 		{
 			if ($info->horse_waitlist == 1 && isset($_GET["horsemanship"])) 
-			{
 				echo '<td>(waitlisted)</td>';
-			}
 			else
 				echo '<td></td>';
 		}
