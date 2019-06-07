@@ -767,6 +767,14 @@ function srbc_camps($atts){
 	//Create the table of camps
 	foreach ($camps as $camp){
 		$finalText .=  '<tr><td>' . $camp->name . '		<a href="../register-for-a-camp/?campid='.$camp->camp_id .'">(Register)</a><a href="#'.$camp->camp_id.'"> (More Info)</a>';
+		//See if horsemanship is full
+		$horsemanshipCount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(registration_id)
+										FROM " . $GLOBALS['srbc_registration'] . "
+										WHERE camp_id=%s AND horse_opt=1",$camp->camp_id));
+
+		if ($horsemanshipCount >= $camp->horse_list_size && $camp->horse_list_size != 0) 
+			$finalText .= '<span style="color:red;"> (Horsemanship Full)</span>';
+		
 		$finalText .=  "</td><td>$" . $camp->cost;
 		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date));
 		$finalText .=  "</td><td>" . $camp->grade_range;
@@ -780,6 +788,8 @@ function srbc_camps($atts){
 										FROM " . $GLOBALS['srbc_registration'] . "
 										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
 										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
+										
+		
 										
 		$total_registered = $boycount + $girlcount;
 		$finalText .=  "</td><td>";
