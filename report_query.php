@@ -318,6 +318,7 @@ else {
 //Puts them into both reports
 if (isset($_GET['buslist'])){
 	$query .= "AND (" . $GLOBALS['srbc_registration'] . ".busride='".$_GET['buslist_type']."' OR " . $GLOBALS['srbc_registration'] . ".busride='both') ";
+	echo '<th>Camp</th>';
 	echo '<th>Primary Phone</th>';
 	echo '<th>Secondary Phone</th>';
 	echo '<th>Parent/Guardian Signature</th>';
@@ -418,6 +419,9 @@ foreach ($information as $info){
 	//We don't need a isset for this because it is always being sent?
 	if (isset($_GET['buslist'])){
 		if($info->busride == $_GET['buslist_type'] || $info->busride == "both"){
+			//TODO Change name to camp_name
+			//BODY this will cause confusion in the future when making these types of queries.
+			echo "<td>" . $info->area . " " . $info->name . "</td>";
 			echo "<td>" . $info->phone. "</td>";
 			echo "<td>" . $info->phone2. "</td>";
 			echo "<td></td>";
