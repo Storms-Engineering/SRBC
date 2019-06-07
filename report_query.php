@@ -5,7 +5,21 @@ require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 if (!is_user_logged_in() && !isset($_GET["camp_numbers"])) exit("Thus I refute thee.... P.H.");
 global $wpdb;
 //Check these values first because it doesn't follow a normal report query format
-if(isset($_GET["mailing_list"]))
+if(isset($_GET["inactive_registrations"]))
+{
+	$campers = $wpdb->get_results("SELECT *	FROM " . $GLOBALS['srbc_registration_inactive'] . 
+									" INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration_inactive'] .
+									".camper_id=srbc_campers.camper_id");
+	echo "<table><tr><th>First Name</th><th>Last Name</th>";
+	//Start new row and put in name since that always happens - most of the time
+	foreach($campers as $camper)
+	{	
+	echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>' . $camper->camper_last_name ."</td><td> " . $camper->camper_first_name. "</td>";
+	}
+	echo "</table>";
+	exit();
+}
+else if(isset($_GET["mailing_list"]))
 {
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 		FROM ((" . $GLOBALS['srbc_registration'] . " 
@@ -401,7 +415,6 @@ foreach ($information as $info){
 
 
 	}
-	//echo "</tr>";
 	//We don't need a isset for this because it is always being sent?
 	if (isset($_GET['buslist'])){
 		if($info->busride == $_GET['buslist_type'] || $info->busride == "both"){

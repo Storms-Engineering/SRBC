@@ -485,7 +485,8 @@ function srbc_camp_reports()
 		<button onclick="generateReport('emails')">Emails </button>
 		<button onclick="generateReport('camp_numbers')">Camp Numbers </button>
 		<button onclick="generateReport('not_checked_in')">Camper didn't check in </button>
-		<button onclick="generateReport('not_payed')">Balance Due</button><br>
+		<button onclick="generateReport('not_payed')">Balance Due</button>
+		<button onclick="generateReport('inactive_registrations')">Inactive Registrations</button><br>
 		<hr>
 		<h2 style="display:inline;">Date specific reports</h2> <div class="tooltip">?
 			<span class="tooltiptext">Please choose the same date twice if you are doing a report for all camps starting on that day.
