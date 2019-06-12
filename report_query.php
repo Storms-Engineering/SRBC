@@ -317,7 +317,8 @@ else {
 //New Buslist grabs all campers heading to anchorage or camp and also selects campers that are going both ways
 //Puts them into both reports
 if (isset($_GET['buslist'])){
-	$query .= "AND (" . $GLOBALS['srbc_registration'] . ".busride='".$_GET['buslist_type']."' OR " . $GLOBALS['srbc_registration'] . ".busride='both') ";
+	$query .= "AND (" . $GLOBALS['srbc_registration'] . ".busride='".$_GET['buslist_type']."' OR " . $GLOBALS['srbc_registration'] . ".busride='both') 
+				AND waitlist=0 ";
 	echo '<th>Camp</th>';
 	echo '<th>Primary Phone</th>';
 	echo '<th>Secondary Phone</th>';
