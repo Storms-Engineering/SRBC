@@ -91,7 +91,7 @@
 				}
 
 				echo '<h3>Payment History</h3><br><textarea rows="4" cols="55">' . $paymentHistory . '</textarea>';
-				echo '</div><div class="modal-footer"><button onclick="saveInfo();closeModal();" class="big_button">Save Info & Close</button></div>';
+				echo '</div><div class="modal-footer"></div>';
 function campSection($registration,$camper,$inactive)
 {
 	global $wpdb;
@@ -227,7 +227,8 @@ function campSection($registration,$camper,$inactive)
 	<option value="cash">Cash</option>
 	</select>';
 	echo '<b>Auto split payment (Beta):</b> $<input type="text" name="auto_payment_amt" ><br>';
-	echo 'Note (Check # or Last 4 of CC): <input type="text" name="auto_note"></span>';
+	echo 'Note (Check # or Last 4 of CC): <input type="text" name="auto_note"></span><br>
+	<button class="big_button" style="padding:10px;" onclick="saveInfo();" >Save</button>';
 	
 	//Add up all the fees
 	//Print out the different fees that have been paid - but we are doing this below
@@ -334,12 +335,12 @@ function campSection($registration,$camper,$inactive)
 	echo '<br><br><button class="big_button" style="background:#009933" onclick="resendEmail('.$registration->registration_id.');" >Resend Email</button>';
 	if ($inactive)
 	{
-		echo '<button class="big_button" style="background:green" onclick="reactivateRegistration(' . $registration->registration_id . ',' 
+		echo '<button class="big_button" style="background:green;float:right;" onclick="reactivateRegistration(' . $registration->registration_id . ',' 
 		. $registration->camper_id . ')">Reactivate Registration</button>';
 	}
 	else
 	{
-		echo '<button class="big_button" style="background:red" onclick="deactivateRegistration(' . $registration->registration_id . ',' 
+		echo '<button class="big_button" style="background:red;float:right;" onclick="deactivateRegistration(' . $registration->registration_id . ',' 
 		. $registration->camper_id . ')">Deactivate Registration</button>';
 	}
 	//Section End Div
