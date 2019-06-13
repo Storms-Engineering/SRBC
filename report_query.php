@@ -289,6 +289,7 @@ $values = array();
 //Setup table and then we will add headers based on the query
 //Only default for most queries.  Isn't for camp_numbers report_table
 if (isset($_GET["backup_registration"])){
+	$query .= $GLOBALS['srbc_registration'] . ".waitlist=0 ";
 	echo '<table id="report_table"><tr><th>Last Name</th><th>First Name</th>';
 	echo '<th>Parent Name</th><th>Camp</th>';
 	echo '<th>Phone #</th><th>Paid</th>';
@@ -305,12 +306,18 @@ if(isset($_GET["camper_report"]))
 {
 	echo '<th>Waitlist</th>';
 }
-
+//TODO see if we really need areas or not?
+//BODY possibly redo a lot of this code as well
 if (isset($_GET['area']) && $_GET["area"] == "") {
+	//Checks to see if we need to add an and
+	if (isset($_GET["backup_registration"]))
+		$query .= " AND ";
 	$query .= $GLOBALS['srbc_camps'] . ".area LIKE '%' ";
 }
 else {
 	$values = array($_GET['area']);
+	if (isset($_GET["backup_registration"]))
+		$query .= " AND ";
 	$query .= $GLOBALS['srbc_camps'] . ".area='%s' ";
 }
 
@@ -451,7 +458,7 @@ foreach ($information as $info){
 									)										
 									FROM " . $GLOBALS['srbc_registration'] . " 
 									INNER JOIN srbc_camps ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
-									WHERE " . $GLOBALS['srbc_registration'] . ".registration_id=%d",$info->registration_id));
+									WHERE " . $GLOBALS['srbc_registration'] . ".registration_id=%d ",$info->registration_id));
 		//Little hack so that is shows 0 if they are no payments
 		if ($totalPayed == NULL)
 			$totalPayed = 0;
