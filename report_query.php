@@ -274,7 +274,37 @@ else if(isset($_GET["snackshop"]))
 	echo "<br>Total fees: $" . $totalFees;
 	exit();
 }
+else if (isset($_GET["transactions"]))
+{
+	$newFormat = date("m/d/Y",strtotime( $_GET["start_date"]));
+	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+													FROM ((" . $GLOBALS['srbc_payments'] . " 
+													INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
+													INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+													WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s 
+													ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
+													
+	echo "<h3>Transactions</h3>";
+	echo '<table id="report_table">';
+	echo "<tr><th>Last name</th><th>First Name</th><th>Payment Type</th><th>Fee Type</th>
+			<th>Amount</th></tr>";
 
+	//ID is for multiple campers that were payed for at once
+	foreach ($campers as $camper)
+	{
+		
+
+			echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_first_name . "</td><td>" . $camper->camper_last_name . "</td>";
+			echo "<td>". $camper->payment_type . "</td>";
+			echo "<td>". $camper->fee_type . "</td>";
+			echo "<td>$". $camper->payment_amt . "</td>";
+			echo "</tr>";
+	}
+	//Close out the table
+	echo "</table>";
+	exit;
+	
+}
 //TODO: fix not payed code, probably haven't updated since payment database was added 
 //$not_payed = NULL;//$_GET['not_payed'];
 

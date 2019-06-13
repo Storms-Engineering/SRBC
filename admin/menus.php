@@ -81,8 +81,6 @@ function srbc_program_access()
 	<script src="../wp-content/plugins/SRBC/admin/popup.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/program_access.js"></script>
 	
-	
-	
 	<?php
 }
 
@@ -503,6 +501,7 @@ function srbc_camp_reports()
 		<button onclick="generateReport('signout_sheets')">Signout Sheets</button>
 		<button onclick="generateReport('registration_day')">Registration Day Report</button>
 		<button onclick="generateReport('mailing_list')">Mailing List</button>
+		<button onclick="generateReport('transactions')">Transactions</button>
 
 		<hr>
 		<h2 style="display:inline;">Camp Specific Reports</h2>
