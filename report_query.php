@@ -265,8 +265,8 @@ else if(isset($_GET["snackshop"]))
 	$totalFees = 0;
 	foreach ($campers as $camper)
 	{
-		echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_first_name 
-		. "</td><td>" . $camper->camper_last_name . "</td>";
+		echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name
+		. "</td><td>" . $camper->camper_first_name . "</td>";
 		echo "<td>$" . $camper->payment_amt . "</td></tr>";
 	}
 	echo "</table>";
