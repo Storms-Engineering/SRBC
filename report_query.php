@@ -267,7 +267,8 @@ else if(isset($_GET["snackshop"]))
 	{
 		echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name
 		. "</td><td>" . $camper->camper_first_name . "</td>";
-		echo "<td>$" . $camper->payment_amt . "</td></tr>";
+		//Extra cell for checkbox so office can check off when they are done with one
+		echo "<td>$" . $camper->payment_amt . '</td><td><input type="checkbox" onclick="event.stopPropagation();"></td></tr>';
 	}
 	echo "</table>";
 	echo "<br>Total fees: $" . $totalFees;
