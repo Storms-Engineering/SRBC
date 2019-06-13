@@ -503,7 +503,8 @@ function amountDue($registration_id)
 {
 	global $wpdb;
 	$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM " . $GLOBALS["srbc_payments"] . " WHERE registration_id=%s",$registration_id));
+									FROM " . $GLOBALS["srbc_payments"] . " WHERE registration_id=%s AND NOT " . $GLOBALS["srbc_payments"] .
+									".fee_type='Store' ",$registration_id));
 	$cost = $wpdb->get_var($wpdb->prepare("
 							SELECT SUM(" . $GLOBALS["srbc_camps"] . ".cost +
 							(CASE WHEN " . $GLOBALS["srbc_registration"] . ".horse_opt = 1 THEN " . $GLOBALS["srbc_camps"] .".horse_opt_cost
