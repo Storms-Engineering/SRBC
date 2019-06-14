@@ -159,6 +159,11 @@ function saveInfo()
 			alert("Please choose a payment type!");
 			return;
 		}
+		else if(info_child["snackshop_payment_type"] == "none" && info_child["snackshop"] != "")
+		{
+			alert("Please choose a payment type!");
+			return;
+		}
 		info[registration_ids[i].innerText.toString()] = info_child;
 	}
 	
