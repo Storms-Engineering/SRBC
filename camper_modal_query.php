@@ -227,8 +227,7 @@ function campSection($registration,$camper,$inactive)
 	<option value="cash">Cash</option>
 	</select>';
 	echo '<b>Auto split payment (Beta):</b> $<input type="text" name="auto_payment_amt" ><br>';
-	echo 'Note (Check # or Last 4 of CC): <input type="text" name="auto_note"></span><br>
-	<button class="big_button" style="padding:10px;" onclick="saveInfo();" >Save</button>';
+	echo 'Note (Check # or Last 4 of CC): <input type="text" name="auto_note"></span><br>';
 	
 	//Add up all the fees
 	//Print out the different fees that have been paid - but we are doing this below
@@ -249,7 +248,7 @@ function campSection($registration,$camper,$inactive)
 			$snackshopTotal += $f[$keys[$i]];
 		$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 	}
-	echo "<br><h3>Fees paid:</h3>";
+	echo "<h3>Fees paid:</h3>";
 	echo $finalText;
 	
 	
@@ -260,7 +259,8 @@ function campSection($registration,$camper,$inactive)
 	<option value="card">Credit Card</option>
 	<option value="check">Check</option>
 	<option value="cash">Cash</option>
-	</select>
+	</select><br>
+	<button class="big_button" style="padding:10px;" onclick="saveInfo();" >Save</button>
 	</fieldset>';
 	
 	//Begin office use fieldset
