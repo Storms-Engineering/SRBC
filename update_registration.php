@@ -160,7 +160,7 @@ else {
 		{
 			$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d ",$key));
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$key));
+									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND NOT fee_type='Store'",$key));
 			
 			//Make the scholarships and discounts add to total payed so we take it out of the base camp fee
 			$totalPayed += $o->discount + $o->scholarship_amt;
