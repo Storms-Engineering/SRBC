@@ -248,8 +248,7 @@ function campSection($registration,$camper,$inactive)
 			$snackshopTotal += $f[$keys[$i]];
 		$finalText .= $keys[$i] . ": $" . $f[$keys[$i]] . "<br>";
 	}
-	echo "<h3>Fees paid:</h3>";
-	echo $finalText;
+
 	
 	
 	//Snackshop
@@ -260,8 +259,10 @@ function campSection($registration,$camper,$inactive)
 	<option value="check">Check</option>
 	<option value="cash">Cash</option>
 	</select><br>
-	<button class="big_button" style="padding:10px;" onclick="saveInfo();" >Save</button>
-	</fieldset>';
+	<button class="big_button" style="padding:10px;" onclick="saveInfo();" >Save</button>';
+	echo "<h3>Fees paid:</h3>";
+	echo $finalText;
+	echo '</fieldset>';
 	
 	//Begin office use fieldset
 	echo '<fieldset><legend>Office Use</legend>';
