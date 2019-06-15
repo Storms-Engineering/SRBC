@@ -50,9 +50,7 @@ else if(isset($_GET["mailing_list"]))
 }
 else if (isset($_GET["camp_numbers"]))
 {
-	$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
-	$date = $date->format("Y-m-d");
-	$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS["srbc_camps"] . " WHERE start_date >= '$date'");
+	$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS["srbc_camps"]);
 	$totalRegistrations = 0;
 	foreach ($camps as $camp)
 	{
