@@ -92,18 +92,17 @@ else if(isset($_GET["signout_sheets"]))
 			//Don't do this for the first table, but do it for every new table
 			if($oldCabin != NULL)
 			{
-				echo "</table><br><br><br><br><br><br>";	
+				echo '</table>';	
 			}
 			if($camper->cabin === "" || $camper->cabin === NULL)
 				echo "<h3>No Cabin Assigned</h3>";
 			else
 				echo "<h3>$camper->cabin</h3>";
-			echo '<table id="report_table">';
-			echo '<tr><th>Camper</th><th>Parent/Guardian</th><th>Phone #</th><th style="width:200px;">Signature</th></tr>';			
+			echo '<table style="page-break-after: always;" id="report_table">';
+			echo '<tr><th>Camper</th><th>Parent/Guardian</th><th style="width:200px;">Signature</th></tr>';			
 		}			
 		echo "<tr><td>". $camper->camper_first_name . " " . $camper->camper_last_name . "</td>";
 		echo "<td>". $camper->parent_first_name . " " . $camper->parent_last_name . "</td>";
-		echo "<td>". $camper->phone . "</td>";
 		echo "<td></td></tr>";
 		$oldCabin = $camper->cabin;
 	}
