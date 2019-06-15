@@ -23,6 +23,8 @@ function generateReport(data)
 			if (inputs[i].id == "start_date" && inputs[i].value !== "")
 				hasStartDate = true;
 		}
+		else if(inputs[i].id == "time")
+			data += "&" + inputs[i].id + "=" + inputs[i].value;
 		else
 			data += "&" + inputs[i].id + "=" + inputs[i].checked;
 	}

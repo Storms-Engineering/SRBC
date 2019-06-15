@@ -158,14 +158,18 @@ else if(isset($_GET["program_camper_sheets"]))
 }
 else if (isset($_GET["registration_day"]))
 {
-	$newFormat = date("m/d/Y",strtotime( $_GET["start_date"]));
-	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+	$newFormat = date("m/d/Y G:i",strtotime( $_GET["start_date"] . " " . $_GET["time"]));
+	$time_end = date("m/d/Y G:i",strtotime($_GET["start_date"] . " " . $_GET["time"] . " +5 hours"));
+	//TODO might need to readd wpdb prepare here
+	//BODY for security purposes.
+	$campers = $wpdb->get_results("SELECT *
 													FROM ((" . $GLOBALS['srbc_payments'] . " 
 													INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
 													INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-													WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s 
-													ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
-													
+													WHERE str_to_date(" . $GLOBALS['srbc_payments'] . ".payment_date,'%m/%d/%Y %H:%i') BETWEEN str_to_date('" . $newFormat . "','%m/%d/%Y %H:%i')
+													AND str_to_date('" . $time_end . "','%m/%d/%Y %H:%i')
+													ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC");
+												
 	echo "<h3>Registration day fees collected:</h3>";
 	echo '<table id="report_table">';
 	echo "<tr><th>Last name</th><th>First Name</th><th>Camp fee</th><th>Program Area</th>
