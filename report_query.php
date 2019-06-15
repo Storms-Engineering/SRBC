@@ -407,7 +407,7 @@ if ( isset($_GET['start_date']) && $_GET["start_date"] != "" && isset($_GET["end
 	array_push($values,$_GET['end_date']);
 }
 if (isset($_GET['not_checked_in'])){
-	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".checked_in=1 ";
+	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".checked_in=1 AND waitlist=0";
 }
 
 if (isset($_GET['packing_list_sent'])){
