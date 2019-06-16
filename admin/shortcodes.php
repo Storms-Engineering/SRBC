@@ -622,7 +622,11 @@ function srbc_registration_complete($atts)
 	if ($waitlist == 1)
 	{
 		$message = "Hi ". $parent_first_name . ",<br><br>This is an email letting you know that you sucessfully put " . $camper_first_name . " on the waitlist for " . $_POST["camp_desc"] . "." . 
-		"<br>We will email you and let you know if a spot opens up for the camp.<br>Thanks!<br> Solid Rock Bible Camp";
+		"<br>We will email you and let you know if a spot opens up for the camp.<br>Thanks!<br><br> -Solid Rock Bible Camp<br><br>36251 Solid Rock Rd #1<br>
+	Soldotna, AK 99669<br>
+	phone: (907) 262-4741<br>
+	fax: (907) 262-9088<br>
+	srbc@alaska.net";
 		sendMail($email,"Waitlist Confirmation",$message);
 	}
 	else
