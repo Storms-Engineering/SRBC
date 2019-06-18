@@ -1,3 +1,12 @@
+function deletePayment(camper_id,payment_id)
+{
+	if(confirm("Are you sure you want to delete this payment?"))
+	{
+	obj = {"delete_payment_id" : payment_id};
+	postAjax(obj,camper_id);
+	}
+}
+
 //Resend the confirmation email
 function resendEmail(r_id){
 	var xhttp;

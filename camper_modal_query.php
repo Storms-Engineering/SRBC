@@ -86,11 +86,15 @@
 					$payments = $wpdb->get_results( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id IN($format)",$registration_ids));
 					
 					foreach ($payments as $payment) {
-						$paymentHistory .= $payment->payment_type . " $" . $payment->payment_amt . " " . $payment->note . " " . $payment->payment_date . " " . $payment->fee_type . "\r\n";
+						$paymentHistory .= "<tr><th>" . $payment->payment_type . "</th><th> $" . $payment->payment_amt . "</th><th> " .
+											$payment->note . "</th><th> " . $payment->payment_date . "</th><th> " . $payment->fee_type . "</th><th>" .
+											$payment->entered_by . '</th><th><button onclick="deletePayment(' . $camper->camper_id . "," . $payment->payment_id . ');">Delete</button></th></tr>';
 					}
 				}
 
-				echo '<h3>Payment History</h3><br><textarea rows="4" cols="55">' . $paymentHistory . '</textarea>';
+				echo '<h3>Payment History</h3>';
+				echo '<table><tr><th>Payment Type</th><th>Amount</th><th>Note</th><th>Date</th><th>Fee Type</th><th>Entered By</th><th>Delete</th><tr>'
+					. $paymentHistory . '</table>';
 				echo '</div><div class="modal-footer"></div>';
 function campSection($registration,$camper,$inactive)
 {

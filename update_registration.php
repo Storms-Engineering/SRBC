@@ -10,7 +10,12 @@ if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
 global $wpdb;
 
 
-if (isset($obj["reactivate_id"]))
+if (isset($obj["delete_payment_id"]))
+{
+	$wpdb->query($wpdb->prepare("DELETE FROM " . $GLOBALS['srbc_payments']. " WHERE payment_id=%d;",$obj["delete_payment_id"]));
+	echo "Payment Sucessfully Deleted!";
+}
+else if (isset($obj["reactivate_id"]))
 {
 	//Delete the requested registration
 	$query = $wpdb->query($wpdb->prepare("INSERT INTO " . $GLOBALS['srbc_registration'] . " SELECT * FROM " . $GLOBALS['srbc_registration_inactive']. 
