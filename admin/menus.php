@@ -304,8 +304,11 @@ function srbc_overview_page()
         <h2 id="typeity"></h2>
     </div>
 	<script>
+	<?php 
+	echo "name = '" . wp_get_current_user()->display_name . "';";
+	?>
 	var i = 0;
-	var txt = "Hello Peter.... what does it look like? The shape in the glass?" +
+	var txt = "Hello " + name + ".... what does it look like? The shape in the glass?" +
 	"\rIn this hour of victory, we taste only defeat. I ask, why? We are Forerunners, guardians of all that exists." +
 	"The roots of the galaxy have grown deep under our careful tending. Where there is life, the wisdom of our countless " +
 	"generations has saturated the soil. Our strength is a luminous sun, towards which all intelligence blossoms... And the " + 
