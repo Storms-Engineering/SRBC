@@ -220,7 +220,7 @@ else if (isset($_GET["registration_day"]))
 		//Write out data
 		if ($camper->camper_id != $nextid || $camper->registration_id != $next_reg_id)
 		{
-			echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_first_name . "</td><td>" . $camper->camper_last_name . "</td>";
+			echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name . "</td><td>" . $camper->camper_first_name . "</td>";
 			echo "<td>$". $camp_fee . "</td>";
 			echo "<td>". $program_area . "</td>";
 			echo "<td>$". $horse_fee . "</td>";
