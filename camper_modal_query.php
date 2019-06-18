@@ -254,10 +254,9 @@ function campSection($registration,$camper,$inactive)
 	//Snackshop
 	echo '<br><h3>Snackshop: $' . $snackshopTotal . '</h3>';
 	echo 'Add to Snackshop: <input type="text" name="snackshop">  <select name="snackshop_payment_type" class="inputs payment_type">
-	<option value="none" id="default" selected></option>
-	<option value="card">Credit Card</option>
-	<option value="check">Check</option>
 	<option value="cash">Cash</option>
+	<option value="check">Check</option>
+	<option value="card">Credit Card</option>
 	</select><br>
 	<button class="big_button" style="padding:10px;" onclick="saveInfo();" >Save</button>';
 	echo "<h3>Fees paid:</h3>";
