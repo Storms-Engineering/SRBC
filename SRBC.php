@@ -136,6 +136,8 @@ function srbc_install() {
 		payment_date TINYTEXT,
 		note TINYTEXT,
 		fee_type TINYTEXT,
+		registration_day TINYINT,
+		entered_by TINYTEXT,
 		PRIMARY KEY (payment_id)
 		)  ENGINE=INNODB;";
 
