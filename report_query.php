@@ -156,7 +156,7 @@ else if(isset($_GET["program_camper_sheets"]))
 else if (isset($_GET["registration_day"]))
 {
 	$newFormat = date("m/d/Y G:i",strtotime( $_GET["start_date"] . " " . $_GET["time"]));
-	$time_end = date("m/d/Y G:i",strtotime($_GET["start_date"] . " " . $_GET["time"] . " +5 hours"));
+	$time_end = date("m/d/Y G:i",strtotime($_GET["start_date"] . " " . $_GET["time"] . " +8 hours"));
 	//TODO might need to readd wpdb prepare here
 	//BODY for security purposes.
 	$campers = $wpdb->get_results("SELECT *
