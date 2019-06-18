@@ -156,7 +156,7 @@ else {
 			makePayment($key,$obj[$key]['snackshop_payment_type'],$obj[$key]["snackshop"],
 				"","Store");
 		}
-		else if($obj[$key]["auto_payment_amt"] != "")
+		if($obj[$key]["auto_payment_amt"] != "")
 		{
 			$o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d ",$key));
 			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
