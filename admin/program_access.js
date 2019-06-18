@@ -1,3 +1,15 @@
+//Toast Notification
+function showToast(text) {
+    // Get the snackbar DIV
+    var x = document.getElementById("snackbar");
+	x.innerText = text;
+    // Add the "show" class to DIV
+    x.className = "show";
+
+    // After 3 seconds, remove the show class from DIV
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+} 
+
 function addNoteToCamper(registration_id)
 {
 	note = prompt("Enter a note for this camper");
@@ -73,8 +85,7 @@ function changeLodgingTo(lodge,camper_id,counselor,assistant_counselor,count,nam
 	}
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-		//alert(this.responseText);
-		//TODO show snackbar for program acesss
+		showToast(this.responseText);
 		showLodging();
 		}
 	};

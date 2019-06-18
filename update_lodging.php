@@ -20,6 +20,12 @@ if(isset($_GET['registration_id']))
 			$vals[$value] = $_GET[$value];
 		}
 	}
+	$checked_in = $wpdb->get_var($wpdb->prepare("SELECT checked_in FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d",$_GET['registration_id']));
+	if($checked_in == 0)
+	{
+		exit("Please make sure that the camper checks in with registration before getting assigned to a cabin.
+					They are currently not checked in according to my records...");
+	}
 	$wpdb->update( 
 		'srbc_registration', 
 		$vals, 
@@ -31,7 +37,7 @@ if(isset($_GET['registration_id']))
 		), 
 		array( '%d' ) 
 	);
-	exit();
+	exit("Sucessfully added camper");
 }
 
 
