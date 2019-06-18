@@ -266,28 +266,38 @@ function calculatePaymentAmt($autoPaymentAmt, $needToPayAmount)
 function makePayment($registration_id,$payment_type,$payment_amt,$note,$fee_type)
 {
 	//Get the current date time
-			$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
-			global $wpdb;
-			$wpdb->insert(
-					$GLOBALS['srbc_payments'], 
-					array( 
-						'payment_id' =>0,
-						'registration_id' => $registration_id,
-						'payment_type' => $payment_type,
-						'payment_amt' => $payment_amt,
-						'payment_date' =>  $date->format("m/d/Y G:i"),
-						'note' => $note ,
-						'fee_type' => $fee_type
-					), 
-					array( 
-						'%d',
-						'%d', 
-						'%s',
-						'%f',
-						'%s',
-						'%s',
-						'%s'				
-					) 
-				);
+	$current_user = wp_get_current_user();
+	$username = $current_user->user_login;
+	$is_registration = 0;
+	if (strpos($username, 'registration') !== false)
+		$is_registration = 1;
+
+	$date = new DateTime("now", new DateTimeZone('America/Anchorage'));
+	global $wpdb;
+	$wpdb->insert(
+			$GLOBALS['srbc_payments'], 
+			array( 
+				'payment_id' =>0,
+				'registration_id' => $registration_id,
+				'payment_type' => $payment_type,
+				'payment_amt' => $payment_amt,
+				'payment_date' =>  $date->format("m/d/Y G:i"),
+				'note' => $note ,
+				'fee_type' => $fee_type,
+				'registration_day' => $is_registration,
+				'entered_by' => $current_user->display_name
+			), 
+			array( 
+				'%d',
+				'%d', 
+				'%s',
+				'%f',
+				'%s',
+				'%s',
+				'%s',
+				'%d',
+				'%s'				
+			) 
+		);
 }
 ?>
