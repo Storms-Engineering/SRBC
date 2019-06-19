@@ -163,7 +163,7 @@ else if (isset($_GET["registration_day"]))
 									FROM ((" . $GLOBALS['srbc_payments'] . " 
 									INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
 									INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-									WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s 
+									WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s AND " . $GLOBALS['srbc_payments'] . ".registration_day=1
 									ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
 									
 	echo "<h3>Registration day fees collected:</h3>";
