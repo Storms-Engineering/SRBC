@@ -111,7 +111,7 @@ function srbc_camp_search($atts){
 		$total_registered = $boycount + $girlcount;
 		$finalText .=  "</td><td>";
 		if (($camp->overall_size - $total_registered) == 0){
-			$finalText .= "Camp is full,<br> register to be put on waiting list";
+			$finalText .= '<span style="color:red">Camp is full,<br> register to be put on waiting list</span>';
 		}	
 		else if($boycount >= $camp->boy_registration_size && $camp->boy_registration_size != 0){
 			$finalText .= "Boy's section is full,<br>girls can still register!";
@@ -796,9 +796,11 @@ function srbc_camps($atts){
 		
 										
 		$total_registered = $boycount + $girlcount;
+		//TODO Duplicate code for camp_search
+		//BODY need to make this another function possibly.
 		$finalText .=  "</td><td>";
 		if (($camp->overall_size - $total_registered) <= 0){
-			$finalText .= "Camp is full,<br> register to be put on waiting list";
+			$finalText .= '<span style="color:red">Camp is full,<br> register to be put on waiting list</span>';
 		}	
 		else if($boycount >= $camp->boy_registration_size && $camp->boy_registration_size != 0){
 			$finalText .= "Boy's section is full,<br>girls can still register!";
