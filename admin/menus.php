@@ -529,8 +529,9 @@ function srbc_camp_reports()
 		<button onclick="generateReport('backup_registration')">Backup Registrations </button><br>
 		<button onclick="generateReport('signout_sheets')">Signout Sheets</button>
 		<button onclick="generateReport('registration_day')">Registration Day Report</button>
+		<button onclick="generateReport('transactions')">Registration Day Transactions</button>
 		<button onclick="generateReport('mailing_list')">Mailing List</button>
-		<button onclick="generateReport('transactions')">Transactions</button>
+
 
 		<hr>
 		<h2 style="display:inline;">Camp Specific Reports</h2>

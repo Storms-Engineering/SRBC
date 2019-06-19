@@ -181,7 +181,6 @@ else if (isset($_GET["registration_day"]))
 	//ID is for multiple campers that were payed for at once
 	foreach ($campers as $camper)
 	{
-		
 		$totals[$camper->payment_type] += $camper->payment_amt;
 		$totals[$camper->fee_type] += $camper->payment_amt;
 		if ($camper->fee_type == "Bus")
@@ -281,7 +280,7 @@ else if (isset($_GET["transactions"]))
 													FROM ((" . $GLOBALS['srbc_payments'] . " 
 													INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
 													INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-													WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s 
+													WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s AND " . $GLOBALS['srbc_payments'] . ".registration_day=1
 													ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
 													
 	echo "<h3>Transactions</h3>";
