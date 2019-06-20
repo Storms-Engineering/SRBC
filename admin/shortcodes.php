@@ -87,18 +87,33 @@ function srbc_camp_search($atts){
 	global $wpdb;
 	$camps = $wpdb->get_results(
 	$wpdb->prepare( $query, $values));
-	
+	//Initialize variable for the html code after the table with descriptions of camps
+	$descriptions = NULL;
 	$finalText = '<table style="width:100%;">
 				<tr style="background:#51d3ff;">
+				<th>Area</th>
 				<th>Camp</th>
 				<th>Cost</th>
-				<th>Start Date</th>
+				<th>Start/End Date</th>
+				<th>Going into Grades</th>
 				<th>Camp Availability</th>
-				</tr>';				
-	foreach ($camps as $camp){
-		$finalText .=  '<tr><td>' . $camp->area . " " . $camp->name . '		<a href="../register-for-a-camp/?campid=' . $camp->camp_id . '">(Register)</a>';
+				</tr>';			
+	//TODO Make a camp dislpay a function or something where we can pass a sql query or the array of camps and have it display correctly.
+		foreach ($camps as $camp){
+		$finalText .=  '<tr><td>' . $camp->area . '</td><td>' . $camp->name . '		<a href="../register-for-a-camp/?campid='.$camp->camp_id .'">(Register)</a><a href="#'.$camp->camp_id.'"> (More Info)</a>';
+		//See if horsemanship is full
+		$horsemanshipCount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(registration_id)
+										FROM " . $GLOBALS['srbc_registration'] . "
+										WHERE camp_id=%s AND horse_opt=1",$camp->camp_id));
+
+		if ($horsemanshipCount >= $camp->horse_list_size && $camp->horse_list_size != 0) 
+			$finalText .= '<span style="color:red;"> (Horsemanship Full)</span>';
+		
 		$finalText .=  "</td><td>$" . $camp->cost;
-		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date));
+		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date));
+		$finalText .=  "</td><td>" . $camp->grade_range;
+		
+										
 		$boycount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM " . $GLOBALS['srbc_registration'] . "
 										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
@@ -108,9 +123,13 @@ function srbc_camp_search($atts){
 										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
 										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
 										
+		
+										
 		$total_registered = $boycount + $girlcount;
+		//TODO Duplicate code for camp_search
+		//BODY need to make this another function possibly.
 		$finalText .=  "</td><td>";
-		if (($camp->overall_size - $total_registered) == 0){
+		if (($camp->overall_size - $total_registered) <= 0){
 			$finalText .= '<span style="color:red">Camp is full,<br> register to be put on waiting list</span>';
 		}	
 		else if($boycount >= $camp->boy_registration_size && $camp->boy_registration_size != 0){
@@ -122,10 +141,12 @@ function srbc_camp_search($atts){
 		else
 			$finalText .= "Camp is open for registrations"; 
 		$finalText .=  "</td>";
-		$finalText .=  "</tr>";
+		//Add a title to the description
+		$descriptions .= "<h3 id=".$camp->camp_id.">".$camp->area . " " . $camp->name.", ". date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)).", Grades ".$camp->grade_range."</h3>";
+		$descriptions .= "<ul><li>". urldecode($camp->description) ."</li></ul>";
 	}
-	$finalText .=  "</table> ";
-	return $finalText;
+	$finalText .=  "</table>*If a camp is full but there is still waitlist spots available then continue registration and it will put you on the waitlist";
+	$finalText .= "<h1>Camp Descriptions:</h1><br>$descriptions";
 	return ob_get_clean() . $finalText;
 }
 
