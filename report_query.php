@@ -14,7 +14,7 @@ if(isset($_GET["inactive_registrations"]))
 	//Start new row and put in name since that always happens - most of the time
 	foreach($campers as $camper)
 	{	
-	$amountDue = amountDueInactive($camper->registration_id);
+	$amountDue = amountDue($camper->registration_id,true);
 	$camp = $wpdb->get_results("SELECT * FROM " . $GLOBALS['srbc_camps'] . 
 									" WHERE camp_id=$camper->camp_id")[0];
 	echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>' . $camper->camper_last_name ."</td><td> " . $camper->camper_first_name. "</td>".
@@ -467,7 +467,7 @@ foreach ($information as $info){
 			echo "<td>" . $info->phone. "</td>";
 			echo "<td>" . $info->phone2. "</td>";
 			echo "<td></td>";
-			$amountDue = amountDue($info->registration_id);
+			$amountDue = amountDue($info->registration_id,false);
 			echo "<td>$" . ($amountDue) . "</td>";
 		}
 	}
@@ -503,7 +503,7 @@ foreach ($information as $info){
 	}
 	else if(isset($_GET["not_payed"]))
 	{
-		$amountDue = amountDue($info->registration_id);
+		$amountDue = amountDue($info->registration_id,false);
 		if($amountDue <= 0)
 			continue;
 		echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
@@ -533,54 +533,34 @@ foreach ($information as $info){
 echo "</table>";
 echo "<br>Campers Count: " . count($information);
 
-function amountDue($registration_id)
+//Calculates that amount due for a registration.  
+//2nd parameter is a bool to determine whether we are looking at the inactive_registration database.
+function amountDue($registration_id,$inactive_registration)
 {
+	//Determines which registration_database we are looking at
+	$database = $GLOBALS["srbc_registration"];
+	if ($inactive_registration)
+		$database = $GLOBALS["srbc_registration_inactive"] ;
 	global $wpdb;
 	$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM " . $GLOBALS["srbc_payments"] . " WHERE registration_id=%s AND NOT " . $GLOBALS["srbc_payments"] .
 									".fee_type='Store' ",$registration_id));
 	$cost = $wpdb->get_var($wpdb->prepare("
 							SELECT SUM(" . $GLOBALS["srbc_camps"] . ".cost +
-							(CASE WHEN " . $GLOBALS["srbc_registration"] . ".horse_opt = 1 THEN " . $GLOBALS["srbc_camps"] .".horse_opt_cost
+							(CASE WHEN " . $database . ".horse_opt = 1 THEN " . $GLOBALS["srbc_camps"] .".horse_opt_cost
 							ELSE 0
 							END) +
-							(CASE WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'to' THEN 35
-							WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'from' THEN 35
-							WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'both' THEN 60
+							(CASE WHEN " . $database . ".busride = 'to' THEN 35
+							WHEN " . $database . ".busride = 'from' THEN 35
+							WHEN " . $database . ".busride = 'both' THEN 60
 							ELSE 0
 							END) 
-							- IF(" . $GLOBALS['srbc_registration'] . ".discount IS NULL,0," . $GLOBALS['srbc_registration'] . ".discount)
-							- IF(" . $GLOBALS['srbc_registration'] . ".scholarship_amt IS NULL,0," . $GLOBALS['srbc_registration'] . ".scholarship_amt)		
+							- IF(" . $database . ".discount IS NULL,0," . $database . ".discount)
+							- IF(" . $database . ".scholarship_amt IS NULL,0," . $database . ".scholarship_amt)		
 							)								
-							FROM " . $GLOBALS['srbc_registration'] . "
-							INNER JOIN " . $GLOBALS["srbc_camps"] . " ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
-							WHERE " . $GLOBALS['srbc_registration'] . ".registration_id=%d",$registration_id));
-	return $cost - $totalPayed;
-}
-//TODO Redo this and probably get rid of seperate database for inactive registrations?
-//BODY also waitlisted campers?  IDK i think that is okay but perhaps we should do something with these inactive registrations.  They seem to be as good as inactive registrations.
-function amountDueInactive($registration_id)
-{
-	global $wpdb;
-	$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM " . $GLOBALS["srbc_payments"] . " WHERE registration_id=%s AND NOT " . $GLOBALS["srbc_payments"] .
-									".fee_type='Store' ",$registration_id));
-	$cost = $wpdb->get_var($wpdb->prepare("
-							SELECT SUM(" . $GLOBALS["srbc_camps"] . ".cost +
-							(CASE WHEN " . $GLOBALS["srbc_registration_inactive"] . ".horse_opt = 1 THEN " . $GLOBALS["srbc_camps"] .".horse_opt_cost
-							ELSE 0
-							END) +
-							(CASE WHEN " . $GLOBALS['srbc_registration_inactive'] . ".busride = 'to' THEN 35
-							WHEN " . $GLOBALS['srbc_registration_inactive'] . ".busride = 'from' THEN 35
-							WHEN " . $GLOBALS['srbc_registration_inactive'] . ".busride = 'both' THEN 60
-							ELSE 0
-							END) 
-							- IF(" . $GLOBALS['srbc_registration_inactive'] . ".discount IS NULL,0," . $GLOBALS['srbc_registration_inactive'] . ".discount)
-							- IF(" . $GLOBALS['srbc_registration_inactive'] . ".scholarship_amt IS NULL,0," . $GLOBALS['srbc_registration_inactive'] . ".scholarship_amt)		
-							)								
-							FROM " . $GLOBALS['srbc_registration_inactive'] . "
-							INNER JOIN " . $GLOBALS["srbc_camps"] . " ON " . $GLOBALS['srbc_registration_inactive'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
-							WHERE " . $GLOBALS['srbc_registration_inactive'] . ".registration_id=%d",$registration_id));
+							FROM " . $database . "
+							INNER JOIN " . $GLOBALS["srbc_camps"] . " ON " . $database . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
+							WHERE " . $database . ".registration_id=%d",$registration_id));
 	return $cost - $totalPayed;
 }
 ?>
