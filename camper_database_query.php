@@ -91,6 +91,8 @@ if (!$specificQuery)
 			<th>Parent Name</th>
 			<th>Email</th>
 			<th>Phone</th>';
+			if ($specificQuery)
+				echo "<th>Waitlist</th>";
 		}
 		else
 			echo '<th>Select</th>';
@@ -111,10 +113,15 @@ if (!$specificQuery)
 		echo "</td><td>" . $camper->parent_first_name ." ". $camper->parent_last_name . "</td>";
 		echo '<td><a style="color:#1043d5;" href="mailto:' . $camper->email . '">'.$camper->email.'</a></td>';
 		echo "<td>" . $camper->phone . "</td>";
+		if($specificQuery)
+		{
+			echo " " . (($camper->waitlist == 1) ? "<td>waitlisted</td>" : "<td></td>");
+		}
 		}
 		else
 			echo '<td><input type="radio" name="nameToAdd" value="' . $camper->registration_id . '"></td>';
 		echo "</tr>";
 	}
+	
 	?>
 	</table> 
