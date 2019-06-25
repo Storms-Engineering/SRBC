@@ -283,11 +283,15 @@ function listCamps($area)
 			<th>Girls Registered</th>
 			<th>Total Registered</th>
 			<th>Waitlist</th>';
-	if ($area == "Lakeside") echo '<th>Horse Waitlist</th>';
+	if ($area == "Lakeside")
+		echo '<th>Horse Waitlist</th>';
 	echo '<th>Delete</th>
 		</tr>';
 	global $wpdb;
-	$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='%s' ORDER BY start_date",$area));
+	if ($area != "Lakeside")
+		$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='%s' ORDER BY start_date",$area));
+	else
+		$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='%s' OR area='Sports' ORDER BY start_date",$area));
 	foreach ($camps as $camp)
 	{
 		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
@@ -403,8 +407,6 @@ function srbc_camps_management()
 		<div id="Misc" class="tabcontent">
 	 
 		<?php
-			echo "<h2>Sports Camps</h2><br>";
-			listCamps("Sports");
 			echo "<h2>Fall Retreat</h2><br>";
 			listCamps("Fall Retreat");
 			echo "<h2>Winter Camp</h2><br>";
