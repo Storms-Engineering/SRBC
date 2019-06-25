@@ -160,9 +160,6 @@ else if(isset($_GET["program_camper_sheets"]))
 else if (isset($_GET["registration_day"]))
 {
 	$newFormat = date("m/d/Y",strtotime( $_GET["start_date"]));
-	//$time_end = date("m/d/Y G:i",strtotime($_GET["start_date"] . " " . $_GET["time"] . " +8 hours"));
-	//TODO might need to readd wpdb prepare here
-	//BODY for security purposes.
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 									FROM ((" . $GLOBALS['srbc_payments'] . " 
 									INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
