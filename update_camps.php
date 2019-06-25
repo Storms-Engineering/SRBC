@@ -17,7 +17,7 @@ if (isset($obj["deleteid"])) {
 }
 //If this is set then we are updating a camp
 else if (isset($obj["camp_id"])) {
-
+//TODO update to an array and array keys
 	
 	//Update database entry
 	$wpdb->update( 
@@ -37,7 +37,8 @@ else if (isset($obj["camp_id"])) {
 		'boy_registration_size' => $obj["boy_registration_size"],
 		'girl_registration_size' => $obj["girl_registration_size"],
 		'overall_size' => $obj["overall_size"],
-		'grade_range' => $obj["grade_range"]
+		'grade_range' => $obj["grade_range"],
+		'closed_to_registrations' =>  $obj["closed_to_registrations"]
 	), 
 	array( 'camp_id' => $obj["camp_id"]), 
 	array( 
@@ -55,7 +56,8 @@ else if (isset($obj["camp_id"])) {
 		'%d',
 		'%d',
 		'%d',
-		'%s'
+		'%s',
+		'%d'
 	),
 	array( '%d' ) 
 	);

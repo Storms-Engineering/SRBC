@@ -32,6 +32,8 @@ if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
 					echo 'Girls Allowed to Register: <input name="girl_registration_size" type="text" value="' . $camp->girl_registration_size . '">';
 					echo 'Overall Size: <input name="overall_size" type="text" value="' . $camp->overall_size . '">';
 					echo 'Grade Range: <input name="grade_range" type="text" value="' . $camp->grade_range . '">';
+					$closed = $camp->closed_to_registrations == 0 ? "" : "checked";
+					echo '<br>Closed To Registrations <input type="checkbox" name="closed_to_registrations" ' . $closed . '>';
 			
 			echo "</div>";
 			echo '<div class="modal-footer"><button  onclick="saveInfo(' . $camp->camp_id . ');" class="big_button">Save Info & Close</button></div>';

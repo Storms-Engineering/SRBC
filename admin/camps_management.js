@@ -69,6 +69,11 @@ function saveInfo(cmp_id)
 	info["description"] = encodeURI(container[0].getElementsByClassName("description")[0].value);
 	for (var j = 0; j < inputs.length; ++j) {
 			info[inputs[j].name] = inputs[j].value;
+			if(inputs[j].name == "closed_to_registrations" )
+				if(inputs[j].checked)
+					info[inputs[j].name] = 1;
+				else
+					info[inputs[j].name] = 0;
 	}
 	console.log(info);
 	postAjax(info);

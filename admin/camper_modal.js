@@ -24,7 +24,6 @@ function resendEmail(r_id){
 	};
 	xhttp.open("GET", "/wp-content/plugins/SRBC/resend_email.php?r_id="+r_id, true);
 	xhttp.send();
-	
 }
 
 //Custom Modal Function

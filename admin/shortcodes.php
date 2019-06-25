@@ -129,7 +129,7 @@ function srbc_camp_search($atts){
 		//TODO Duplicate code for camp_search
 		//BODY need to make this another function possibly.
 		$finalText .=  "</td><td>";
-		if (($camp->overall_size - $total_registered) <= 0){
+		if (($camp->overall_size - $total_registered) <= 0 || $camp->closed_to_registrations == 1){
 			$finalText .= '<span style="color:red">Camp is full,<br> register to be put on waiting list</span>';
 		}	
 		else if($boycount >= $camp->boy_registration_size && $camp->boy_registration_size != 0){
@@ -474,7 +474,7 @@ function srbc_registration_complete($atts)
 	}
 	//Check if this camp is already full
 	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM " . $GLOBALS['srbc_registration'] . " WHERE camp_id=%s AND waitlist=0",$_POST["campid"])); 
-	if($count < $camp->overall_size)
+	if($count < $camp->overall_size && $camp->closed_to_registrations == 0)
 	{
 		//This camp is not overall full check gender specific caps
 		if ($gender == "male")
@@ -667,7 +667,7 @@ function srbc_registration_complete($atts)
 	sendMail($email,"Registration Confirmation",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
 	}
 	
-	return "Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. (If you don't see the email check your spam box and please mark it not spam)";
+	return 'Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. <span style="color:red">(If you don\'t see the email check your spam box and please mark it not spam)';
 }
 
 
@@ -820,7 +820,7 @@ function srbc_camps($atts){
 		//TODO Duplicate code for camp_search
 		//BODY need to make this another function possibly.
 		$finalText .=  "</td><td>";
-		if (($camp->overall_size - $total_registered) <= 0){
+		if (($camp->overall_size - $total_registered) <= 0 || $camp->closed_to_registrations == 1){
 			$finalText .= '<span style="color:red">Camp is full,<br> register to be put on waiting list</span>';
 		}	
 		else if($boycount >= $camp->boy_registration_size && $camp->boy_registration_size != 0){
