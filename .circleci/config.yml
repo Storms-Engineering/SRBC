@@ -75,10 +75,6 @@ jobs:
             phpunit
             WP_MULTISITE=1 phpunit
             SKIP_DB_CREATE=true
-    filters:
-      branches:
-        only: 
-          - circleci
   php70-build:
     <<: *php_job
     docker:
