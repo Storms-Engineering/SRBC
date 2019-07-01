@@ -58,6 +58,7 @@ jobs:
       - run: |
          if [ "$CIRCLE_BRANCH" = "master" ]; then
            circleci-agent step halt
+           echo "Not testing branch.. Stopping here. P.H."
          fi
       - checkout
       - run: *setup_environment
