@@ -52,7 +52,7 @@ jobs:
     filters: 
       branches:
         only: 
-          - master
+          - circleci
     <<: *php_job
     docker:
       - image: circleci/php:5.6
