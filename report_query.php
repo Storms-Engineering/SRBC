@@ -184,9 +184,12 @@ else if (isset($_GET["registration_day"]))
 	$pointer = 1;
 	$totals = ["card" => 0,"check" => 0, "cash" => 0, "Bus" => 0, "Store" => 0, "LS Horsemanship" => 0, "WT Horsemanship" => 0,
 	"Lakeside" => 0, "Wagon Train" => 0, "Wilderness" => 0, "None" => 0, "Refund" => 0];
-	//ID is for multiple campers that were payed for at once
+	$camper_ids = [];
+	//TODO investigate this:
+	//ID is for multiple campers that were payed for at once?
 	foreach ($campers as $camper)
 	{
+		$camper_ids[] = $camper->camper_id;
 		$totals[$camper->payment_type] += $camper->payment_amt;
 		$totals[$camper->fee_type] += $camper->payment_amt;
 		if ($camper->fee_type == "Bus")
@@ -238,6 +241,30 @@ else if (isset($_GET["registration_day"]))
 			$program_area = "None";
 		}
 		$pointer++;
+	}
+	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+									FROM ((" . $GLOBALS['srbc_camps'] . " 
+									INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id)
+									INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+									WHERE " . $GLOBALS['srbc_camps'] . ".start_date=%s
+									ORDER BY srbc_campers.camper_id",$_GET['start_date'] ));
+	//Show campers who are signed up for these camps, but didn't pay anything
+	foreach($campers as $camper)
+	{
+		//TODO make this use sql
+		//BODY that will be faster
+		if(!in_array($camper->camper_id,$camper_ids))
+		{
+			echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name . "</td><td>" . $camper->camper_first_name . "</td>";
+			echo "<td>$0</td>";
+			echo "<td>None</td>";
+			echo "<td>$0</td>";
+			echo "<td>$0</td>";
+			echo "<td>$0</td>";
+			echo "<td>$0</td>";
+			echo "<td>$0</td>";
+			echo "</tr>";
+		}
 	}
 	//Close out the table
 	echo "</table>";
