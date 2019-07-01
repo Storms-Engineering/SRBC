@@ -7,8 +7,8 @@ workflows:
       #- php71-build
       #- php72-build
   branches:
-      only:
-        - circleci
+    only:
+    - circleci
 version: 2
 
 job-references:
