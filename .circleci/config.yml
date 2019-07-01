@@ -3,10 +3,6 @@ workflows:
   main:
     jobs:
       - php56-build
-          filters:
-              branches:
-                only: 
-                  - circleci
       #- php70-build
       #- php71-build
       #- php72-build
@@ -79,6 +75,10 @@ jobs:
             phpunit
             WP_MULTISITE=1 phpunit
             SKIP_DB_CREATE=true
+    filters:
+      branches:
+        only: 
+          - circleci
 
   php70-build:
     <<: *php_job
