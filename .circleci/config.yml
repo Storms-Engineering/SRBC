@@ -49,16 +49,16 @@ job-references:
 
 jobs:
   php56-build:
-    run: |
-         if [ "$CIRCLE_BRANCH" = "master" ]; then
-           circleci-agent step halt
-         fi
     <<: *php_job
     
     docker:
       - image: circleci/php:5.6
       - image: *mysql_image
     steps:
+      - run: |
+         if [ "$CIRCLE_BRANCH" = "master" ]; then
+           circleci-agent step halt
+         fi
       - checkout
       - run: *setup_environment
       - run: *install_dependencies
