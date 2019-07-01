@@ -107,7 +107,12 @@ else if(isset($_GET["signout_sheets"]))
 		}			
 		echo "<tr><td>". $camper->camper_first_name . " " . $camper->camper_last_name . "</td>";
 		echo "<td>". $camper->parent_first_name . " " . $camper->parent_last_name . "</td>";
-		echo "<td></td></tr>";
+		
+		//Show bus in the signature column if the camper is riding the bus when leaving camp
+		if ($camper->busride == "from" || $camper->busride == "both")
+			echo "<td><b>ON THE BUS</b></td></tr>";
+		else
+			echo "<td></td></tr>";
 		$oldCabin = $camper->cabin;
 	}
 	//Close out the table
