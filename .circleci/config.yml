@@ -3,10 +3,6 @@ workflows:
   main:
     jobs:
       - php56-build
-          filters: 
-            branches:
-              only: 
-                - master
       #- php70-build
       #- php71-build
       #- php72-build
@@ -53,6 +49,10 @@ job-references:
 
 jobs:
   php56-build:
+    filters: 
+      branches:
+        only: 
+          - master
     <<: *php_job
     docker:
       - image: circleci/php:5.6
