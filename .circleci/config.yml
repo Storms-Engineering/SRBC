@@ -1,15 +1,14 @@
 workflows:
   version: 2
   main:
-    branches:
-    only: 
-      - circleci
     jobs:
       - php56-build
       #- php70-build
       #- php71-build
       #- php72-build
-
+        branches:
+          only: 
+            - circleci
 version: 2
 
 job-references:
