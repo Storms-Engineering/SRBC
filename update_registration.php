@@ -5,7 +5,6 @@ $obj = json_decode( stripslashes($_POST["x"]), true);
 $arrayKeys = array_keys($obj);
 //Database shtuff
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
-//Security check - kinda
 if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
 global $wpdb;
 

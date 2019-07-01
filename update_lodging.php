@@ -5,8 +5,7 @@
 //Import wordpress stuff we need
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 global $wpdb;
-//Security check - kinda
-if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
+securityCheck();
 
 //Check if we are updating and do so
 if(isset($_GET['registration_id']))

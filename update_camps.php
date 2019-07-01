@@ -5,8 +5,7 @@ $obj = json_decode( stripslashes($_POST["x"]), true);
 
 //Database shtuff
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
-//Security check - kinda
-if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
+securityCheck();
 global $wpdb;
 
 if (isset($obj["deleteid"])) {

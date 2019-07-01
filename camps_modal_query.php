@@ -5,8 +5,7 @@
 	<?php
 	//This returns the data for one specific camper.
 	require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
-	//Security check - kinda
-if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
+	securityCheck();
 	global $wpdb;
 	$camp = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] ." WHERE camp_id = %d",$_GET['camp_id'] ));
 	echo $camp->area . " " . $camp->name;

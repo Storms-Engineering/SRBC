@@ -12,6 +12,12 @@ function error_msg($msg)
 {
 	echo '<h2 style="color:red;text-align:center">' .$msg.'</h2>';
 }
+
+//Checks if the user is logged in when viewing this file
+function securityCheck()
+{
+	if (!is_user_logged_in()) exit("Thus I refute thee.... P.H.");
+}
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require 'PHPMailer/src/Exception.php';
