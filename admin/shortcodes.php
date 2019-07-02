@@ -587,9 +587,11 @@ function srbc_registration_complete($atts)
 				'%d'
 			) 
 			);
+	$registration_id = $wpdb->insert_id;
+	require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/email.php');
 	//Notify office that this parent is sending a check	
 	if (isset($_POST["using_check"])){
-		sendMail(srbc_email,"$parent_first_name $parent_last_name is sending a check ",
+		Email::sendMail(srbc_email,"$parent_first_name $parent_last_name is sending a check ",
 		"Hi,\r\n$parent_first_name $parent_last_name is sending a check for $camper_first_name $camper_last_name<br>Thanks!<br>-Peter Hawke SRBC Ancilla");
 	}
 	else if($waitlist != 1 && $_POST["cc_amount"] != "")
@@ -639,32 +641,13 @@ function srbc_registration_complete($atts)
 			);
 		
 	}
-
 	if ($waitlist == 1)
 	{
-		$message = "Hi ". $parent_first_name . ",<br><br>This is an email letting you know that you sucessfully put " . $camper_first_name . " on the waitlist for " . $_POST["camp_desc"] . "." . 
-		"<br>We will email you and let you know if a spot opens up for the camp.<br>Thanks!<br><br> -Solid Rock Bible Camp<br><br>36251 Solid Rock Rd #1<br>
-	Soldotna, AK 99669<br>
-	phone: (907) 262-4741<br>
-	fax: (907) 262-9088<br>
-	srbc@alaska.net";
-		sendMail($email,"Waitlist Confirmation",$message);
+		Email::sendWaitlistEmail($registration_id);
 	}
 	else
 	{
-	$message = "Hello ". $parent_first_name . ",<br><br>Thanks for signing up " . $camper_first_name . " for <b>" . $_POST["camp_desc"] . "</b>!  <br><br>
-	<b>Camp Start date</b>:" .date("l, M j,Y",strtotime($camp->start_date)) . '<br><pre style="display:inline">	</pre><b>Camp Drop off time</b>: 5:00pm' . 
-	"<br><br><b>Camp End date</b>:" .date("l, M j,Y",strtotime($camp->end_date)) . '<br><pre style="display:inline">	</pre><b>Camp Pick up time</b>: 9:00am<br><br>' . 
-	"A <b>health form</b> has been attached. Please fill it out and bring it on the opening day of camp.<br><br>" .
-	'If your camper is riding the bus please refer to our FAQ page for bus stop location and times.<br><br>' .
-	'If you have any other questions please refer to our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.<br><br>' .
-	'If you want to know what your camper should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>.'.
-	"<br><br>See you on the opening day of camp!<br><br> -Solid Rock Bible Camp<br><br>36251 Solid Rock Rd #1<br>
-	Soldotna, AK 99669<br>
-	phone: (907) 262-4741<br>
-	fax: (907) 262-9088<br>
-	srbc@alaska.net";
-	sendMail($email,"Registration Confirmation",$message,$_SERVER['DOCUMENT_ROOT']. '/attachments/healthform.pdf');
+		Email::sendConfirmationEmail($registration_id);
 	}
 	
 	return 'Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. <span style="color:red">(If you don\'t see the email check your spam box and please mark it not spam)';
