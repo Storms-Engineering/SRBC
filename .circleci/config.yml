@@ -33,11 +33,6 @@ job-references:
       - WP_TESTS_DIR: "/tmp/wordpress-tests-lib"
       - WP_CORE_DIR: "/tmp/wordpress/"
     steps:
-      - run: |
-             if [ "$CIRCLE_BRANCH" = "master" ]; then
-               circleci-agent step halt
-               echo "Not testing branch.. Stopping here. P.H."
-             fi
       - checkout
       - run: *setup_environment
       - run: *install_dependencies
@@ -60,7 +55,11 @@ jobs:
       - image: circleci/php:5.6
       - image: *mysql_image
     steps:
-      
+      - run: |
+             if [ "$CIRCLE_BRANCH" = "master" ]; then
+               circleci-agent step halt
+               echo "Not testing branch.. Stopping here. P.H."
+             fi
       - checkout
       - run: *setup_environment
       - run: *install_dependencies
