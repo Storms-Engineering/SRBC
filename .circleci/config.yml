@@ -28,10 +28,16 @@ job-references:
       sudo apt-get update && sudo apt-get install mysql-client-5.7
 
   php_job: &php_job
+  
     environment:
       - WP_TESTS_DIR: "/tmp/wordpress-tests-lib"
       - WP_CORE_DIR: "/tmp/wordpress/"
     steps:
+      - run: |
+             if [ "$CIRCLE_BRANCH" = "master" ]; then
+               circleci-agent step halt
+               echo "Not testing branch.. Stopping here. P.H."
+             fi
       - checkout
       - run: *setup_environment
       - run: *install_dependencies
@@ -49,11 +55,6 @@ job-references:
 
 jobs:
   php56-build:
-    run: |
-         if [ "$CIRCLE_BRANCH" = "master" ]; then
-           circleci-agent step halt
-           echo "Not testing branch.. Stopping here. P.H."
-         fi
     <<: *php_job
     docker:
       - image: circleci/php:5.6
