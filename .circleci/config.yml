@@ -49,7 +49,7 @@ job-references:
 
 jobs:
   php56-build:
-    - run: |
+    run: |
          if [ "$CIRCLE_BRANCH" = "master" ]; then
            circleci-agent step halt
            echo "Not testing branch.. Stopping here. P.H."
