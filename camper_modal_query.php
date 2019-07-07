@@ -144,9 +144,9 @@ function campSection($registration,$camper,$inactive)
 	//Shows a red waitlist
 	$campNote = NULL;
 	if ($registration->waitlist != 0)
-		$campNote = ' <span style="color:red;">(Waitlisted for Camp)</span>';
-	else if($inactive)
-		$campNote = ' <span style="color:red;">(Inactive Registration)</span>';
+		$campNote .= ' <span style="color:red;">(Waitlisted for Camp)</span>';
+	if($inactive)
+		$campNote .= ' <span style="color:red;">(Inactive Registration)</span>';
 	
 	$horsesWaitlistHTML = NULL;
 	if($registration->horse_waitlist == 1)
