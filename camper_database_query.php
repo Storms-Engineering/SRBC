@@ -118,7 +118,7 @@ if (!$specificQuery)
 		}
 		}
 		else
-			echo '<td><input type="radio" name="nameToAdd" value="' . $camper->registration_id . '"></td>';
+			echo '<td><input type="checkbox" name="nameToAdd" value="' . $camper->registration_id . '"></td>';
 		echo "</tr>";
 	}
 	

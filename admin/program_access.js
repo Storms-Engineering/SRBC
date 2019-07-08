@@ -58,15 +58,14 @@ function updateCamperLodging(lodge,counselorPos){
 				{
 					if(names[i].checked)
 					{
-						camper_id = names[i].value;
+						camper_id = (names[i].value);
 						//Plus one because the first row is the header
 						cells = document.getElementById("results_table").rows[i+1].cells;
 						name = cells[0].innerHTML + " " + cells[1].innerHTML; 
-						break;
+						//We are passing counselorPos to get which table
+						changeLodgingTo(lodge,camper_id,counselor,assistant_counselor,counselorPos,name);
 					}
 				}
-				//We are passing counselorPos to get which table
-				changeLodgingTo(lodge,camper_id,counselor,assistant_counselor,counselorPos,name);
 				popup.style.display = "none";
 	};
 }
