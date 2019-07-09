@@ -36,7 +36,39 @@ else if (isset($obj["deactivate_id"]))
 	$GLOBALS['srbc_registration']. "  WHERE registration_id=%d;",$obj["deactivate_id"]));
 	if($query === false || $query === 0 )
 	{
-		exit("Something went wrong with the moving query");
+		//Thanks so much to :https://dba.stackexchange.com/questions/75532/query-to-compare-the-structure-of-two-tables-in-mysql/75651#75651?newreg=52c95cc1e3144bc287f834a1a25b2923
+		//TODO add this to peter hawke health report.
+		//Checks if the srbc_registration and srbc_registration_inactive database have the same structure.
+		$error_msg = $wpdb->get_var("SELECT IF(COUNT(1)>0,'Differences','No Differences') Comparison FROM
+							(
+								SELECT
+									column_name,ordinal_position,
+									data_type,column_type,COUNT(1) rowcount
+								FROM information_schema.columns
+								WHERE table_schema=DATABASE()
+								AND table_name IN ('srbc_registration','srbc_registration_inactive')
+								GROUP BY
+									column_name,ordinal_position,
+									data_type,column_type
+								HAVING COUNT(1)=1
+							) A;");
+		/*Saving this code for the Peter Hawke console update
+		$error_verbose = $wpdb->get_results("SELECT column_name,ordinal_position,data_type,column_type FROM
+									(
+										SELECT
+											column_name,ordinal_position,
+											data_type,column_type,COUNT(1) rowcount
+										FROM information_schema.columns
+										WHERE table_schema=DATABASE()
+										AND table_name IN ('srbc_registration','srbc_registration_inactive')
+										GROUP BY
+											column_name,ordinal_position,
+											data_type,column_type
+										HAVING COUNT(1)=1
+									) A;");		*/			
+		echo "\rDatabase " . $error_msg;
+		//echo "\rDatabase message: " . var_dump($error_verbose);
+		exit("\rSomething went wrong with the moving query");
 	}
 	else
 	{
