@@ -42,10 +42,11 @@ foreach($camps as $camp){
 							$GLOBALS['srbc_registration'] . ".registration_id ASC",$q[0],$q[1]));
 	}
 }
-
+require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/camper_search.php');
 if (!$specificQuery)
 {
-	$name = explode(" ",$_GET['query']);
+	
+	
 	
 	//This query searches for first name or last name of the camper and orders it by first name
 	//Also protected against sql injection by prepare
@@ -62,22 +63,8 @@ if (!$specificQuery)
 			ORDER BY srbc_campers.camper_last_name ASC", 
 			$name."%",$name."%",$name."%",$name."%",$_GET['camp_id']));
 	}
-	else if (count($name) == 2){
-		$fname = $name[0];
-		$campers = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM srbc_campers WHERE (camper_first_name 
-			LIKE %s AND camper_last_name LIKE %s )OR (parent_first_name LIKE %s AND parent_last_name LIKE %s)
-			ORDER BY camper_id ASC", 
-			$name[0]."%",$name[1]."%",$name[0]."%",$name[1]."%"));
-	}
-	else{
-		$name = $name[0];
-		$campers = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM srbc_campers WHERE camper_first_name 
-			LIKE %s OR camper_last_name LIKE %s OR parent_first_name LIKE %s OR parent_last_name LIKE %s
-			ORDER BY camper_id ASC", 
-			$name."%",$name."%",$name."%",$name."%"));
-	}
+	else
+		$campers = CamperSearch::searchParentAndCamper($_GET['query']);
 }
 	echo ' <table style="width:100%;" id="results_table">
 		<tr>
@@ -121,6 +108,5 @@ if (!$specificQuery)
 			echo '<td><input type="checkbox" name="nameToAdd" value="' . $camper->registration_id . '"></td>';
 		echo "</tr>";
 	}
-	
-	?>
-	</table> 
+	echo "</table>"
+?>
