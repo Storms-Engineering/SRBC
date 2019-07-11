@@ -45,15 +45,14 @@ foreach($camps as $camp){
 require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/camper_search.php');
 if (!$specificQuery)
 {
-	
-	
-	
 	//This query searches for first name or last name of the camper and orders it by first name
 	//Also protected against sql injection by prepare
 	//See if they typed a first name and last name
+	
+	//Inner is for the camper select dialog for lodge assignment
 	if(isset($_GET['inner']))
 	{
-		$name = $name[0];
+		$name = $_GET['query'];
 		$campers = $wpdb->get_results(
 			$wpdb->prepare( "SELECT * FROM srbc_campers
 			INNER JOIN srbc_registration ON srbc_campers.camper_id=srbc_registration.camper_id
@@ -66,47 +65,13 @@ if (!$specificQuery)
 	else
 		$campers = CamperSearch::searchParentAndCamper($_GET['query']);
 }
-	echo ' <table style="width:100%;" id="results_table">
-		<tr>
-			<th>Firstname</th>
-			<th>Lastname</th>';
-		//Custom table
-		if (!isset($_GET['inner']))
-		{
-			echo '<th>Age</th>
-			<th>Parent Name</th>
-			<th>Email</th>
-			<th>Phone</th>';
-			if ($specificQuery)
-				echo "<th>Waitlist</th>";
-		}
-		else
-			echo '<th>Select</th>';
-	echo '</tr>';
-	foreach ($campers as $camper)
+	if(isset($_GET['inner']))
+		CamperSearch::createCheckboxTable($campers);
+	else
 	{
-		if(isset($_GET['inner']))
-			echo '<tr>';
-		else
-			echo '<tr onclick="openModal('.$camper->camper_id.')" class="'. $camper->gender .'">';
-		echo "<td>";
-		echo $camper->camper_first_name . "</td>";
-		echo "<td>" . $camper->camper_last_name . "</td>";
-		//The inner value is for the program access 
-		if(!isset($_GET['inner']))
-		{
-		echo "<td>" . $camper->age . "</td>"; 
-		echo "</td><td>" . $camper->parent_first_name ." ". $camper->parent_last_name . "</td>";
-		echo '<td><a style="color:#1043d5;" href="mailto:' . $camper->email . '">'.$camper->email.'</a></td>';
-		echo "<td>" . $camper->phone . "</td>";
-		if($specificQuery)
-		{
-			echo " " . (($camper->waitlist == 1) ? "<td>waitlisted</td>" : "<td></td>");
-		}
-		}
-		else
-			echo '<td><input type="checkbox" name="nameToAdd" value="' . $camper->registration_id . '"></td>';
-		echo "</tr>";
+		$columnHeaders = array("Firstname", "Lastname", "Parent Name", "Email", "Phone");
+		$properties = array("camper_first_name", "camper_last_name" , "parent_first_name", "email", "phone");
+		CamperSearch::createTable($columnHeaders, $properties, $campers);
 	}
 	echo "</table>"
 ?>
