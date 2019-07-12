@@ -15,7 +15,7 @@ function search()
 		}
 	};
 	var query = document.getElementById("search").value;
-	xhttp.open("GET", "/wp-content/plugins/SRBC/camper_database_query.php?query="+query, true);
+	xhttp.open("GET", "/wp-content/plugins/SRBC/camper_database_query.php?query="+encodeURIComponent(query), true);
 	xhttp.send();
 }
 // Get the input field
