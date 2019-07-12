@@ -225,16 +225,11 @@ function calculate_totals()
 		// Find its child `input` elements
 		var inputs = containers[i].getElementsByTagName('input');
 		for (var j = 0; j < inputs.length; ++j) {
-			//We don't want to grab text fields and parseInt doesn't like empty strings
-			
-			//TODO just check the type if it a number and make sure it isn't disabled.
-			//TODO: change this to loop  through an array or use a foreach this is terrible
-			if(inputs[j].name != "scholarship_type" && inputs[j].name != "discount_type" && inputs[j].name != "counselor" && 
-				inputs[j].name != "cabin" && inputs[j].name != "checked_in" && inputs[j].name != "horse_waitlist" && inputs[j].name != "packing_list_sent" &&
-				inputs[j].name != "auto_note" && inputs[j].name != "health_form" && inputs[j].name != "waitlist" && inputs[j].name !== "snackshop" &&
-				inputs[j].name != "note" && inputs[j].name != "assistant_counselor" && inputs[j].value != "")
-			{				
-				
+			//We don't want to grab the calculated text fields and parseInt doesn't like empty strings		
+			calcInputs = ["horse_opt", "busride_cost", "discount", "scholarship_amt", "auto_payment_amt", "payment_amt", "payed"];
+			if(calcInputs.includes(inputs[j].name) && inputs[j].value != "")
+			{			
+				console.log(inputs[j].name);
 				if (inputs[j].name == "busride_cost")
 				{
 					var busride = document.querySelectorAll("select[name=busride]")[i].value;
