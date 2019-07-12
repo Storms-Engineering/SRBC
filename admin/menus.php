@@ -146,7 +146,7 @@ function srbc_database()
 	  	Clear the field and hit save to revert to the current database.
 	</form>
 	<br><br>
-	<form method="post">
+	<form method="post" onsubmit="return confirm('Are you sure you want to archive all data?');">
 	  <input type="submit" name="rename_database" value="Archive All Current Data">
 	  <h2 style="color:red">Please Note that this will make all registrations and camps archived.  
 	  If you wish to access this data please enter the year that you archived the data.
