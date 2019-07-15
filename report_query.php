@@ -165,12 +165,13 @@ else if(isset($_GET["program_camper_sheets"]))
 else if (isset($_GET["registration_day"]))
 {
 	$newFormat = date("m/d/Y",strtotime( $_GET["start_date"]));
+	$newFormat2 = date("m/d/Y",strtotime( $_GET["start_date"] . " 2 days"));
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 									FROM ((" . $GLOBALS['srbc_payments'] . " 
 									INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
 									INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-									WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s AND " . $GLOBALS['srbc_payments'] . ".registration_day=1
-									ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
+									WHERE (" . $GLOBALS['srbc_payments'] . ".payment_date BETWEEN %s AND %s) AND " . $GLOBALS['srbc_payments'] . ".registration_day=1
+									ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%",$newFormat2 . "%"));
 									
 	echo "<h3>Registration day fees collected:</h3>";
 	echo '<table id="report_table">';
