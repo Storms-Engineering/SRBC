@@ -159,8 +159,12 @@ function campSection($registration,$camper,$inactive)
 	$payedCash = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='cash' AND NOT fee_type='store'",$registration->registration_id));
 	
+	//Get start and end dates for camp
+	$start_date = date("m/d",strtotime($camp->start_date));
+	$end_date = $start_date = date("m/d",strtotime($camp->end_date));
+		
 	echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campNote . 
-	'<span style="float:right;">Registered: '. $registration->date . '</span></button><div class="content">';
+	'<span style="color:black;margin-left:15px;">' . $start_date . ' - ' . $end_date . '</span> <span style="float:right;">Registered: '. $registration->date . '</span></button><div class="content">';
 	
 	
 			
