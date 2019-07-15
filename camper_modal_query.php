@@ -161,10 +161,10 @@ function campSection($registration,$camper,$inactive)
 	
 	//Get start and end dates for camp
 	$start_date = date("m/d",strtotime($camp->start_date));
-	$end_date = $start_date = date("m/d",strtotime($camp->end_date));
+	$end_date = date("m/d",strtotime($camp->end_date));
 		
 	echo '<button class="collapsible">'.$camp->area . ' ' . $camp->name . $campNote . 
-	'<span style="color:black;margin-left:15px;">' . $start_date . ' - ' . $end_date . '</span> <span style="float:right;">Registered: '. $registration->date . '</span></button><div class="content">';
+	'<span style="margin-left:15px;">' . $start_date . ' - ' . $end_date . '</span> <span style="float:right;">Registered: '. $registration->date . '</span></button><div class="content">';
 	
 	
 			
