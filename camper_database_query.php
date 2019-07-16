@@ -42,7 +42,8 @@ foreach($camps as $camp){
 							$GLOBALS['srbc_registration'] . ".registration_id ASC",$q[0],$q[1]));
 	}
 }
-require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/camper_search.php');
+require 'requires/camper_search.php';
+require 'requires/tables.php';
 if (!$specificQuery)
 {
 	//This query searches for first name or last name of the camper and orders it by first name
@@ -66,12 +67,12 @@ if (!$specificQuery)
 		$campers = CamperSearch::searchParentAndCamper($_GET['query']);
 }
 	if(isset($_GET['inner']))
-		CamperSearch::createCheckboxTable($campers);
+		Tables::createCheckboxTable($campers);
 	else
 	{
 		$columnHeaders = array("Firstname", "Lastname", "Parent Name", "Email", "Phone");
 		$properties = array("camper_first_name", "camper_last_name" , "parent_first_name", "email", "phone");
-		CamperSearch::createTable($columnHeaders, $properties, $campers);
+		Tables::createTable($columnHeaders, $properties, $campers);
 	}
 	echo "</table>"
 ?>
