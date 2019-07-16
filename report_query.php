@@ -6,41 +6,11 @@ if (!is_user_logged_in() && !isset($_GET["camp_numbers"])) exit("Thus I refute t
 global $wpdb;
 //Check these values first because it doesn't follow a normal report query format
 require 'requires/reports.php';
-if(isset($_GET["inactive_registrations"]))
-{
-	Reports::inactive_registrations();
-}
-else if(isset($_GET["mailing_list"]))
-{
-	Reports::mailing_list($_GET["start_date"]);
-}
-else if (isset($_GET["camp_numbers"]))
-{
-	Reports::camp_numbers();
-}
-else if(isset($_GET["signout_sheets"]))
-{
-	Reports::signout_sheets($_GET['start_date'],$_GET['end_date'],$_GET['camp']);
-}
-else if(isset($_GET["program_camper_sheets"]))
-{
-	Reports::program_camper_sheets($_GET['camp']);
-}
-else if (isset($_GET["registration_day"]))
-{
-	Reports::registration_day($_GET['start_date']);
-}
-else if(isset($_GET["snackshop"]))
-{
-	Reports::snackshop($_GET["camp"]);
-}
-else if (isset($_GET["transactions"]))
-{
-	Reports::transactions($_GET["start_date"]);
-	
-}
-//TODO: fix not payed code, probably haven't updated since payment database was added 
-//$not_payed = NULL;//$_GET['not_payed'];
+
+$thisReport = new Report($_GET['start_date'],$_GET['end_date'],$_GET['camp']);
+$thisReport->{$_GET['report']}();
+
+
 
 //Combining all of the databases so that we can pull all the data that we need from it
 //TODO this is an incredibly expensive query.
@@ -53,19 +23,8 @@ $query = "SELECT *
 $values = array();
 //Setup table and then we will add headers based on the query
 //Only default for most queries.  Isn't for camp_numbers report_table
-if (isset($_GET["backup_registration"])){
-	$query .= $GLOBALS['srbc_registration'] . ".waitlist=0 ";
-	echo '<table id="report_table"><tr><th>Last Name</th><th>First Name</th>';
-	echo '<th>Parent Name</th><th>Camp</th>';
-	echo '<th>Phone #</th><th>Paid</th>';
-	echo '<th>Amount Due</th><th>Payment Type</th><th>Payment Amount</th>';
-}
-else if(isset($_GET["emails"]))
-	//Do nothing
-	echo "";
-else {
-	echo '<table id="report_table"><tr><th>Last Name</th><th>First Name</th>';
-}
+echo '<table id="report_table"><tr><th>Last Name</th><th>First Name</th>';
+
 
 if(isset($_GET["camper_report"]))
 {
@@ -74,15 +33,10 @@ if(isset($_GET["camper_report"]))
 //TODO see if we really need areas or not?
 //BODY possibly redo a lot of this code as well
 if (isset($_GET['area']) && $_GET["area"] == "") {
-	//Checks to see if we need to add an and
-	if (isset($_GET["backup_registration"]))
-		$query .= " AND ";
 	$query .= $GLOBALS['srbc_camps'] . ".area LIKE '%' ";
 }
 else {
 	$values = array($_GET['area']);
-	if (isset($_GET["backup_registration"]))
-		$query .= " AND ";
 	$query .= $GLOBALS['srbc_camps'] . ".area='%s' ";
 }
 
@@ -101,10 +55,6 @@ if (isset($_GET["horsemanship"])){
 	$query .= "AND (NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 OR NOT " . $GLOBALS['srbc_registration'] . ".horse_waitlist=0)";
 	echo '<th>Horse WaitingList</th>';
 }
-//TODO this seems entirely unecessary and seems to be old code
-/*if (isset($_GET["camp_numbers"])){
-	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 ";
-}*/
 if (isset($_GET['scholarship'])){
 	$query .= "AND NOT " . $GLOBALS['srbc_registration'] . ".scholarship_amt=0 ";
 	echo '<th>Scholarship Type</th><th>Scholarship Amount</th>';
@@ -147,12 +97,6 @@ if (isset($_GET['packing_list_sent'])){
 	echo '<th>Packing List Sent</th>';
 }
 
-//TODO amount_due deprecated
-//@body needs to be redone with proper SQl query
-/*
-if ($not_payed == "true"){
-	$query .= "AND NOT srbc_registration.amount_due=0 ";
-}*/
 //close the row
 echo "</tr>";
 $information = $wpdb->get_results(
@@ -160,24 +104,11 @@ $information = $wpdb->get_results(
 //TODO redo this code.  It has gotten really confusing
 //Show the correct row based on what the user was searching for
 foreach ($information as $info){
-	//If emails we don't need any of the tables
-	if(isset($_GET["emails"]))
-	{
-		echo $info->email . ",<br>";
-		continue;
-	}
 	
 	if(!isset($_GET["not_payed"]))
 	{
 		//Start new row and put in name since that always happens - most of the time
 		echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
-		if ($info->waitlist == 1 && isset($_GET["camper_report"])) 
-		{
-			echo '<td class="stickout">(waitlisted)</td>';
-		}
-		else if(isset($_GET["camper_report"]))
-			echo "<td></td>";
-
 		if(($info->horse_opt == 1 || $info->horse_waitlist == 1) && isset($_GET["horsemanship"]))
 		{
 			if ($info->horse_waitlist == 1 && isset($_GET["horsemanship"])) 
@@ -201,36 +132,6 @@ foreach ($information as $info){
 			$amountDue = amountDue($info->registration_id,false);
 			echo "<td>$" . ($amountDue) . "</td>";
 		}
-	}
-	else if (isset($_GET["backup_registration"])){
-		echo "<td>" . $info->parent_first_name . " " . $info->parent_last_name . "</td>";
-		echo "<td>" . $info->area . " ".  $info->name . "</td>";
-		echo "<td>" . $info->phone . "</td>";
-		$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-								FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$info->registration_id));
-		$cost = $wpdb->get_var($wpdb->prepare("
-								SELECT SUM(srbc_camps.cost +
-									(CASE WHEN " . $GLOBALS['srbc_registration'] . ".horse_opt = 1 THEN " . $GLOBALS['srbc_camps'] . ".horse_opt_cost
-									ELSE 0
-									END) +
-									(CASE WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'to' THEN 35
-									WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'from' THEN 35
-									WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'both' THEN 60
-									ELSE 0
-									END) 
-									- IF(" . $GLOBALS['srbc_registration'] . ".discount IS NULL,0," . $GLOBALS['srbc_registration'] . ".discount)
-									- IF(" . $GLOBALS['srbc_registration'] . ".scholarship_amt IS NULL,0," . $GLOBALS['srbc_registration'] . ".scholarship_amt)		
-									)										
-									FROM " . $GLOBALS['srbc_registration'] . " 
-									INNER JOIN srbc_camps ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
-									WHERE " . $GLOBALS['srbc_registration'] . ".registration_id=%d ",$info->registration_id));
-		//Little hack so that is shows 0 if they are no payments
-		if ($totalPayed == NULL)
-			$totalPayed = 0;
-		echo "<td>$" . number_format($totalPayed,2) . "</td>";
-		echo "<td>$" . number_format(($cost - $totalPayed),2) . "</td>";
-		//Empty cells
-		echo "<td></td><td></td>";
 	}
 	else if(isset($_GET["not_payed"]))
 	{

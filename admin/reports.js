@@ -16,6 +16,8 @@ function generateReport(data)
 	}
 	var inputs = document.querySelectorAll("input");
 	hasStartDate = false;
+	//redo data paremeter to be in the report parameter
+	data = "report=" + data;
 	for (var i = 0;i < inputs.length; i++) {
 		if (inputs[i].id == "start_date" || inputs[i].id == "end_date")
 		{

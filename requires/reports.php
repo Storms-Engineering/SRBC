@@ -1,7 +1,18 @@
 <?php
-Class Reports
+Class Report
 {
-	private static function printHeader($camp = NULL)
+	private $start_date;
+	private $end_date;
+	private $camp_id;
+	
+	function __construct($startDate,$endDate,$campId) 
+	{
+		$this->start_date = $startDate;
+		$this->end_date = $endDate;
+	    $this->camp_id = $campId;
+	}
+	
+	private function printHeader($camp = NULL)
 	{
 		//Get calling method, we will use this to print a Header
 		$header = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
@@ -33,9 +44,9 @@ Class Reports
 			echo '<span style="font-size:large">' . $header . "</span>" . " - " . $campInfo . "<br><br>";
 	}
 	//Displays all inactive registrations
-	public static function inactive_registrations()
+	public function inactive_registrations()
 	{
-		self::printHeader();
+		$this->printHeader();
 		global $wpdb;
 		$campers = $wpdb->get_results("SELECT *	FROM " . $GLOBALS['srbc_registration_inactive'] . 
 									" INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration_inactive'] .
@@ -54,14 +65,14 @@ Class Reports
 	}
 	
 	//Pops up a mailing list that the user is asked to download in a .csv file
-	public static function mailing_list($start_date)
+	public function mailing_list()
 	{
 		global $wpdb;
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 			FROM ((" . $GLOBALS['srbc_registration'] . " 
 			INNER JOIN " . $GLOBALS["srbc_camps"] . " ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
 			INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE 
-			" . $GLOBALS["srbc_camps"] . ".start_date='%s'",$start_date));
+			" . $GLOBALS["srbc_camps"] . ".start_date='%s'",$this->start_date));
 		$csvArray = array();
 		$csvArray[] = array("First_name","Last_name","Address","City","State","Zipcode","Cabin", "Camp");
 		foreach($campers as $camper)
@@ -83,9 +94,9 @@ Class Reports
 		fclose($file);
 	}
 	
-	public static function camp_numbers()
+	public function camp_numbers()
 	{
-		self::printHeader();
+		$this->printHeader();
 		global $wpdb;
 		$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS["srbc_camps"]);
 		$totalRegistrations = 0;
@@ -108,7 +119,7 @@ Class Reports
 		echo "<br><br>Overall Camp Total: " . $totalRegistrations;
 	}
 	
-	public static function signout_sheets($start_date,$end_date,$camp)
+	public function signout_sheets()
 	{
 		global $wpdb;
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
@@ -116,9 +127,9 @@ Class Reports
 								 INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
 								 ".camp_id)
 								 INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
-								 WHERE " . $GLOBALS["srbc_camps"] . ".start_date BETWEEN '%s' AND '%s' OR " . $GLOBALS['srbc_camps'] . ".camp_id=%d
-								 ORDER BY srbc_registration.cabin DESC",$start_date,$end_date,$camp));
-		self::printHeader($campers);
+								 WHERE " . $GLOBALS["srbc_camps"] . ".start_date='%s' OR " . $GLOBALS['srbc_camps'] . ".camp_id=%d
+								 ORDER BY srbc_registration.cabin DESC",$this->start_date,$this->camp_id));
+		$this->printHeader($campers);
 		//This variable keeps track of if we have changed cabin group
 		//Initialized to 0 so we don't compare to null and get true
 		$oldCabin = 0;
@@ -154,17 +165,19 @@ Class Reports
 		echo "</table>";
 	}
 	
-	public static function program_camper_sheets($camp)
+	public function program_camper_sheets()
 	{
 		global $wpdb;
+		if($this->camp_id == "none")
+			exit("Please pick a camp to generate a report for.");
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 										FROM ((" . $GLOBALS['srbc_registration'] . "
 									 INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
 									 ".camp_id)
 									 INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
 									 WHERE " . $GLOBALS["srbc_camps"] . ".camp_id=%d
-									 ORDER BY srbc_registration.cabin DESC",$camp));
-		self::printHeader($campers);
+									 ORDER BY srbc_registration.cabin DESC",$this->camp_id));
+		$this->printHeader($campers);
 		//This variable keeps track of if we have changed cabin group
 		//Initialized to 0 so we don't compare to null and get true
 		$oldCabin = 0;
@@ -199,12 +212,12 @@ Class Reports
 		echo "</table>";
 	}
 	
-	public static function registration_day($start_date)
+	public function registration_day()
 	{
 		global $wpdb;
-		$newFormat = date("m/d/Y",strtotime( $start_date));
-		$newFormat2 = date("m/d/Y",strtotime( $start_date . " + 1 days"));
-		$newFormat3 = date("m/d/Y",strtotime( $start_date . " + 2 days"));
+		$newFormat = date("m/d/Y",strtotime( $this->start_date));
+		$newFormat2 = date("m/d/Y",strtotime( $this->start_date . " + 1 days"));
+		$newFormat3 = date("m/d/Y",strtotime( $this->start_date . " + 2 days"));
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 										FROM ((" . $GLOBALS['srbc_payments'] . " 
 										INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
@@ -316,7 +329,7 @@ Class Reports
 		}
 	}
 	
-	public static function snackshop($camp)
+	public function snackshop()
 	{
 		global $wpdb;
 		echo "<h3>Snackshop (Store) fees collected:</h3>";
@@ -326,7 +339,7 @@ Class Reports
 														FROM ((" . $GLOBALS['srbc_payments'] . " 
 														INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
 														INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
-														WHERE " . $GLOBALS['srbc_payments'] . ".fee_type='Store' AND " . $GLOBALS['srbc_registration'] . ".camp_id=%d",$camp));
+														WHERE " . $GLOBALS['srbc_payments'] . ".fee_type='Store' AND " . $GLOBALS['srbc_registration'] . ".camp_id=%d",$this->camp_id));
 		$totalFees = 0;
 		foreach ($campers as $camper)
 		{
@@ -339,10 +352,10 @@ Class Reports
 		echo "<br>Total fees: $" . $totalFees;
 	}
 	
-	public static function transactions($date)
+	public function transactions()
 	{
 		global $wpdb;
-		$newFormat = date("m/d/Y",strtotime($date));
+		$newFormat = date("m/d/Y",strtotime($this->start_date));
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 														FROM ((" . $GLOBALS['srbc_payments'] . " 
 														INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
@@ -367,6 +380,92 @@ Class Reports
 				echo "</tr>";
 		}
 		//Close out the table
+		echo "</table>";
+	}
+	
+	public function emails()
+	{
+		global $wpdb;
+		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+										FROM ((" . $GLOBALS['srbc_registration'] . "
+									 INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
+									 ".camp_id)
+									 INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+									 WHERE " . $GLOBALS["srbc_camps"] . ".camp_id=%d OR " . $GLOBALS['srbc_camps'] . ".start_date=%s 
+									 ORDER BY srbc_registration.cabin DESC",$this->camp_id,$this->start_date));
+		foreach($campers as $camper)
+			echo $camper->email . ",<br>";
+	}
+	
+	public function backup_registration()
+	{
+		global $wpdb;
+		$allInfo = $wpdb->get_results($wpdb->prepare( "SELECT *
+			FROM ((" . $GLOBALS['srbc_registration'] . "
+			INNER JOIN " . $GLOBALS['srbc_camps']. " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
+			INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) 
+			WHERE " . $GLOBALS['srbc_registration'] . ".waitlist=0 AND (" .
+			$GLOBALS["srbc_camps"] . ".camp_id=%d OR " . $GLOBALS['srbc_camps'] . ".start_date=%s)",$this->camp_id,$this->start_date));
+		echo '<table id=""><tr><th>Last Name</th><th>First Name</th>';
+		echo '<th>Parent Name</th><th>Camp</th>';
+		echo '<th>Phone #</th><th>Paid</th>';
+		echo '<th>Amount Due</th><th>Payment Type</th><th>Payment Amount</th></tr>';
+		foreach($allInfo as $info)
+		{
+			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo "<td>" . $info->parent_first_name . " " . $info->parent_last_name . "</td>";
+			echo "<td>" . $info->area . " ".  $info->name . "</td>";
+			echo "<td>" . $info->phone . "</td>";
+			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$info->registration_id));
+			$cost = $wpdb->get_var($wpdb->prepare("
+									SELECT SUM(srbc_camps.cost +
+										(CASE WHEN " . $GLOBALS['srbc_registration'] . ".horse_opt = 1 THEN " . $GLOBALS['srbc_camps'] . ".horse_opt_cost
+										ELSE 0
+										END) +
+										(CASE WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'to' THEN 35
+										WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'from' THEN 35
+										WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'both' THEN 60
+										ELSE 0
+										END) 
+										- IF(" . $GLOBALS['srbc_registration'] . ".discount IS NULL,0," . $GLOBALS['srbc_registration'] . ".discount)
+										- IF(" . $GLOBALS['srbc_registration'] . ".scholarship_amt IS NULL,0," . $GLOBALS['srbc_registration'] . ".scholarship_amt)		
+										)										
+										FROM " . $GLOBALS['srbc_registration'] . " 
+										INNER JOIN srbc_camps ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
+										WHERE " . $GLOBALS['srbc_registration'] . ".registration_id=%d ",$info->registration_id));
+			//Little hack so that it shows 0 if they are no payments
+			if ($totalPayed == NULL)
+				$totalPayed = 0;
+			echo "<td>$" . number_format($totalPayed,2) . "</td>";
+			echo "<td>$" . number_format(($cost - $totalPayed),2) . "</td>";
+			//Empty cells
+			echo "<td></td><td></td></tr>";
+		}
+		echo "</table>";
+		echo "<br>Campers Count: " . count($allInfo);
+	}
+	
+	public function camper_report()
+	{
+		global $wpdb;
+		$campers = $wpdb->get_results($wpdb->prepare( "SELECT *
+		FROM ((" . $GLOBALS['srbc_registration'] . "
+		INNER JOIN " . $GLOBALS['srbc_camps']. " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
+		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE " .
+			$GLOBALS["srbc_camps"] . ".camp_id=%d ", $this->camp_id));
+		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Waitlist</th></tr>';
+		foreach($campers as $info)
+		{
+			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			if ($info->waitlist == 1 ) 
+			{
+				echo '<td>(waitlisted)</td>';
+			}
+			else
+				echo "<td></td>";
+			echo "</tr>";
+		}
 		echo "</table>";
 	}
 }
