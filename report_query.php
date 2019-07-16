@@ -9,38 +9,43 @@ require 'requires/reports.php';
 if(isset($_GET["inactive_registrations"]))
 {
 	Reports::inactive_registrations();
+	exit();
 }
 else if(isset($_GET["mailing_list"]))
 {
 	Reports::mailing_list($_GET["start_date"]);
+	exit();
 }
 else if (isset($_GET["camp_numbers"]))
 {
 	Reports::camp_numbers();
+	exit();
 }
 else if(isset($_GET["signout_sheets"]))
 {
 	Reports::signout_sheets($_GET['start_date'],$_GET['end_date'],$_GET['camp']);
+	exit();
 }
 else if(isset($_GET["program_camper_sheets"]))
 {
 	Reports::program_camper_sheets($_GET['camp']);
+	exit();
 }
 else if (isset($_GET["registration_day"]))
 {
 	Reports::registration_day($_GET['start_date']);
+	exit();
 }
 else if(isset($_GET["snackshop"]))
 {
 	Reports::snackshop($_GET["camp"]);
+	exit();
 }
 else if (isset($_GET["transactions"]))
 {
-	Reports::transactions($_GET["start_date"]);
-	
+	Reports::transactions($_GET["start_date"]);	
+	exit();
 }
-//TODO: fix not payed code, probably haven't updated since payment database was added 
-//$not_payed = NULL;//$_GET['not_payed'];
 
 //Combining all of the databases so that we can pull all the data that we need from it
 //TODO this is an incredibly expensive query.
