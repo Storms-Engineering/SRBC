@@ -491,6 +491,7 @@ function srbc_camp_reports()
 	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/tooltip.css">
 	<div id="dontprint">
 	<h1>Reports</h1>
+	Note: Unless a report has a waitlist column all reports exclude waitlisted campers... Hopefully 😬<br>
 	<button style="float:right;" onclick="window.print()">Print Report</button>
 	
 	Program Area:
@@ -503,18 +504,19 @@ function srbc_camp_reports()
 			<option value="Sports">Sports Camp</option>
 			<option value="Fall Retreat">Fall Retreat</option>
 			<option value="Winter Camp">Winter Camp</option>
-		</select><br>
+		</select><button onclick="generateReport('area_report')">Area Report</button><br>
+		
 <br>
 		<h2 style="display:inline">General Reports</h2> <div class="tooltip">?
 			<span class="tooltiptext">These general reports can also be narrowed to a specific camp or program area, except for camp numbers</span>
 		</div> 
 		<br>
-		<button onclick="generateReport('scholarship')">Scholarships </button>
-		<button onclick="generateReport('discount')">Discounts </button>
+		<button onclick="generateReport('scholarships')">Scholarships </button>
+		<button onclick="generateReport('discounts')">Discounts </button>
 		<button onclick="generateReport('emails')">Emails </button>
 		<button onclick="generateReport('camp_numbers')">Camp Numbers </button>
-		<button onclick="generateReport('not_checked_in')">Camper didn't check in </button>
-		<button onclick="generateReport('not_payed')">Balance Due</button>
+		<button onclick="generateReport('not_checked_in')">Camper not checked in</button>
+		<button onclick="generateReport('balance_due')">Balance Due</button>
 		<button onclick="generateReport('inactive_registrations')">Inactive Registrations</button><br>
 		<hr>
 		<h2 style="display:inline;">Date specific reports</h2> <div class="tooltip">?
