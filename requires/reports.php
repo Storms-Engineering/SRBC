@@ -4,28 +4,41 @@ Class Report
 	private $start_date;
 	private $end_date;
 	private $camp_id;
+	private $buslist_type;
 	
-	function __construct($startDate,$endDate,$campId) 
+	function __construct($startDate,$endDate,$campId,$buslist_typ) 
 	{
 		$this->start_date = $startDate;
 		$this->end_date = $endDate;
 	    $this->camp_id = $campId;
+	    $this->buslist_type = $buslist_typ;
 	}
 	
 	//Gets campers using a generic query that we can add on too.  Also takes into the date and camp_id restrictions
 	private function getCampers($query = NULL)
 	{
-		if($this->camp_id == "none" && $this->start_date == NULL)
-			error_msg("Please pick a start date or a camp to generate this report");
 		global $wpdb;
-		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+		//Search for everything
+		if($this->camp_id == "none" && $this->start_date == NULL)
+		{
+			$campers = $wpdb->get_results("SELECT *
 									FROM ((" . $GLOBALS['srbc_registration'] . "
 								 INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
 								 ".camp_id)
 								 INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
-	WHERE " . $GLOBALS['srbc_registration'] . ".waitlist=0 AND (" . $GLOBALS["srbc_camps"] . ".start_date='%s' OR " . $GLOBALS['srbc_camps'] . ".camp_id=%d)" . $query ,
-								 $this->start_date,$this->camp_id));
-		return $campers;
+		WHERE " . $GLOBALS['srbc_registration'] . ".waitlist=0 ". $query );
+			}
+		else
+		{
+			$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+										FROM ((" . $GLOBALS['srbc_registration'] . "
+									INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
+									".camp_id)
+									INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+		WHERE " . $GLOBALS['srbc_registration'] . ".waitlist=0 AND (" . $GLOBALS["srbc_camps"] . ".start_date='%s' OR " . $GLOBALS['srbc_camps'] . ".camp_id=%d) " . $query ,
+									$this->start_date,$this->camp_id));
+		}
+			return $campers;
 	}
 	
 	//Calculates that amount due for a registration.  
@@ -552,6 +565,83 @@ Class Report
 		echo "</table>";
 	}
 	
+	//New Buslist grabs all campers heading to anchorage or camp and also selects campers that are going both ways
+	//Puts them into both reports
+	public function buslist()
+	{
+		$campers = $this->getCampers("AND (" . $GLOBALS['srbc_registration'] . ".busride='".$this->buslist_type."' OR " . $GLOBALS['srbc_registration'] . ".busride='both')" );
+		$this->printHeader();
+		echo '<table id=""><tr><th>Last Name</th><th>First Name</th>';
+		echo '<th>Camp</th>';
+		echo '<th>Primary Phone</th>';
+		echo '<th>Secondary Phone</th>';
+		echo '<th>Parent/Guardian Signature</th>';
+		echo '<th>Total Due</th></tr>';
+		foreach($campers as $info)
+		{
+			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			//TODO Change name to camp_name
+			//BODY this will cause confusion in the future when making these types of queries.
+			echo "<td>" . $info->area . " " . $info->name . "</td>";
+			echo "<td>" . $info->phone. "</td>";
+			echo "<td>" . $info->phone2. "</td>";
+			echo "<td></td>";
+			$amountDue = $this->amountDue($info->registration_id,false);
+			echo "<td>$" . ($amountDue) . "</td></tr>";
+			
+		}
+		echo "</table>";
+	}
+	
+	public function camp_report()
+	{
+		$campers = $this->getCampers();
+		$this->printHeader();
+		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Gender</th><th>Age</th><th>Counselor</th></tr>';
+		foreach($campers as $info)
+		{
+
+			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo "<td>" . $info->gender . "</td>";
+			echo "<td>" . $info->age . "</td>";
+			echo "<td>" . $info->counselor . "</td>";
+			echo "</tr>";
+		}
+		echo "</table>";
+	}
+	
+	public function horsemanship()
+	{
+		$campers = $this->getCampers("AND (NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 OR NOT " . $GLOBALS['srbc_registration'] . ".horse_waitlist=0)");
+		$this->printHeader();
+		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Horse WaitingList</th></tr>';
+		foreach($campers as $info)
+		{
+
+			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			if ($info->horse_waitlist == 1) 
+				echo '<td>(waitlisted)</td>';
+			else
+				echo '<td></td>';
+			echo "</tr>";
+		}
+		echo "</table>";
+	}
+	
+	public function packing_list_sent()
+	{
+		$campers = $this->getCampers();
+		$this->printHeader();
+		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Packing List Sent</th></tr>';
+		foreach($campers as $info)
+		{
+
+			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo "<td>" . ($info->packing_list_sent == 1 ? "Sent" : "Not Sent") . "</td></tr>";
+			echo "</tr>";
+		}
+		echo "</table>";
+	}
 	
 }
 
