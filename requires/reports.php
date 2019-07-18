@@ -77,8 +77,8 @@ Class Report
 		$header = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
 		//Format - remove _ and uppercase
 		$header = ucwords(str_replace("_"," ",$header));
-		
 		$campInfo = array();
+
 		//Get camps we are pulling info from
 		if ($camp !== NULL)
 		{
@@ -120,6 +120,7 @@ Class Report
 	}
 	
 	//Pops up a mailing list that the user is asked to download in a .csv file
+
 	public function mailing_list()
 	{
 		$campers = $this->getCampers();
@@ -144,6 +145,7 @@ Class Report
 		fclose($file);
 	}
 	
+
 	public function camp_numbers()
 	{
 		$this->printHeader();
@@ -246,7 +248,7 @@ Class Report
 		//Close out the table
 		echo "</table>";
 	}
-	
+
 	public function registration_day()
 	{
 		global $wpdb;
@@ -373,7 +375,7 @@ Class Report
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 														FROM ((" . $GLOBALS['srbc_payments'] . " 
 														INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
-														INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+														INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id
 														WHERE " . $GLOBALS['srbc_payments'] . ".fee_type='Store' AND " . $GLOBALS['srbc_registration'] . ".camp_id=%d",$this->camp_id));
 		$totalFees = 0;
 		foreach ($campers as $camper)
@@ -642,7 +644,6 @@ Class Report
 		}
 		echo "</table>";
 	}
-	
 }
 
 ?>

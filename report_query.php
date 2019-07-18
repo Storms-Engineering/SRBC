@@ -10,7 +10,4 @@ require 'requires/reports.php';
 $thisReport = new Report($_GET['start_date'],$_GET['end_date'],$_GET['camp'],$_GET['buslist_type']);
 $thisReport->{$_GET['report']}();
 
-
-
-
 ?>
