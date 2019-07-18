@@ -6,10 +6,9 @@ Class Report
 	private $camp_id;
 	private $buslist_type;
 	
-	function __construct($startDate,$endDate,$campId,$buslist_typ) 
+	function __construct($startDate,$campId,$buslist_typ) 
 	{
 		$this->start_date = $startDate;
-		$this->end_date = $endDate;
 	    $this->camp_id = $campId;
 	    $this->buslist_type = $buslist_typ;
 	}
@@ -643,6 +642,21 @@ Class Report
 			echo "</tr>";
 		}
 		echo "</table>";
+	}
+	
+	public function no_health_form()
+	{
+		$campers = $this->getCampers("AND " . $GLOBALS["srbc_registration"] . ".health_form=0");
+		$this->printHeader();
+		echo '<table id=""><tr><th>Last Name</th><th>First Name</th></tr>';
+		foreach($campers as $info)
+		{
+
+			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo "</tr>";
+		}
+		echo "</table>";
+
 	}
 }
 
