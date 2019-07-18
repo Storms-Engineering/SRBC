@@ -523,7 +523,7 @@ function srbc_camp_reports()
 			<span class="tooltiptext">Please choose the same date twice if you are doing a report for all camps starting on that day.
 		For buslists pick the starting date(Earlier starting date first)for two camps as as there will be some campers going both ways</span>
 		</div> 
-		Camp Dates between <input id="start_date" type="date"> & <input id="end_date" type="date">
+		Camp Start Date <input id="start_date" type="date">
 		<br>
 		<button onclick="generateReport('buslist')">Buslist </button><select class="inputs" id="buslist_type">
 			<option value="to">To Camp</option>

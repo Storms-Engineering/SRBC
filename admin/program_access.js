@@ -48,6 +48,12 @@ function updateCamperLodging(lodge,counselorPos){
 		return;
 	}
 	assistant_counselor = document.getElementsByName("assistant_counselor")[counselorPos].value;
+	//Deselect all checkboxes
+	inputs = document.querySelectorAll("#popup input[type=checkbox]");
+	for (i = 0; i<inputs.length;i++)
+	{
+		inputs[i].checked = false;
+	}
 	
 	popup.style.display = "block";
 	//Callback for getting the selected cameper
