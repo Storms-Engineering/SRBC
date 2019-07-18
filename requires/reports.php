@@ -38,7 +38,7 @@ Class Report
 		WHERE " . $GLOBALS['srbc_registration'] . ".waitlist=0 AND (" . $GLOBALS["srbc_camps"] . ".start_date='%s' OR " . $GLOBALS['srbc_camps'] . ".camp_id=%d) " . $query ,
 									$this->start_date,$this->camp_id));
 		}
-			return $campers;
+		return $campers;
 	}
 	
 	//Calculates that amount due for a registration.  
