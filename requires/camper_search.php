@@ -27,7 +27,13 @@ class CamperSearch
 				$name."%",$name."%",$name."%",$name."%"));
 		}
 		return $campers;
-	}	
+	}
+	
+	//Gets campers using a general query that searches through quite a bit of data
+	public static function getCampers()
+	{
+		throw new Exception("Method is not yet implemented");
+	}
 	
 }
 ?>
