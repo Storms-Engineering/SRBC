@@ -244,8 +244,8 @@ function program_menu()
 {
    add_submenu_page(
         'srbc_overview',
-        'Program Access',
-        'Program Access',
+        'Camper Lodging',
+        'Camper Lodging',
         'manage_options',
         'srbc_program_access',
 		'srbc_program_access'
