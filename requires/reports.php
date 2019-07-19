@@ -15,7 +15,7 @@ Class Report
 	}
 	
 	//Gets campers using a generic query that we can add on too.  Also takes into the date and camp_id restrictions
-	private function getCampers(string $query = "", bool $printHeader = true)
+	private function getCampers($query = NULL, $printHeader = true)
 	{
 
 		global $wpdb;
@@ -76,7 +76,7 @@ Class Report
 								WHERE " . $database . ".registration_id=%d",$registration_id));
 		return $cost - $totalPayed;
 	}
-	private function printHeader($camp = NULL, bool $traceBack3 = false)
+	private function printHeader($camp = NULL, $traceBack3 = false)
 	{
 		//Get calling method, we will use this to print a Header
 		//Traceback is how many functions back we want to trace back to
