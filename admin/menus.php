@@ -309,7 +309,7 @@ function listCamps($area)
 										FROM " . $GLOBALS['srbc_registration'] . "
 										WHERE camp_id=%s AND NOT horse_waitlist=0",$camp->camp_id)); 
 										
-		echo '<tr onclick="openModal(' . $camp->camp_id . ')"><td>' . $camp->name;
+		echo '<tr onclick="openCampModal(' . $camp->camp_id . ')"><td>' . $camp->name;
 		echo "</td><td>" . $camp->start_date . "</td>";
 		echo "<td>" . $male_registered . "</td>";
 		echo "<td>" . $female_registered . "</td>";
@@ -369,6 +369,7 @@ function srbc_camps_management()
 	global $wpdb;
 	?>
 	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/camps_management.css">
+	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/camper_management.css">
     <div class="wrap">
         <h1><?= esc_html(get_admin_page_title()); ?></h1>
         <button class="tablink" onclick="openPage('Lakeside', this, '#b30000')" id="defaultOpen">Lakeside</button>
@@ -450,6 +451,8 @@ function srbc_camps_management()
 	<div id="snackbar"></div>
 	<div id="error"></div>
 	<script src="../wp-content/plugins/SRBC/admin/camps_management.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/camper_modal.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/sortTable.js"></script>
     <?php
 }
 

@@ -7,7 +7,7 @@ function deleteCamp(ev,cmpid)
 }
 
 //Opens modal showing the ability to edit a camp
-function openModal(cmp_id) {
+function openCampModal(cmp_id) {
 	var xhttp;
 	if (window.XMLHttpRequest) {
 		// code for modern browsers

@@ -123,7 +123,7 @@ Class Report
 			$amountDue = $this->amountDue($camper->registration_id,true);
 			$camp = $wpdb->get_results("SELECT * FROM " . $GLOBALS['srbc_camps'] . 
 											" WHERE camp_id=$camper->camp_id")[0];
-			echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>' . $camper->camper_last_name ."</td><td> " . $camper->camper_first_name. "</td>".
+			echo '<tr class="'.$camper->gender.'" onclick="openCamperModal('.$camper->camper_id.');"><td>' . $camper->camper_last_name ."</td><td> " . $camper->camper_first_name. "</td>".
 			"<td>" . $camp->area . " " . $camp->name . "</td><td>$" . $amountDue . "</td>";
 		}
 		echo "</table>";
@@ -325,7 +325,7 @@ Class Report
 			//Write out data
 			if ($camper->camper_id != $nextid || $camper->registration_id != $next_reg_id)
 			{
-				echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name . "</td><td>" . $camper->camper_first_name . "</td>";
+				echo '<tr class="'.$camper->gender.'" onclick="openCamperModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name . "</td><td>" . $camper->camper_first_name . "</td>";
 				echo "<td>$". $camp_fee . "</td>";
 				echo "<td>". $program_area . "</td>";
 				echo "<td>$". $horse_fee . "</td>";
@@ -353,7 +353,7 @@ Class Report
 			//BODY that will be faster
 			if(!in_array($camper->camper_id,$camper_ids))
 			{
-				echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name . "</td><td>" . $camper->camper_first_name . "</td>";
+				echo '<tr class="'.$camper->gender.'" onclick="openCamperModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name . "</td><td>" . $camper->camper_first_name . "</td>";
 				echo "<td>$0</td>";
 				echo "<td>None</td>";
 				echo "<td>$0</td>";
@@ -388,7 +388,7 @@ Class Report
 		$totalFees = 0;
 		foreach ($campers as $camper)
 		{
-			echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name
+			echo '<tr class="'.$camper->gender.'" onclick="openCamperModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name
 			. "</td><td>" . $camper->camper_first_name . "</td>";
 			//Extra cell for checkbox so office can check off when they are done with one
 			echo "<td>$" . $camper->payment_amt . '</td><td><input type="checkbox" onclick="event.stopPropagation();"></td></tr>';
@@ -417,7 +417,7 @@ Class Report
 		{
 			
 
-				echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>'. $camper->camper_first_name . "</td><td>" . $camper->camper_last_name . "</td>";
+				echo '<tr class="'.$camper->gender.'" onclick="openCamperModal('.$camper->camper_id.');"><td>'. $camper->camper_first_name . "</td><td>" . $camper->camper_last_name . "</td>";
 				echo "<td>". $camper->payment_type . "</td>";
 				echo "<td>". $camper->fee_type . "</td>";
 				echo "<td>$". $camper->payment_amt . "</td>";
@@ -444,7 +444,7 @@ Class Report
 		echo '<th>Amount Due</th><th>Payment Type</th><th>Payment Amount</th></tr>';
 		foreach($campers as $camper)
 		{
-			echo '<tr class="'.$camper->gender.'" onclick="openModal('.$camper->camper_id.');"><td>' . $camper->camper_last_name ."</td><td> " . $camper->camper_first_name. "</td>";
+			echo '<tr class="'.$camper->gender.'" onclick="openCamperModal('.$camper->camper_id.');"><td>' . $camper->camper_last_name ."</td><td> " . $camper->camper_first_name. "</td>";
 			echo "<td>" . $camper->parent_first_name . " " . $camper->parent_last_name . "</td>";
 			echo "<td>" . $camper->area . " ".  $camper->name . "</td>";
 			echo "<td>" . $camper->phone . "</td>";
@@ -492,7 +492,7 @@ Class Report
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Waitlist</th></tr>';
 		foreach($campers as $info)
 		{
-			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
 			if ($info->waitlist == 1 ) 
 			{
 				echo '<td>(waitlisted)</td>';
@@ -523,7 +523,7 @@ Class Report
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Scholarship Type</th><th>Scholarship Amount</th>';
 		foreach($campers as $info)
 		{
-			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
 			echo "<td>" . $info->scholarship_type . "</td><td>$" . $info->scholarship_amt . "</td>";
 			echo "</tr>";
 		}
@@ -537,7 +537,7 @@ Class Report
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Discount Type</th><th>Discount</th></tr>';
 		foreach($campers as $info)
 		{
-			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
 			echo "<td>" . $info->discount_type . "</td>";
 			echo "<td>$" . $info->discount . "</td>";
 			echo "</tr>";
@@ -551,7 +551,7 @@ Class Report
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th></tr>';
 		foreach($campers as $info)
 		{
-			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
 			echo "</tr>";
 		}
 		echo "</table>";
@@ -566,7 +566,7 @@ Class Report
 			$amountDue = $this->amountDue($info->registration_id,false);
 			if($amountDue <= 0)
 				continue;
-			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
 			echo "<td>$" . $amountDue . "</td>";
 			echo "</tr>";
 		}
@@ -586,7 +586,7 @@ Class Report
 		echo '<th>Total Due</th></tr>';
 		foreach($campers as $info)
 		{
-			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
 			//TODO Change name to camp_name
 			//BODY this will cause confusion in the future when making these types of queries.
 			echo "<td>" . $info->area . " " . $info->name . "</td>";
@@ -616,7 +616,7 @@ Class Report
 		foreach($campers as $info)
 		{
 
-			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
 			if ($info->horse_waitlist == 1) 
 				echo '<td>(waitlisted)</td>';
 			else
@@ -633,7 +633,7 @@ Class Report
 		foreach($campers as $info)
 		{
 
-			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
+			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
 			echo "<td>" . ($info->packing_list_sent == 1 ? "Sent" : "Not Sent") . "</td></tr>";
 			echo "</tr>";
 		}

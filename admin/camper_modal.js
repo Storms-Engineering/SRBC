@@ -27,7 +27,7 @@ function resendEmail(r_id){
 }
 
 //Custom Modal Function
-function openModal(cmpr_id) {
+function openCamperModal(cmpr_id) {
 	var xhttp;
 	if (window.XMLHttpRequest) {
 		// code for modern browsers
@@ -229,7 +229,6 @@ function calculate_totals()
 			calcInputs = ["horse_opt", "busride_cost", "discount", "scholarship_amt", "auto_payment_amt", "payment_amt", "payed"];
 			if(calcInputs.includes(inputs[j].name) && inputs[j].value != "")
 			{			
-				console.log(inputs[j].name);
 				if (inputs[j].name == "busride_cost")
 				{
 					var busride = document.querySelectorAll("select[name=busride]")[i].value;

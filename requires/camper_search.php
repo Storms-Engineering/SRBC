@@ -35,5 +35,17 @@ class CamperSearch
 		throw new Exception("Method is not yet implemented");
 	}
 	
+	public static function getCampersByCampID($camp_id)
+	{
+		global $wpdb;
+		$campers = $wpdb->get_results(
+			$wpdb->prepare( "SELECT *
+							FROM ((" . $GLOBALS['srbc_registration'] . " 
+							INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS['srbc_registration'] . '.camp_id= ' . $GLOBALS['srbc_camps'] . '.camp_id)
+							INNER JOIN srbc_campers ON ' . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+							WHERE " . $GLOBALS['srbc_camps'] . ".camp_id=%d",$camp_id));	
+		return $campers;
+	}
+	
 }
 ?>

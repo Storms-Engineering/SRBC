@@ -24,7 +24,7 @@ Class Tables
 		foreach($campers as $camper)
 		{
 			//Allows user to click on camper and get modal
-			echo '<tr onclick="openModal('.$camper->camper_id.')" class="'. $camper->gender .'">';
+			echo '<tr onclick="openCamperModal('.$camper->camper_id.')" class="'. $camper->gender .'">';
 			foreach($properties as $prop)
 			{
 				if($prop === "email")
