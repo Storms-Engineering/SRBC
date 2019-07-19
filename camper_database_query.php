@@ -70,9 +70,9 @@ if (!$specificQuery)
 		Tables::createCheckboxTable($campers);
 	else
 	{
-		$columnHeaders = array("Firstname", "Lastname", "Parent Name", "Email", "Phone");
-		$properties = array("camper_first_name", "camper_last_name" , "parent_first_name", "email", "phone");
-		Tables::createTable($columnHeaders, $properties, $campers);
+		$columnHeaders = array("Parent Name", "Email", "Phone");
+		$properties = array("parent_first_name", "email", "phone");
+		Tables::createTable($campers, $columnHeaders, $properties);
 	}
 	echo "</table>"
 ?>

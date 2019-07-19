@@ -1,4 +1,5 @@
 <?php
+require_once 'tables.php';
 Class Report
 {
 	private $start_date;
@@ -14,8 +15,9 @@ Class Report
 	}
 	
 	//Gets campers using a generic query that we can add on too.  Also takes into the date and camp_id restrictions
-	private function getCampers($query = NULL)
+	private function getCampers(string $query = NULL, bool $printHeader = true)
 	{
+
 		global $wpdb;
 		//Search for everything
 		if($this->camp_id == "none" && $this->start_date == NULL)
@@ -26,7 +28,8 @@ Class Report
 								 ".camp_id)
 								 INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
 		WHERE " . $GLOBALS['srbc_registration'] . ".waitlist=0 ". $query );
-			}
+		}
+		//
 		else
 		{
 			$campers = $wpdb->get_results($wpdb->prepare("SELECT *
@@ -37,6 +40,9 @@ Class Report
 		WHERE " . $GLOBALS['srbc_registration'] . ".waitlist=0 AND (" . $GLOBALS["srbc_camps"] . ".start_date='%s' OR " . $GLOBALS['srbc_camps'] . ".camp_id=%d) " . $query ,
 									$this->start_date,$this->camp_id));
 		}
+		//We want to traceback 3 functions
+		if($printHeader)
+			$this->printHeader($campers,true);
 		return $campers;
 	}
 	
@@ -70,10 +76,15 @@ Class Report
 								WHERE " . $database . ".registration_id=%d",$registration_id));
 		return $cost - $totalPayed;
 	}
-	private function printHeader($camp = NULL)
+	private function printHeader($camp = NULL, bool $traceBack3 = false)
 	{
 		//Get calling method, we will use this to print a Header
-		$header = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
+		//Traceback is how many functions back we want to trace back to
+		if ($traceBack3 === true)
+			$traceBackAmt = 2;
+		else 
+			$traceBackAmt = 1;
+		$header = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[$traceBackAmt]['function'];
 		//Format - remove _ and uppercase
 		$header = ucwords(str_replace("_"," ",$header));
 		$campInfo = array();
@@ -95,7 +106,7 @@ Class Report
 		if ($camp === NULL)
 			echo "<h1>" . $header . "</h1>";
 		else
-			echo '<span style="font-size:large">' . $header . "</span>" . " - " . $campsString . "<br><br>";
+			echo '<h1 style="display:inline;">' . $header . "</h1>" . " - " . $campsString . "<br><br>";
 	}
 	//Displays all inactive registrations
 	public function inactive_registrations()
@@ -106,7 +117,7 @@ Class Report
 									" INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration_inactive'] .
 									".camper_id=srbc_campers.camper_id");
 		echo "<table><tr><th>First Name</th><th>Last Name</th><th>Camp</th><th>Amount Due</th></tr>";
-		//Start new row and put in name since that always happens - most of the time
+		//Start new row and put in name 
 		foreach($campers as $camper)
 		{	
 			$amountDue = $this->amountDue($camper->registration_id,true);
@@ -173,7 +184,6 @@ Class Report
 	public function signout_sheets()
 	{
 		$campers = $this->getCampers("ORDER BY srbc_registration.cabin DESC");
-		$this->printHeader($campers);
 		//This variable keeps track of if we have changed cabin group
 		//Initialized to 0 so we don't compare to null and get true
 		$oldCabin = 0;
@@ -213,7 +223,6 @@ Class Report
 	{
 		global $wpdb;
 		$campers = $this->getCampers("ORDER BY srbc_registration.cabin DESC");
-		$this->printHeader($campers);
 		//This variable keeps track of if we have changed cabin group
 		//Initialized to 0 so we don't compare to null and get true
 		$oldCabin = 0;
@@ -398,8 +407,7 @@ Class Report
 														INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
 														WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s AND " . $GLOBALS['srbc_payments'] . ".registration_day=1
 														ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
-														
-		echo "<h3>Transactions</h3>";
+		$this->printHeader();												
 		echo '<table id="report_table">';
 		echo "<tr><th>Last name</th><th>First Name</th><th>Payment Type</th><th>Fee Type</th>
 				<th>Amount</th></tr>";
@@ -480,6 +488,7 @@ Class Report
 		INNER JOIN " . $GLOBALS['srbc_camps']. " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
 		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE " .
 			$GLOBALS["srbc_camps"] . ".camp_id=%d ", $this->camp_id));
+		$this->printHeader($campers);
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Waitlist</th></tr>';
 		foreach($campers as $info)
 		{
@@ -510,7 +519,6 @@ Class Report
 	public function scholarships()
 	{
 		$campers = $this->getCampers("AND NOT " . $GLOBALS['srbc_registration'] . ".scholarship_amt=0");
-		$this->printHeader();
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Scholarship Type</th><th>Scholarship Amount</th>';
 		foreach($campers as $info)
 		{
@@ -524,7 +532,7 @@ Class Report
 	public function discounts()
 	{
 		$campers = $this->getCampers("AND NOT " . $GLOBALS['srbc_registration'] . ".discount=0 ");
-		$this->printHeader();
+		//TODO we could use the default table function, but I want to add $ to the beginning of certain lines so idk how to do that yet.
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Discount Type</th><th>Discount</th></tr>';
 		foreach($campers as $info)
 		{
@@ -539,7 +547,6 @@ Class Report
 	public function not_checked_in()
 	{
 		$campers = $this->getCampers("AND " . $GLOBALS['srbc_registration']. ".checked_in=0");
-		$this->printHeader();
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th></tr>';
 		foreach($campers as $info)
 		{
@@ -552,7 +559,6 @@ Class Report
 	public function balance_due()
 	{
 		$campers = $this->getCampers();
-		$this->printHeader();
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Amount Due</th></tr>';
 		foreach($campers as $info)
 		{
@@ -571,7 +577,6 @@ Class Report
 	public function buslist()
 	{
 		$campers = $this->getCampers("AND (" . $GLOBALS['srbc_registration'] . ".busride='".$this->buslist_type."' OR " . $GLOBALS['srbc_registration'] . ".busride='both')" );
-		$this->printHeader();
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th>';
 		echo '<th>Camp</th>';
 		echo '<th>Primary Phone</th>';
@@ -592,29 +597,20 @@ Class Report
 			
 		}
 		echo "</table>";
+		echo "<br>Campers Count: " . count($campers);
 	}
 	
 	public function camp_report()
 	{
 		$campers = $this->getCampers();
-		$this->printHeader();
-		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Gender</th><th>Age</th><th>Counselor</th></tr>';
-		foreach($campers as $info)
-		{
-
-			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
-			echo "<td>" . $info->gender . "</td>";
-			echo "<td>" . $info->age . "</td>";
-			echo "<td>" . $info->counselor . "</td>";
-			echo "</tr>";
-		}
-		echo "</table>";
+		$headers = array("Gender", "Age", "Counselor");
+		$props = array("gender", "age", "counselor");
+		Tables::createTable($campers, $headers, $props);
 	}
 	
 	public function horsemanship()
 	{
 		$campers = $this->getCampers("AND (NOT " . $GLOBALS['srbc_registration'] . ".horse_opt=0 OR NOT " . $GLOBALS['srbc_registration'] . ".horse_waitlist=0)");
-		$this->printHeader();
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Horse WaitingList</th></tr>';
 		foreach($campers as $info)
 		{
@@ -632,7 +628,6 @@ Class Report
 	public function packing_list_sent()
 	{
 		$campers = $this->getCampers();
-		$this->printHeader();
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Packing List Sent</th></tr>';
 		foreach($campers as $info)
 		{
@@ -647,15 +642,7 @@ Class Report
 	public function no_health_form()
 	{
 		$campers = $this->getCampers("AND " . $GLOBALS["srbc_registration"] . ".health_form=0");
-		$this->printHeader();
-		echo '<table id=""><tr><th>Last Name</th><th>First Name</th></tr>';
-		foreach($campers as $info)
-		{
-
-			echo '<tr class="'.$info->gender.'" onclick="openModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
-			echo "</tr>";
-		}
-		echo "</table>";
+		Tables::createTable($campers);
 
 	}
 }

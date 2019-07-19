@@ -3,16 +3,21 @@ Class Tables
 {
 	//Creates a table based on the properties given it.
 	//Both the properties and tablen headers must be in the correct order
-	public static function createTable($columnHeaders, $properties,$campers)
+	public static function createTable($campers, $columnHeaders = array(), $properties = array(), $showWaitlist = false)
 	{
-		echo ' <table style="width:100%;" id="results_table">';
+		$defaultHeaders = array("Last Name", "First Name");
+		$defaultProperties = array("camper_last_name", "camper_first_name");
+		
+		$columnHeaders  = array_merge($defaultHeaders, $columnHeaders);
+		$properties  = array_merge($defaultProperties, $properties);
+		echo ' <table id="results_table">';
 		echo '<tr>';
 		foreach($columnHeaders as $ch)
 		{
 			echo '<th>' . $ch . '</th>';
 		}
 		//Show a waitlist column if we have it available.
-		if(property_exists($campers[0],'waitlist'))
+		if(property_exists($campers[0],'waitlist') && $showWaitlist)
 			echo '<th>Waitlist</th>';
 		echo '</tr>';
 		//List campers
@@ -28,10 +33,12 @@ Class Tables
 					echo '<td>' . $camper->{$prop} . '</td>';
 			}
 			//Show a waitlist column if we have it available.
-			if(property_exists($camper,'waitlist'))
+			if(property_exists($camper,'waitlist') && $showWaitlist)
 				echo " " . (($camper->waitlist == 1) ? "<td>waitlisted</td>" : "<td></td>");
 			echo '</tr>';
 		}
+		echo "</table>";
+		echo "<br>Campers Count: " . count($campers);
 	}
 	
 	public static function createCheckboxTable($campers)
