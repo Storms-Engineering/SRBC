@@ -15,7 +15,7 @@ Class Report
 	}
 	
 	//Gets campers using a generic query that we can add on too.  Also takes into the date and camp_id restrictions
-	private function getCampers(string $query = NULL, bool $printHeader = true)
+	private function getCampers(string $query = "", bool $printHeader = true)
 	{
 
 		global $wpdb;
@@ -507,6 +507,7 @@ Class Report
 	public function area_report()
 	{
 		error_msg("Area report currently doesn't work");
+		$query = null;
 		if (isset($_GET['area']) && $_GET["area"] == "") {
 		$query .= $GLOBALS['srbc_camps'] . ".area LIKE '%' ";
 		}
