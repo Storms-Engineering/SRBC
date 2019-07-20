@@ -75,7 +75,7 @@ function postAjax(obj,camper_id) {
     if (this.readyState == 4 && this.status == 200) {
 		var txt = this.responseText;
 		if(camper_id !== 0)
-			openModal(camper_id);
+			openCamperModal(camper_id);
 		//If an error occurs show the error from the php properly so it doesn't go away in a toast
 		//TODO CHANGE THIS CAUSE THIS DOESN"T WORK GREAT
         if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
