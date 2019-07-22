@@ -383,7 +383,7 @@ Class Report
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 														FROM ((" . $GLOBALS['srbc_payments'] . " 
 														INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
-														INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id
+														INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
 														WHERE " . $GLOBALS['srbc_payments'] . ".fee_type='Store' AND " . $GLOBALS['srbc_registration'] . ".camp_id=%d",$this->camp_id));
 		$totalFees = 0;
 		foreach ($campers as $camper)
