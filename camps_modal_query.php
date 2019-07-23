@@ -31,10 +31,10 @@
 	$closed = $camp->closed_to_registrations == 0 ? "" : "checked";
 	echo '<br>Closed To Registrations <input type="checkbox" name="closed_to_registrations" ' . $closed . '><br><br>';
 	
-	require_once 'requires/tables.php';
+	/*require_once 'requires/tables.php';
 	require_once 'requires/camper_search.php';
 	$campers = CamperSearch::getCampersByCampID($camp->camp_id);
-	Tables::createTable($campers);
+	Tables::createTable($campers);*/
 	
 	echo "</div>";
 	echo '<div class="modal-footer"><button  onclick="saveInfo(' . $camp->camp_id . ');" class="big_button">Save Info & Close</button></div>';
