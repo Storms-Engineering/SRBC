@@ -81,7 +81,7 @@ function commandHandler() {
 	if (this.rawMode) {
 		if (this.env.getPassword) {
 			// sample password handler (lineBuffer == stored username ?)
-			if (this.lineBuffer == ") {
+			if (this.lineBuffer == "janus key") {
 				this.user = this.env.username;
 				this.ps = '['+this.user+']>';
 				this.type('Welcome '+this.user+', you are now logged on to the system.');
