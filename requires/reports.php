@@ -578,6 +578,11 @@ Class Report
 	public function buslist()
 	{
 		$campers = $this->getCampers("AND (" . $GLOBALS['srbc_registration'] . ".busride='".$this->buslist_type."' OR " . $GLOBALS['srbc_registration'] . ".busride='both')" );
+		echo '<h1>' . ($this->buslist_type == "to" ? "Anchorage to camp" : "Camp to Anchorage");
+		if($this->buslist_type == "from")
+			echo ", " . date ("l",strtotime( $campers[0]->end_date)) . " , " .  date("n/j", strtotime($campers[0]->end_date)) . "</h1>";
+		else if($this->buslist_type == "to")
+			echo ", " . date ("l",strtotime( $campers[0]->start_date)) . " , " .  date("n/j", strtotime($campers[0]->start_date)) . "</h1>";
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th>';
 		echo '<th>Camp</th>';
 		echo '<th>Primary Phone</th>';
