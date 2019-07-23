@@ -198,13 +198,15 @@ Class Report
 				{
 					echo '</table>';	
 				}
-					if($camper->cabin === "" || $camper->cabin === NULL)
-						echo "<h3>No Cabin Assigned</h3>";
-					else
-						echo "<h3>$camper->cabin</h3>";
-					echo '<table style="page-break-after: always;" id="report_table">';
-					echo '<tr><th>Camper</th><th>Parent/Guardian</th><th style="width:200px;">Signature</th></tr>';			
-				}			
+				echo "<h1>Signout Sheet for " . $camper->area . " " . $camper->name . "</h1>";
+				
+				if($camper->cabin === "" || $camper->cabin === NULL)
+					echo "<h3>No Cabin Assigned</h3>";
+				else
+					echo "<h3>$camper->cabin</h3>";
+				echo '<table style="page-break-after: always;" id="report_table">';
+				echo '<tr><th>Camper</th><th>Parent/Guardian</th><th style="width:200px;">Signature</th></tr>';			
+			}			
 			echo "<tr><td>". $camper->camper_first_name . " " . $camper->camper_last_name . "</td>";
 			echo "<td>". $camper->parent_first_name . " " . $camper->parent_last_name . "</td>";
 			
