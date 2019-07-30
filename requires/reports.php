@@ -648,6 +648,19 @@ Class Report
 		$headers = array("Gender", "Age", "Counselor");
 		$props = array("gender", "age", "counselor");
 		Tables::createTable($campers, $headers, $props);
+		$genderTotals = array();
+		foreach($campers as $camper)
+		{
+			if(!array_key_exists($camper->gender,$genderTotals))
+				$genderTotals[$camper->gender] = 0;
+			$genderTotals[$camper->gender] += 1;
+		}
+		$keys = array_keys($genderTotals);
+		for($i=0;$i<count($keys);$i++)
+		{
+			echo "<br>Total ".$keys[$i]. ": ";
+			echo $genderTotals[$keys[$i]];
+		}
 	}
 	
 	public function horsemanship()
