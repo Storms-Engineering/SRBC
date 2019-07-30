@@ -368,6 +368,11 @@ Class Report
 		}
 		//Close out the table
 		echo "</table>";
+		$this->printTotals($totals);
+	}
+	
+	private function printTotals($totals)
+	{
 		$keys = array_keys($totals);
 		for($i=0;$i<count($keys);$i++)
 		{
@@ -519,17 +524,29 @@ Class Report
 		}
 	}
 	
+	//Prints all the campers with Scholarships and the type and the totals
 	public function scholarships()
 	{
-		$campers = $this->getCampers("AND NOT " . $GLOBALS['srbc_registration'] . ".scholarship_amt=0");
+		$campers = $this->getCampers("AND NOT " . $GLOBALS['srbc_registration'] . ".scholarship_amt=0 ORDER BY " . $GLOBALS['srbc_registration'] . ".scholarship_type ASC");
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Scholarship Type</th><th>Scholarship Amount</th>';
+		$totals = array();
+		$grandTotal = 0;
 		foreach($campers as $info)
 		{
+			//If the key doesn't exist create it
+			if(!array_key_exists($info->scholarship_type,$totals))
+				$totals[$info->scholarship_type] = 0;
+			//Add to our total
+			$totals[$info->scholarship_type] += $info->scholarship_amt;
+			$grandTotal += $info->scholarship_amt;
+			
 			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
 			echo "<td>" . $info->scholarship_type . "</td><td>$" . $info->scholarship_amt . "</td>";
 			echo "</tr>";
 		}
 		echo "</table>";
+		$this->printTotals($totals);
+		echo "<h1>Grand Total: $" . number_format($grandTotal,2) . "</h1>";
 	}
 	
 	public function discounts()
