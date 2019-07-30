@@ -582,6 +582,8 @@ Class Report
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Amount Due</th><th>Camp</th></tr>';
 		foreach($campers as $info)
 		{
+			//TODO Change amount_due to a complete sql query
+			//BODY this is a super heavy load.
 			$amountDue = $this->amountDue($info->registration_id,false);
 			if($amountDue <= 0)
 				continue;
@@ -591,6 +593,20 @@ Class Report
 			echo "</tr>";
 		}
 		echo "</table>";
+	}
+	
+	public function balance_due_emails()
+	{
+		$campers = $this->getCampers();
+		foreach($campers as $info)
+		{
+			//TODO Change amount_due to a complete sql query
+			//BODY this is a super heavy load.
+			$amountDue = $this->amountDue($info->registration_id,false);
+			if($amountDue <= 0)
+				continue;
+			echo $info->email . ",<br>";
+		}
 	}
 	
 	//New Buslist grabs all campers heading to anchorage or camp and also selects campers that are going both ways
