@@ -595,6 +595,8 @@ Class Report
 		echo "</table>";
 	}
 	
+	//Generates a report for all the overpayed campers.
+	//This can also show the same campers more than once if they owe for multiple camps they are signed up for
 	public function overpayed()
 	{
 		$campers = $this->getCampers();
@@ -615,6 +617,8 @@ Class Report
 		echo "</table>";
 	}
 	
+	//Shows all the emails for campers that have a balance due.
+	//Is also redundant see above function comment
 	public function balance_due_emails()
 	{
 		$campers = $this->getCampers();
