@@ -76,6 +76,8 @@ Class Report
 								WHERE " . $database . ".registration_id=%d",$registration_id));
 		return $cost - $totalPayed;
 	}
+	
+	//Creates a Title for each report
 	private function printHeader($camp = NULL, $traceBack3 = false)
 	{
 		//Get calling method, we will use this to print a Header

@@ -379,88 +379,23 @@ function srbc_registration( $atts )
 
 function srbc_registration_complete($atts)
 {
-	//TODO: Bleh this is messy I don't know why I did this
-	//TODO: GET RID OF THIS WASTED SPACE
-	$camper_first_name = $_POST["camper_first_name"];
-	$camper_last_name = $_POST["camper_last_name"];
-	$birthday = $_POST["birthday"];
-	$gender = $_POST["gender"];
-	$grade = $_POST["grade"];
-	$parent_first_name = $_POST["parent_first_name"];
-	$parent_last_name = $_POST["parent_last_name"];
-	$email = $_POST["email"];
-	$phone = $_POST["phone"];
-	$phone2 = $_POST["phone2"];
-	$address = $_POST["address"];
-	$city = $_POST["city"];
-	$state = $_POST["state"];
-	$zipcode = $_POST["zipcode"];
-	$busride = $_POST["busride"];
+	
+	require __DIR__ .  '/../requires/Camper.php';	
+	
 	
 	//Horse option is just a boolean because I will pull the price from the camps database so we don't people changing prices
 	$horse_opt = 0;
 	if (isset($_POST["horse_opt"]))
 		$horse_opt = 1;
 	
-	//Calculate the campers age
-	$d1 = new DateTime(date("Y/m/d"));
-	$d2 = new DateTime($birthday);
-	$diff = $d2->diff($d1);
-	$age = $diff->y;
+	
+	
+	//Creates a camper and returns the camper ID.  If the camper already exists then it returns that ID.
+	//$_POST contains all of the data that we need.
+	$camper_id = Camper::createCamper($_POST);
 	
 	global $wpdb;
-	//Update camper info or create new camper if camper doesn't exist
-	//Using prepare to sanitize input
-	$camper = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_campers WHERE camper_first_name=%s AND camper_last_name=%s AND birthday=%s",
-	$camper_first_name,$camper_last_name,$birthday));
-	$camper_id = 0;
-	if ($camper!=NULL)
-	{
-		//Camper already exists so use their ID
-		$camper_id = $camper->camper_id;
-	}
-	//Replace existing camper information or create a new one if camper doesn't exist
-	$wpdb->replace( 
-	'srbc_campers', 
-	array( 
-        'camper_id' =>$camper_id,
-		'camper_first_name' => $camper_first_name, 
-		'camper_last_name' => $camper_last_name,
-		'birthday' => $birthday,
-		'age' => $age,
-		'gender' => $gender,
-		'grade' => $grade,
-		'parent_first_name' => $parent_first_name,
-		'parent_last_name' => $parent_last_name,
-		'email' => $email,
-		'phone' => $phone,
-		'phone2' => $phone2,
-		'address' => $address,
-		'city' => $city,
-		'state' => $state,
-		'zipcode' => $zipcode
-	), 
-	array( 
-        '%d',
-		'%s', 
-		'%s',
-		'%s',
-		'%d',
-		'%s',
-		'%s',
-		'%s',
-		'%s',
-		'%s',
-		'%s',
-		'%s',
-		'%s',
-		'%s',
-		'%s',
-		'%d'		
-		
-	) 
-	);
-	$camper_id = $wpdb->insert_id;
+	
 	$waitlistsize = 0;
 	$waitlist = 0;
 	//Calculate if this camper needs to go on a waiting list
@@ -479,7 +414,7 @@ function srbc_registration_complete($atts)
 	if($count < $camp->overall_size && $camp->closed_to_registrations == 0)
 	{
 		//This camp is not overall full check gender specific caps
-		if ($gender == "male")
+		if ($_POST['gender'] == "male")
 		{
 			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM " . $GLOBALS['srbc_registration'] . "
@@ -491,7 +426,7 @@ function srbc_registration_complete($atts)
 				goto waitinglist;
 			}
 		}
-		else if($gender == "female")
+		else if($_POST['gender'] == "female")
 		{
 			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM " . $GLOBALS['srbc_registration'] . "
@@ -541,7 +476,7 @@ function srbc_registration_complete($atts)
 	if ($horse_opt == 1)
 	{
 		$listsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM " . $GLOBALS['srbc_registration'] . " WHERE horse_waitlist=0 AND horse_opt=1 AND camp_id=%s ",$_POST["campid"])); 
-		//If we have to many people in horses
+		//If we have too many people in horses
 		if($listsize >= $camp->horse_list_size)
 		{
 			//We have exceeded our horse list so turn this option to 0
@@ -574,7 +509,7 @@ function srbc_registration_complete($atts)
 				'camper_id' => $camper_id,
 				'date' => $currentDate->format("m/d/Y h:i A"),
 				'horse_opt' => $horse_opt,
-				'busride' => $busride,
+				'busride' => $_POST['busride'],
 				'waitlist' => $waitlist,
 				'horse_waitlist' => $horse_waitlist
 			), 
@@ -593,8 +528,8 @@ function srbc_registration_complete($atts)
 	require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/email.php');
 	//Notify office that this parent is sending a check	
 	if (isset($_POST["using_check"])){
-		Email::sendMail(srbc_email,"$parent_first_name $parent_last_name is sending a check ",
-		"Hi,\r\n$parent_first_name $parent_last_name is sending a check for $camper_first_name $camper_last_name<br>Thanks!<br>-Peter Hawke SRBC Ancilla");
+		Email::sendMail(srbc_email,$_POST['parent_first_name'] . " " . $_POST['parent_last_name'] . " is sending a check ",
+		"Hi,\r\n" . $_POST['parent_first_name'] . " " . $_POST['parent_last_name'] . " is sending a check for " . $_POST['camper_first_name'] . " " . $_POST['camper_last_name'] . "<br>Thanks!<br>-Peter Hawke SRBC Ancilla");
 	}
 	else if($waitlist != 1 && $_POST["cc_amount"] != "")
 	{
@@ -626,7 +561,7 @@ function srbc_registration_complete($atts)
 				//Use base64 so the database can handle it properly since we are just using text
 				'data' => base64_encode($edata), 
 				'amount' => $_POST["cc_amount"],
-				'camper_name' => $camper_first_name . " " . $camper_last_name,
+				'camper_name' => $_POST['camper_first_name'] . " " . $_POST['camper_last_name'],
 				'camp' => ($camp->area . " " . $camp->name),
 				'comments' => $comments,
 				'payment_date' => $currentDate->format("m/d/Y")
