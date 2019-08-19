@@ -4,6 +4,97 @@
 -------------------------------------------------------------------------
 SHORTCODE HOOKS
 */
+
+//Stores information for workcrew and also sends email to nathaniel.
+function srbc_workcrew_registration($atts)
+{
+	//Generate text for body
+   $body = NULL;
+   $keys = array_keys($_POST);
+   $i = 0;
+   //Loop through all of the parameters and join them together in one big text block
+   foreach ($_POST as $val){
+	   //Position is a nested array of values
+	   if ($keys[$i] == "Position"){
+		   $body .= $keys[$i] . ": ";
+			foreach ($val as $v){
+				if ($v != "")
+					$body .= '<b style="font-size:20px">' . $v . "</b> " . ", ";
+			}
+			$body .= "<br>";
+	   }
+	   else
+			$body .= '<b style="font-size:20px">' . $keys[$i] . '</b>: ' . $val . "<br>";
+	   $i++;
+   }
+   //Email applicant
+   sendMail($_POST["email"], 'You applied to work at Solid Rock Bible Camp ',
+   "Dear " . $_POST["Firstname"] . ",<br>Thanks for applying to work at Solid Rock Bible Camp!
+   <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
+   <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
+   /* Set the mail message body. */
+	sendMail(workcrew_email, 'Workcrew Registration For ' . $_POST["first_name"] . " " . $_POST["last_name"],$body);
+
+echo "Application submitted sucessfully!
+  You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!";
+}
+
+//Creates a table of current lakeside camps for workcrew to choose from
+function srbc_workcrew_workschedule($atts)
+{
+	$area = "Lakeside";
+	
+	$finalText = '<table style="width:100%;">
+				<tr style="background:#51d3ff;">
+				<th>Preference</th>
+				<th>Camp Name</th>
+				<th>Date</th>
+				<th>Bus</th>
+				</tr>';
+	global $wpdb;
+	$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='$area' ORDER BY start_date");	
+	//If no camps then give a message
+	if (count($camps) == 0)
+		return "<h2>There is currently no camps scheduled for this area at this time.  Please check back later!</h2>";
+	
+	
+	
+	//Create the table of camps
+	foreach ($camps as $camp){
+		$finalText .=  '<tr>';
+		$finalText .= "<td>" . createCampSelect($camp->area . " " . $camp->name,count($camps)) . "</td>";
+		$finalText .= '<td>' . $camp->name ;		
+		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date));
+		$finalText .=  "</td>";
+		$finalText .= '<td>' . createBusSelect($camp->area . " " . $camp->name) . '</td>';
+	}
+	$finalText .=  "</table>";
+	return $finalText;
+}
+
+function createCampSelect($campName,$number)
+{
+	$select = '<select name="' . $campName . '">';
+	for($i = 1;$i<=$number;$i++)
+	{
+		$select .= '<option value="' . $i . '">' . $i . '</option>';
+	}
+	$select .= '</select>';
+	return $select;
+}
+
+function createBusSelect($campName)
+{
+	$select = '<select name="busride_' . $campName . '">
+					<option value="none" selected>No bus ride needed</option>
+					<option value="Round-Trip">Round-Trip $60</option>
+					<option value="One-way to Camp">One-way to Camp $35</option>
+					<option value="One-way to Anchorage">One-way to Anchorage $35</option>
+				</select>';
+	return $select;
+}
+
+
 //Email about volunteering
 function srbc_volunteer_contact_form_email($atts){
 	if (!isset($_POST['contact_name'])){
@@ -676,6 +767,7 @@ function autoSplit($cc_amount,$campid,$registration_id,$busride,$horseOpt)
 	}
 	return $comments;
 }
+
 //TODO this seems to be redeclared when I run update_registration
 //@body Fatal error</b>: Cannot redeclare calculatePaymentAmt() (previously declared in E:\xampp\htdocs\wp-content\plugins\SRBC\update_registration.php:246) in <b>E:\xampp\htdocs\wp-content\plugins\SRBC\admin\shortcodes.php</b> on line <b>747</b><br />
 //Calculates how much they need to pay and makes the payment
@@ -690,6 +782,8 @@ function calcPaymentAmt($autoPaymentAmt, $needToPayAmount)
 	$autoPaymentAmt -= $paymentAmt;
 	return array($autoPaymentAmt,$paymentAmt);
 }
+
+//Lists all camps by area
 function srbc_camps($atts){
 	$query = $atts["area"];
 	
