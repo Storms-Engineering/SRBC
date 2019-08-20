@@ -4,8 +4,8 @@
 -------------------------------------------------------------------------
 SHORTCODE HOOKS
 */
-
-//Stores information for workcrew and also sends email to nathaniel.
+require_once __DIR__ . '/../requires/email.php';
+//Stores information for workcrew and also sends email to WorkCrew Manager.
 function srbc_workcrew_registration($atts)
 {
 	//Generate text for body
@@ -13,29 +13,20 @@ function srbc_workcrew_registration($atts)
    $keys = array_keys($_POST);
    $i = 0;
    //Loop through all of the parameters and join them together in one big text block
-   foreach ($_POST as $val){
-	   //Position is a nested array of values
-	   if ($keys[$i] == "Position"){
-		   $body .= $keys[$i] . ": ";
-			foreach ($val as $v){
-				if ($v != "")
-					$body .= '<b style="font-size:20px">' . $v . "</b> " . ", ";
-			}
-			$body .= "<br>";
-	   }
-	   else
-			$body .= '<b style="font-size:20px">' . $keys[$i] . '</b>: ' . $val . "<br>";
-	   $i++;
+   foreach ($_POST as $val)
+   {
+		$body .= '<b style="font-size:20px">' . $keys[$i] . '</b>: ' . $val . "<br>";
+	    $i++;
    }
    //Email applicant
-   sendMail($_POST["email"], 'You applied to work at Solid Rock Bible Camp ',
-   "Dear " . $_POST["Firstname"] . ",<br>Thanks for applying to work at Solid Rock Bible Camp!
+   Email::sendMail($_POST["email"], 'WorkCrew Registration ',
+   "Dear " . $_POST["first_name"] . ",<br>Thanks for registering for workcrew at Solid Rock Bible Camp!
    <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
    <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
    /* Set the mail message body. */
-	sendMail(workcrew_email, 'Workcrew Registration For ' . $_POST["first_name"] . " " . $_POST["last_name"],$body);
+	Email::sendMail(workcrew_email, 'Workcrew Registration For ' . $_POST["first_name"] . " " . $_POST["last_name"],$body);
 
-echo "Application submitted sucessfully!
+echo "Registration submitted sucessfully!
   You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!";
 }
 
@@ -75,7 +66,7 @@ function srbc_workcrew_workschedule($atts)
 function createCampSelect($campName,$number)
 {
 	$select = '<select name="' . $campName . '">';
-	for($i = 1;$i<=$number;$i++)
+	for($i = 0;$i<=$number;$i++)
 	{
 		$select .= '<option value="' . $i . '">' . $i . '</option>';
 	}
@@ -104,7 +95,7 @@ function srbc_volunteer_contact_form_email($atts){
 	}
 	$body = $_POST['contact_name'] . " has some questions:<br>" . $_POST['questions'] . "<br>Contact info: " .
 		$_POST['phone'] . ' ' . $_POST['email'] . "<br>Area of interest:" . $_POST['area_of_interest'] . "<br><br>- Peter Hakwe SRBC Ancilla";
-	sendMail(srbc_email,
+	Email::sendMail(srbc_email,
 	$_POST['contact_name'] . ' is interested at working at Solid Rock' ,$body);
 	return "<h1>Info Sent Sucessfully!</h1>";
 }
@@ -128,7 +119,7 @@ function srbc_contact_form_email($atts){
 	   $i++;
    }
    /* Set the mail message body. */
-	sendMail(srbc_email,
+	Email::sendMail(srbc_email,
 	'Retreat request for ' . $_POST["organization"],$body);
 
 	return "Request submitted sucessfully!";
@@ -265,12 +256,12 @@ function srbc_application_complete($atts){
 	   $i++;
    }
    //Email applicant
-   sendMail($_POST["email"], 'You applied to work at Solid Rock Bible Camp ',
+   Email::sendMail($_POST["email"], 'You applied to work at Solid Rock Bible Camp ',
    "Dear " . $_POST["Firstname"] . ",<br>Thanks for applying to work at Solid Rock Bible Camp!
    <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
    <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
    /* Set the mail message body. */
-	sendMail(srbc_email, 'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body);
+	Email::sendMail(srbc_email, 'Application For ' . $_POST["Firstname"] . " " . $_POST["Lastname"],$body);
 
 echo "Application submitted sucessfully!
   You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!";
