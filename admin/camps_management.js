@@ -1,7 +1,7 @@
-function deleteCamp(ev,cmpid)
+function deleteCamp(ev,cmpid,nonce)
 {
 	if(confirm('Are you sure you want to delete?')){
-		postAjax({'deleteid': cmpid });
+		postAjax({'deleteid': cmpid , '_wpnonce' : nonce});
 	}
 	ev.stopPropagation();
 }

@@ -6,12 +6,15 @@ $obj = json_decode( stripslashes($_POST["x"]), true);
 //Database shtuff
 require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 securityCheck();
+require_once __DIR__ . '/requires/Camp.php';
 global $wpdb;
 
 if (isset($obj["deleteid"])) {
     //If this is set then we are deleting a camp
-	$wpdb->delete( $GLOBALS['srbc_camps'], array( 'camp_id' => $obj["deleteid"] ) );
-	echo "Camp Deleted and Data Saved Sucessfully";
+	//Check nonce and send them elsewhere if it fails
+	if (!wp_verify_nonce( $obj['_wpnonce'], 'delete-camp_'.$obj["deleteid"]))
+		wp_nonce_ays("");
+	Camp::deleteCamp($obj["deleteid"]);
 	exit;
 }
 //If this is set then we are updating a camp

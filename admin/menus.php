@@ -317,7 +317,7 @@ function listCamps($area)
 		echo "<td>" . $waitlistsize ."/" . $camp->waiting_list_size . "</td>";
 		if ($area == "Lakeside")
 			echo "<td>" . $horseWaitlist ."/" . $camp->horse_waiting_list_size . "</td>";
-		echo '<td><button class="big_button" style="padding:2px;" onclick="deleteCamp(event,' . $camp->camp_id . ');">Delete</button></td></tr>';
+		echo '<td><button class="big_button" style="padding:2px;" onclick="deleteCamp(event,' . $camp->camp_id . ',\'' . wp_create_nonce('delete-camp_'.$camp->camp_id) . '\');">Delete</button></td></tr>';
 	}
 	echo "</table> ";
 }

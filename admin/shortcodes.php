@@ -26,7 +26,7 @@ function srbc_workcrew_registration($atts)
    /* Set the mail message body. */
 	Email::sendMail(workcrew_email, 'Workcrew Registration For ' . $_POST["first_name"] . " " . $_POST["last_name"],$body);
 
-echo "Registration submitted sucessfully!
+	echo "Registration submitted sucessfully!
   You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!";
 }
 
