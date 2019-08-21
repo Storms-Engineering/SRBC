@@ -1,8 +1,8 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-require $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/PHPMailer/src/Exception.php';
-require $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/PHPMailer/src/PHPMailer.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/PHPMailer/src/Exception.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/PHPMailer/src/PHPMailer.php';
 
 class Email
 {

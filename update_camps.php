@@ -17,6 +17,8 @@ if (isset($obj["deleteid"])) {
 	Camp::deleteCamp($obj["deleteid"]);
 	exit;
 }
+
+//Can we just use replace for this?
 //If this is set then we are updating a camp
 else if (isset($obj["camp_id"])) {
 //TODO update to an array and array keys
