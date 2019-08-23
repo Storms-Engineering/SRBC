@@ -157,6 +157,48 @@ Class Report
 		fclose($file);
 	}
 	
+	public function all_camp_totals()
+	{
+		$this->printHeader();
+		global $wpdb;
+		$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS["srbc_camps"] . " ORDER BY area DESC");
+		$totalRegistrationsPerArea = [ "Wagon Train" => 0, "Lakeside" => 0, "Wilderness" => 0, "Sports" => 0 ];
+		$oldArea = NULL;
+		$totalRegistrations = 0;
+		foreach ($camps as $camp)
+		{
+			$totalRegistered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+											FROM " . $GLOBALS['srbc_registration'] . "
+											LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
+											WHERE camp_id=%s AND waitlist=0",$camp->camp_id)); 
+			if ($oldArea != $camp->area)
+			{
+				if ($oldArea !== NULL)
+				{
+					echo "</table>";
+					echo $oldArea . " total: " . $totalRegistrationsPerArea[$oldArea];
+				}
+				//Start new table
+				echo "<br><h3>" . $camp->area . "</h3>";
+				echo "<table>
+						<tr>
+							<th>Camp</th>
+							<th># of Campers</th>
+						</tr>";
+				$oldArea = $camp->area;
+			}
+			echo "<tr><td>" . $camp->area . " " . $camp->name . "</td><td>" . $totalRegistered . "</td></tr>";
+			$totalRegistrationsPerArea[$camp->area] += $totalRegistered;
+			
+		}
+		echo "</table>";
+		echo $oldArea . " total: " . $totalRegistrationsPerArea[$oldArea];
+		foreach($totalRegistrationsPerArea as $areaTotal)
+		{
+			$totalRegistrations += $areaTotal;
+		}
+		echo "<br><br>Overall Total: " . $totalRegistrations;
+	}
 
 	public function camp_numbers()
 	{

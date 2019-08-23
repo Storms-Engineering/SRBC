@@ -644,6 +644,7 @@ function srbc_camp_reports()
 		<button onclick="generateReport('discounts')">Discounts </button>
 		<button onclick="generateReport('emails')">Emails </button>
 		<button onclick="generateReport('camp_numbers')">Camp Numbers </button>
+		<button onclick="generateReport('all_camp_totals')">All Camp Totals</button>
 		<button onclick="generateReport('not_checked_in')">Camper not checked in</button>
 		<button onclick="generateReport('balance_due')">Balance Due</button>
 		<button onclick="generateReport('overpayed')">Overpayed</button>
