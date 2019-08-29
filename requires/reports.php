@@ -55,7 +55,7 @@ Class Report
 		if ($inactive_registration)
 			$database = $GLOBALS["srbc_registration_inactive"] ;
 		global $wpdb;
-		$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+		$totalpaid = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 										FROM " . $GLOBALS["srbc_payments"] . " WHERE registration_id=%s AND NOT " . $GLOBALS["srbc_payments"] .
 										".fee_type='Store' ",$registration_id));
 		$cost = $wpdb->get_var($wpdb->prepare("
@@ -74,7 +74,7 @@ Class Report
 								FROM " . $database . "
 								INNER JOIN " . $GLOBALS["srbc_camps"] . " ON " . $database . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
 								WHERE " . $database . ".registration_id=%d",$registration_id));
-		return $cost - $totalPayed;
+		return $cost - $totalpaid;
 	}
 	
 	//Creates a Title for each report
@@ -330,7 +330,7 @@ Class Report
 		"Lakeside" => 0, "Wagon Train" => 0, "Wilderness" => 0, "None" => 0, "Refund" => 0];
 		$camper_ids = [];
 		//TODO investigate this:
-		//ID is for multiple campers that were payed for at once?
+		//ID is for multiple campers that were paid for at once?
 		foreach ($campers as $camper)
 		{
 			$camper_ids[] = $camper->camper_id;
@@ -463,7 +463,7 @@ Class Report
 		echo "<tr><th>Last name</th><th>First Name</th><th>Payment Type</th><th>Fee Type</th>
 				<th>Amount</th></tr>";
 
-		//ID is for multiple campers that were payed for at once
+		//ID is for multiple campers that were paid for at once
 		foreach ($campers as $camper)
 		{
 			
@@ -499,7 +499,7 @@ Class Report
 			echo "<td>" . $camper->parent_first_name . " " . $camper->parent_last_name . "</td>";
 			echo "<td>" . $camper->area . " ".  $camper->name . "</td>";
 			echo "<td>" . $camper->phone . "</td>";
-			$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+			$totalpaid = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$camper->registration_id));
 			$cost = $wpdb->get_var($wpdb->prepare("
 									SELECT SUM(srbc_camps.cost +
@@ -518,10 +518,10 @@ Class Report
 										INNER JOIN srbc_camps ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
 										WHERE " . $GLOBALS['srbc_registration'] . ".registration_id=%d ",$camper->registration_id));
 			//Little hack so that it shows 0 if they are no payments
-			if ($totalPayed == NULL)
-				$totalPayed = 0;
-			echo "<td>$" . number_format($totalPayed,2) . "</td>";
-			echo "<td>$" . number_format(($cost - $totalPayed),2) . "</td>";
+			if ($totalpaid == NULL)
+				$totalpaid = 0;
+			echo "<td>$" . number_format($totalpaid,2) . "</td>";
+			echo "<td>$" . number_format(($cost - $totalpaid),2) . "</td>";
 			//Empty cells
 			echo "<td></td><td></td></tr>";
 		}
@@ -639,9 +639,9 @@ Class Report
 		echo "</table>";
 	}
 	
-	//Generates a report for all the overpayed campers.
+	//Generates a report for all the overpaid campers.
 	//This can also show the same campers more than once if they owe for multiple camps they are signed up for
-	public function overpayed()
+	public function overpaid()
 	{
 		$campers = $this->getCampers();
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Amount Due</th><th>Camp</th></tr>';

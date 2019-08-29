@@ -152,11 +152,11 @@ function campSection($registration,$camper,$inactive)
 	if($registration->horse_waitlist == 1)
 		$horsesWaitlistHTML = ' <span style="color:red;"><b>(Waitlisted for Horses)</b></span>';						
 	//Don't include store type fees in these totals
-	$payedCard = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+	$paidCard = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='card' AND NOT fee_type='store'",$registration->registration_id));
-	$payedCheck = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+	$paidCheck = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='check' AND NOT fee_type='store'",$registration->registration_id));
-	$payedCash = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+	$paidCash = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 					FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND payment_type='cash' AND NOT fee_type='store'",$registration->registration_id));
 	
 	//Get start and end dates for camp
@@ -223,9 +223,9 @@ function campSection($registration,$camper,$inactive)
 	<option value="Trade"' . $scholSelector[3] . '>Trade</option>
 	<option value="Volunteer"' . $scholSelector[4] . '>Volunteer</option>
 	</select><br></span>';
-	echo '<span class="financial_info">Paid Check: $<input class="financial" name="payed" type="text" value="' . $payedCheck . '" readonly></span>';
-	echo '<span class="financial_info">Paid Cash: $<input class="financial" name="payed" type="text" value="' . $payedCash . '" readonly></span>';
-	echo '<span class="financial_info">Paid Card: $<input class="financial" name="payed" type="text" value="' . $payedCard . '" readonly></span>';
+	echo '<span class="financial_info">Paid Check: $<input class="financial" name="paid" type="text" value="' . $paidCheck . '" readonly></span>';
+	echo '<span class="financial_info">Paid Cash: $<input class="financial" name="paid" type="text" value="' . $paidCash . '" readonly></span>';
+	echo '<span class="financial_info">Paid Card: $<input class="financial" name="paid" type="text" value="' . $paidCard . '" readonly></span>';
 	echo '<span class="financial_info"><h3>Amount Due: $<span class="amount_due"></span></h3></span>';
 
 	//Autopayment section

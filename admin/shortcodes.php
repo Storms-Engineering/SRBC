@@ -266,7 +266,6 @@ function srbc_application_complete($atts){
 	fclose($fp);
 	openssl_get_publickey($pub_key);
 	openssl_public_encrypt($_POST["ssn"],$edata,$pub_key);
-	echo base64_encode($edata);
     $wpdb->insert(
 			"srbc_staff_app", 
 			array( 
@@ -706,15 +705,15 @@ function srbc_registration_complete($atts)
 function autoSplit($cc_amount,$campid,$registration_id,$busride,$horseOpt)
 {
 	global $wpdb;
-	$totalPayed = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+	$totalpaid = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
 									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$registration_id));
 			
-	//Make the scholarships and discounts add to total payed so we take it out of the base camp fee
+	//Make the scholarships and discounts add to total paid so we take it out of the base camp fee
 	//Not using this because this is the first time they are signing up for the camp
-	//$totalPayed += $o->discount + $o->scholarship_amt;
-	if($totalPayed == NULL)
-		$totalPayed = 0;
-	//Check if they have payed the base camp amount which is (camp cost - horse cost)
+	//$totalpaid += $o->discount + $o->scholarship_amt;
+	if($totalpaid == NULL)
+		$totalpaid = 0;
+	//Check if they have paid the base camp amount which is (camp cost - horse cost)
 	$camp = $wpdb->get_row("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE camp_id=$campid");
 	$baseCampCost = $camp->cost - $camp->horse_cost;
 	$needToPayAmount = 0;
@@ -737,47 +736,47 @@ function autoSplit($cc_amount,$campid,$registration_id,$busride,$horseOpt)
 	//or an overpayment happens which stores it in the database
 	while ($autoPaymentAmt != 0)
 	{
-		if ($totalPayed < $baseCampCost)
+		if ($totalpaid < $baseCampCost)
 		{
 			//We still need to pay some on the base camp cost
-			$needToPayAmount = $baseCampCost - $totalPayed;
+			$needToPayAmount = $baseCampCost - $totalpaid;
 			if ($camp->area == "Sports")
 				$feeType = "Lakeside";
 			else
 				$feeType = $camp->area;
 		}				
-		//$totalPayed comes first because this also checks that they have payed more than we are currently looking atan
-		//If we flip it then it becomes a negative number if the totalPayed is greater than the value we are checking
+		//$totalpaid comes first because this also checks that they have paid more than we are currently looking atan
+		//If we flip it then it becomes a negative number if the totalpaid is greater than the value we are checking
 		//Check horse_cost (aka WT Horsemanship Fee
-		else if(($totalPayed - $baseCampCost) < $camp->horse_cost) 
+		else if(($totalpaid - $baseCampCost) < $camp->horse_cost) 
 		{
 			//We still need to pay some on the base camp cost
-			$needToPayAmount = $camp->horse_cost - ($baseCampCost - $totalPayed);
+			$needToPayAmount = $camp->horse_cost - ($baseCampCost - $totalpaid);
 			$feeType = "WT Horsemanship";
 		}				
 		//Horse option check aka LS Horsemanship
-		else if(($totalPayed - $camp->cost) < $horseOpt) 
+		else if(($totalpaid - $camp->cost) < $horseOpt) 
 		{
 			//We still need to pay some on the horse option
-			$needToPayAmount = $horseOpt - ($totalPayed - $camp->cost);
+			$needToPayAmount = $horseOpt - ($totalpaid - $camp->cost);
 			$feeType = "LS Horsemanship";
 		}
-		else if(($totalPayed - ($camp->cost + $horseOpt)) < $busfee) 
+		else if(($totalpaid - ($camp->cost + $horseOpt)) < $busfee) 
 		{
 			//We still need to pay some on the bus option
-			$needToPayAmount = $busfee - ($totalPayed - ($camp->cost + $horseOpt));
+			$needToPayAmount = $busfee - ($totalpaid - ($camp->cost + $horseOpt));
 			$feeType = "Bus";
 		}
 		else
 		{
-			//Overpayed
+			//Overpaid
 			$needToPayAmount = $autoPaymentAmt;
 			$feeType= "Overpaid";
 		}
 		//Also updates autoPaymentAmt
-		list ($autoPaymentAmt,$payed) = calcPaymentAmt($autoPaymentAmt,$needToPayAmount);
-		$comments .= $feeType . ":$" . $payed . ",";
-		$totalPayed += $payed;
+		list ($autoPaymentAmt,$paid) = calcPaymentAmt($autoPaymentAmt,$needToPayAmount);
+		$comments .= $feeType . ":$" . $paid . ",";
+		$totalpaid += $paid;
 		$loops++;
 		if ($loops > 5)
 		{
@@ -799,7 +798,7 @@ function calcPaymentAmt($autoPaymentAmt, $needToPayAmount)
 		$paymentAmt = $autoPaymentAmt;
 	else if($autoPaymentAmt > $needToPayAmount)
 		$paymentAmt = $needToPayAmount;
-	//this is how much money is left so subtract what we just payed
+	//this is how much money is left so subtract what we just paid
 	$autoPaymentAmt -= $paymentAmt;
 	return array($autoPaymentAmt,$paymentAmt);
 }

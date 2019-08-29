@@ -226,7 +226,7 @@ function calculate_totals()
 		var inputs = containers[i].getElementsByTagName('input');
 		for (var j = 0; j < inputs.length; ++j) {
 			//We don't want to grab the calculated text fields and parseInt doesn't like empty strings		
-			calcInputs = ["horse_opt", "busride_cost", "discount", "scholarship_amt", "auto_payment_amt", "payment_amt", "payed"];
+			calcInputs = ["horse_opt", "busride_cost", "discount", "scholarship_amt", "auto_payment_amt", "payment_amt", "paid"];
 			if(calcInputs.includes(inputs[j].name) && inputs[j].value != "")
 			{			
 				if (inputs[j].name == "busride_cost")
