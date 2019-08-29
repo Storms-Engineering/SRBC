@@ -143,6 +143,17 @@ function srbc_install() {
 		)  ENGINE=INNODB;";
 
 	dbDelta( $sql );
+	//Create application database for staff applications
+	$sql = "CREATE TABLE IF NOT EXISTS srbc_staff_app (
+		staff_app_id INT AUTO_INCREMENT,
+		Firstname TINYTEXT,
+		Middlename TINYTEXT,
+		Lastname TINYTEXT,
+		ssn TEXT NOT NULL,
+		PRIMARY KEY (staff_app_id)
+		)  ENGINE=INNODB;";
+
+	dbDelta( $sql );
 }
 register_activation_hook( __FILE__, 'srbc_install' );
 

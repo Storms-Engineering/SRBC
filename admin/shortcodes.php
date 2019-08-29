@@ -237,24 +237,54 @@ function srbc_camp_search($atts){
 //Sends the application as an email Solid Rock
 function srbc_application_complete($atts){
    //Generate text for body
+   if (!isset($_POST["Firstname"]))
+	   return;
+   global $wpdb;
    $body = NULL;
    $keys = array_keys($_POST);
    $i = 0;
    //Loop through all of the parameters and join them together in one big text block
-   foreach ($_POST as $val){
-	   //Position is a nested array of values
-	   if ($keys[$i] == "Position"){
-		   $body .= $keys[$i] . ": ";
-			foreach ($val as $v){
+   foreach ($_POST as $val)
+   {
+	    //Position is a nested array of values
+	    if ($keys[$i] == "Position")
+		{
+		    $body .= $keys[$i] . ": ";
+			foreach ($val as $v)
+			{
 				if ($v != "")
 					$body .= '<b style="font-size:20px">' . $v . "</b> " . ", ";
 			}
 			$body .= "<br>";
-	   }
-	   else
-			$body .= '<b style="font-size:20px">' . $keys[$i] . '</b>: ' . $val . "<br>";
+	    }
+	    else if($keys[$i] != "ssn" && $keys[$i] != "Middlename")
+			$body .= '<b style="font-size:20px">' . $keys[$i] . '</b>: ' . $val . "<br>";			
 	   $i++;
-   }
+    }
+    $fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
+    $pub_key=fread($fp,8192);
+	fclose($fp);
+	openssl_get_publickey($pub_key);
+	openssl_public_encrypt($_POST["ssn"],$edata,$pub_key);
+	echo base64_encode($edata);
+    $wpdb->insert(
+			"srbc_staff_app", 
+			array( 
+				'staff_app_id' => 0,
+				'Firstname' => $_POST["Firstname"], 
+				'Lastname' => $_POST["Lastname"],
+				'Middlename' => $_POST["Middlename"],
+				'ssn' => base64_encode($edata)
+			), 
+			array( 
+				'%s',
+				'%s',
+				'%s',
+				'%s'
+			) 
+			);
+   
+   
    //Email applicant
    Email::sendMail($_POST["email"], 'You applied to work at Solid Rock Bible Camp ',
    "Dear " . $_POST["Firstname"] . ",<br>Thanks for applying to work at Solid Rock Bible Camp!
