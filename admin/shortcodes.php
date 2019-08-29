@@ -261,11 +261,12 @@ function srbc_application_complete($atts){
 			$body .= '<b style="font-size:20px">' . $keys[$i] . '</b>: ' . $val . "<br>";			
 	   $i++;
     }
+	//TODO implement encryption class
     $fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
     $pub_key=fread($fp,8192);
 	fclose($fp);
 	openssl_get_publickey($pub_key);
-	openssl_public_encrypt($_POST["ssn"],$edata,$pub_key);
+	openssl_public_encrypt($_POST["ssn"],$edata,$pub_key,OPENSSL_PKCS1_OAEP_PADDING);
     $wpdb->insert(
 			"srbc_staff_app", 
 			array( 
@@ -659,12 +660,12 @@ function srbc_registration_complete($atts)
 		}
 		//Show comments about buslist and horse option and horse_cost
 		$comments = autoSplit($_POST["cc_amount"],$camp->camp_id,$wpdb->insert_id,$busride,$horse_opt);
-		//Encrypt using ssl
+		//Encrypt using ssl pgp
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
 		$pub_key=fread($fp,8192);
 		fclose($fp);
 		openssl_get_publickey($pub_key);
-		openssl_public_encrypt($data,$edata,$pub_key);
+		openssl_public_encrypt($data,$edata,$pub_key,OPENSSL_PKCS1_OAEP_PADDING);
 		$wpdb->insert(
 			'srbc_cc', 
 			array( 
