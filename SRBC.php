@@ -263,6 +263,19 @@ function program_menu()
     );
 }
 add_action('admin_menu', 'program_menu');
+
+function staff_app_setup()
+{
+   add_submenu_page(
+        'srbc_overview',
+        'Staff Applications',
+        'Staff Applications',
+        'manage_options',
+        'staff_application_menu',
+		'staff_application_menu'
+    );
+}
+add_action('admin_menu', 'staff_app_setup');
 //END MENUS
 
 //Settings

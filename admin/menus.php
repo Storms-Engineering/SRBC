@@ -1,4 +1,68 @@
 <?php 
+function staff_application_menu()
+{
+	// check user capabilities
+    if (!current_user_can('manage_options') || in_array( 'program', (array) wp_get_current_user()->roles)) {
+         exit("Thus I refute thee.... P.H.");
+    }
+	?>
+	<style>
+	table, th, td
+	{
+	border: 1px solid black;
+	border-collapse: collapse;
+	word-wrap: break-word;
+	max-width: 800px;
+	}
+	/*@media print
+	{		
+		td:nth-child(6) {
+		   display: none;
+		}
+		th:nth-child(6) {
+		   display: none;
+		}
+			
+	}*/
+	</style>
+	<h1>Staff Applications</h1>
+	<p>Note if all the data is false, then please double check the password or the file you imported.  You will need to reload the page to make changes.</p>
+	Password :  <input type="password" id="pwd"> Decryption Progress <progress value="0" id="progress"></progress>
+	<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">Drop key file here</div>
+	<table id="cc_table" style="width:100%;" >
+		<tr>
+			<th>Name</th>
+			<th>SSN</th>
+			<th>Delete</th>
+		</tr>
+		
+	<?php
+	
+	global $wpdb;
+	$apps = $wpdb->get_results("SELECT * FROM srbc_staff_app ORDER BY staff_app_id ASC");
+	foreach ($apps as $app)
+	{
+		/*TODO: I would like to store this more efficiently but not right this moment
+		$camper = $wpdb->get_row($wpdb->prepare("SELECT *
+							FROM ((srbc_registration 
+							INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
+							INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+							WHERE ",$ccs->registration_id);*/
+		echo "<tr><td>" . $app->Firstname . " " . $app->Middlename . " " . $app->Lastname;
+		echo '</td><td class="ssn">' . $app->ssn;
+		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $app->staff_app_id . '})}">Delete</button>';
+		echo "</td></tr>";
+	}
+	echo "</table> ";
+	?>
+	
+	<script src="../wp-content/plugins/SRBC/JSEncrypt/jsencrypt.min.js"></script>
+	<script src="../wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/sortTable.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/staff_application.js"></script>
+	
+	<?php
+}
 function srbc_program_access()
 {
 	// check user capabilities

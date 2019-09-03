@@ -262,11 +262,11 @@ function srbc_application_complete($atts){
 	   $i++;
     }
 	//TODO implement encryption class
-    $fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
-    $pub_key=fread($fp,8192);
-	fclose($fp);
+    $pub_key=file_get_contents($_SERVER['DOCUMENT_ROOT']. '/files/ssn_public.pem');//fread($fp,8192);
 	openssl_get_publickey($pub_key);
-	openssl_public_encrypt($_POST["ssn"],$edata,$pub_key,OPENSSL_PKCS1_OAEP_PADDING);
+	openssl_public_encrypt($_POST["ssn"],$edata,$pub_key);
+	
+	
     $wpdb->insert(
 			"srbc_staff_app", 
 			array( 

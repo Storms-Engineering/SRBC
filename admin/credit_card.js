@@ -1,3 +1,5 @@
+//TODO update this javascript library to a different encryption library 
+//BODY perhaps one day to one that is a little simpler or easier to read and implement
 window.onload = initSort();
 
 function postAjax(obj) {
