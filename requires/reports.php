@@ -629,7 +629,7 @@ Class Report
 			//TODO Change amount_due to a complete sql query
 			//BODY this is a super heavy load.
 			$amountDue = $this->amountDue($info->registration_id,false);
-			if($amountDue == 0)
+			if($amountDue <= 0)
 				continue;
 			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
 			echo "<td>$" . $amountDue . "</td>";
