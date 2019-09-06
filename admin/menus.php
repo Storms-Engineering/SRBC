@@ -713,6 +713,7 @@ function srbc_camp_reports()
 		<button onclick="generateReport('balance_due')">Balance Due</button>
 		<button onclick="generateReport('overpaid')">Overpaid</button>
 		<button onclick="generateReport('balance_due_emails')">Balance Due Emails</button>
+		<button onclick="generateReport('balance_due_addresses')">Balance Due Addresses</button>
 		<button onclick="generateReport('inactive_registrations')">Inactive Registrations</button>
 		<button onclick="generateReport('no_health_form')">No Heatlh Form</button><br>
 		<hr>

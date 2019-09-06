@@ -626,8 +626,6 @@ Class Report
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Amount Due</th><th>Camp</th></tr>';
 		foreach($campers as $info)
 		{
-			//TODO Change amount_due to a complete sql query
-			//BODY this is a super heavy load.
 			$amountDue = $this->amountDue($info->registration_id,false);
 			if($amountDue <= 0)
 				continue;
@@ -663,25 +661,38 @@ Class Report
 	//Is also redundant see above function comment
 	public function balance_due_addresses()
 	{
-		$this->printHeader();
+		//$this->printHeader();
 		$database = $GLOBALS["srbc_registration"];
 		/*if ($inactive_registration)
 			$database = $GLOBALS["srbc_registration_inactive"] ;*/
 		global $wpdb;
 		$balanceDueCampers = $this->getAmountDueArray();
 		$campersInformation = $wpdb->get_results("SELECT * FROM " . $database . " INNER JOIN srbc_campers ON srbc_campers.camper_id=" . $database . ".camper_id",OBJECT_K);
-		//var_dump($campersInformation);
-		
-		foreach($balanceDueCampers as $camper)
+
+		$csvArray = array();
+		$csvArray[] = array("Parent_first_name","parent_last_name","Address","City","State","Zipcode");
+		foreach($balanceDueCampers as $info)
 		{
-			//TODO Change amount_due to a complete sql query
-			//BODY this is a super heavy load.
-			echo $campersInformation[$camper->registration_id]->email . "<br>";
-			/*$amountDue = $this->amountDue($info->registration_id,false);
-			if($amountDue <= 0)
-				continue;
-			echo $info->email . ",<br>";*/
+			$camper = $campersInformation[$info->registration_id];
+			//Remove any line breaks from an address
+			$csvArray[] = array($camper->parent_first_name,$camper->parent_last_name,preg_replace( "/\r|\n/", "", $camper->address)
+			,$camper->city,$camper->state,$camper->zipcode);
 		}
+
+		header("Content-type: text/csv");
+		header("Cache-Control: no-store, no-cache");
+		header('Content-Disposition: attachment; filename="content.csv"');
+		//I think this is some kind of temp stream
+		$file = fopen('php://output','w');
+
+		foreach ($csvArray as $fields) {
+			fputcsv($file, $fields);
+		}
+		fclose($file);
+		
+		
+
+		
 	}
 	
 	private function getAmountDueArray()
