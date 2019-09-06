@@ -638,6 +638,90 @@ Class Report
 		}
 		echo "</table>";
 	}
+		
+		
+	//Shows all the emails for campers that have a balance due.
+	public function balance_due_emails()
+	{
+		$this->printHeader();
+		$database = $GLOBALS["srbc_registration"];
+		/*if ($inactive_registration)
+			$database = $GLOBALS["srbc_registration_inactive"] ;*/
+		global $wpdb;
+		$balanceDueCampers = $this->getAmountDueArray();
+		$campersInformation = $wpdb->get_results("SELECT * FROM " . $database . " INNER JOIN srbc_campers ON srbc_campers.camper_id=" . $database . ".camper_id",OBJECT_K);
+
+		
+		foreach($balanceDueCampers as $camper)
+		{
+			echo $campersInformation[$camper->registration_id]->email . "<br>";
+		}
+	}
+	
+			
+	//Shows all the emails for campers that have a balance due.
+	//Is also redundant see above function comment
+	public function balance_due_addresses()
+	{
+		$this->printHeader();
+		$database = $GLOBALS["srbc_registration"];
+		/*if ($inactive_registration)
+			$database = $GLOBALS["srbc_registration_inactive"] ;*/
+		global $wpdb;
+		$balanceDueCampers = $this->getAmountDueArray();
+		$campersInformation = $wpdb->get_results("SELECT * FROM " . $database . " INNER JOIN srbc_campers ON srbc_campers.camper_id=" . $database . ".camper_id",OBJECT_K);
+		//var_dump($campersInformation);
+		
+		foreach($balanceDueCampers as $camper)
+		{
+			//TODO Change amount_due to a complete sql query
+			//BODY this is a super heavy load.
+			echo $campersInformation[$camper->registration_id]->email . "<br>";
+			/*$amountDue = $this->amountDue($info->registration_id,false);
+			if($amountDue <= 0)
+				continue;
+			echo $info->email . ",<br>";*/
+		}
+	}
+	
+	private function getAmountDueArray()
+	{
+		//TODO inactive_registration support?
+		//BODY I seemed to implement this for inactive registration report but do we really need it?  Look into it.
+		//Determines which registration_database we are looking at
+		$database = $GLOBALS["srbc_registration"];
+		/*if ($inactive_registration)
+			$database = $GLOBALS["srbc_registration_inactive"] ;*/
+		global $wpdb;
+		$arrayOfTotalPayed = $wpdb->get_results("SELECT 	owedTble.registration_id,SUM(owe - payed) as amountDue
+						FROM (SELECT registration_id,
+						SUM(
+                                " . $GLOBALS['srbc_camps'] . " .cost + (CASE WHEN " . $database . ".horse_opt = 1 THEN " . $GLOBALS['srbc_camps']. ".horse_opt_cost
+								ELSE 0
+								END)
+                                 +
+								(CASE WHEN " . $database . ".busride = 'to' THEN 35
+								WHEN " . $database . ".busride = 'from' THEN 35
+								WHEN " . $database . ".busride = 'both' THEN 60
+								ELSE 0
+								END) 
+								- IF(" . $database . ".discount IS NULL,0," . $database . ".discount)
+								- IF(" . $database . ".scholarship_amt IS NULL,0," . $database . ".scholarship_amt)		
+								) AS owe
+								
+					FROM " . $GLOBALS['srbc_camps'] . " INNER JOIN " . $database . " ON " . $GLOBALS['srbc_camps'] . ".camp_id=" . $database . ".camp_id
+					GROUP BY " . $database. ".registration_id
+					) as owedTble
+				INNER JOIN (SELECT payment_type,registration_id,SUM(" . $GLOBALS['srbc_payments'] . ".payment_amt) as payed FROM " . $GLOBALS['srbc_payments'] . "
+							WHERE NOT " . $GLOBALS['srbc_payments'] . ".fee_type='Store'
+							GROUP BY " . $GLOBALS['srbc_payments']. ".registration_id) as payedTble ON owedTble.registration_id = payedTble.registration_id
+							/*amount due greater than 0*/
+							WHERE (owe - payed) > 0
+				GROUP BY registration_id",OBJECT_K);
+			return $arrayOfTotalPayed;	
+		
+		   
+	}
 	
 	//Generates a report for all the overpaid campers.
 	//This can also show the same campers more than once if they owe for multiple camps they are signed up for
@@ -661,21 +745,7 @@ Class Report
 		echo "</table>";
 	}
 	
-	//Shows all the emails for campers that have a balance due.
-	//Is also redundant see above function comment
-	public function balance_due_emails()
-	{
-		$campers = $this->getCampers();
-		foreach($campers as $info)
-		{
-			//TODO Change amount_due to a complete sql query
-			//BODY this is a super heavy load.
-			$amountDue = $this->amountDue($info->registration_id,false);
-			if($amountDue <= 0)
-				continue;
-			echo $info->email . ",<br>";
-		}
-	}
+
 	
 	//New Buslist grabs all campers heading to anchorage or camp and also selects campers that are going both ways
 	//Puts them into both reports
