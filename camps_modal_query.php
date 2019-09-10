@@ -9,7 +9,7 @@
 	$camp = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] ." WHERE camp_id = %d",$_GET['camp_id'] ));
 	echo $camp->area . " " . $camp->name;
 	echo "</h2></div>";
-	echo '<button class="big_button" style="float:right;" onclick="saveInfo(' . $camp->camp_id . ');">Save Info & Close</button>';
+	echo '<button class="big_button" style="float:right;" onclick="saveCampInfo(' . $camp->camp_id . ');">Save Info & Close</button>';
 	echo '<div class="modal-body">';
 	echo 'Area: <input name="area" type="text" value="' . $camp->area . '">';
 	echo 'Camp: <input name="name" type="text" value="' . $camp->name . '"><br>';
@@ -31,13 +31,13 @@
 	$closed = $camp->closed_to_registrations == 0 ? "" : "checked";
 	echo '<br>Closed To Registrations <input type="checkbox" name="closed_to_registrations" ' . $closed . '><br><br>';
 	
-	/*require_once 'requires/tables.php';
+	require_once 'requires/tables.php';
 	require_once 'requires/camper_search.php';
 	$campers = CamperSearch::getCampersByCampID($camp->camp_id);
-	Tables::createTable($campers);*/
+	Tables::createTable($campers);
 	
 	echo "</div>";
-	echo '<div class="modal-footer"><button  onclick="saveInfo(' . $camp->camp_id . ');" class="big_button">Save Info & Close</button></div>';
+	echo '<div class="modal-footer"><button  onclick="saveCampInfo(' . $camp->camp_id . ');" class="big_button">Save Info & Close</button></div>';
 
 	
 ?>

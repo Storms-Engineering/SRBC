@@ -337,54 +337,7 @@ function srbc_camper_management()
     <?php
 }
 
-function listCamps($area)
-{
-	echo '<table style="width:100%;">
-		<tr>
-			<th>Camp</th>
-			<th>Start Date</th>
-			<th>Boys Registered</th>
-			<th>Girls Registered</th>
-			<th>Total Registered</th>
-			<th>Waitlist</th>';
-	if ($area == "Lakeside")
-		echo '<th>Horse Waitlist</th>';
-	echo '<th>Delete</th>
-		</tr>';
-	global $wpdb;
-	if ($area != "Lakeside")
-		$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='%s' ORDER BY start_date",$area));
-	else
-		$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='%s' OR area='Sports' ORDER BY start_date",$area));
-	foreach ($camps as $camp)
-	{
-		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM " . $GLOBALS['srbc_registration'] . "
-										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id)); 
-		$male_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM " . $GLOBALS['srbc_registration'] . "
-										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id)); 
-		$female_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM " . $GLOBALS['srbc_registration'] . "
-										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
-		$horseWaitlist = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
-										FROM " . $GLOBALS['srbc_registration'] . "
-										WHERE camp_id=%s AND NOT horse_waitlist=0",$camp->camp_id)); 
-										
-		echo '<tr onclick="openCampModal(' . $camp->camp_id . ')"><td>' . $camp->name;
-		echo "</td><td>" . $camp->start_date . "</td>";
-		echo "<td>" . $male_registered . "</td>";
-		echo "<td>" . $female_registered . "</td>";
-		echo "<td>" . ($male_registered + $female_registered) . "/" . $camp->overall_size . "</td>"; 
-		echo "<td>" . $waitlistsize ."/" . $camp->waiting_list_size . "</td>";
-		if ($area == "Lakeside")
-			echo "<td>" . $horseWaitlist ."/" . $camp->horse_waiting_list_size . "</td>";
-		echo '<td><button class="big_button" style="padding:2px;" onclick="deleteCamp(event,' . $camp->camp_id . ',\'' . wp_create_nonce('delete-camp_'.$camp->camp_id) . '\');">Delete</button></td></tr>';
-	}
-	echo "</table> ";
-}
+
 
 function srbc_overview_page()
 {
@@ -641,9 +594,60 @@ function srbc_camps_management()
 	<div id="snackbar"></div>
 	<div id="error"></div>
 	<script src="../wp-content/plugins/SRBC/admin/camps_management.js"></script>
-	<!--<script src="../wp-content/plugins/SRBC/admin/camper_modal.js"></script>-->
+	<script src="../wp-content/plugins/SRBC/admin/camper_modal.js"></script>
 	<script src="../wp-content/plugins/SRBC/admin/sortTable.js"></script>
     <?php
+}
+
+//Helper function for srbc_camps_management
+//Lists all the camps for a certain area in a table with appropriate delete buttons and information
+function listCamps($area)
+{
+	echo '<table style="width:100%;">
+		<tr>
+			<th>Camp</th>
+			<th>Start Date</th>
+			<th>Boys Registered</th>
+			<th>Girls Registered</th>
+			<th>Total Registered</th>
+			<th>Waitlist</th>';
+	if ($area == "Lakeside")
+		echo '<th>Horse Waitlist</th>';
+	echo '<th>Delete</th>
+		</tr>';
+	global $wpdb;
+	if ($area != "Lakeside")
+		$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='%s' ORDER BY start_date",$area));
+	else
+		$camps = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='%s' OR area='Sports' ORDER BY start_date",$area));
+	foreach ($camps as $camp)
+	{
+		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+										FROM " . $GLOBALS['srbc_registration'] . "
+										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id)); 
+		$male_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+										FROM " . $GLOBALS['srbc_registration'] . "
+										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id)); 
+		$female_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+										FROM " . $GLOBALS['srbc_registration'] . "
+										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
+		$horseWaitlist = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+										FROM " . $GLOBALS['srbc_registration'] . "
+										WHERE camp_id=%s AND NOT horse_waitlist=0",$camp->camp_id)); 
+										
+		echo '<tr onclick="openCampModal(' . $camp->camp_id . ')"><td>' . $camp->name;
+		echo "</td><td>" . $camp->start_date . "</td>";
+		echo "<td>" . $male_registered . "</td>";
+		echo "<td>" . $female_registered . "</td>";
+		echo "<td>" . ($male_registered + $female_registered) . "/" . $camp->overall_size . "</td>"; 
+		echo "<td>" . $waitlistsize ."/" . $camp->waiting_list_size . "</td>";
+		if ($area == "Lakeside")
+			echo "<td>" . $horseWaitlist ."/" . $camp->horse_waiting_list_size . "</td>";
+		echo '<td><button class="big_button" style="padding:2px;" onclick="deleteCamp(event,' . $camp->camp_id . ',\'' . wp_create_nonce('delete-camp_'.$camp->camp_id) . '\');">Delete</button></td></tr>';
+	}
+	echo "</table> ";
 }
 
 function srbc_camp_reports()

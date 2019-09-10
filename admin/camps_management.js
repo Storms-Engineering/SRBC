@@ -56,7 +56,7 @@ xmlhttp.open("POST", "../wp-content/plugins/SRBC/update_camps.php", true);
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 xmlhttp.send("x=" + encodeURIComponent(param));
 }
-function saveInfo(cmp_id)
+function saveCampInfo(cmp_id)
 {
 	// Get the container element
 	//This is the JSON object that we will pass to the server to store in the database
