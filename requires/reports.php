@@ -756,6 +756,36 @@ Class Report
 		echo "</table>";
 	}
 	
+	//Displays all campers who were refunded money - general report
+	public function refunds()
+	{
+		global $wpdb;
+		$newFormat = date("m/d/Y",strtotime($this->start_date));
+		$campers = $wpdb->get_results("SELECT *
+														FROM ((" . $GLOBALS['srbc_payments'] . " 
+														INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
+														INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+														WHERE " . $GLOBALS['srbc_payments'] . ".fee_type='Refund'
+														ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC");
+		$this->printHeader();												
+		echo '<table id="report_table">';
+		echo "<tr><th>Last name</th><th>First Name</th><th>Payment Type</th><th>Fee Type</th>
+				<th>Amount</th></tr>";
+
+		//ID is for multiple campers that were paid for at once
+		foreach ($campers as $camper)
+		{
+			
+
+				echo '<tr class="'.$camper->gender.'" onclick="openCamperModal('.$camper->camper_id.');"><td>'. $camper->camper_first_name . "</td><td>" . $camper->camper_last_name . "</td>";
+				echo "<td>". $camper->payment_type . "</td>";
+				echo "<td>". $camper->fee_type . "</td>";
+				echo "<td>$". $camper->payment_amt . "</td>";
+				echo "</tr>";
+		}
+		//Close out the table
+		echo "</table>";
+	}
 
 	
 	//New Buslist grabs all campers heading to anchorage or camp and also selects campers that are going both ways
