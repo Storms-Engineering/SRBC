@@ -44,7 +44,7 @@ function updateCamperLodging(lodge,counselorPos){
 	counselor = document.getElementsByName("counselor")[counselorPos].value;
 	if(counselor === "")
 	{
-		alert("Please enter a counselor for this cabin");
+		alert("Please enter a counselor for this lodge");
 		return;
 	}
 	assistant_counselor = document.getElementsByName("assistant_counselor")[counselorPos].value;
@@ -94,7 +94,7 @@ function changeLodgingTo(lodge,camper_id,counselor,assistant_counselor,count,nam
 		showLodging();
 		}
 	};
-	xhttp.open("GET", "/wp-content/plugins/SRBC/update_lodging.php?cabin="+lodge + "&registration_id=" + camper_id +"&counselor=" + counselor 
+	xhttp.open("GET", "/wp-content/plugins/SRBC/update_lodging.php?lodging="+lodge + "&registration_id=" + camper_id +"&counselor=" + counselor 
 					+ "&assistant_counselor="+ assistant_counselor, true);
 	xhttp.send();
 }

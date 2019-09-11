@@ -153,7 +153,7 @@ else {
 			array( 
 				'assistant_counselor' => $obj[$key]["assistant_counselor"],	
 				'counselor' => $obj[$key]["counselor"],	
-				'cabin' => $obj[$key]["cabin"],	
+				'lodging' => $obj[$key]["lodging"],	
 				'horse_opt' => $obj[$key]["horse_opt"],	
 				'busride' => $obj[$key]["busride"],	
 				'discount' => $obj[$key]["discount"],

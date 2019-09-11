@@ -22,7 +22,7 @@ if(isset($_GET['registration_id']))
 	$checked_in = $wpdb->get_var($wpdb->prepare("SELECT checked_in FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d",$_GET['registration_id']));
 	if($checked_in == 0)
 	{
-		exit("Please make sure that the camper checks in with registration before getting assigned to a cabin.
+		exit("Please make sure that the camper checks in with registration before getting assigned to lodging.
 					They are currently not checked in according to my records...");
 	}
 	$wpdb->update( 
@@ -54,14 +54,14 @@ $lodgeNames = array_keys($lodgesCanHold);
 $count = 0;
 foreach($lodgesCanHold as $lodgeCanHold)
 {
-	echo '<table name="cabins">
+	echo '<table name="lodging">
 			<tr>
 				<th colspan="2">' . $lodgeNames[$count] . "</th>
 			</tr>";
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT camper_first_name,camper_last_name,counselor,assistant_counselor, registration_id
 									FROM srbc_campers INNER JOIN srbc_registration
 									ON srbc_campers.camper_id=srbc_registration.camper_id
-									WHERE srbc_registration.camp_id=%d AND srbc_registration.cabin=%s",$_GET['camp_id'],$lodgeNames[$count]));
+									WHERE srbc_registration.camp_id=%d AND srbc_registration.lodging=%s",$_GET['camp_id'],$lodgeNames[$count]));
 	
 	$counselor = (count($campers) == 0) ? null : $campers[0]->counselor;
 	$assistant_counselor = (count($campers) == 0) ? null : $campers[0]->assistant_counselor;

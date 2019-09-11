@@ -142,7 +142,7 @@ Class Report
 		{
 			//Remove any line breaks from an address
 			$csvArray[] = array($camper->camper_first_name,$camper->camper_last_name,preg_replace( "/\r|\n/", "", $camper->address)
-			,$camper->city,$camper->state,$camper->zipcode,$camper->cabin,$camper->area . " " . $camper->name);
+			,$camper->city,$camper->state,$camper->zipcode,$camper->lodging,$camper->area . " " . $camper->name);
 		}
 
 		header("Content-type: text/csv");
@@ -227,27 +227,27 @@ Class Report
 	
 	public function signout_sheets()
 	{
-		$campers = $this->getCampers("ORDER BY srbc_registration.cabin DESC");
-		//This variable keeps track of if we have changed cabin group
+		$campers = $this->getCampers("ORDER BY srbc_registration.lodging DESC");
+		//This variable keeps track of if we have changed lodging group
 		//Initialized to 0 so we don't compare to null and get true
-		$oldCabin = 0;
+		$oldLodging = 0;
 		//echo '<table id="report_table">';
 		foreach ($campers as $camper)
 		{
 			//Start a new table
-			if ($camper->cabin != $oldCabin || $oldCabin === 0)
+			if ($camper->lodging != $oldLodging || $oldLodging === 0)
 			{
 				//Don't do this for the first table, but do it for every new table
-				if($oldCabin != NULL)
+				if($oldLodging != NULL)
 				{
 					echo '</table>';	
 				}
 				echo "<h1>Signout Sheet for " . $camper->area . " " . $camper->name . "</h1>";
 				
-				if($camper->cabin === "" || $camper->cabin === NULL)
-					echo "<h3>No Cabin Assigned</h3>";
+				if($camper->lodging === "" || $camper->lodging === NULL)
+					echo "<h3>No Lodging Assigned</h3>";
 				else
-					echo "<h3>$camper->cabin</h3>";
+					echo "<h3>$camper->lodging</h3>";
 				echo '<table style="page-break-after: always;" id="report_table">';
 				echo '<tr><th>Camper</th><th>Parent/Guardian</th><th style="width:200px;">Signature</th></tr>';			
 			}			
@@ -259,35 +259,37 @@ Class Report
 				echo "<td><b>ON THE BUS</b></td></tr>";
 			else
 				echo "<td></td></tr>";
-			$oldCabin = $camper->cabin;
+			$oldCabin = $camper->lodging;
 		}
 		//Close out the table
 		echo "</table>";
 	}
 	
+	//TODO Similar to signout sheets?
+	//Prints out a list of campers for program
 	public function program_camper_sheets()
 	{
 		global $wpdb;
-		$campers = $this->getCampers("ORDER BY srbc_registration.cabin DESC");
-		//This variable keeps track of if we have changed cabin group
+		$campers = $this->getCampers("ORDER BY srbc_registration.lodging DESC");
+		//This variable keeps track of if we have changed lodge 
 		//Initialized to 0 so we don't compare to null and get true
-		$oldCabin = 0;
+		$oldLodging = 0;
 		//echo '<table id="report_table">';
 		foreach ($campers as $camper)
 		{
 			//Start a new table
-			if ($camper->cabin != $oldCabin || $oldCabin === 0)
+			if ($camper->lodging != $oldLodging || $oldLodging === 0)
 			{
 				//Don't do this for the first table, but do it for every new table
-				if($oldCabin != NULL)
+				if($oldLodging != NULL)
 				{
 					echo "</table><br><br><br>";	
 				}
-				if($camper->cabin === "" || $camper->cabin === NULL)
+				if($camper->lodging === "" || $camper->lodging === NULL)
 					echo "<h3>No Cabin Assigned</h3>";
 				else
 				{
-					echo '<h3 style="display:inline">' . $camper->cabin . '</h3><br><b>Counselor: ' . $camper->counselor . '</b>';
+					echo '<h3 style="display:inline">' . $camper->lodging . '</h3><br><b>Counselor: ' . $camper->counselor . '</b>';
 					echo '&nbsp|&nbsp<b>Assistant Counselor: ' . $camper->assistant_counselor . '</b>';
 				}
 				echo '<table id="report_table">';
@@ -297,7 +299,7 @@ Class Report
 			echo "<td>". $camper->phone . "</td>";
 			echo "<td>". $camper->registration_notes . "</td>";
 			echo "</tr>";
-			$oldCabin = $camper->cabin;
+			$oldCabin = $camper->lodging;
 		}
 		//Close out the table
 		echo "</table>";

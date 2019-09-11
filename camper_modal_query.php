@@ -315,7 +315,7 @@ function campSection($registration,$camper,$inactive)
 	//Lodging and counselor
 	echo '<br><br><br>Counselor: <input name="counselor" type="text" value="' . $registration->counselor . '">';
 	echo '<br>Assistant Counselor: <input name="assistant_counselor" type="text" value="' . $registration->assistant_counselor . '">';
-	echo ' Lodged in: <input name="cabin" list="lodging" type="text" value="' . $registration->cabin . '"><br>';
+	echo ' Lodged in: <input name="lodging" list="lodging" type="text" value="' . $registration->lodging . '"><br>';
 	echo '<datalist id="lodging">
 			<option value="Girls Tent">
 			<option value="Guys Tent">
