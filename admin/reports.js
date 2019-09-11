@@ -38,7 +38,7 @@ function generateReport(data)
 	}
 	
 	url =  "/wp-content/plugins/SRBC/report_query.php?" + data;
-	if ((data.includes("mailing_list") || data.includes("balance_due_addresses"))  && hasStartDate )
+	if ((data.includes("mailing_list")  && hasStartDate) ||  data.includes("balance_due_addresses") )
 		window.open(url, '_blank');
 	else if(data.includes("mailing_list"))
 	{
