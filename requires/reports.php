@@ -331,8 +331,6 @@ Class Report
 		$totals = ["card" => 0,"check" => 0, "cash" => 0, "Bus" => 0, "Store" => 0, "LS Horsemanship" => 0, "WT Horsemanship" => 0,
 		"Lakeside" => 0, "Wagon Train" => 0, "Wilderness" => 0, "None" => 0, "Refund" => 0];
 		$camper_ids = [];
-		//TODO investigate this:
-		//ID is for multiple campers that were paid for at once?
 		foreach ($campers as $camper)
 		{
 			$camper_ids[] = $camper->camper_id;
