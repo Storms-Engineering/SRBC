@@ -15,7 +15,10 @@ function srbc_workcrew_registration($atts)
    //Loop through all of the parameters and join them together in one big text block
    foreach ($_POST as $val)
    {
+	   if($val != "none")
+	   {
 		$body .= '<b style="font-size:20px">' . $keys[$i] . '</b>: ' . $val . "<br>";
+	   }
 	    $i++;
    }
    //Email applicant
