@@ -21,13 +21,15 @@ function srbc_workcrew_registration($atts)
    //Email applicant
    Email::sendMail($_POST["email"], 'WorkCrew Registration ',
    "Dear " . $_POST["first_name"] . ",<br>Thanks for registering for workcrew at Solid Rock Bible Camp!
+   <br>Please use the code <code>warden</code> when you register as a camper.<bt>
    <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
    <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
    /* Set the mail message body. */
 	Email::sendMail(workcrew_email, 'Workcrew Registration For ' . $_POST["first_name"] . " " . $_POST["last_name"],$body);
 
-	echo "Registration submitted sucessfully!
-  You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!";
+	echo 'Registration submitted sucessfully!  <span style="color:red">Important note: Please register for the week of camp that you specified.  Please enter the code 
+	<code>warden</code> on the registration page when it asks you for a code.</span>
+  You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!';
 }
 
 //Creates a table of current lakeside camps for workcrew to choose from
@@ -38,8 +40,7 @@ function srbc_workcrew_workschedule($atts)
 	$finalText = '<table style="width:100%;">
 				<tr style="background:#51d3ff;">
 				<th>Preference</th>
-				<th>Camp Name</th>
-				<th>Date</th>
+				<th>Camp</th>
 				<th>Bus</th>
 				</tr>';
 	global $wpdb;
@@ -49,34 +50,33 @@ function srbc_workcrew_workschedule($atts)
 		return "<h2>There is currently no camps scheduled for this area at this time.  Please check back later!</h2>";
 	
 	
-	
-	//Create the table of camps
-	foreach ($camps as $camp){
+	//Create table of camps
+	for($i = 1; $i <= 5; $i++)
+	{
 		$finalText .=  '<tr>';
-		$finalText .= "<td>" . createCampSelect($camp->area . " " . $camp->name,count($camps)) . "</td>";
-		$finalText .= '<td>' . $camp->name ;		
-		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date));
-		$finalText .=  "</td>";
-		$finalText .= '<td>' . createBusSelect($camp->area . " " . $camp->name) . '</td>';
+		$finalText .=  '<td>#' . $i;
+		$finalText .= "<td>" . createCampSelect($i,$camps) . "</td>";
+		$finalText .= '<td>' .  createBusSelect($i) . '</td>';
 	}
 	$finalText .=  "</table>";
 	return $finalText;
 }
 
-function createCampSelect($campName,$number)
+function createCampSelect($number,$camps)
 {
-	$select = '<select name="' . $campName . '">';
-	for($i = 0;$i<=$number;$i++)
+	$select = '<select name="preference_' . $number . '">';
+	foreach($camps as $camp)
 	{
-		$select .= '<option value="' . $i . '">' . $i . '</option>';
+		$select .= '<option value="' . $camp->area . " " . $camp->name . '">' . $camp->area . " " . $camp->name . " " . date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)) . '</option>';
 	}
 	$select .= '</select>';
+	
 	return $select;
 }
 
-function createBusSelect($campName)
+function createBusSelect($number)
 {
-	$select = '<select name="busride_' . $campName . '">
+	$select = '<select name="busride_week_' . $number . '">
 					<option value="none" selected>No bus ride needed</option>
 					<option value="Round-Trip">Round-Trip $60</option>
 					<option value="One-way to Camp">One-way to Camp $35</option>
@@ -419,11 +419,15 @@ function srbc_registration( $atts )
 				<option value="agree">Agree</option>
 			</select></p>
 	<hr>
-	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received.  (This $50 DOES go towards the cost of the camp)</span><br>
+	Workcrew Code: <input type="text" id="code" name="code"><!--Workcrew Warden: Nathaniel McGilvra aka McBob-->
+	<hr>
+	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received unless you are workcrew*.  (This $50 DOES go towards the cost of the camp)</span><br>
 	You must pay $50, or pay the full amount of the camp, unless you a are registering for the waitlist then you don't have to pay a registration fee.  Any remaining amount will be due the day of registration.
 	<br>
+	*If you are workcrew please enter the code received in your email and after registering in the box above and your registration will be allowed.
 	<br>
-	<h2>Amount to pay: </h2>
+	<br>
+	<h2>Amount to pay*: </h2>
 	<!--<input type="radio" name="cc_amount" value="50"> $50<br>
 	<input type="radio" name="gender" value="0"> $<span id="total"></span>
 	<br>	-->
@@ -443,6 +447,7 @@ function srbc_registration( $atts )
 		<input type="radio"  name="cc_amount" id="waitlist" value="">
 		<span class="checkmark"></span>
 	</label>
+	*Disregard this section if are workcrew and have put in your code.
 	<hr>
 	<h2>Use a credit card:</h2>	
 		Name on Credit Card: <input type="text" name="cc_name">
@@ -606,12 +611,16 @@ function srbc_registration_complete($atts)
 	}
 	$currentDate = new DateTime("now", new DateTimeZone('America/Anchorage'));
 	//Check that they aren't trying to cheat the system by saying they are signing up for a camp that isn't waitlisted and paying nothing
-	if($waitlist == 0 && $_POST["cc_amount"] == "")
+	if(($waitlist == 0 && $_POST["cc_amount"] == ""))
 	{
+		//Let workcrew through though
+		if($_POST["code"] != "warden")
+		{
 		error_msg("Please enter credit card information or check the 'Send a check' option.
 		This camp is not currently full and therefore you aren't being put on the waiting list.
 		Please hit the back button and try again. Thanks!");
 		exit();
+		}
 	}
 	$wpdb->insert(
 			$GLOBALS['srbc_registration'], 
@@ -637,7 +646,7 @@ function srbc_registration_complete($atts)
 			) 
 			);
 	$registration_id = $wpdb->insert_id;
-	require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/email.php');
+	//require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/email.php');
 	//Notify office that this parent is sending a check	
 	if (isset($_POST["using_check"])){
 		Email::sendMail(srbc_email,$_POST['parent_first_name'] . " " . $_POST['parent_last_name'] . " is sending a check ",
@@ -659,7 +668,7 @@ function srbc_registration_complete($atts)
 			$data .= '   USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
 		}
 		//Show comments about buslist and horse option and horse_cost
-		$comments = autoSplit($_POST["cc_amount"],$camp->camp_id,$wpdb->insert_id,$busride,$horse_opt);
+		$comments = autoSplit($_POST["cc_amount"],$camp->camp_id,$wpdb->insert_id,$_POST['busride'],$horse_opt);
 		//Encrypt using ssl pgp
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
 		$pub_key=fread($fp,8192);

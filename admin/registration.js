@@ -30,7 +30,7 @@ function validateForm()
 		alert("Please check emails to make sure that they match!");
 		return false;
 	}
-	if (document.getElementById("use_check").checked || document.getElementById("waitlist").checked)
+	if (document.getElementById("use_check").checked || document.getElementById("waitlist").checked || document.getElementById("code").value == "warden")
 	{
 		return true;
 	}

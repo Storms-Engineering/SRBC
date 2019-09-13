@@ -5,9 +5,9 @@ Description: Solid Rock Bible Camp Plugin for Registration and Displaying Users
 Version: 0.8.09
 */
 //Require
-require("admin/shortcodes.php");
-require("admin/menus.php");
-require("functions.php");
+require_once "admin/shortcodes.php";
+require_once "admin/menus.php";
+require_once "functions.php";
 
 //Initial install code, setting up database 
 function srbc_install() {
