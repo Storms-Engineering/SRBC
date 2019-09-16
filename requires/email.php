@@ -41,7 +41,7 @@ class Email
 		Hello ". $info->parent_first_name . ",<br><br>Thanks for signing up " . $info->camper_first_name . " for <b>" . $info->area . " " . $info->name . "</b>!  <br><br>
 		<b>Camp Start date</b>:" .date("l, M j,Y",strtotime($info->start_date)) . '<br><pre style="display:inline">	</pre><b>Camp Drop off time</b>: 8:00am*' . 
 		"<br><br><b>Camp End date</b>:" .date("l, M j,Y",strtotime($info->end_date)) . '<br><pre style="display:inline">	</pre><b>Camp Pick up time</b>: 5:00pm*<br><br>' . 
-		"*Contact office to arrange additional hours.<br>" . 
+		"*Notify office about early dropoff or late pickup.<br>" . 
 		"A <b>health form</b> has been attached. Please fill it out and bring it on the opening day of camp.<br><br>" .
 		"<br><br>See you at camp!<br><br> -Solid Rock Bible Camp<br><br>36251 Solid Rock Rd #1<br>
 		Soldotna, AK 99669<br>
