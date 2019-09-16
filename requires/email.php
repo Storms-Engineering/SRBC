@@ -34,6 +34,28 @@ class Email
 	
 	//Sends confirmation email.
 	//Info is the information that we need in an object
+	public static function sendDaycampConfirmationEmail($registration_id)
+	{
+		$info = self::getInfo($registration_id);
+		$msg = "<html><body>
+		Hello ". $info->parent_first_name . ",<br><br>Thanks for signing up " . $info->camper_first_name . " for <b>" . $info->area . " " . $info->name . "</b>!  <br><br>
+		<b>Camp Start date</b>:" .date("l, M j,Y",strtotime($info->start_date)) . '<br><pre style="display:inline">	</pre><b>Camp Drop off time</b>: 8:00am*' . 
+		"<br><br><b>Camp End date</b>:" .date("l, M j,Y",strtotime($info->end_date)) . '<br><pre style="display:inline">	</pre><b>Camp Pick up time</b>: 5:00pm*<br><br>' . 
+		"*Contact office to arrange additional hours.<br>" . 
+		"A <b>health form</b> has been attached. Please fill it out and bring it on the opening day of camp.<br><br>" .
+		"<br><br>See you at camp!<br><br> -Solid Rock Bible Camp<br><br>36251 Solid Rock Rd #1<br>
+		Soldotna, AK 99669<br>
+		phone: (907) 262-4741<br>
+		fax: (907) 262-9088<br>
+		srbc@alaska.net
+		</body>
+		</html>";
+		self::sendMail($info->email,"Thank you for signing up for a Solid Rock Camp!", $msg, $_SERVER['DOCUMENT_ROOT'].'/attachments/healthform.pdf');
+		echo "Email Sent!";
+	}
+	
+	//Sends confirmation email.
+	//Info is the information that we need in an object
 	public static function sendConfirmationEmail($registration_id)
 	{
 		$info = self::getInfo($registration_id);
