@@ -50,7 +50,7 @@ class Email
 		srbc@alaska.net
 		</body>
 		</html>";
-		self::sendMail($info->email,"Thank you for signing up for a Solid Rock Camp!", $msg, $_SERVER['DOCUMENT_ROOT'].'/attachments/healthform.pdf');
+		self::sendMail($info->email,"Thank you for signing up for a Solid Rock Camp!", $msg, $_SERVER['DOCUMENT_ROOT'].'/attachments/healthform2.pdf');
 		echo "Email Sent!";
 	}
 	
