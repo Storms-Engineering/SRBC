@@ -1,7 +1,7 @@
 function deleteCamp(ev,cmpid,nonce)
 {
 	if(confirm('Are you sure you want to delete?')){
-		postAjax({'deleteid': cmpid , '_wpnonce' : nonce});
+		postCampAjax({'deleteid': cmpid , '_wpnonce' : nonce});
 	}
 	ev.stopPropagation();
 }
@@ -37,7 +37,7 @@ function showToast(text) {
     // After 3 seconds, remove the show class from DIV
     setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 } 
-function postAjax(obj) {
+function postCampAjax(obj) {
 	param = JSON.stringify(obj);
 	xmlhttp = new XMLHttpRequest();
 	xmlhttp.onreadystatechange = function() {
@@ -76,7 +76,7 @@ function saveCampInfo(cmp_id)
 					info[inputs[j].name] = 0;
 	}
 	console.log(info);
-	postAjax(info);
+	postCampAjax(info);
 	closeModal();
 }
 function addNewCamp()
@@ -96,7 +96,7 @@ function addNewCamp()
 			info[inputs[j].name] = inputs[j].value;
 	}
 	console.log(info);
-	postAjax(info);
+	postCampAjax(info);
 }
 
 function openPage(pageName,elmnt,color) {
