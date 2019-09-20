@@ -821,7 +821,8 @@ function calcPaymentAmt($autoPaymentAmt, $needToPayAmount)
 }
 
 //Lists all camps by area
-function srbc_camps($atts){
+function srbc_camps($atts)
+{
 	$query = $atts["area"];
 	
 	$finalText = '<table style="width:100%;">
