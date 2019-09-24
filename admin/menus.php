@@ -50,7 +50,7 @@ function staff_application_menu()
 							WHERE ",$ccs->registration_id);*/
 		echo "<tr><td>" . $app->Firstname . " " . $app->Middlename . " " . $app->Lastname;
 		echo '</td><td class="ssn">' . $app->ssn;
-		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $app->staff_app_id . '})}">Delete</button>';
+		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $app->staff_app_id . ", 'wp_nonce' : '" . wp_create_nonce( 'delete_ssn_'.$app->staff_app_id) . '\'})}">Delete</button>';
 		echo "</td></tr>";
 	}
 	echo "</table> ";
