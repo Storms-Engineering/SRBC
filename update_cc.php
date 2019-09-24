@@ -9,9 +9,15 @@ securityCheck();
 global $wpdb;
 //Check if we are deleting a camp
 if (isset($obj["deleteid"])) {
-    //If this is set then we are deleting a camp
-	$wpdb->delete( 'srbc_cc', array( 'cc_id' => $obj["deleteid"] ) );
-	echo "Camp Deleted and Data Saved Sucessfully";
+	//If this is set then we are deleting a camp
+	if(wp_verify_nonce( $obj["wp_nonce"], 'delete_cc'.$obj["deleteid"] ))
+	{
+		$wpdb->delete( 'srbc_cc', array( 'cc_id' => $obj["deleteid"] ) );
+		echo "Camp Deleted and Data Saved Sucessfully";
+	}
+	else 
+		wp_nonce_ays("");
+	
 	exit;
 }
 ?>

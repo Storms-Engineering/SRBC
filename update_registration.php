@@ -17,7 +17,7 @@ if (isset($obj["delete_payment_id"]))
 		echo "Payment Sucessfully Deleted!";
 	}
 	else
-		wp_nonce_ays();
+		wp_nonce_ays("");
 }
 else if (isset($obj["reactivate_id"]))
 {

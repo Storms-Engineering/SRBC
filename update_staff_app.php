@@ -16,7 +16,7 @@ if (isset($obj["deleteid"])) {
         echo "Camp Deleted and Data Saved Sucessfully";
     }
     else
-        wp_nonce_ays();
+        wp_nonce_ays("");
 	
 	exit;
 }
