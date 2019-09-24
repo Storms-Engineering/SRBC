@@ -11,8 +11,13 @@ global $wpdb;
 
 if (isset($obj["delete_payment_id"]))
 {
-	$wpdb->query($wpdb->prepare("DELETE FROM " . $GLOBALS['srbc_payments']. " WHERE payment_id=%d;",$obj["delete_payment_id"]));
-	echo "Payment Sucessfully Deleted!";
+	if(wp_verify_nonce( $obj["wp_nonce"], 'delete_cc'.$obj["delete_payment_id"]  ))
+	{
+		$wpdb->query($wpdb->prepare("DELETE FROM " . $GLOBALS['srbc_payments']. " WHERE payment_id=%d;",$obj["delete_payment_id"]));
+		echo "Payment Sucessfully Deleted!";
+	}
+	else
+		wp_nonce_ays();
 }
 else if (isset($obj["reactivate_id"]))
 {

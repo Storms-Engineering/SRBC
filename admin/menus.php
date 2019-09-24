@@ -282,7 +282,7 @@ function srbc_credit_cards(){
 		echo "</td><td>" . $cc->camper_name;
 		echo "</td><td>" . $cc->camp;
 		echo "</td><td>" . $cc->comments;
-		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $cc->cc_id . '})}">Delete</button>';
+		echo '</td><td><button onclick="' . "if(confirm('Are you sure you want to delete?')){postAjax(" . "{'deleteid':" . $cc->cc_id . ", 'wp_nonce':'" . wp_create_nonce( 'delete_cc'.$cc->cc_id ) . '\' })}">Delete</button>';
 		echo "</td></tr>";
 	}
 	echo "</table> ";
