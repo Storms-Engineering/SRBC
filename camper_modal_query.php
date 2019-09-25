@@ -90,7 +90,7 @@
 					foreach ($payments as $payment) {
 						$paymentHistory .= "<tr><th>" . $payment->payment_type . "</th><th> $" . $payment->payment_amt . "</th><th> " .
 											$payment->note . "</th><th> " . $payment->payment_date . "</th><th> " . $payment->fee_type . "</th><th>" .
-											$payment->entered_by . '</th><th><button onclick="deletePayment(' . $camper->camper_id . "," . $payment->payment_id . ');">Delete</button></th></tr>';
+											$payment->entered_by . '</th><th><button onclick="deletePayment(' . $camper->camper_id . "," . $payment->payment_id . ",'" . wp_create_nonce( 'delete_payment_'.$payment->payment_id) . '\');">Delete</button></th></tr>';
 					}
 				}
 

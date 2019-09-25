@@ -1,8 +1,8 @@
-function deletePayment(camper_id,payment_id)
+function deletePayment(camper_id,payment_id,wpNonce)
 {
 	if(confirm("Are you sure you want to delete this payment?"))
 	{
-	obj = {"delete_payment_id" : payment_id};
+	obj = {"delete_payment_id" : payment_id, "wp_nonce":wpNonce};
 	postAjax(obj,camper_id);
 	}
 }

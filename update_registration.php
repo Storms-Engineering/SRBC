@@ -11,7 +11,7 @@ global $wpdb;
 
 if (isset($obj["delete_payment_id"]))
 {
-	if(wp_verify_nonce( $obj["wp_nonce"], 'delete_cc'.$obj["delete_payment_id"]  ))
+	if(wp_verify_nonce( $obj["wp_nonce"], 'delete_payment_'.$obj["delete_payment_id"]  ))
 	{
 		$wpdb->query($wpdb->prepare("DELETE FROM " . $GLOBALS['srbc_payments']. " WHERE payment_id=%d;",$obj["delete_payment_id"]));
 		echo "Payment Sucessfully Deleted!";
