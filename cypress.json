@@ -1,0 +1,6 @@
+{
+    "env": {
+        "wp_user": "testing",
+        "wp_pass": "all the tests"
+    }
+}
