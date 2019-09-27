@@ -135,7 +135,8 @@ Class Report
 
 	public function mailing_list()
 	{
-		$campers = $this->getCampers();
+		//Get campers but don't print header
+		$campers = $this->getCampers(NULL,false);
 		$csvArray = array();
 		$csvArray[] = array("First_name","Last_name","Address","City","State","Zipcode","Cabin", "Camp");
 		foreach($campers as $camper)

@@ -1,3 +1,3 @@
-bin/install-wp-tests.sh
+bin
 vendor
 node_modules
