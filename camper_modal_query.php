@@ -267,8 +267,12 @@ function campSection($registration,$camper,$inactive)
 	<option value="cash">Cash</option>
 	<option value="check">Check</option>
 	<option value="card">Credit Card</option>
-	</select><br>
-	<button class="big_button" style="padding:10px;" onclick="saveInfo();" >Save</button>';
+	</select><br>';
+	if($inactive)
+		echo '<button class="big_button" style="padding:10px;" onclick="saveInfo();" disabled>Cannot save inactive registration</button>';
+	else
+		echo '<button class="big_button" style="padding:10px;" onclick="saveInfo();" >Save</button>';
+		
 	echo "<h3>Fees paid:</h3>";
 	echo $finalText;
 	echo '</fieldset>';
@@ -340,7 +344,10 @@ function campSection($registration,$camper,$inactive)
 	echo '</fieldset>';	
 	
 	//Buttons
-	echo '<br><br><button class="big_button" onclick="saveInfo();" >Save</button>';
+	if($inactive)
+		echo '<br><br><button class="big_button" onclick="saveInfo();" disabled>Cannot save inactive registrations</button>';
+	else
+		echo '<br><br><button class="big_button" onclick="saveInfo();" >Save</button>';
 	echo ' <button class="big_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>';
 	echo '<br><br><button class="big_button" style="background:#009933" onclick="resendEmail('.$registration->registration_id.');" >Resend Email</button>';
 	if ($inactive)
