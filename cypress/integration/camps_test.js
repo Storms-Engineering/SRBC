@@ -8,7 +8,7 @@ describe('Registration Test',function() {
         cy.get( '#user_pass' ).type( Cypress.env( "wp_pass" ) );
         cy.get( '#wp-submit' ).click();
     } );
-    /*it( 'Create new camp with UI', function() {
+    it( 'Create new camp with UI', function() {
         cy.visit( baseURL + '/wp-admin/admin.php?page=camp_management' );
         cy.contains('Add New Camp').click();
         cy.get( '[name="name"]' ).type( "A Test Camp" );
@@ -33,7 +33,7 @@ describe('Registration Test',function() {
         cy.contains("Create New Camp").click();
         cy.wait('@createCamp').its('status').should('eq', 200)
         
-    } );*/
+    } );
 
     it('Check if I can open a camp and modify and save it', function() {
         cy.visit( baseURL + '/wp-admin/admin.php?page=camp_management' );
@@ -47,6 +47,7 @@ describe('Registration Test',function() {
         cy.wait('@saveCamp').its('status').should('eq', 200)
     });
 
+    //Doesn't work yet
     /*it('Test Deleting a camp', function() {
         cy.visit( baseURL + '/wp-admin/admin.php?page=camp_management' );
         cy.server()

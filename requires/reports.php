@@ -158,6 +158,37 @@ Class Report
 		fclose($file);
 	}
 	
+	//Similar to mailing list but designed to be merged in an excel spread sheet
+	function kids_mailingList()
+	{
+		//Get campers but don't print header
+		$campers = $this->getCampers(NULL,false);
+		$csvArray = array();
+		$csvArray[] = array("FirstName","LastName","Address","City","State", "ZipCode","Birthdate","Kenai Penin?", "Parent/Guardian", "EmailAddress");
+		$kPenZipcodes = array(99611,99605,	99631,	99664, 99572,	99672,	99669,	99610,	99568,	99639,	99556,	99603);
+		foreach($campers as $camper)
+		{
+			//See if there are on the kenai peninsula
+			$onKenaiPenin = 'FALSE';
+			if (in_array($camper->zipcode,$kPenZipcodes))
+				$onKenaiPenin = 'TRUE';
+
+			//Remove any line breaks from an address
+			$csvArray[] = array($camper->camper_first_name,$camper->camper_last_name,preg_replace( "/\r|\n/", "", $camper->address)
+			,$camper->city,$camper->state,$camper->zipcode,$camper->birthday, $onKenaiPenin ,$camper->parent_first_name . " " . $camper->parent_last_name,$camper->email);
+		}
+
+		header("Content-type: text/csv");
+		header("Cache-Control: no-store, no-cache");
+		header('Content-Disposition: attachment; filename="content.csv"');
+		//I think this is some kind of temp stream
+		$file = fopen('php://output','w');
+
+		foreach ($csvArray as $fields) {
+			fputcsv($file, $fields);
+}
+fclose($file);
+	}
 	public function all_camp_totals()
 	{
 		$this->printHeader();

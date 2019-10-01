@@ -720,7 +720,8 @@ function srbc_camp_reports()
 		<button onclick="generateReport('balance_due_emails')">Balance Due Emails</button>
 		<button onclick="generateReport('balance_due_addresses')">Balance Due Addresses</button>
 		<button onclick="generateReport('inactive_registrations')">Inactive Registrations</button>
-		<button onclick="generateReport('no_health_form')">No Heatlh Form</button><br>
+		<button onclick="generateReport('no_health_form')">No Heatlh Form</button>
+		<button onclick="generateReport('kids_mailingList')">Kids Mailing List for Merge</button><br>
 		<hr>
 		<h2 style="display:inline;">Date specific reports</h2> <div class="tooltip">?
 			<span class="tooltiptext">Please choose the same date twice if you are doing a report for all camps starting on that day.
