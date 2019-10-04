@@ -389,8 +389,10 @@ function srbc_registration( $atts )
 				<textarea class="inputs" required name="address" rows="2" cols="30"></textarea>
 				City:<input type="text" style="width:100px;" required name="city">
 				State:<input type="text" style="width:50px;" required name="state">
-				Zipcode:<input type="text"  style="width:100px;" required pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="zipcode" ><br>
-				<h3>Parental Notice and Release - Agreement is required for camper admittance</h3>
+				Zipcode:<input type="text"  style="width:100px;" required pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="zipcode" >
+				<br>
+			<hr>
+			<h3>Parental Notice and Release - Agreement is required for camper admittance</h3>
 				
 				<p>I/We, the undersigned, understand that while attending Solid Rock Bible Camp of Soldotna, Alaska (camp),
 			the below-named child may be involved in various activities including but not limited to: horseback riding,
@@ -422,7 +424,183 @@ function srbc_registration( $atts )
 				<option value="agree">Agree</option>
 			</select></p>
 	<hr>
-	Workcrew Code: <input type="text" id="code" name="code"><!--Workcrew Warden: Nathaniel McGilvra aka McBob-->
+	<!--Start Health Form-->
+	<!--TODO put this into a function that I can call-->
+	<h1>Health Form</h1>
+		Emergency Contact: <input type="text" name="emergency_contact">
+		<br>
+		Home Phone <input type="text" name="emergency_phone_home">
+		Cell Phone <input type="text" name="emergency_phone_cell">
+		<br>
+		<br>
+		<h3>General Health Questions</h3>
+		<div id="healthQuestions" style="display:block;">
+			<div id="leftSide">
+				Any recent injury or illness?
+				<select name="recent_injury_illness">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Frequency ear infections?
+				<select name="ear_infections">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Any Skin Problems?
+				<select name="skin_problems">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Problems with sleepwalking?
+				<select name="sleepwalking">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				A Chronic or Recurring Illness?
+				<select name="chronic_recurring_illness">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Wear glasses or contacts?
+				<select name="glassses_contacts">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				An orthodontic appliance?
+				<select name="orthodontic_appliance">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Mono in last year?
+				<select name="mono">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Any current medications?
+				<select name="current_medications">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Frequent Headaches?
+				<select name="frequent_headaches">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+			</div>
+			<div id="rightSide">
+				Frequent stomach aches?
+				<select name="stomach_aches">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				A head injury?
+				<select name="head_injury">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				High blood pressure?
+				<select name="high_blood_pressure">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Asthma?
+				<select name="asthma">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Emotional difficulties for which professional help was sought?
+				<select name="emotional_difficulties">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Seizures?
+				<select name="seizures">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Diabetes?
+				<select name="diabetes">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				History of bed wetting?
+				<select name="bed_wetting">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Immunizations current?
+				<select name="immunizations">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				<br>
+			</div>
+		</div>
+		<hr style="clear:both">
+	<h3>Please explain any "Yes" answers from above</h3>
+	<textarea name="yes_explained"></textarea>
+	<br>
+	<br>
+	Carrier <input type="text" name="carrier">
+	Policy Number<input type="text" name="policy_number">
+	<br>
+	Family Physician <input type="text" name="physician">
+	Phone Number <input type="text" name="physician_number">
+	<br>
+	Family Dentist <input type="text" name="family_dentist">
+	Phone Number <input type="text" name="dentist_number">
+	<hr>
+	<h3>Essential Medical Information</h3>
+	<ul>
+		<li>For the safety of everyone in camp and to comply with regulations, all medication will be stored in the Health Center</li>
+		<li>The following OTCM are kept in the Health Center & are provided to campers under the standing orders provided by a local physician.
+			These would include: Acetaminophen, Ibuprofen, Robitussin DM/CF, Sudafed, Tums, Mylanta, Benadryl, and Claritin
+		</li>
+		<li>
+			<b>All prescriptoion medications and vitamins must be in the original container with the correct name,
+			 date physicians name, and instructions on the bottle.</b>  
+			 The camp will not administer any prescribed medications that are improperly labeled.
+		</li>
+		<li>
+			Phone calls will be made to parents and/or physicians concering any medications about which there are any questions.
+		</li>
+		<li>
+				SRBC food service is not providing specialized diets.  
+				Campers with dietary restrictions or needs are welcome to bring their own food.
+		</li>
+	</ul>
+	<h3>Permission to provide necessary treatment or emergency care</h3>
+	<p>
+		I, hereby give permission to the medical personnel selected by SRBC to give OTCM per our standing order physician and administer
+		treatment to my child, and if the need arises, provide transportation to a medical provider or call 911 for EMS response.
+		I give permission for medical care by a health provider or emergency care including hospitilization, x-rays, routine tests
+		treatment, and release of records necessary for insurance purposes.  I also give permission to share health information on an
+		 as needed to camp staff.  This completed form may be photocopied for trips out of camp.  Parents will be notified in the case of 
+		 an emergency or the need for outside medical care arises.
+	</p>
+	<br>
+	<!--End Health Form-->
+	<hr style="clear:both;">
+	<h1>Payment:</h1>
+	Workcrew Code: <input type="text" id="code" name="code">
 	<hr>
 	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received unless you are workcrew*.  (This $50 DOES go towards the cost of the camp)</span><br>
 	You must pay $50, or pay the full amount of the camp, unless you a are registering for the waitlist then you don't have to pay a registration fee.  Any remaining amount will be due the day of registration.
@@ -430,10 +608,7 @@ function srbc_registration( $atts )
 	*If you are workcrew please enter the code received in your email and after registering in the box above and your registration will be allowed.
 	<br>
 	<br>
-	<h2>Amount to pay*: </h2>
-	<!--<input type="radio" name="cc_amount" value="50"> $50<br>
-	<input type="radio" name="gender" value="0"> $<span id="total"></span>
-	<br>	-->
+	<h3>Amount to pay*: </h3>
 	<label class="container">$50
 		<input type="radio" name="cc_amount" checked="checked" value="50">
 		<span class="checkmark"></span>
@@ -452,7 +627,7 @@ function srbc_registration( $atts )
 	</label>
 	*Disregard this section if are workcrew and have put in your code.
 	<hr>
-	<h2>Use a credit card:</h2>	
+	<h3>Use a credit card:</h3>	
 		Name on Credit Card: <input type="text" name="cc_name">
 		Billing Zip <input style="width:100px;" type="text" name="cc_zipcode">
 		Credit Card # <input type="text" id="cc_number" name="cc_number"><br>
@@ -486,7 +661,7 @@ function srbc_registration( $atts )
 								</select>
 								<br>
 		<h3>OR</h3>
-		<h2 style="display:inline">Send a check</h2> <input type="checkbox" id="use_check" name="using_check">
+		<h3 style="display:inline">Send a check</h3> <input type="checkbox" id="use_check" name="using_check">
 		<p>Please make checks out to Solid Rock Bible Camp and send to 36251 Solid Rock Road #1, Soldotna, Alaska 99669, with campers name in the memo.</p>
 		<input type="submit" value="Submit">
 	</form> 

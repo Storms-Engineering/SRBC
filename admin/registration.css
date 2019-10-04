@@ -96,3 +96,20 @@
   border-radius: 50%;
   background: white;
 } 
+
+#leftSide
+{
+  float:left;
+}
+
+#rightSide
+{
+  float:left;
+  margin-left:20px;
+}
+
+#healthQuestions select
+{
+  float:right;
+  margin-left:10px;
+}
