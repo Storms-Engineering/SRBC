@@ -426,6 +426,7 @@ function srbc_registration( $atts )
 	<hr>
 	<!--Start Health Form-->
 	<!--TODO put this into a function that I can call-->
+	
 	<h1>Health Form</h1>
 		Emergency Contact: <input type="text" name="emergency_contact">
 		<br>
@@ -596,7 +597,15 @@ function srbc_registration( $atts )
 		 as needed to camp staff.  This completed form may be photocopied for trips out of camp.  Parents will be notified in the case of 
 		 an emergency or the need for outside medical care arises.
 	</p>
+	<div style="border:1px solid black;">
+	<canvas width="200" height="200"></canvas>
+	</div>
+	<input type="hidden" name="signature_img">
 	<br>
+	<button type="button" onclick="signaturePad.clear()">Clear</button>
+	<button type="button" onclick="undo()">Undo</button>
+	<br>
+	<script src="../wp-content/plugins/SRBC/requires/js/signature_pad/signature_pad.min.js"></script>
 	<!--End Health Form-->
 	<hr style="clear:both;">
 	<h1>Payment:</h1>
