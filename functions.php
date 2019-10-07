@@ -1,6 +1,6 @@
 <?php
 //Collection of various random functions that come in handy
-define('srbc_email', 'info@solidrockbiblecamp.com');
+define('srbc_email', 'solidrockbiblecamp@gmail.com');
 //TODO Update Email address to WorkCrew manager
 define('workcrew_email', 'n_mcgilvra@alaska.net');
 
