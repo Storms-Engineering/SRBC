@@ -597,9 +597,10 @@ function srbc_registration( $atts )
 		 as needed to camp staff.  This completed form may be photocopied for trips out of camp.  Parents will be notified in the case of 
 		 an emergency or the need for outside medical care arises.
 	</p>
-	<div style="border:1px solid black;">
-	<canvas width="200" height="200"></canvas>
-	</div>
+	<!--<div style="border:1px solid black;">
+	
+	</div>-->
+	<canvas id="canvas"></canvas>
 	<input type="hidden" name="signature_img">
 	<br>
 	<button type="button" onclick="signaturePad.clear()">Clear</button>
