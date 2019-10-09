@@ -437,11 +437,11 @@ function srbc_registration( $atts )
 		<h3>General Health Questions</h3>
 		<div id="healthQuestions" style="display:block;">
 			<div id="leftSide">
-				Any recent injury or illness?
-				<select name="recent_injury_illness">
-						<option value="No">No</option>
-						<option value="Yes">Yes</option>
-				</select>
+					Any recent injury or illness?
+					<select name="recent_injury_illness">
+							<option value="No">No</option>
+							<option value="Yes">Yes</option>
+					</select>
 				<br>
 				Frequency ear infections?
 				<select name="ear_infections">
@@ -522,11 +522,11 @@ function srbc_registration( $atts )
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Emotional difficulties for which professional help was sought?
+				<div> Emotional difficulties for which professional help was sought?
 				<select name="emotional_difficulties">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
-				</select>
+				</select></div>
 				<br>
 				Seizures?
 				<select name="seizures">
@@ -597,10 +597,8 @@ function srbc_registration( $atts )
 		 as needed to camp staff.  This completed form may be photocopied for trips out of camp.  Parents will be notified in the case of 
 		 an emergency or the need for outside medical care arises.
 	</p>
-	<!--<div style="border:1px solid black;">
-	
-	</div>-->
-	<canvas id="canvas"></canvas>
+	<h3>Signature:</h3>
+	<canvas id="canvas" style="border:1px solid black" height="200" width="300"></canvas>
 	<input type="hidden" name="signature_img">
 	<br>
 	<button type="button" onclick="signaturePad.clear()">Clear</button>

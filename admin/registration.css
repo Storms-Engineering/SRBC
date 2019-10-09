@@ -113,3 +113,17 @@
   float:right;
   margin-left:10px;
 }
+
+@media only screen and (max-width: 600px) 
+{
+  #healthQuestions select
+  {
+    display:block;
+    float:none;
+  }
+
+  #rightSide
+  {
+    margin-left:0px;
+  }
+}
