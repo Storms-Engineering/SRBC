@@ -931,6 +931,7 @@ function srbc_registration_complete($atts)
 		$pub_key=fread($fp,8192);
 		fclose($fp);
 		openssl_get_publickey($pub_key);
+		//Temporary fix because I have not updated the javascript to use this padding.
 		openssl_public_encrypt($data,$edata,$pub_key);//,OPENSSL_PKCS1_OAEP_PADDING);
 		$wpdb->insert(
 			'srbc_cc', 
