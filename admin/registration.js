@@ -18,7 +18,7 @@ function undo()
 //This function puts the base64 equivelent of the img in a hidden field so its gets caught in the form submittal
 function storeImg()
 {
-	document.getElementsByName("signature_img").value = signaturePad.toDataURL();
+	document.querySelector("[name=signature_img]").value = signaturePad.toDataURL();
 }
 
 
@@ -57,7 +57,7 @@ function validateForm()
 	}
 	if(signaturePad.isEmpty())
 	{
-		alert("Please draw your signature");
+		alert("Please fill in your signature");
 		return false;
 	}
 	if (document.getElementById("use_check").checked || document.getElementById("waitlist").checked || document.getElementById("code").value == "warden")

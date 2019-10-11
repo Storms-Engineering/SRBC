@@ -159,6 +159,7 @@ function srbc_install() {
 	$sql = "CREATE TABLE IF NOT EXISTS srbc_health_form (
 		health_form_id INT AUTO_INCREMENT,
 		camper_id INT,
+		aesKey TEXT,
 		data TEXT,
 		PRIMARY KEY (health_form_id)
 		)  ENGINE=INNODB;";

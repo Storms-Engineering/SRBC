@@ -428,10 +428,10 @@ function srbc_registration( $atts )
 	<!--TODO put this into a function that I can call-->
 	
 	<h1>Health Form</h1>
-		Emergency Contact: <input type="text" name="emergency_contact">
+		Emergency Contact: <input type="text" name="emergency_contact" required>
 		<br>
-		Home Phone <input type="text" name="emergency_phone_home">
-		Cell Phone <input type="text" name="emergency_phone_cell">
+		Home Phone <input type="text" name="emergency_phone_home" required>
+		Cell Phone <input type="text" name="emergency_phone_cell" required>
 		<br>
 		<br>
 		<h3>General Health Questions</h3>
@@ -557,7 +557,7 @@ function srbc_registration( $atts )
 		</div>
 		<hr style="clear:both">
 	<h3>Please explain any "Yes" answers from above</h3>
-	<textarea name="yes_explained"></textarea>
+	<textarea name="explanations"></textarea>
 	<br>
 	<br>
 	Carrier <input type="text" name="carrier">
@@ -832,6 +832,72 @@ function srbc_registration_complete($atts)
 			) 
 			);
 	$registration_id = $wpdb->insert_id;
+	//Health form stuff
+	//generate a random key for encrypting the signature_img
+	$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/health_form_public_key.pem',"r");
+	$pub_key=fread($fp,8192);
+	fclose($fp);
+	openssl_get_publickey($pub_key);
+	//Encrypt AES key
+	$aesKey = base64_encode(openssl_random_pseudo_bytes(32));
+	openssl_public_encrypt($aesKey,$encryptedKey,$pub_key,OPENSSL_PKCS1_OAEP_PADDING);
+	$encryptedKey = base64_encode($encryptedKey);
+	$healthInformation = array(
+		"emergency_contact" => $_POST['emergency_contact'],
+		"emergency_phone_home" => $_POST['emergency_phone_home'],
+		"emergency_phone_cell" => $_POST['emergency_phone_cell'],
+		"recent_injury_illness" => $_POST['recent_injury_illness'],
+		"ear_infections" => $_POST['ear_infections'],
+		"skin_problems" => $_POST['skin_problems'],
+		"sleepwalking" => $_POST['sleepwalking'],
+		"chronic_recurring_illness" => $_POST['chronic_recurring_illness'],
+		"glassses_contacts" => $_POST['glassses_contacts'],
+		"orthodontic_appliance" => $_POST['orthodontic_appliance'],
+		"mono" => $_POST['mono'],
+		"current_medications" => $_POST['current_medications'],
+		"frequent_headaches" => $_POST['frequent_headaches'],
+		"stomach_aches" => $_POST['stomach_aches'],
+		"head_injury" => $_POST['head_injury'],
+		"high_blood_pressure" => $_POST['high_blood_pressure'],
+		"asthma" => $_POST['asthma'],
+		"emotional_difficulties" => $_POST['emotional_difficulties'],
+		"seizures" => $_POST['seizures'],
+		"diabetes" => $_POST['diabetes'],
+		"bed_wetting" => $_POST['bed_wetting'],
+		"immunizations" => $_POST['immunizations'],
+		"explanations" => $_POST['explanations'],
+		"carrier" => $_POST['carrier'],
+		"policy_number" => $_POST['policy_number'],
+		"physician" => $_POST['physician'],
+		"physician_number" => $_POST['physician_number'],
+		"family_dentist" => $_POST['family_dentist'],
+		"dentist_number" => $_POST['dentist_number'],
+		//Also removed all backspaces as it is just escaped characters.
+		"signature_img" => str_replace("\\", "", $_POST['signature_img'])
+	);
+	$JSONhealthInformation = json_encode($healthInformation);
+	
+	//Encrypt image seperately since it is too big to be encrypted with a public key
+
+	$encryptedJSON = aesEncrypt($JSONhealthInformation, $aesKey);
+	echo "Encrytped JSON:" . $encryptedJSON;
+	$wpdb->insert(
+		'srbc_health_form', 
+		array( 
+			'health_form_id' =>0,
+			'camper_id' => $camper_id,
+			'aesKey' => $encryptedKey,
+			"data" => $encryptedJSON
+		), 
+		array( 
+			'%d',
+			'%d',
+			'%s', 
+			'%s',
+		) 
+		);
+
+
 	//require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/email.php');
 	//Notify office that this parent is sending a check	
 	if (isset($_POST["using_check"])){
@@ -856,11 +922,12 @@ function srbc_registration_complete($atts)
 		//Show comments about buslist and horse option and horse_cost
 		$comments = autoSplit($_POST["cc_amount"],$camp->camp_id,$wpdb->insert_id,$_POST['busride'],$horse_opt);
 		//Encrypt using ssl pgp
+		//TODO turn this into a function
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
 		$pub_key=fread($fp,8192);
 		fclose($fp);
 		openssl_get_publickey($pub_key);
-		openssl_public_encrypt($data,$edata,$pub_key,OPENSSL_PKCS1_OAEP_PADDING);
+		openssl_public_encrypt($data,$edata,$pub_key);//,OPENSSL_PKCS1_OAEP_PADDING);
 		$wpdb->insert(
 			'srbc_cc', 
 			array( 
@@ -901,6 +968,35 @@ function srbc_registration_complete($atts)
 	return 'Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. <span style="color:red">(If you don\'t see the email check your spam box and please mark it not spam)';
 }
 
+//From: https://www.php.net/manual/en/function.openssl-encrypt.php
+function aesEncrypt($plaintext,$key)
+{
+	$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+	$iv = openssl_random_pseudo_bytes($ivlen);
+	$ciphertext_raw = openssl_encrypt($plaintext, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
+	$hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
+	$ciphertext = base64_encode( $iv.$hmac.$ciphertext_raw );
+	return $ciphertext;
+}
+
+function aesDecrypt($encryptedText,$key)
+{
+	$c = base64_decode($encryptedText);
+	$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
+	$iv = substr($c, 0, $ivlen);
+	$hmac = substr($c, $ivlen, $sha2len=32);
+	$ciphertext_raw = substr($c, $ivlen+$sha2len);
+	$original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
+	$calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
+	if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
+	{
+		return $original_plaintext;
+	}
+	else
+	{
+		return "Decryption failed";
+	}
+}
 
 function autoSplit($cc_amount,$campid,$registration_id,$busride,$horseOpt)
 {
