@@ -39,6 +39,7 @@ function drop(ev) {
 	  reader.readAsText(file);
 }
 var crypt = new JSEncrypt();
+//Update this function to decrypt openssl data like the ssn function
 async function decryptCCs(data2) {
 	var passphrase = document.getElementById("pwd").value;
 	

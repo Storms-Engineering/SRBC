@@ -15,6 +15,8 @@
 	<button class="big_button" style="float:right;" onclick="saveInfo();closeModal();">Save Info & Close</button>
 			<div class="modal-body">
 			<?php
+
+				echo '<a class="big_button" style="float:right;" target="_blank" href="/wp-content/plugins/SRBC/get_health_form.php?c_id='.$_GET['camper_id'].'">Health Form</a>';
 				//TODO  I might not need this span class
 				//BODY Everything might be handled by the label now
 				$hidden = wp_get_current_user()->user_login === "Unixen" ? NULL : "display:none";

@@ -1,0 +1,37 @@
+<html>
+    <body>
+
+
+        <script type="text/javascript" src="https://cdn.rawgit.com/ricmoo/aes-js/e27b99df/index.js"></script>
+        <script>
+    function _base64ToArrayBuffer(base64) {
+        var binary_string =  atob(base64);
+        var len = binary_string.length;
+        var bytes = new Array(len);
+        for (var i = 0; i < len; i++)        {
+            bytes[i] = binary_string.charCodeAt(i);
+        }
+        return bytes;
+    }
+        var jsonData = _base64ToArrayBuffer('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');
+        // An example 128-bit key
+        var key = _base64ToArrayBuffer('+giCS+R0yjhzY4UEp6H1OosByg/cBxO9s0OjHLFn1HY=');//[ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 ];
+
+        // The initialization vector (must be 16 bytes)
+        var iv = jsonData.slice(0,16);//[ 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,35, 36 ];
+
+        // The cipher-block chaining mode of operation maintains internal
+        // state, so to decrypt a new instance must be instantiated.
+        var aesCbc = new aesjs.ModeOfOperation.cbc(key, iv);
+        var data = jsonData.slice(48);
+        var decryptedBytes = aesCbc.decrypt(data);
+
+        // Convert our bytes back into text
+        var decryptedText = aesjs.utils.utf8.fromBytes(decryptedBytes);
+        console.log(decryptedText);
+        // "TextMustBe16Byte"
+        
+        
+        </script>
+    </body>
+</html>

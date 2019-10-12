@@ -840,8 +840,11 @@ function srbc_registration_complete($atts)
 	openssl_get_publickey($pub_key);
 	//Encrypt AES key
 	$aesKey = base64_encode(openssl_random_pseudo_bytes(32));
-	openssl_public_encrypt($aesKey,$encryptedKey,$pub_key,OPENSSL_PKCS1_OAEP_PADDING);
+	openssl_public_encrypt($aesKey,$encryptedKey,$pub_key);//,OPENSSL_PKCS1_OAEP_PADDING);
 	$encryptedKey = base64_encode($encryptedKey);
+	echo "Encrypted key:" . $encryptedKey;
+
+	
 	$healthInformation = array(
 		"emergency_contact" => $_POST['emergency_contact'],
 		"emergency_phone_home" => $_POST['emergency_phone_home'],
