@@ -707,10 +707,6 @@ function srbc_registration_complete($atts)
 	{
 		Email::sendWaitlistEmail($registration_id);
 	}
-	else if($camp->camp_id == 32 || $camp->camp_id == 33)
-	{
-		Email::sendDaycampConfirmationEmail($registration_id);
-	}
 	else
 	{
 		Email::sendConfirmationEmail($registration_id);
