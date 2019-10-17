@@ -32,6 +32,8 @@ class Email
 		self::sendMail($info->email,"Waitlist Confirmation",$msg);
 	}
 	
+	//TODO make this use times from the database
+	//BODY that will be implemented once we get day camps checkbox added
 	//Sends confirmation email.
 	//Info is the information that we need in an object
 	public static function sendDaycampConfirmationEmail($registration_id)
@@ -75,7 +77,6 @@ class Email
 		</body>
 		</html>";
 		self::sendMail($info->email,"Thank you for signing up for a Solid Rock Camp!", $msg, $_SERVER['DOCUMENT_ROOT'].'/attachments/healthform.pdf');
-		echo "Email Sent!";
 	}
 	//Sends mail just a bit easier to use than declaring the class everytime
 	public static function sendMail($to,$subject,$msg,$attachment = "")
