@@ -64,7 +64,7 @@ class Email
 		$msg = "<html><body>
 		Hello ". $info->parent_first_name . ",<br><br>Thanks for signing up " . $info->camper_first_name . " for <b>" . $info->area . " " . $info->name . "</b>!  <br><br>
 		<b>Camp Start date</b>:" .date("l, M j,Y",strtotime($info->start_date)) . '<br><pre style="display:inline">	</pre><b>Camp Drop off time</b>: 5:00pm' . 
-		"<br><br><b>Camp End date</b>:" .date("l, M j,Y",strtotime($info->end_date)) . '<br><pre style="display:inline">	</pre><b>Camp Pick up time</b>: 9:00am<br><br>' . 
+		"<br><br><b>Camp End date</b>:" .date("l, M j,Y",strtotime($info->end_date)) . '<br><pre style="display:inline">	</pre><b>Camp Pick up time</b>: 4:00pm<br><br>' . 
 		"A <b>health form</b> has been attached. Please fill it out and bring it on the opening day of camp.<br><br>" .
 		'If your camper is riding the bus please refer to our FAQ page for bus stop location and times.<br><br>' .
 		'If you have any other questions please refer to our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.<br><br>' .
