@@ -77,6 +77,9 @@ class Email
 		</body>
 		</html>";
 		self::sendMail($info->email,"Thank you for signing up for a Solid Rock Camp!", $msg, $_SERVER['DOCUMENT_ROOT'].'/attachments/healthform.pdf');
+		//TODO fix this for registrations because it looks corny
+		//BODY but it is also returned on ajax requests for resending email
+		echo "Email Sent!";
 	}
 	//Sends mail just a bit easier to use than declaring the class everytime
 	public static function sendMail($to,$subject,$msg,$attachment = "")
