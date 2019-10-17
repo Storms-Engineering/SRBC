@@ -1,5 +1,4 @@
-bin
-vendor
-node_modules
-test.php
-test.html
+bin/
+vendor/
+node_modules/
+test.*
