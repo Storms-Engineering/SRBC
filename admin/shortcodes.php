@@ -345,7 +345,7 @@ function srbc_registration( $atts )
 				</h4>
 				<br>
 				<span>Busride*:</span>
-				<select onchange="calculateTotal();" class="inputs" id="busride" name="busride">
+				<select onchange="calculateTotal();" class="inputs" id="busride" name="busride" disabled>
 					<option value="none" selected>No bus ride needed</option>
 					<option value="both">Round-Trip $60</option>
 					<option value="to">One-way to Camp $35</option>
