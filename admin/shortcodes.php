@@ -319,6 +319,14 @@ function srbc_registration( $atts )
 				{
 					$cmpid = $_GET['campid'];
 					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE camp_id=%s",$cmpid));
+					//TODO add a check if the camp is past the signup date
+					//BODY also could add a check if the camp is completely full
+					echo "CAmp" . $camp->closed_to_registrations;
+					if($camp->closed_to_registrations === "1")
+					{
+						echo '</select><br><br><h1 style="color:red;text-align:center;">Camp is not open to registrations</h1>';
+						return;
+					}
 					if ($camp == "")
 					{
 						echo "</select><br><br>";
