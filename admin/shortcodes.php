@@ -353,11 +353,11 @@ function srbc_registration( $atts )
 				</h4>
 				<br>
 				<span>Busride*:</span>
-				<select onchange="calculateTotal();" class="inputs" id="busride" name="busride" disabled>
+				<select onchange="calculateTotal();" class="inputs" id="busride" name="busride">
 					<option value="none" selected>No bus ride needed</option>
-					<option value="both">Round-Trip $60</option>
+					<!--<option value="both">Round-Trip $60</option>
 					<option value="to">One-way to Camp $35</option>
-					<option value="from">One-way to Anchorage $35</option>
+					<option value="from">One-way to Anchorage $35</option>-->
 				</select>
 
 				<p>*The bus will depart from and return to the Duluth Trading Company parking lot at 8931 Old Seward Hwy., Suite A Anchorage, AK 99515.
