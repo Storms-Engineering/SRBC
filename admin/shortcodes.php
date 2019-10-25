@@ -839,7 +839,7 @@ function srbc_registration_complete($atts)
 	fclose($fp);
 	openssl_get_publickey($pub_key);
 	//Encrypt AES key
-	$aesKey = base64_encode(openssl_random_pseudo_bytes(32));
+	$aesKey = substr(base64_encode(openssl_random_pseudo_bytes(16)),0,16);
 	openssl_public_encrypt($aesKey,$encryptedKey,$pub_key);//,OPENSSL_PKCS1_OAEP_PADDING);
 	$encryptedKey = base64_encode($encryptedKey);
 	echo "Encrypted key:" . $encryptedKey;
@@ -880,23 +880,24 @@ function srbc_registration_complete($atts)
 	);
 	$JSONhealthInformation = json_encode($healthInformation);
 	
-	//Encrypt image seperately since it is too big to be encrypted with a public key
-
-	$encryptedJSON = aesEncrypt($JSONhealthInformation, $aesKey);
-	echo "Encrytped JSON:" . $encryptedJSON;
+	//Data in encrypted with AES since it is too large to be directly encyrpted by RSA
+	$encryptedJSONobj = aesEncrypt($JSONhealthInformation, $aesKey);
+	//echo "Encrytped JSON:" . $encryptedJSONobj;
 	$wpdb->insert(
 		'srbc_health_form', 
 		array( 
 			'health_form_id' =>0,
 			'camper_id' => $camper_id,
+			'IV' => $encryptedJSONobj->IV,
 			'aesKey' => $encryptedKey,
-			"data" => $encryptedJSON
+			"data" => $encryptedJSONobj->cipherText
 		), 
 		array( 
 			'%d',
 			'%d',
 			'%s', 
-			'%s',
+			'%s', 
+			'%s'
 		) 
 		);
 
@@ -975,11 +976,16 @@ function srbc_registration_complete($atts)
 function aesEncrypt($plaintext,$key)
 {
 	$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
-	$iv = openssl_random_pseudo_bytes($ivlen);
-	$ciphertext_raw = openssl_encrypt($plaintext, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
-	$hmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
-	$ciphertext = base64_encode( $iv.$hmac.$ciphertext_raw );
-	return $ciphertext;
+	//TODO shorten IV
+	$iv = substr(base64_encode(openssl_random_pseudo_bytes($ivlen)),0,16);
+
+	$ciphertext = openssl_encrypt($plaintext, $cipher, $key, null, $iv);
+
+	$object = (object) [
+		'IV' => $iv,
+		'cipherText' => $ciphertext
+	  ];
+	return $object;
 }
 
 function aesDecrypt($encryptedText,$key)

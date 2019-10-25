@@ -14,7 +14,7 @@ class HealthForm
         echo '<input type="hidden" name="IV" value="'. $healthForm->IV . '">';
         echo '<input type="hidden" name="aesKey" value="'. $healthForm->aesKey . '">';
         echo '<input type="hidden" name="data" value="'. $healthForm->data . '">';
-        
+        echo '<button onclick="decryptHealthForms();">Decrypt</button>';
         
 		echo '<br>
 		Camper name <input type="text" name="camper_first_name"> <input type="text" name="camper_last_name">
@@ -207,7 +207,7 @@ class HealthForm
 		 an emergency or the need for outside medical care arises.
 	</p>
 	<h3>Signature:</h3>
-	<img id="signature_img">';
+	<img name="signature_img" src="">';
     echo '</div>';
                              
     }
