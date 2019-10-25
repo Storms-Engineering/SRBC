@@ -1,0 +1,39 @@
+.health_form
+{
+    padding:10px;
+    margin:auto;
+}
+input
+{
+    margin:3.5px;
+}
+.small_input
+{
+    width:80px;
+}
+#leftSide
+{
+  float:left;
+}
+
+#rightSide
+{
+  float:left;
+  margin-left:20px;
+}
+
+#healthQuestions select
+{
+  float:right;
+  margin-top:-5px;
+  margin-left:10px;
+  clear:right;
+  margin-bottom:8px;
+}
+
+label
+{
+    margin-bottom:22px;
+    float:left;
+    clear:left;
+}

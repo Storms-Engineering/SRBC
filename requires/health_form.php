@@ -9,18 +9,25 @@ class HealthForm
 			$wpdb->prepare( "SELECT *
                              FROM srbc_health_form 
                              INNER JOIN srbc_campers ON srbc_health_form.camper_id=srbc_campers.camper_id
-                             WHERE srbc_campers.camper_id=%s",$camperId));
-        echo '<div class="health-form">';
-        echo '<input id="IV" value="'. $healthForm->IV . '">';
-        echo '<input id="aesKey" value="'. $healthForm->IV . '">';
+							 WHERE srbc_campers.camper_id=%s",$camperId))[0];
+        echo '<div class="health_form">';
+        echo '<input type="hidden" name="IV" value="'. $healthForm->IV . '">';
+        echo '<input type="hidden" name="aesKey" value="'. $healthForm->aesKey . '">';
+        echo '<input type="hidden" name="data" value="'. $healthForm->data . '">';
         
         
-        echo '<br>
+		echo '<br>
+		Camper name <input type="text" name="camper_first_name"> <input type="text" name="camper_last_name">
+		DOB <input class="small_input" type="text" name="birthday">
+		Age <input class="small_input" type="text" name="age">
+		Gender <input class="small_input" type="text" name="gender">
+		<br>
         Parent/Guardian
         <input class="inputs" type="text" name="parent_first_name" required placeholder="First Name">
-        <input class="inputs" type="text" name="parent_last_name" required placeholder="Last Name"><br>
-        Email:<input type="email" name="email" required><br>
-        Phone including area code (Numbers only please):<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
+        <input class="inputs" type="text" name="parent_last_name" required placeholder="Last Name">
+		Email:<input type="email" name="email" required>
+		<br>
+        Phone :<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
         Secondary Phone: <input type="tel" pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone2"><br>
         Street Address:<br>
             <textarea class="inputs" required name="address" rows="2" cols="30"></textarea>
@@ -37,116 +44,118 @@ class HealthForm
 		<h3>General Health Questions</h3>
 		<div id="healthQuestions" style="display:block;">
 			<div id="leftSide">
-					Any recent injury or illness?
+					<label for="recent_injury_illness">Any recent injury or illness?</label>
 					<select name="recent_injury_illness">
 							<option value="No">No</option>
 							<option value="Yes">Yes</option>
 					</select>
+
 				<br>
-				Frequency ear infections?
+				<label for="ear_infections">Frequency ear infections?</label>
+
 				<select name="ear_infections">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Any Skin Problems?
+				<label for="skin_problems">Any Skin Problems?</label>
 				<select name="skin_problems">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Problems with sleepwalking?
+				<label for="sleepwalking">Problems with sleepwalking?</label>
 				<select name="sleepwalking">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				A Chronic or Recurring Illness?
+				<label for="chronic_recurring_illness">A Chronic or Recurring Illness?</label>
 				<select name="chronic_recurring_illness">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Wear glasses or contacts?
+				<label for="glasses_contacts">Wear glasses or contacts?</label>
 				<select name="glassses_contacts">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				An orthodontic appliance?
+				<label for="otrthodontic_appliance">An orthodontic appliance?</label>
 				<select name="orthodontic_appliance">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Mono in last year?
+				<label for="mono">Mono in last year?</label>
 				<select name="mono">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Any current medications?
+				<label for="current_medications">Any current medications?</label>
 				<select name="current_medications">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Frequent Headaches?
+				<label for="frequent_headaches">Frequent Headaches?</label>
 				<select name="frequent_headaches">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 			</div>
 			<div id="rightSide">
-				Frequent stomach aches?
+				<label for="stomach_aches">Frequent stomach aches?</label>
 				<select name="stomach_aches">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				A head injury?
+				<label for="head_injury">A head injury?</label>
 				<select name="head_injury">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				High blood pressure?
+				<label for="high_blood_pressure">High blood pressure?</label>
 				<select name="high_blood_pressure">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Asthma?
+				<label for="asthma">Asthma?</label>
 				<select name="asthma">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				<div> Emotional difficulties for which professional help was sought?
+				 <label for="emotional_difficulties">Emotional difficulties for which professional help was sought?</label>
 				<select name="emotional_difficulties">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
-				</select></div>
+				</select>
 				<br>
-				Seizures?
+				<label for="seizures">Seizures?</label>
 				<select name="seizures">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Diabetes?
+				<label for="diabetes">Diabetes?</label>
 				<select name="diabetes">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				History of bed wetting?
+				<label for="bed_wetting">History of bed wetting?</label>
 				<select name="bed_wetting">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Immunizations current?
+				<label for="immunizations">Immunizations current?</label>
 				<select name="immunizations">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
@@ -157,7 +166,7 @@ class HealthForm
 		</div>
 		<hr style="clear:both">
 	<h3>Please explain any "Yes" answers from above</h3>
-	<textarea name="explanations"></textarea>
+	<div name="explanations"></div>
 	<br>
 	<br>
 	Carrier <input type="text" name="carrier">
@@ -199,7 +208,7 @@ class HealthForm
 	</p>
 	<h3>Signature:</h3>
 	<img id="signature_img">';
-        echo '</div>';
+    echo '</div>';
                              
     }
 }
