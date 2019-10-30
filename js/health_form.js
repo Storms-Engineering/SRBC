@@ -74,6 +74,8 @@ function decryptHealthForms(privateKey) {
           element = document.querySelectorAll("[name=" + objectKeys[j] + "]")[i];
           if(objectKeys[j] === "signature_img")
             element.src = healthObj[objectKeys[j]];
+          else if(objectKeys[j] === "explanations")
+            element.innerText = healthObj[objectKeys[j]];
           element.value = healthObj[objectKeys[j]];
         }
         //console.log(toUTF8Array("Yeet"));

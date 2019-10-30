@@ -17,23 +17,23 @@ class HealthForm
         echo '<button onclick="decryptHealthForms();">Decrypt</button>';
         
 		echo '<br>
-		Camper name <input type="text" name="camper_first_name"> <input type="text" name="camper_last_name">
-		DOB <input class="small_input" type="text" name="birthday">
-		Age <input class="small_input" type="text" name="age">
-		Gender <input class="small_input" type="text" name="gender">
+		Camper name <input type="text" name="camper_first_name" value="' . $healthForm->camper_first_name .'"> <input type="text" name="camper_last_name" value="' . $healthForm->camper_last_name . '">
+		DOB <input class="small_input" type="text" name="birthday" value="' . $healthForm->birthday . '">
+		Age <input class="small_input" type="text" name="age" value="' . $healthForm->age . '">
+		Gender <input class="small_input" type="text" name="gender" value="' . $healthForm->gender . '">
 		<br>
         Parent/Guardian
-        <input class="inputs" type="text" name="parent_first_name" required placeholder="First Name">
-        <input class="inputs" type="text" name="parent_last_name" required placeholder="Last Name">
-		Email:<input type="email" name="email" required>
+        <input class="inputs" type="text" name="parent_first_name" value="' . $healthForm->parent_first_name . '">
+        <input class="inputs" type="text" name="parent_last_name" value="' . $healthForm->parent_last_name . '">
+		Email:<input type="email" name="email" value="' . $healthForm->email . '">
 		<br>
-        Phone :<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
-        Secondary Phone: <input type="tel" pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone2"><br>
+        Phone :<input type="tel" name="phone" value="' . $healthForm->phone . '">
+        Secondary Phone: <input type="tel" name="phone2" value="' . $healthForm->phone2 . '"><br>
         Street Address:<br>
-            <textarea class="inputs" required name="address" rows="2" cols="30"></textarea>
-            City:<input type="text" style="width:100px;" required name="city">
-            State:<input type="text" style="width:50px;" required name="state">
-            Zipcode:<input type="text"  style="width:100px;" required pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="zipcode" >
+            <textarea class="inputs" required name="address" rows="2" cols="30">' . $healthForm->address . '</textarea>
+            City:<input type="text" style="width:100px;" name="city" value="' . $healthForm->city . '">
+            State:<input type="text" style="width:50px;" name="state" value="' . $healthForm->state . '">
+            Zipcode:<input type="text"  style="width:100px;" name="zipcode" value="' . $healthForm->zipcode . '">
             <br>
             Emergency Contact: <input type="text" name="emergency_contact" required>
 		<br>
@@ -166,7 +166,7 @@ class HealthForm
 		</div>
 		<hr style="clear:both">
 	<h3>Please explain any "Yes" answers from above</h3>
-	<div name="explanations"></div>
+	<div style="word-wrap:break-word;" name="explanations"></div>
 	<br>
 	<br>
 	Carrier <input type="text" name="carrier">
