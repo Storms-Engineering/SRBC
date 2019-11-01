@@ -16,8 +16,12 @@ echo '<html>
 <head>
 <link rel="stylesheet" type="text/css" href="/wp-content/plugins/SRBC/css/health_form.css">
 </head>
-<body><input type="password" id="pwd"> Decryption Progress <progress value="0" id="progress"></progress>
-<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">Drop key file here</div>';
+<body>
+<div id="no-print">
+<input type="password" id="pwd"> Decryption Progress <progress value="0" id="progress"></progress>
+<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">
+Drop key file here</div>
+</div>';
 //Just one camper id so generate one health form
 if($camper_id != null)
     HealthForm::generateHealthForm($camper_id);

@@ -1,16 +1,3 @@
-.health_form
-{
-    padding:10px;
-    margin:auto;
-}
-input
-{
-    margin:3.5px;
-}
-.small_input
-{
-    width:80px;
-}
 #leftSide
 {
   float:left;
@@ -22,18 +9,51 @@ input
   margin-left:20px;
 }
 
-#healthQuestions select
+#healthQuestions span
 {
   float:right;
-  margin-top:-5px;
-  margin-left:10px;
   clear:right;
-  margin-bottom:8px;
+  /*font-size:12px;*/
 }
+
+#healthQuestions .value
+{
+  margin:0px;
+  margin-left:10px;
+}
+
+.value
+{
+ /* text-decoration: underline;*/
+  font-family:Arial;
+  font-style:italic;
+  margin:3.5px;
+  margin-right:20px;
+  font-size:17px;
+}
+
 
 label
 {
-    margin-bottom:22px;
     float:left;
     clear:left;
+}
+
+html, body {
+ width: 8.5in !important;
+  height: 11in !important;
+  margin:auto;
+  line-height:140%;
+  font-size:15px;
+}
+
+#no-print
+{
+  display:none;
+}
+
+@media print
+{
+  
+
 }

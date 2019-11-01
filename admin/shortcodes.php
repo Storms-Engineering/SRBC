@@ -838,7 +838,7 @@ function srbc_registration_complete($atts)
 	$pub_key=fread($fp,8192);
 	fclose($fp);
 	openssl_get_publickey($pub_key);
-	//Encrypt AES key
+	//Encrypt AES key only 16 characters because that is the key size
 	$aesKey = substr(base64_encode(openssl_random_pseudo_bytes(16)),0,16);
 	openssl_public_encrypt($aesKey,$encryptedKey,$pub_key);//,OPENSSL_PKCS1_OAEP_PADDING);
 	$encryptedKey = base64_encode($encryptedKey);
@@ -976,7 +976,7 @@ function srbc_registration_complete($atts)
 function aesEncrypt($plaintext,$key)
 {
 	$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
-	//TODO shorten IV
+	//IV length is also only 16 characters
 	$iv = substr(base64_encode(openssl_random_pseudo_bytes($ivlen)),0,16);
 
 	$ciphertext = openssl_encrypt($plaintext, $cipher, $key, null, $iv);
@@ -986,25 +986,6 @@ function aesEncrypt($plaintext,$key)
 		'cipherText' => $ciphertext
 	  ];
 	return $object;
-}
-
-function aesDecrypt($encryptedText,$key)
-{
-	$c = base64_decode($encryptedText);
-	$ivlen = openssl_cipher_iv_length($cipher="AES-128-CBC");
-	$iv = substr($c, 0, $ivlen);
-	$hmac = substr($c, $ivlen, $sha2len=32);
-	$ciphertext_raw = substr($c, $ivlen+$sha2len);
-	$original_plaintext = openssl_decrypt($ciphertext_raw, $cipher, $key, $options=OPENSSL_RAW_DATA, $iv);
-	$calcmac = hash_hmac('sha256', $ciphertext_raw, $key, $as_binary=true);
-	if (hash_equals($hmac, $calcmac))//PHP 5.6+ timing attack safe comparison
-	{
-		return $original_plaintext;
-	}
-	else
-	{
-		return "Decryption failed";
-	}
 }
 
 function autoSplit($cc_amount,$campid,$registration_id,$busride,$horseOpt)
