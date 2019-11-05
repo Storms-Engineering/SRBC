@@ -1,8 +1,8 @@
 <?php
 //Collection of various random functions that come in handy
 define('srbc_email', 'solidrockbiblecamp@gmail.com');
-//TODO Update Email address to WorkCrew manager
 define('workcrew_email', 'n_mcgilvra@alaska.net');
+define('developer_email', 'armystorms@gmail.com');
 
 $GLOBALS['srbc_camps'] = "srbc_camps" . get_option("srbc_database_year");
 $GLOBALS['srbc_payments'] = "srbc_payments" . get_option("srbc_database_year");

@@ -633,30 +633,38 @@ function srbc_registration_complete($atts)
 		exit();
 		}
 	}
-	$wpdb->insert(
-			$GLOBALS['srbc_registration'], 
-			array( 
-				'registration_id' =>0,
-				'camp_id' => $_POST["campid"], 
-				'camper_id' => $camper_id,
-				'date' => $currentDate->format("m/d/Y h:i A"),
-				'horse_opt' => $horse_opt,
-				'busride' => $_POST['busride'],
-				'waitlist' => $waitlist,
-				'horse_waitlist' => $horse_waitlist
-			), 
-			array( 
-				'%d',
-				'%d', 
-				'%d',
-				'%s',
-				'%d',
-				'%s',
-				'%d',
-				'%d'
-			) 
-			);
+	try
+	{
+		$wpdb->insert(
+				$GLOBALS['srbc_registration'], 
+				array( 
+					'registration_id' =>0,
+					'camp_id' => $_POST["campid"], 
+					'camper_id' => $camper_id,
+					'date' => $currentDate->format("m/d/Y h:i A"),
+					'horse_opt' => $horse_opt,
+					'busride' => $_POST['busride'],
+					'waitlist' => $waitlist,
+					'horse_waitlist' => $horse_waitlist
+				), 
+				array( 
+					'%d',
+					'%d', 
+					'%d',
+					'%s',
+					'%d',
+					'%s',
+					'%d',
+					'%d'
+				) 
+				);
 	$registration_id = $wpdb->insert_id;
+	}
+	catch(Exception $e)
+	{
+		Email::emailDeveloper($e->getMessage());
+	}
+
 	//require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/email.php');
 	//Notify office that this parent is sending a check	
 	if (isset($_POST["using_check"])){

@@ -6,6 +6,12 @@ require_once __DIR__ . '/../PHPMailer/src/PHPMailer.php';
 
 class Email
 {
+
+	public static function emailDeveloper($information)
+	{
+		sendMail($GLOBALS['developer_email'],"Message From Peter Hawke", "Greetings Brayden, 
+		It seems we are having some problems with the website.  Here is the information I have:\r" . $information);
+	}
 	//Queries database for camper information
 	private static function getInfo($registration_id)
 	{
