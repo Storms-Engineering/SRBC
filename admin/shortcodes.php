@@ -816,29 +816,36 @@ function srbc_registration_complete($atts)
 		exit();
 		}
 	}
-	$wpdb->insert(
-			$GLOBALS['srbc_registration'], 
-			array( 
-				'registration_id' =>0,
-				'camp_id' => $_POST["campid"], 
-				'camper_id' => $camper_id,
-				'date' => $currentDate->format("m/d/Y h:i A"),
-				'horse_opt' => $horse_opt,
-				'busride' => $_POST['busride'],
-				'waitlist' => $waitlist,
-				'horse_waitlist' => $horse_waitlist
-			), 
-			array( 
-				'%d',
-				'%d', 
-				'%d',
-				'%s',
-				'%d',
-				'%s',
-				'%d',
-				'%d'
-			) 
-			);
+	try
+	{
+		$wpdb->insert(
+				$GLOBALS['srbc_registration'], 
+				array( 
+					'registration_id' =>0,
+					'camp_id' => $_POST["campid"], 
+					'camper_id' => $camper_id,
+					'date' => $currentDate->format("m/d/Y h:i A"),
+					'horse_opt' => $horse_opt,
+					'busride' => $_POST['busride'],
+					'waitlist' => $waitlist,
+					'horse_waitlist' => $horse_waitlist
+				), 
+				array( 
+					'%d',
+					'%d', 
+					'%d',
+					'%s',
+					'%d',
+					'%s',
+					'%d',
+					'%d'
+				) 
+				);
+	}
+	catch(Exception $e)
+	{
+		Email::emailDeveloper($e->getMessage());
+	}
 	$registration_id = $wpdb->insert_id;
 	//Health form stuff
 	//generate a random key for encrypting the signature_img
@@ -908,6 +915,7 @@ function srbc_registration_complete($atts)
 			'%s'
 		) 
 		);
+
 
 
 	//require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/email.php');

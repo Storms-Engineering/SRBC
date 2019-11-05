@@ -63,8 +63,15 @@ if (!$specificQuery)
 			ORDER BY srbc_campers.camper_last_name ASC", 
 			$name."%",$name."%",$name."%",$name."%",$_GET['camp_id']));
 	}
+	else if(is_numeric($_GET['query']))
+	{
+		$campers = CamperSearch::searchByCamperId((int)$_GET['query']);
+	}
 	else
+	{
 		$campers = CamperSearch::searchParentAndCamper($_GET['query']);
+
+	}
 }
 	if(isset($_GET['inner']))
 		Tables::createCheckboxTable($campers);

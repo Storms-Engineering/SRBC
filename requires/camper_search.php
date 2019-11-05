@@ -2,6 +2,17 @@
 //This class is related to all queries for searching for campers and generating tables.
 class CamperSearch
 {
+
+	//Search for either a camper name or last name or a combined query of first name last name
+	public static function searchByCamperId($camperId)
+	{
+		global $wpdb;
+		$campers = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM srbc_campers WHERE camper_id=%s
+			ORDER BY camper_id ASC", 
+			$camperId));
+		return $campers;
+	}
 	//Search for either a camper name or last name or a combined query of first name last name
 	public static function searchParentAndCamper($query)
 	{
