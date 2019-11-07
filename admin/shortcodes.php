@@ -393,7 +393,7 @@ function srbc_registration( $atts )
 			Retype Email: <input type="email" id="retyped_email" required><br>
 			Phone including area code (Numbers only please):<input type="tel" required pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone">
 			Secondary Phone: <input type="tel" pattern="[0-9]{7,}" title="Please enter a valid phone number" name="phone2"><br>
-			Street Address:<br>
+			Mailing Address:<br>
 				<textarea class="inputs" required name="address" rows="2" cols="30"></textarea>
 				City:<input type="text" style="width:100px;" required name="city">
 				State:<input type="text" style="width:50px;" required name="state">
