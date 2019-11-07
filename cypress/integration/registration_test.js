@@ -74,4 +74,14 @@ describe('Registration Test',function() {
             .trigger('mouseup', 'bottom', { which:1});
     });
 
+    it('Fills out credit card info', function() {
+        cy.get( '[name="cc_name"]' ).type("Test One");
+        cy.get( '[name="cc_zipcode"]' ).type("99669");
+        cy.get( '[name="cc_number"]' ).type("1234567891254567");
+        cy.get( '[name="cc_vcode"]' ).type("123");
+        cy.get( '[name="cc_month"]' ).select("01");
+        //Current Year
+        cy.get( '[name="cc_year"]' ).select(Cypress.moment().format('YYYY'));
+    });
+
 })
