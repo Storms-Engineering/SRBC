@@ -84,4 +84,12 @@ describe('Registration Test',function() {
         cy.get( '[name="cc_year"]' ).select(Cypress.moment().format('YYYY'));
     });
 
+    it('Submits form and checks for a good registration', function(){
+        cy.contains('Submit').click();
+        cy.url().should('include', '/registration-complete')
+        cy.contains("Email Sent!");
+
+    });
+
+
 })
