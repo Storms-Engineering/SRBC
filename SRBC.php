@@ -45,6 +45,8 @@ function srbc_install() {
 		description TEXT NOT NULL,
 		start_date DATE,
 		end_date DATE,
+		dropoff_time TINYTEXT NOT NULL,
+		pickup_time TINYTEXT NOT NULL,
 		cost SMALLINT NOT NULL,
 		horse_cost SMALLINT,
 		horse_opt_cost TINYINT NOT NULL,
