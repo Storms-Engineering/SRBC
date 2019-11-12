@@ -32,6 +32,8 @@ else if (isset($obj["camp_id"])) {
 		'description' => $obj["description"],	
 		'start_date' => $obj["start_date"],	
 		'end_date' => $obj["end_date"],	
+		'dropoff_time' => $obj["dropoff_time"],	
+		'pickup_time' => $obj["pickup_time"],	
 		'cost' => $obj["cost"],	
 		'horse_cost' => $obj["horse_cost"],	
 		'horse_opt_cost' => $obj["horse_opt_cost"],
@@ -49,6 +51,8 @@ else if (isset($obj["camp_id"])) {
 		'%s',	
 		'%s',
 		'%s',
+		'%s',	
+		'%s',	
 		'%s',	
 		'%s',	
 		'%d',
@@ -78,6 +82,8 @@ $wpdb->insert(
 		'description' => $obj["description"],	
 		'start_date' => $obj["start_date"],	
 		'end_date' => $obj["end_date"],	
+		'dropoff_time' => $obj["dropoff_time"],	
+		'pickup_time' => $obj["pickup_time"],	
 		'cost' => $obj["cost"],	
 		'horse_cost' => $obj["horse_cost"],	
 		'horse_opt_cost' => $obj["horse_opt_cost"],
@@ -88,24 +94,27 @@ $wpdb->insert(
 		'girl_registration_size' => $obj["girl_registration_size"],
 		'overall_size' => $obj["overall_size"],
 		'grade_range' => $obj["grade_range"]
-	), 
+	),
 	array( 
 		'%s',	
 		'%s',
 		'%s',
 		'%s',	
 		'%s',	
+		'%s',	
+		'%s',	
+		'%d',
 		'%d',
 		'%d',
 		'%d',
 		'%d',	
 		'%d',	
-		'%d',	
 		'%d',
 		'%d',
 		'%d',
-		'%s'
-	) 
+		'%s',
+		'%d'
+	)
 );
 echo "Data Saved Sucessfully";
 
