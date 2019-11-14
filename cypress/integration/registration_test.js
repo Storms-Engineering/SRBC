@@ -49,6 +49,7 @@ describe('Registration Test',function() {
         cy.get( '[name="head_injury"]' ).select("Yes");
         cy.get( '[name="high_blood_pressure"]' ).select("Yes");
         cy.get( '[name="asthma"]' ).select("Yes");
+        cy.get( '[name="emotional_difficulties"]' ).select("Yes");
         cy.get( '[name="seizures"]' ).select("Yes");
         cy.get( '[name="diabetes"]' ).select("Yes");
         cy.get( '[name="bed_wetting"]' ).select("Yes");

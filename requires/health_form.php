@@ -36,7 +36,7 @@ class HealthForm
         Address:<span class="value">
             ' . $healthForm->address . ' ' . $healthForm->city . ' ' . $healthForm->state . ' ' . $healthForm->zipcode . '</span>
             <br>
-            Emergency Contact:<span class="value" name="emergency_contact"></span>
+            Emergency Contact:<span class="value" name="emergency_contact"></span><br>
 		Home Phone:<span class="value" name="emergency_phone_home"></span>
 		Cell Phone:<span class="value" name="emergency_phone_cell"></span>
 		<h3>General Health Questions</h3>
@@ -71,7 +71,7 @@ class HealthForm
 				<span class="value" name="current_medications">
 				</span>
 				<label for="frequent_headaches">Frequent Headaches?</label>
-				<span name="frequent_headaches">
+				<span class="value" name="frequent_headaches">
 				</span>
 			</div>
 			<div id="rightSide">
@@ -99,7 +99,7 @@ class HealthForm
 		</div>
 		<hr style="clear:both">
 	<h3>Please explain any "Yes" answers from above</h3>
-	<div style="word-wrap:break-word;" name="explanations"></div>
+	<div style="word-wrap:break-word;"  class="value" name="explanations"></div>
 	Carrier:<span name="carrier" class="value"></span>
 	Policy Number:<span name="policy_number" class="value"></span>
 	<br>
@@ -121,6 +121,30 @@ class HealthForm
 	<img name="signature_img" src="">';
     echo '</div>';
                              
-    }
+	}
+	
+	//HTML setup before healthforms
+	public static function before()
+	{
+		echo '<html>
+		<head>
+		<link rel="stylesheet" type="text/css" href="/wp-content/plugins/SRBC/css/health_form.css">
+		</head>
+		<body>
+		<div id="no-print">
+		<input type="password" id="pwd"> Decryption Progress <progress value="0" id="progress"></progress>
+		<div ondrop="drop(event)" ondragover="allowDrop(event)" style="background:lightblue;height:50px;width:400px;float:right;">
+		Drop key file here</div>
+		</div>';
+	}
+
+	public static function after()
+	{
+		echo '<script src="/wp-content/plugins/SRBC/requires/js/forge.min.js"></script>
+			<script src="/wp-content/plugins/SRBC/JSEncrypt/jsencrypt.min.js"></script>
+			<script src="/wp-content/plugins/SRBC/Jsrsasign/jsrsasign-all-min.js"></script>
+			<script src="/wp-content/plugins/SRBC/js/health_form.js"></script>';
+		echo "</html></body>";
+	}
 }
 ?>

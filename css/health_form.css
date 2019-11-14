@@ -29,7 +29,7 @@
   font-style:italic;
   margin:3.5px;
   margin-right:20px;
-  font-size:17px;
+  font-size:14px;
 }
 
 
@@ -44,16 +44,17 @@ html, body {
   height: 11in !important;
   margin:auto;
   line-height:140%;
-  font-size:15px;
+  font-size:12px;
 }
 
-#no-print
+.health_form
 {
-  display:none;
+  page-break-after: always;
 }
-
 @media print
 {
-  
-
+  #no-print
+  {
+    display:none;
+  }
 }
