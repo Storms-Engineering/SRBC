@@ -1,0 +1,60 @@
+#leftSide
+{
+  float:left;
+}
+
+#rightSide
+{
+  float:left;
+  margin-left:20px;
+}
+
+#healthQuestions span
+{
+  float:right;
+  clear:right;
+  /*font-size:12px;*/
+}
+
+#healthQuestions .value
+{
+  margin:0px;
+  margin-left:10px;
+}
+
+.value
+{
+ /* text-decoration: underline;*/
+  font-family:Arial;
+  font-style:italic;
+  margin:3.5px;
+  margin-right:20px;
+  font-size:14px;
+}
+
+
+label
+{
+    float:left;
+    clear:left;
+}
+
+html, body {
+ width: 8.5in !important;
+  height: 11in !important;
+  margin:auto;
+  line-height:140%;
+  font-size:12px;
+}
+
+.health_form
+{
+  page-break-after: always;
+}
+@media print
+{
+  #no-print
+  {
+    display:none;
+  }
+}

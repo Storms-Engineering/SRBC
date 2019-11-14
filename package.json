@@ -1,0 +1,26 @@
+{
+  "name": "srbc",
+  "version": "1.0.0",
+  "description": "A user, camp, and registration manager plugin for Solid Rock Bible Camp",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "cypress": "^3.6.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Storms-Engineering/SRBC.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Storms-Engineering/SRBC/issues"
+  },
+  "homepage": "https://github.com/Storms-Engineering/SRBC#readme"
+}

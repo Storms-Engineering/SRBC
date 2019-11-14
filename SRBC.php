@@ -156,6 +156,18 @@ function srbc_install() {
 		)  ENGINE=INNODB;";
 
 	dbDelta( $sql );
+
+	//Create health form database
+	$sql = "CREATE TABLE IF NOT EXISTS srbc_health_form (
+		health_form_id INT AUTO_INCREMENT,
+		camper_id INT,
+		IV TEXT,
+		aesKey TEXT,
+		data TEXT,
+		PRIMARY KEY (health_form_id)
+		)  ENGINE=INNODB;";
+
+	dbDelta( $sql );
 }
 register_activation_hook( __FILE__, 'srbc_install' );
 

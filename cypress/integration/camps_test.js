@@ -2,11 +2,15 @@ describe('Registration Test',function() {
     const baseURL = "http://127.0.0.1";
     //Login to wordpress
     beforeEach( function() {
-        cy.visit( baseURL + '/wp-login.php' );
-        cy.wait( 1000 );
-        cy.get( '#user_login' ).type( Cypress.env( "wp_user" ) );
-        cy.get( '#user_pass' ).type( Cypress.env( "wp_pass" ) );
-        cy.get( '#wp-submit' ).click();
+        cy.request({
+            method: 'POST',
+            url: baseURL + '/wp-login.php', // baseUrl is prepended to url
+            form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
+            body: {
+              log: Cypress.env("wp_user"),
+              pwd: Cypress.env("wp_pass")
+            }
+          })
     } );
     it( 'Create new camp with UI', function() {
         cy.visit( baseURL + '/wp-admin/admin.php?page=camp_management' );

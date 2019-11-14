@@ -15,6 +15,8 @@
 	<button class="big_button" style="float:right;" onclick="saveInfo();closeModal();">Save Info & Close</button>
 			<div class="modal-body">
 			<?php
+
+				echo '<a class="big_button" style="float:right;" target="_blank" href="/wp-content/plugins/SRBC/get_health_form.php?c_id='.$_GET['camper_id'].'">Health Form</a>';
 				//TODO  I might not need this span class
 				//BODY Everything might be handled by the label now
 				$hidden = wp_get_current_user()->user_login === "Unixen" ? NULL : "display:none";
@@ -187,7 +189,7 @@ function campSection($registration,$camper,$inactive)
 	//Financial Inputs
 	echo '<span class="financial_info"><h3>Camp Cost:   $<span id="camp_cost">' . $camp->cost . '</span></h3></span>';		
 	echo '<span class="financial_info">'.$horsesWaitlistHTML.'Horse Option '.$horseHTML.' $<input class="financial" name="horse_opt" type="text" value="0" readonly></span>';
-	echo '<span class="financial_info">Busride ' . $busride .  ': $<input class="financial" name="busride_cost" type="text" value="' . $busride_cost .'" readonly></span>';
+	echo '<span class="financial_info">Busride ' . $busride .  ': $<input class="financial" name="busride_cost" type="text" value="0" readonly></span>';
 	echo '<span class="financial_info">Discount: $<input class="financial" type="text" name="discount" value="' . $registration->discount . '"></span>';
 	$discountSelector = array(null,null,null,null);
 	if($registration->discount_type == "Multiple Child")

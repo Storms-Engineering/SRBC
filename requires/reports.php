@@ -46,6 +46,19 @@ Class Report
 		return $campers;
 	}
 	
+	public function healthForms()
+	{
+		//Get campers but don't print header
+		$campers = $this->getCampers(NULL,false);
+		require_once 'health_form.php';
+		HealthForm::before();
+		foreach($campers as $camper)
+		{
+			HealthForm::generateHealthForm($camper->camper_id);
+		}
+		HealthForm::after();
+	}
+
 	//Calculates that amount due for a registration.  
 	//2nd parameter is a bool to determine whether we are looking at the inactive_registration database.
 	private function amountDue($registration_id,$inactive_registration)

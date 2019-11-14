@@ -63,7 +63,7 @@
   border-radius: 50%;
   margin-top: 7px;
 }
-}
+
 
 /* On mouse-over, add a grey background color */
 .container:hover input ~ .checkmark {
@@ -96,3 +96,34 @@
   border-radius: 50%;
   background: white;
 } 
+
+#leftSide
+{
+  float:left;
+}
+
+#rightSide
+{
+  float:left;
+  margin-left:20px;
+}
+
+#healthQuestions select
+{
+  float:right;
+  margin-left:10px;
+}
+
+@media only screen and (max-width: 600px) 
+{
+  #healthQuestions select
+  {
+    display:block;
+    float:none;
+  }
+
+  #rightSide
+  {
+    margin-left:0px;
+  }
+}
