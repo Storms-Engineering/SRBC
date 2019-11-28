@@ -174,13 +174,30 @@ function srbc_program_access()
 	<?php
 }
 
-function srbc_database()
+function srbc_settings()
 {
 	// check user capabilities
     if (!current_user_can('manage_options') || in_array( 'program', (array) wp_get_current_user()->roles)) {
          exit("Thus I refute thee.... P.H.");
     }
 	global $wpdb;
+	//Archive old databases by moving them into new database with the suffix of the year they were archived
+	if(isset($_POST["rename_database"]))
+	{
+		//Rename databases and recreate new ones
+		$wpdb->query("RENAME TABLE srbc_registration TO srbc_registration" . date("Y") .  ",
+		srbc_camps TO srbc_camps" . date("Y") . ", srbc_payments to srbc_payments" . date("Y") . ", srbc_registration_inactive TO srbc_registration_inactive".
+		date("Y") . ";");
+		srbc_install();
+		goto end;
+	}
+	
+	//Update the summer camps disabled option
+	if(isset($_POST['srbc_summer_camps_disable']))
+		update_option("srbc_summer_camps_disable",$_POST["srbc_summer_camps_disable"]);
+	else
+		update_option("srbc_summer_camps_disable","");
+	//Update globals
 	if(isset($_POST["srbc_database_year"]))
 	{
 		update_option("srbc_database_year",$_POST["srbc_database_year"]);
@@ -191,23 +208,19 @@ function srbc_database()
 		$GLOBALS['srbc_registration'] = "srbc_registration" . get_option("srbc_database_year");
 		$GLOBALS['srbc_registration_inactive'] = "srbc_registration_inactive" . get_option("srbc_database_year");
 	}
-	if(isset($_POST["rename_database"]))
-	{
-		
-		//Rename databases and recreate new ones
-		$wpdb->query("RENAME TABLE srbc_registration TO srbc_registration" . date("Y") .  ",
-		srbc_camps TO srbc_camps" . date("Y") . ", srbc_payments to srbc_payments" . date("Y") . ", srbc_registration_inactive TO srbc_registration_inactive".
-		date("Y") . ";");
-		srbc_install();
-	}
+	end:
 	?>
-	<h1>Database Management</h1>
+	<h1>Settings</h1>
 	<form method="post">
+	Disable Summer Camps <input type="checkbox" name="srbc_summer_camps_disable" value="true" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "checked" : ""; ?>>
+	<h1>Database Management</h1>
 	Please choose which year you would like to pull data from: 
 	<input type="year"  pattern="[2][0-9][0-9][0-9]" placeholder="2019" title="Use a full year format like 2019" name="srbc_database_year" value="<?php echo get_option("srbc_database_year");?>">
-	  <input type="submit" value="Save">
-	  <br>
-	  	Clear the field and hit save to revert to the current database.
+	  	<br>
+		Clear the field and hit save to revert to the current database.
+		<br>
+		<br>
+		<input type="submit" value="Save">
 	</form>
 	<br><br>
 	<form method="post" onsubmit="return confirm('Are you sure you want to archive all data?');">

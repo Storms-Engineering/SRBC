@@ -252,19 +252,6 @@ function credit_cards()
 }
 add_action('admin_menu', 'credit_cards');
 
-function database()
-{
-   add_submenu_page(
-        'srbc_overview',
-        'Database Management',
-        'Database Management',
-        'manage_options',
-        'srbc_database',
-		'srbc_database'
-    );
-}
-add_action('admin_menu', 'database');
-
 function program_menu()
 {
    add_submenu_page(
@@ -290,6 +277,19 @@ function staff_app_setup()
     );
 }
 add_action('admin_menu', 'staff_app_setup');
+
+function settings()
+{
+   add_submenu_page(
+        'srbc_overview',
+        'Settings',
+        'Settings',
+        'manage_options',
+        'srbc_settings',
+		'srbc_settings'
+    );
+}
+add_action('admin_menu', 'settings');
 //END MENUS
 
 //Settings
@@ -298,7 +298,8 @@ function register_my_setting() {
             'type' => 'string', 
             'default' => NULL,
             );
-    register_setting( 'srbc_options_group', 'srbc_database_year', $args ); 
+	register_setting( 'srbc_options_group', 'srbc_database_year', $args ); 
+	register_setting( 'srbc_options_group', 'srbc_summer_camps_disable', $args ); 
 } 
 add_action( 'admin_init', 'register_my_setting');
 
