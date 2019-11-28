@@ -1118,8 +1118,15 @@ function srbc_camps($atts)
 	global $wpdb;
 	$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE area='$query' ORDER BY start_date");	
 	//If no camps then give a message
+	if((get_option("srbc_summer_camps_disable") == "true" && ($query !== "Fall Retreat" && $query !== "Winter Camp")))
+	{
+		date('Y', strtotime('+1 years'));
+		//Says next summer year based on which month it is
+		return "<h2>Registration for Summer ". ((date("m") < 8) ? date('Y') : date('Y', strtotime('+1 years'))) . " is not open at this time.  Please check back later<h2>";
+	}
 	if (count($camps) == 0)
 		return "<h2>There is currently no camps scheduled for this area at this time.  Please check back later!</h2>";
+	
 	
 	//Initialize variable for the html code after the table with descriptions of camps
 	$descriptions = NULL;
