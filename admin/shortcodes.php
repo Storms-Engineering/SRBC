@@ -1122,7 +1122,7 @@ function srbc_camps($atts)
 	{
 		date('Y', strtotime('+1 years'));
 		//Says next summer year based on which month it is
-		return "<h2>Registration for Summer ". ((date("m") < 8) ? date('Y') : date('Y', strtotime('+1 years'))) . " is not open at this time.  Please check back later<h2>";
+		return '<h2 style="text-align:center">Registration for Summer '. ((date("m") < 8) ? date('Y') : date('Y', strtotime('+1 years'))) . ' has not opened yet.  Please check back later!<h2>';
 	}
 	if (count($camps) == 0)
 		return "<h2>There is currently no camps scheduled for this area at this time.  Please check back later!</h2>";
