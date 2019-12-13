@@ -1,4 +1,3 @@
-//TODO update this javascript library to a different encryption library
 function postAjax(obj) {
 	param = JSON.stringify(obj);
 	xmlhttp = new XMLHttpRequest();

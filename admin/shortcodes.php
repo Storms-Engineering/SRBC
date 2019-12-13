@@ -321,7 +321,7 @@ function srbc_registration( $atts )
 					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE camp_id=%s",$cmpid));
 					//TODO add a check if the camp is past the signup date
 					//BODY also could add a check if the camp is completely full
-					echo "CAmp" . $camp->closed_to_registrations;
+					echo "Camp" . $camp->closed_to_registrations;
 					if($camp->closed_to_registrations === "1")
 					{
 						echo '</select><br><br><h1 style="color:red;text-align:center;">Camp is not open to registrations</h1>';
@@ -438,8 +438,8 @@ function srbc_registration( $atts )
 	<h1>Health Form</h1>
 		Emergency Contact: <input type="text" name="emergency_contact" required>
 		<br>
-		Home Phone <input type="text" name="emergency_phone_home" required>
-		Cell Phone <input type="text" name="emergency_phone_cell" required>
+		Phone 1<input type="text" name="emergency_phone_home" required>
+		Phone 2<input type="text" name="emergency_phone_cell" >
 		<br>
 		<br>
 		<h3>General Health Questions</h3>
@@ -554,7 +554,7 @@ function srbc_registration( $atts )
 						<option value="Yes">Yes</option>
 				</select>
 				<br>
-				Immunizations current?
+				Immunizations out of date?
 				<select name="immunizations">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
@@ -580,11 +580,11 @@ function srbc_registration( $atts )
 	<h3>Essential Medical Information</h3>
 	<ul>
 		<li>For the safety of everyone in camp and to comply with regulations, all medication will be stored in the Health Center</li>
-		<li>The following OTCM are kept in the Health Center & are provided to campers under the standing orders provided by a local physician.
+		<li>The following over the counter medications are kept in the Health Center & are provided to campers under the standing orders provided by a local physician.
 			These would include: Acetaminophen, Ibuprofen, Robitussin DM/CF, Sudafed, Tums, Mylanta, Benadryl, and Claritin
 		</li>
 		<li>
-			<b>All prescriptoion medications and vitamins must be in the original container with the correct name,
+			<b>All prescription medications and vitamins must be in the original container with the correct name,
 			 date physicians name, and instructions on the bottle.</b>  
 			 The camp will not administer any prescribed medications that are improperly labeled.
 		</li>
@@ -592,7 +592,7 @@ function srbc_registration( $atts )
 			Phone calls will be made to parents and/or physicians concering any medications about which there are any questions.
 		</li>
 		<li>
-				SRBC food service is not providing specialized diets.  
+				SRBC food service does not provide specialized diets.  
 				Campers with dietary restrictions or needs are welcome to bring their own food.
 		</li>
 	</ul>
@@ -856,6 +856,7 @@ function srbc_registration_complete($atts)
 		Email::emailDeveloper($e->getMessage());
 	}
 	$registration_id = $wpdb->insert_id;
+
 	//Health form stuff
 	//generate a random key for encrypting the signature_img
 	$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/health_form_public_key.pem',"r");

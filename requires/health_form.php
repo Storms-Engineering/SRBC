@@ -93,7 +93,7 @@ class HealthForm
 					<span class="value" name="diabetes"></span>
 				<label for="bed_wetting">History of bed wetting?</label>
 					<span class="value" name="bed_wetting"></span>
-				<label for="immunizations">Immunizations current?</label>
+				<label for="immunizations">Immunizations out of date?</label>
 					<span class="value" name="immunizations"></span>
 			</div>
 		</div>
