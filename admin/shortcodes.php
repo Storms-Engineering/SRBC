@@ -616,32 +616,41 @@ function srbc_registration( $atts )
 	<!--End Health Form-->
 	<hr style="clear:both;">
 	<h1>Payment:</h1>
-	Workcrew Code: <input type="text" id="code" name="code">
-	<hr>
-	<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received unless you are workcrew*.  (This $50 DOES go towards the cost of the camp)</span><br>
-	You must pay $50, or pay the full amount of the camp, unless you a are registering for the waitlist then you don't have to pay a registration fee.  Any remaining amount will be due the day of registration.
-	<br>
-	*If you are workcrew please enter the code received in your email and after registering in the box above and your registration will be allowed.
-	<br>
-	<br>
-	<h3>Amount to pay*: </h3>
-	<label class="container">$50
-		<input type="radio" name="cc_amount" checked="checked" value="50">
-		<span class="checkmark"></span>
-	</label>
-	<label class="container">$<span id="total">
 	<?php
-	echo $camp->cost;
-	echo '</span><input type="radio" name="cc_amount" id="cc_amount" value="'.$camp->cost.'">';
-	echo '<span style="display:none" id="camp_cost">' . $camp->cost . '</span>';
+
+	if($camp->area == "Fall Retreat" || $camp->area == "Winter Camp")
+	{
+		echo 'Please enter amount to pay: <input type="text" name="cc_amount" id="cc_amount" value="'.$camp->cost.'">';
+	}
+	else
+	{
+		echo '	Workcrew Code: <input type="text" id="code" name="code">
+		<hr>
+		<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received unless you are workcrew*.  (This $50 DOES go towards the cost of the camp)</span><br>
+		You must pay $50, or pay the full amount of the camp, unless you a are registering for the waitlist then you don\'t have to pay a registration fee.  Any remaining amount will be due the day of registration.
+		<br>
+		*If you are workcrew please enter the code received in your email and after registering in the box above and your registration will be allowed.
+		<br>
+		<br>
+		<h3>Amount to pay*: </h3>
+		<label class="container">$50
+			<input type="radio" name="cc_amount" checked="checked" value="50">
+			<span class="checkmark"></span>
+		</label>
+		<label class="container">$<span id="total">';
+		echo $camp->cost;
+		echo '</span><input type="radio" name="cc_amount" id="cc_amount" value="'.$camp->cost.'">';
+		echo '<span style="display:none" id="camp_cost">' . $camp->cost . '</span>';
+		echo '<span class="checkmark"></span>
+		</label>
+		<label class="container">$0 Registering for waiting list
+			<input type="radio"  name="cc_amount" id="waitlist" value="">
+			<span class="checkmark"></span>
+		</label>
+		*Disregard this section if are workcrew and have put in your code.';
+	}
 	?>
-		<span class="checkmark"></span>
-	</label>
-	<label class="container">$0 Registering for waiting list
-		<input type="radio"  name="cc_amount" id="waitlist" value="">
-		<span class="checkmark"></span>
-	</label>
-	*Disregard this section if are workcrew and have put in your code.
+	
 	<hr>
 	<h3>Use a credit card:</h3>	
 		Name on Credit Card: <input type="text" name="cc_name">
@@ -857,7 +866,6 @@ function srbc_registration_complete($atts)
 	$aesKey = substr(base64_encode(openssl_random_pseudo_bytes(16)),0,16);
 	openssl_public_encrypt($aesKey,$encryptedKey,$pub_key);//,OPENSSL_PKCS1_OAEP_PADDING);
 	$encryptedKey = base64_encode($encryptedKey);
-	echo "Encrypted key:" . $encryptedKey;
 
 	
 	$healthInformation = array(
