@@ -445,7 +445,8 @@ function srbc_registration( $atts )
 
 	if($camp->area == "Fall Retreat" || $camp->area == "Winter Camp")
 	{
-		echo 'Please enter amount to pay: <input type="text" name="cc_amount" id="cc_amount" value="'.$camp->cost.'">';
+		echo 'Please enter amount to pay: <input type="text" name="cc_amount" id="cc_amount" value="'.$camp->cost.'"><br>';
+		echo 'Please enter name of friend that you are bringing: <input type="text" name="registration_notes">';
 	}
 	else
 	{
@@ -472,7 +473,8 @@ function srbc_registration( $atts )
 			<input type="radio"  name="cc_amount" id="waitlist" value="">
 			<span class="checkmark"></span>
 		</label>
-		*Disregard this section if are workcrew and have put in your code.';
+		*Disregard this section if are workcrew and have put in your code.<br>
+		Registration notes: <input type="text" name="registration_notes">';
 	}
 	?>
 	
@@ -662,7 +664,8 @@ function srbc_registration_complete($atts)
 					'horse_opt' => $horse_opt,
 					'busride' => $_POST['busride'],
 					'waitlist' => $waitlist,
-					'horse_waitlist' => $horse_waitlist
+					'horse_waitlist' => $horse_waitlist,
+					'registration_notes' => $_POST['registration_notes']
 				), 
 				array( 
 					'%d',
@@ -672,7 +675,8 @@ function srbc_registration_complete($atts)
 					'%d',
 					'%s',
 					'%d',
-					'%d'
+					'%d',
+					'%s'
 				) 
 				);
 	}
