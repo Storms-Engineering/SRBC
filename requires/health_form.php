@@ -146,5 +146,190 @@ class HealthForm
 			<script src="/wp-content/plugins/SRBC/js/health_form.js"></script>';
 		echo "</html></body>";
 	}
+
+	public static function generateSubmitForm()
+	{
+		?>
+		<h1>Health Form</h1>
+		Emergency Contact: <input type="text" name="emergency_contact" required>
+		<br>
+		Phone 1<input type="text" name="emergency_phone_home" required>
+		Phone 2<input type="text" name="emergency_phone_cell" >
+		<br>
+		<br>
+		<h3>General Health Questions</h3>
+		<div id="healthQuestions" style="display:block;">
+			<div id="leftSide">
+					Any recent injury or illness?
+					<select name="recent_injury_illness">
+							<option value="No">No</option>
+							<option value="Yes">Yes</option>
+					</select>
+				<br>
+				Frequency ear infections?
+				<select name="ear_infections">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Any Skin Problems?
+				<select name="skin_problems">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Problems with sleepwalking?
+				<select name="sleepwalking">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				A Chronic or Recurring Illness?
+				<select name="chronic_recurring_illness">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Wear glasses or contacts?
+				<select name="glassses_contacts">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				An orthodontic appliance?
+				<select name="orthodontic_appliance">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Mono in last year?
+				<select name="mono">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Any current medications?
+				<select name="current_medications">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Frequent Headaches?
+				<select name="frequent_headaches">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+			</div>
+			<div id="rightSide">
+				Frequent stomach aches?
+				<select name="stomach_aches">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				A head injury?
+				<select name="head_injury">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				High blood pressure?
+				<select name="high_blood_pressure">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Asthma?
+				<select name="asthma">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				<div> Emotional difficulties for which professional help was sought?
+				<select name="emotional_difficulties">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select></div>
+				<br>
+				Seizures?
+				<select name="seizures">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Diabetes?
+				<select name="diabetes">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				History of bed wetting?
+				<select name="bed_wetting">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Immunizations out of date?
+				<select name="immunizations">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				<br>
+			</div>
+		</div>
+		<hr style="clear:both">
+	<h3>Please explain any "Yes" answers from above</h3>
+	<textarea name="explanations"></textarea>
+	<br>
+	<br>
+	Carrier <input type="text" name="carrier">
+	Policy Number<input type="text" name="policy_number">
+	<br>
+	Family Physician <input type="text" name="physician">
+	Phone Number <input type="text" name="physician_number">
+	<br>
+	Family Dentist <input type="text" name="family_dentist">
+	Phone Number <input type="text" name="dentist_number">
+	<hr>
+	<h3>Essential Medical Information</h3>
+	<ul>
+		<li>For the safety of everyone in camp and to comply with regulations, all medication will be stored in the Health Center</li>
+		<li>The following over the counter medications are kept in the Health Center & are provided to campers under the standing orders provided by a local physician.
+			These would include: Acetaminophen, Ibuprofen, Robitussin DM/CF, Sudafed, Tums, Mylanta, Benadryl, and Claritin
+		</li>
+		<li>
+			<b>All prescription medications and vitamins must be in the original container with the correct name,
+			 date physicians name, and instructions on the bottle.</b>  
+			 The camp will not administer any prescribed medications that are improperly labeled.
+		</li>
+		<li>
+			Phone calls will be made to parents and/or physicians concering any medications about which there are any questions.
+		</li>
+		<li>
+				SRBC food service does not provide specialized diets.  
+				Campers with dietary restrictions or needs are welcome to bring their own food.
+		</li>
+	</ul>
+	<h3>Permission to provide necessary treatment or emergency care</h3>
+	<p>
+		I, hereby give permission to the medical personnel selected by SRBC to give OTCM per our standing order physician and administer
+		treatment to my child, and if the need arises, provide transportation to a medical provider or call 911 for EMS response.
+		I give permission for medical care by a health provider or emergency care including hospitilization, x-rays, routine tests
+		treatment, and release of records necessary for insurance purposes.  I also give permission to share health information on an
+		 as needed to camp staff.  This completed form may be photocopied for trips out of camp.  Parents will be notified in the case of 
+		 an emergency or the need for outside medical care arises.
+	</p>
+	<h3>Signature:</h3>
+	<canvas id="canvas" style="border:1px solid black" height="200" width="300"></canvas>
+	<input type="hidden" name="signature_img">
+	<br>
+	<button type="button" onclick="signaturePad.clear()">Clear</button>
+	<button type="button" onclick="undo()">Undo</button>
+	<br>
+	<script src="../wp-content/plugins/SRBC/requires/js/signature_pad/signature_pad.min.js"></script>
+
+		<?php
+	}
 }
 ?>
