@@ -752,13 +752,7 @@ function srbc_registration_complete($atts)
 
 
 
-	//require($_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/SRBC/requires/email.php');
-	//Notify office that this parent is sending a check	
-	if (isset($_POST["using_check"])){
-		Email::sendMail(srbc_email,$_POST['parent_first_name'] . " " . $_POST['parent_last_name'] . " is sending a check ",
-		"Hi,\r\n" . $_POST['parent_first_name'] . " " . $_POST['parent_last_name'] . " is sending a check for " . $_POST['camper_first_name'] . " " . $_POST['camper_last_name'] . "<br>Thanks!<br>-Peter Hawke SRBC Ancilla");
-	}
-	else if($waitlist != 1 && $_POST["cc_amount"] != "")
+	if($waitlist != 1 && $_POST["cc_amount"] != "")
 	{
 		//Credit Card Stuff
 		//Make credit card easier to read
