@@ -13,7 +13,7 @@ class HealthForm
 							 WHERE srbc_campers.camper_id=%s",$camperId));
 		if($healthForm == NULL)
 		{
-			echo "<h1>No camper health information available</h1>";
+			echo '<h1 id="no-print">No camper health information available</h1>';
 			return;
 		}
 
