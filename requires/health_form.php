@@ -321,7 +321,7 @@ class HealthForm
 		 an emergency or the need for outside medical care arises.
 	</p>
 	<h3>Signature:</h3>
-	<canvas id="canvas" style="border:1px solid black" height="200" width="300"></canvas>
+	<canvas id="canvas" style="border:1px solid black" height="200" width="500"></canvas>
 	<input type="hidden" name="signature_img">
 	<br>
 	<button type="button" onclick="signaturePad.clear()">Clear</button>
