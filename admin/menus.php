@@ -215,7 +215,7 @@ function srbc_settings()
 	Disable Summer Camps <input type="checkbox" name="srbc_summer_camps_disable" value="true" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "checked" : ""; ?>>
 	<h1>Database Management</h1>
 	Please choose which year you would like to pull data from: 
-	<input type="year"  pattern="[2][0-9][0-9][0-9]" placeholder="2019" title="Use a full year format like 2019" name="srbc_database_year" value="<?php echo get_option("srbc_database_year");?>">
+	<input type="year"  pattern="[2][0-9][0-9][0-9]" placeholder="ex 2019" title="Use a full year format like 2019" name="srbc_database_year" value="<?php echo get_option("srbc_database_year");?>">
 	  	<br>
 		Clear the field and hit save to revert to the current database.
 		<br>
