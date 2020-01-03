@@ -181,13 +181,13 @@ function srbc_settings()
          exit("Thus I refute thee.... P.H.");
     }
 	global $wpdb;
-	//Archive old databases by moving them into new database with the suffix of the year they were archived
+	//Archive old databases by moving them into new database with the year specified
 	if(isset($_POST["rename_database"]))
 	{
 		//Rename databases and recreate new ones
-		$wpdb->query("RENAME TABLE srbc_registration TO srbc_registration" . date("Y") .  ",
-		srbc_camps TO srbc_camps" . date("Y") . ", srbc_payments to srbc_payments" . date("Y") . ", srbc_registration_inactive TO srbc_registration_inactive".
-		date("Y") . ";");
+		$wpdb->query("RENAME TABLE srbc_registration TO srbc_registration" . $_POST["year_to_rename"] .  ",
+		srbc_camps TO srbc_camps" . $_POST["year_to_rename"] . ", srbc_payments to srbc_payments" . $_POST["year_to_rename"] . ", srbc_registration_inactive TO srbc_registration_inactive".
+		$_POST["year_to_rename"] . ";");
 		srbc_install();
 		goto end;
 	}
@@ -224,16 +224,18 @@ function srbc_settings()
 	</form>
 	<br><br>
 	<form method="post" onsubmit="return confirm('Are you sure you want to archive all data?');">
-	  <input type="submit" name="rename_database" value="Archive All Current Data">
+		Year to archive data under: <input type="text" name="year_to_rename">
+	  	<input type="submit" name="rename_database" value="Archive All Current Data">
+	  
 	  <h2 style="color:red">Please Note that this will make all registrations and camps archived.  
 	  If you wish to access this data please enter the year that you archived the data.
 	  </h2>
 	  <p>
-	  When you archive data, it will use the current year to label the database.
-		So if you archive the database in 2019, and are trying to access it in 2020, just enter 2019 for the year.
+	  When you archive data, it will use the year you specified to label the database.
+		So if you archive the database in 2019 and specify the year as 2019, and are trying to access it in 2020, just enter 2019 for the year.
 		If you archive the database in Nov of 2019, it will move all the camps, registrations, and payments to the 2019 database.
-		If you try to archive it again in lets say dec 2019, it will probably delete the old database or throw an error.
-		But after you archive it in Nov 2019, this database is 'New' and wiped clean.  Camper addresses and information will be retained through all
+		If an error pops up saying a database already exists, then you might have already archived all the data for the specified year.
+		This database is 'New' and wiped clean.  Camper addresses and information will be retained through all
 		database archiving.
 	  </p>
 	</form>
