@@ -353,11 +353,12 @@ function srbc_registration( $atts )
 				</h4>
 				<br>
 				<span>Busride*:</span>
+				<!-- TODO remove busride option for Winter and Teen Camps -->
 				<select onchange="calculateTotal();" class="inputs" id="busride" name="busride">
 					<option value="none" selected>No bus ride needed</option>
-					<!--<option value="both">Round-Trip $60</option>
+					<option value="both">Round-Trip $60</option>
 					<option value="to">One-way to Camp $35</option>
-					<option value="from">One-way to Anchorage $35</option>-->
+					<option value="from">One-way to Anchorage $35</option>
 				</select>
 
 				<p>*The bus will depart from and return to the Duluth Trading Company parking lot at 8931 Old Seward Hwy., Suite A Anchorage, AK 99515.
@@ -837,7 +838,7 @@ function autoSplit($cc_amount,$campid,$registration_id,$busride,$horseOpt)
 {
 	global $wpdb;
 	$totalpaid = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM 'srbc_payments WHERE registration_id=%s",$registration_id));
+									FROM srbc_payments WHERE registration_id=%s",$registration_id));
 			
 	//Make the scholarships and discounts add to total paid so we take it out of the base camp fee
 	//Not using this because this is the first time they are signing up for the camp
