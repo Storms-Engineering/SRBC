@@ -179,7 +179,7 @@ function srbc_camp_search($atts){
 				<th>Area</th>
 				<th>Camp</th>
 				<th>Cost</th>
-				<th>Start/End Date</th>
+				<th>Start-End Date</th>
 				<th>Going into Grades</th>
 				<th>Camp Availability</th>
 				</tr>';			
@@ -195,7 +195,7 @@ function srbc_camp_search($atts){
 			$finalText .= '<span style="color:red;"> (Horsemanship Full)</span>';
 		
 		$finalText .=  "</td><td>$" . $camp->cost;
-		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date));
+		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "-" . date("M j",strtotime($camp->end_date));
 		$finalText .=  "</td><td>" . $camp->grade_range;
 		
 										
@@ -944,7 +944,7 @@ function srbc_camps($atts)
 				<tr style="background:#51d3ff;">
 				<th>Camp</th>
 				<th>Cost</th>
-				<th>Start/End Date</th>
+				<th>Start-End Date</th>
 				<th>Going into Grades</th>
 				<th>Camp Availability</th>
 				</tr>';
@@ -975,7 +975,7 @@ function srbc_camps($atts)
 			$finalText .= '<span style="color:red;"> (Horsemanship Full)</span>';
 		
 		$finalText .=  "</td><td>$" . $camp->cost;
-		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date));
+		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "-" . date("M j",strtotime($camp->end_date));
 		$finalText .=  "</td><td>" . $camp->grade_range;
 		
 										
