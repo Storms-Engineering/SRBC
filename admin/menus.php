@@ -195,8 +195,6 @@ function srbc_settings()
 	//Update the summer camps disabled option
 	if(isset($_POST['srbc_summer_camps_disable']))
 		update_option("srbc_summer_camps_disable",$_POST["srbc_summer_camps_disable"]);
-	else
-		update_option("srbc_summer_camps_disable","");
 	//Update globals
 	if(isset($_POST["srbc_database_year"]))
 	{
@@ -212,7 +210,8 @@ function srbc_settings()
 	?>
 	<h1>Settings</h1>
 	<form method="post">
-	Disable Summer Camps <input type="checkbox" name="srbc_summer_camps_disable" value="true" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "checked" : ""; ?>>
+	Disable Summer Camps <br><input type="radio" name="srbc_summer_camps_disable" value="true" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "checked" : ""; ?>>True<br>
+	<input type="radio" name="srbc_summer_camps_disable" value="" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "" : "checked" ?>>False<br>
 	<h1>Database Management</h1>
 	Please choose which year you would like to pull data from: 
 	<input type="year"  pattern="[2][0-9][0-9][0-9]" placeholder="ex 2019" title="Use a full year format like 2019" name="srbc_database_year" value="<?php echo get_option("srbc_database_year");?>">
