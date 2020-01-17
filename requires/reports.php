@@ -272,7 +272,7 @@ fclose($file);
 	
 	public function signout_sheets()
 	{
-		$campers = $this->getCampers("ORDER BY srbc_registration.lodging DESC");
+		$campers = $this->getCampers("ORDER BY " . $GLOBALS['srbc_registration'] . ".lodging DESC");
 		//This variable keeps track of if we have changed lodging group
 		//Initialized to 0 so we don't compare to null and get true
 		$oldLodging = 0;
@@ -304,7 +304,7 @@ fclose($file);
 				echo "<td><b>ON THE BUS</b></td></tr>";
 			else
 				echo "<td></td></tr>";
-			$oldCabin = $camper->lodging;
+			$oldLodging = $camper->lodging;
 		}
 		//Close out the table
 		echo "</table>";
