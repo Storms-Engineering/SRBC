@@ -10,7 +10,8 @@ class HealthForm
 			$wpdb->prepare( "SELECT *
                              FROM srbc_health_form 
                              INNER JOIN srbc_campers ON srbc_health_form.camper_id=srbc_campers.camper_id
-							 WHERE srbc_campers.camper_id=%s",$camperId));
+							 WHERE srbc_campers.camper_id=%s
+							 ORDER BY srbc_campers.camper_last_name DESC ",$camperId));
 		if($healthForm == NULL)
 		{
 			echo '<h1 id="no-print">No camper health information available</h1>';
