@@ -529,6 +529,7 @@ function srbc_registration_complete($atts)
 {
 	
 	require __DIR__ .  '/../requires/Camper.php';	
+	require __DIR__ .  '/../requires/health_form.php';	
 	
 	
 	//Horse option is just a boolean because I will pull the price from the camps database so we don't people changing prices
@@ -688,73 +689,7 @@ function srbc_registration_complete($atts)
 	$registration_id = $wpdb->insert_id;
 
 	//Health form stuff
-	//generate a random key for encrypting the signature_img
-	$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/health_form_public_key.pem',"r");
-	$pub_key=fread($fp,8192);
-	fclose($fp);
-	openssl_get_publickey($pub_key);
-	//Encrypt AES key only 16 characters because that is the key size
-	$aesKey = substr(base64_encode(openssl_random_pseudo_bytes(16)),0,16);
-	openssl_public_encrypt($aesKey,$encryptedKey,$pub_key);//,OPENSSL_PKCS1_OAEP_PADDING);
-	$encryptedKey = base64_encode($encryptedKey);
-
-	
-	$healthInformation = array(
-		"emergency_contact" => $_POST['emergency_contact'],
-		"emergency_phone_home" => $_POST['emergency_phone_home'],
-		"emergency_phone_cell" => $_POST['emergency_phone_cell'],
-		"recent_injury_illness" => $_POST['recent_injury_illness'],
-		"ear_infections" => $_POST['ear_infections'],
-		"skin_problems" => $_POST['skin_problems'],
-		"sleepwalking" => $_POST['sleepwalking'],
-		"chronic_recurring_illness" => $_POST['chronic_recurring_illness'],
-		"glassses_contacts" => $_POST['glassses_contacts'],
-		"orthodontic_appliance" => $_POST['orthodontic_appliance'],
-		"mono" => $_POST['mono'],
-		"current_medications" => $_POST['current_medications'],
-		"frequent_headaches" => $_POST['frequent_headaches'],
-		"stomach_aches" => $_POST['stomach_aches'],
-		"head_injury" => $_POST['head_injury'],
-		"high_blood_pressure" => $_POST['high_blood_pressure'],
-		"asthma" => $_POST['asthma'],
-		"emotional_difficulties" => $_POST['emotional_difficulties'],
-		"seizures" => $_POST['seizures'],
-		"diabetes" => $_POST['diabetes'],
-		"bed_wetting" => $_POST['bed_wetting'],
-		"immunizations" => $_POST['immunizations'],
-		"explanations" => $_POST['explanations'],
-		"carrier" => $_POST['carrier'],
-		"policy_number" => $_POST['policy_number'],
-		"physician" => $_POST['physician'],
-		"physician_number" => $_POST['physician_number'],
-		"family_dentist" => $_POST['family_dentist'],
-		"dentist_number" => $_POST['dentist_number'],
-		//Also removed all backspaces as it is just escaped characters.
-		"signature_img" => str_replace("\\", "", $_POST['signature_img'])
-	);
-	$JSONhealthInformation = json_encode($healthInformation);
-	
-	//Data in encrypted with AES since it is too large to be directly encyrpted by RSA
-	$encryptedJSONobj = aesEncrypt($JSONhealthInformation, $aesKey);
-	//echo "Encrytped JSON:" . $encryptedJSONobj;
-	$wpdb->insert(
-		'srbc_health_form', 
-		array( 
-			'health_form_id' =>0,
-			'camper_id' => $camper_id,
-			'IV' => $encryptedJSONobj->IV,
-			'aesKey' => $encryptedKey,
-			"data" => $encryptedJSONobj->cipherText
-		), 
-		array( 
-			'%d',
-			'%d',
-			'%s', 
-			'%s', 
-			'%s'
-		) 
-		);
-
+	HealthForm::healthFormSubmit($camper_id);
 
 
 	if($waitlist != 1 && $_POST["cc_amount"] != "")
