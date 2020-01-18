@@ -5,8 +5,7 @@ require($_SERVER['DOCUMENT_ROOT'].'/wp-load.php');
 if (!is_user_logged_in() && $_GET["report"] !== "camp_numbers") exit("Thus I refute thee.... P.H.");
 
 require 'requires/reports.php';
-
-$thisReport = new Report($_GET['start_date'],$_GET['camp'],$_GET['buslist_type']);
+$thisReport = new Report($_GET['start_date'],$_GET['camp'],$_GET['buslist_type'],$_GET['area']);
 $thisReport->{$_GET['report']}();
 
 ?>

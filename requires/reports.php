@@ -6,12 +6,14 @@ Class Report
 	private $end_date;
 	private $camp_id;
 	private $buslist_type;
+	private $area;
 	
-	function __construct($startDate,$campId,$buslist_typ) 
+	function __construct($startDate,$campId,$buslist_typ,$area) 
 	{
 		$this->start_date = $startDate;
 	    $this->camp_id = $campId;
 	    $this->buslist_type = $buslist_typ;
+	    $this->area = $area;
 	}
 	
 	//Gets campers using a generic query that we can add on too.  Also takes into the date and camp_id restrictions
@@ -126,7 +128,6 @@ Class Report
 	//Displays all inactive registrations
 	public function inactive_registrations()
 	{
-		$this->printHeader();
 		global $wpdb;
 		$campers = $wpdb->get_results("SELECT *	FROM " . $GLOBALS['srbc_registration_inactive'] . 
 									" INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration_inactive'] .
@@ -602,15 +603,56 @@ fclose($file);
 	
 	public function area_report()
 	{
-		error_msg("Area report currently doesn't work");
 		$query = null;
-		if (isset($_GET['area']) && $_GET["area"] == "") {
-		$query .= $GLOBALS['srbc_camps'] . ".area LIKE '%' ";
+		if ($this->area == "")
+			$query = "AND " . $GLOBALS['srbc_camps'] . ".area LIKE '%' ";
+		else 
+			$query .= "AND " . $GLOBALS['srbc_camps'] . ".area='$this->area' ";
+
+		$campers = $this->getCampers($query);
+
+		global $wpdb;
+		echo '<table id="results_table"><tr>
+		<th>Date Registered</th>
+		<th>First Name</th><th>Last Name</th><th>Camp</th>';
+		echo '<th>Parent Name</th>';
+		echo '<th>Phone #</th>';
+		echo '<th>Payment Type</th><th>Payment Amount</th></tr>';
+		foreach($campers as $camper)
+		{
+			echo '<tr class="' . $camper->gender . '" onclick="openCamperModal(' . $camper->camper_id . ');"><td>' . $camper->date . '</td>
+			<td>' . $camper->camper_first_name ."</td><td> " . $camper->camper_last_name. "</td>";
+			echo "<td>" . $camper->area . " ".  $camper->name . "</td>";
+			echo "<td>" . $camper->parent_first_name . "</td>";
+			echo "<td>" . $camper->phone . "</td>";
+			$totalpaid = $wpdb->get_results($wpdb->prepare("SELECT SUM(payment_amt) AS amount, CONCAT(payment_type, ',') AS type
+									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$camper->registration_id))[0];
+			$cost = $wpdb->get_var($wpdb->prepare("
+									SELECT SUM(srbc_camps.cost +
+										(CASE WHEN " . $GLOBALS['srbc_registration'] . ".horse_opt = 1 THEN " . $GLOBALS['srbc_camps'] . ".horse_opt_cost
+										ELSE 0
+										END) +
+										(CASE WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'to' THEN 35
+										WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'from' THEN 35
+										WHEN " . $GLOBALS['srbc_registration'] . ".busride = 'both' THEN 60
+										ELSE 0
+										END) 
+										- IF(" . $GLOBALS['srbc_registration'] . ".discount IS NULL,0," . $GLOBALS['srbc_registration'] . ".discount)
+										- IF(" . $GLOBALS['srbc_registration'] . ".scholarship_amt IS NULL,0," . $GLOBALS['srbc_registration'] . ".scholarship_amt)		
+										)										
+										FROM " . $GLOBALS['srbc_registration'] . " 
+										INNER JOIN srbc_camps ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
+										WHERE " . $GLOBALS['srbc_registration'] . ".registration_id=%d ",$camper->registration_id));
+			//Little hack so that it shows 0 if they are no payments
+			if ($totalpaid == NULL)
+				$totalpaid = 0;
+			echo "<td>" . $totalpaid->type . "</td>";
+			echo "<td>$" . number_format($totalpaid->amount,2) . "</td>";
+			//Empty cells
+			echo "</tr>";
 		}
-		else {
-			$values = array($_GET['area']);
-			$query .= $GLOBALS['srbc_camps'] . ".area='%s' ";
-		}
+		echo "</table>";
+		echo "<br>Campers Count: " . count($campers);
 	}
 	
 	//Prints all the campers with Scholarships and the type and the totals
