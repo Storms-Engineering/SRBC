@@ -110,7 +110,7 @@ class HealthForm
 	Phone Number:<span name="dentist_number" class="value"></span>
 	<h3>Permission to provide necessary treatment or emergency care</h3>
 	<p>
-		I, hereby give permission to the medical personnel selected by SRBC to give OTCM per our standing order physician and administer
+		I, hereby give permission to the medical personnel selected by Solid Rock Bible Camp to give OTCM per our standing order physician and administer
 		treatment to my child, and if the need arises, provide transportation to a medical provider or call 911 for EMS response.
 		I give permission for medical care by a health provider or emergency care including hospitilization, x-rays, routine tests
 		treatment, and release of records necessary for insurance purposes.  I also give permission to share health information on an
@@ -307,13 +307,13 @@ class HealthForm
 			Phone calls will be made to parents and/or physicians concering any medications about which there are any questions.
 		</li>
 		<li>
-				SRBC food service does not provide specialized diets.  
+				Solid Rock Bible Camp food service does not provide specialized diets.  
 				Campers with dietary restrictions or needs are welcome to bring their own food.
 		</li>
 	</ul>
 	<h3>Permission to provide necessary treatment or emergency care</h3>
 	<p>
-		I, hereby give permission to the medical personnel selected by SRBC to give OTCM per our standing order physician and administer
+		I, hereby give permission to the medical personnel selected by Solid Rock Bible Camp to give OTCM per our standing order physician and administer
 		treatment to my child, and if the need arises, provide transportation to a medical provider or call 911 for EMS response.
 		I give permission for medical care by a health provider or emergency care including hospitilization, x-rays, routine tests
 		treatment, and release of records necessary for insurance purposes.  I also give permission to share health information on an
