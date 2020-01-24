@@ -387,11 +387,19 @@ class HealthForm
 	$encryptedJSONobj = aesEncrypt($JSONhealthInformation, $aesKey);
 	
 	global $wpdb;
-	
-	$wpdb->insert(
+
+	//Check if a camper already has a health form and replace it
+	$prevCamperCheck = $wpdb->get_row( "SELECT * FROM srbc_health_form WHERE camper_id = $camper_id" );
+	$healthFormId = 0;
+	if($prevCamperCheck != NULL)
+	{
+		$healthFormId = $prevCamperCheck->health_form_id;
+	}
+
+	$wpdb->replace(
 		'srbc_health_form', 
 		array( 
-			'health_form_id' =>0,
+			'health_form_id' => $healthFormId,
 			'camper_id' => $camper_id,
 			'IV' => $encryptedJSONobj->IV,
 			'aesKey' => $encryptedKey,
