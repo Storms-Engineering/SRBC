@@ -19,10 +19,10 @@ class HealthForm
 		}
 
 		$healthForm = $healthForm[0];
-        echo '<div class="health_form">';
-        echo '<input type="hidden" name="IV" value="'. $healthForm->IV . '">';
-        echo '<input type="hidden" name="aesKey" value="'. $healthForm->aesKey . '">';
-        echo '<input type="hidden" name="data" value="'. $healthForm->data . '">';
+        echo '<div class="health_form">
+        <input type="hidden" name="IV" value="'. $healthForm->IV . '">
+        <input type="hidden" name="aesKey" value="'. $healthForm->aesKey . '">
+        <input type="hidden" name="data" value="'. $healthForm->data . '">';
         //echo '<button onclick="decryptHealthForms();">Decrypt</button>';
 		echo '<h3>Health History for: ' . $healthForm->camper_first_name .' ' . $healthForm->camper_last_name . '</h3>
 		DOB:<span class="value">' . $healthForm->birthday . '</span>
@@ -119,8 +119,8 @@ class HealthForm
 		 an emergency or the need for outside medical care arises.
 	</p>
 	<h3>Signature:</h3>
-	<img name="signature_img" src=""><span name="dateTime" ></span>';
-    echo '</div>';
+	<img name="signature_img" src=""><span name="dateTime" ></span>
+    </div>';
                              
 	}
 	
@@ -150,7 +150,7 @@ class HealthForm
 
 	public static function generateSubmitForm()
 	{
-		?>
+		return '
 		<h1>Health Form</h1>
 		Emergency Contact: <input type="text" name="emergency_contact" required>
 		<br>
@@ -328,9 +328,8 @@ class HealthForm
 	<button type="button" onclick="signaturePad.clear()">Clear</button>
 	<button type="button" onclick="undo()">Undo</button>
 	<br>
-	<script src="../wp-content/plugins/SRBC/requires/js/signature_pad/signature_pad.min.js"></script>
-
-		<?php
+	<script src="/wp-content/plugins/SRBC/requires/js/signature_pad/signature_pad.min.js"></script>
+	<script src="/wp-content/plugins/SRBC/admin/js/signature-pad-setup.js"></script>';
 	}
 
 	public static function healthFormSubmit($camper_id)
