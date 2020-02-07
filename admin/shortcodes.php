@@ -5,6 +5,14 @@
 SHORTCODE HOOKS
 */
 require_once __DIR__ . '/../requires/email.php';
+
+function srbc_health_form_generate($atts)
+{
+	require_once __DIR__ . '/../requires/health_form.php';
+	$finalText = '<link rel="stylesheet" type="text/css" href="../../wp-content/plugins/SRBC/admin/registration.css">';
+	return $finalText . HealthForm::generateSubmitForm();
+}
+
 //Stores information for workcrew and also sends email to WorkCrew Manager.
 function srbc_workcrew_registration($atts)
 {
@@ -15,6 +23,8 @@ function srbc_workcrew_registration($atts)
    //Loop through all of the parameters and join them together in one big text block
    foreach ($_POST as $val)
    {
+	   if($keys[$i] == "emergency_contact")
+  			 break;
 	   if($val != "none")
 	   {
 		$body .= '<b style="font-size:20px">' . $keys[$i] . '</b>: ' . $val . "<br>";
@@ -23,12 +33,12 @@ function srbc_workcrew_registration($atts)
    }
    //Email applicant
    Email::sendMail($_POST["email"], 'WorkCrew Registration ',
-   "Dear " . $_POST["first_name"] . ",<br>Thanks for registering for workcrew at Solid Rock Bible Camp!
+   "Dear " . $_POST["camper_first_name"] . ",<br>Thanks for registering for workcrew at Solid Rock Bible Camp!
    <br>Please use the code <code>warden</code> when you register as a camper.<bt>
    <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
    <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
    /* Set the mail message body. */
-	Email::sendMail(workcrew_email, 'Workcrew Registration For ' . $_POST["first_name"] . " " . $_POST["last_name"],$body);
+	Email::sendMail(workcrew_email, 'Workcrew Registration For ' . $_POST["camper_first_name"] . " " . $_POST["camper_last_name"],$body);
 
 	echo 'Registration submitted sucessfully!  <span style="color:red">Important note: Please register for the week of camp that you specified.  Please enter the code 
 	<code>warden</code> on the registration page when it asks you for a code.</span>
@@ -36,9 +46,9 @@ function srbc_workcrew_registration($atts)
 }
 
 //Creates a table of current lakeside camps for workcrew to choose from
-function srbc_workcrew_workschedule($atts)
+function srbc_workcrew_workschedule()
 {
-	$area = "Lakeside";
+	$area = "Workcrew";
 	
 	$finalText = '<table style="width:100%;">
 				<tr style="background:#51d3ff;">
@@ -54,7 +64,7 @@ function srbc_workcrew_workschedule($atts)
 	
 	
 	//Create table of camps
-	for($i = 1; $i <= 5; $i++)
+	for($i = 1; $i <= 3; $i++)
 	{
 		$finalText .=  '<tr>';
 		$finalText .=  '<td>#' . $i;
@@ -67,10 +77,10 @@ function srbc_workcrew_workschedule($atts)
 
 function createCampSelect($number,$camps)
 {
-	$select = '<select name="preference_' . $number . '">';
+	$select = '<select name="camp_' . $number . '">';
 	foreach($camps as $camp)
 	{
-		$select .= '<option value="' . $camp->area . " " . $camp->name . '">' . $camp->area . " " . $camp->name . " " . date("M j",strtotime($camp->start_date)) . "/" . date("M j",strtotime($camp->end_date)) . '</option>';
+		$select .= '<option value="' . $camp->camp_id . '">' . $camp->area . " " . $camp->name . '</option>';
 	}
 	$select .= '</select>';
 	
@@ -79,11 +89,11 @@ function createCampSelect($number,$camps)
 
 function createBusSelect($number)
 {
-	$select = '<select name="busride_week_' . $number . '">
+	$select = '<select name="busride_' . $number . '">
 					<option value="none" selected>No bus ride needed</option>
-					<option value="Round-Trip">Round-Trip $60</option>
-					<option value="One-way to Camp">One-way to Camp $35</option>
-					<option value="One-way to Anchorage">One-way to Anchorage $35</option>
+					<option value="both">Round-Trip $60</option>
+					<option value="to">One-way to Camp $35</option>
+					<option value="from">One-way to Anchorage $35</option>
 				</select>';
 	return $select;
 }
@@ -306,22 +316,22 @@ function srbc_registration( $atts )
 {
 	ob_start();
 	?> 
-	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/registration.css">
+	<link rel="stylesheet" type="text/css" href="/wp-content/plugins/SRBC/admin/registration.css">
 	<div class="registration_box">
 	<form action="../registration-complete/" method="post" style="margin:auto;" onsubmit="return validateForm()">
-			<h4>Camp you wish to register for:
-				<select style="width:275px;" name="campid">
-				<?php
+		<?php
+			
+				echo '<h3>Camp registering for:';
 				global $wpdb;
 				//Get list of camp ids and then populate the options box since the user just found this page
 				$camp = NULL;
+				//Make sure user didn't just navigate here from google
 				if(isset($_GET['campid']))
 				{
 					$cmpid = $_GET['campid'];
 					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$cmpid));
 					//TODO add a check if the camp is past the signup date
 					//BODY also could add a check if the camp is completely full
-					echo "Camp" . $camp->closed_to_registrations;
 					if($camp->closed_to_registrations === "1")
 					{
 						echo '</select><br><br><h1 style="color:red;text-align:center;">Camp is not open to registrations</h1>';
@@ -332,9 +342,11 @@ function srbc_registration( $atts )
 						echo "</select><br><br>";
 						error_msg("Please use the Camp Finder page to select a camp or go to the correct program area and find your camp
 						there.  You shouldn't acess this page directly");
+						return;
 					}
 					else
 					{
+						echo '<select style="width:275px;" name="campid">';
 						echo '<option value="'.$cmpid.'" selected>' .$camp->area . " " . $camp->name . '</option></select>';
 						echo '<input type="hidden" name="camp_desc" value = "' .$camp->area . " " . $camp->name . '">'; 
 						if($camp->horse_opt_cost != 0)
@@ -343,26 +355,37 @@ function srbc_registration( $atts )
 						}
 					}
 				}
-				else
+				//Unless they are workcrew then let them through because they signup differently
+				else if(isset($_GET['workcrew']))
+				{
+					//put workcrew in the title
+					echo " Lakeside Workcrew";
+				}
+				else if(!isset($_GET['workcrew']))
 				{
 					echo "</select><br><br>";
 					error_msg("Please use the Camp Finder page to select a camp or go to the correct program area and find your camp there.
 					You shouldn't acess this page directly");
 				}
+				
+				
+				echo "</h3><br>";
+				//We aren't showing busrides here for workcrew
+				if(!isset($_GET['workcrew']))
+				{
+					echo '<span>Busride*:</span>
+					<!-- TODO remove busride option for Winter and Teen Camps -->
+					<select onchange="calculateTotal();" class="inputs" id="busride" name="busride">
+						<option value="none" selected>No bus ride needed</option>
+						<option value="both">Round-Trip $60</option>
+						<option value="to">One-way to Camp $35</option>
+						<option value="from">One-way to Anchorage $35</option>
+					</select>
+	
+					<p>*The bus will depart from and return to the Duluth Trading Company parking lot at 8931 Old Seward Hwy., Suite A Anchorage, AK 99515.
+					The exact times will be sent you in your confirmation email or letter.</p>';
+				}
 				?>
-				</h4>
-				<br>
-				<span>Busride*:</span>
-				<!-- TODO remove busride option for Winter and Teen Camps -->
-				<select onchange="calculateTotal();" class="inputs" id="busride" name="busride">
-					<option value="none" selected>No bus ride needed</option>
-					<option value="both">Round-Trip $60</option>
-					<option value="to">One-way to Camp $35</option>
-					<option value="from">One-way to Anchorage $35</option>
-				</select>
-
-				<p>*The bus will depart from and return to the Duluth Trading Company parking lot at 8931 Old Seward Hwy., Suite A Anchorage, AK 99515.
-				The exact times will be sent you in your confirmation email or letter.</p>
 			Camper:
 			<input class="inputs" type="text" name="camper_first_name" placeholder="First Name" required>
 			<input class="inputs" type="text" name="camper_last_name" placeholder="Last Name" required>
@@ -401,6 +424,14 @@ function srbc_registration( $atts )
 				Zipcode:<input type="text"  style="width:100px;" required pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="zipcode" >
 				<br>
 			<hr>
+			<?php
+				if(isset($_GET['workcrew']))
+				{
+					echo srbc_workcrew_workschedule();
+				}
+			
+			?>
+			<hr>
 			<h3>Parental Notice and Release - Agreement is required for camper admittance</h3>
 				
 				<p>I/We, the undersigned, understand that while attending Solid Rock Bible Camp of Soldotna, Alaska (camp),
@@ -432,90 +463,102 @@ function srbc_registration( $atts )
 				<option value="">Disagree</option>
 				<option value="agree">Agree</option>
 			</select></p>
+
+			<?php 
+				//Extra agreement for workcrew for payments
+				if(isset($_GET['workcrew']))
+				{
+					echo '<p>I/we understand that we will be responsible for all the fee\'s incurred by registering for camp if there is not room available for WorkCrew in the weeks that you have chosen, or if your child is removed from WorkCrew because of outstanding circumstances by the parent or if the WorkCrew program coordinator takes disciplinary action as to remove them from that week of workcrew.
+					<select class="legal" title="You must agree to register for camp" required="">
+					<option value="">Disagree</option>
+					<option value="agree">Agree</option>
+					</select></p>';
+				}
+			?>
 	<hr>
 
-	<!--Start Health Form-->
 	<?php
 	require_once __DIR__ . '/../requires/health_form.php';
-	HealthForm::generateSubmitForm();
-	?>
-	<!--End Health Form-->
-	<hr style="clear:both;">
-	<h1>Payment:</h1>
-	<?php
-
-	if($camp->area == "Fall Retreat" || $camp->area == "Winter Camp")
+	echo HealthForm::generateSubmitForm();
+	if(!isset($_GET['workcrew']))
 	{
-		echo 'Please enter amount to pay: <input type="text" name="cc_amount" id="cc_amount" value="'.$camp->cost.'"><br>';
-		echo 'Please enter name of friend that you are bringing: <input type="text" name="registration_notes">';
-	}
-	else
-	{
-		echo '	Workcrew Code: <input type="text" id="code" name="code">
+		echo '<hr style="clear:both;">
+		<h1>Payment:</h1>';
+		if($camp->area == "Fall Retreat" || $camp->area == "Winter Camp")
+		{
+			echo 'Please enter amount to pay: <input type="text" name="cc_amount" id="cc_amount" value="'.$camp->cost.'"><br>';
+			echo 'Please enter name of friend that you are bringing: <input type="text" name="registration_notes">';
+		}
+		else
+		{
+			echo 'Workcrew Code: <input type="text" id="code" name="code">
+			<hr>
+			<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received unless you are workcrew*.  (This $50 DOES go towards the cost of the camp)</span><br>
+			You must pay $50, or pay the full amount of the camp, unless you a are registering for the waitlist then you don\'t have to pay a registration fee.  Any remaining amount will be due the day of registration.
+			<br>
+			*If you are workcrew please enter the code received in your email and after registering in the box above and your registration will be allowed.
+			<br>
+			<br>
+			<h3>Amount to pay*: </h3>
+			<label class="container">$50
+				<input type="radio" name="cc_amount" checked="checked" value="50">
+				<span class="checkmark"></span>
+			</label>
+			<label class="container">$<span id="total">';
+			echo $camp->cost;
+			echo '</span><input type="radio" name="cc_amount" id="cc_amount" value="'.$camp->cost.'">';
+			echo '<span style="display:none" id="camp_cost">' . $camp->cost . '</span>';
+			echo '<span class="checkmark"></span>
+			</label>
+			<label class="container">$0 Registering for waiting list
+				<input type="radio"  name="cc_amount" id="waitlist" value="">
+				<span class="checkmark"></span>
+			</label>
+			*Disregard this section if are workcrew and have put in your code.<br>
+			<input type="hidden" name="registration_notes">';
+		}
+		echo '
 		<hr>
-		<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received unless you are workcrew*.  (This $50 DOES go towards the cost of the camp)</span><br>
-		You must pay $50, or pay the full amount of the camp, unless you a are registering for the waitlist then you don\'t have to pay a registration fee.  Any remaining amount will be due the day of registration.
-		<br>
-		*If you are workcrew please enter the code received in your email and after registering in the box above and your registration will be allowed.
-		<br>
-		<br>
-		<h3>Amount to pay*: </h3>
-		<label class="container">$50
-			<input type="radio" name="cc_amount" checked="checked" value="50">
-			<span class="checkmark"></span>
-		</label>
-		<label class="container">$<span id="total">';
-		echo $camp->cost;
-		echo '</span><input type="radio" name="cc_amount" id="cc_amount" value="'.$camp->cost.'">';
-		echo '<span style="display:none" id="camp_cost">' . $camp->cost . '</span>';
-		echo '<span class="checkmark"></span>
-		</label>
-		<label class="container">$0 Registering for waiting list
-			<input type="radio"  name="cc_amount" id="waitlist" value="">
-			<span class="checkmark"></span>
-		</label>
-		*Disregard this section if are workcrew and have put in your code.<br>
-		Registration notes: <input type="text" name="registration_notes">';
+		<h3>Use a credit card:</h3>	
+			Name on Credit Card: <input type="text" name="cc_name">
+			Billing Zip <input style="width:100px;" type="text" name="cc_zipcode">
+			Credit Card # <input type="text" id="cc_number" name="cc_number"><br>
+			Verification Code: <input type="text" name="cc_vcode" style="width:5%">
+			Expiration: <select name="cc_month" size="1">
+										<option value="">Pick</option>
+										<option value="01">01</option>
+										<option value="02">02</option>
+										<option value="03">03</option>
+										<option value="04">04</option>
+										<option value="05">05</option>
+										<option value="06">06</option>
+										<option value="07">07</option>
+										<option value="08">08</option>
+										<option value="09">09</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
+									</select>/
+									<select name="cc_year" size="1">
+										<option value="">Pick</option>
+										<option value="19">2019</option>
+										<option value="20">2020</option>
+										<option value="21">2021</option>
+										<option value="22">2022</option>
+										<option value="23">2023</option>
+										<option value="24">2024</option>
+										<option value="25">2025</option>
+										<option value="26">2026</option>
+										<option value="27">2027</option>
+									</select>
+									<br>
+			<h3>OR</h3>
+			<h3 style="display:inline">Send a check</h3> <input type="checkbox" id="use_check" name="using_check">
+			<p>Please make checks out to Solid Rock Bible Camp and send to 36251 Solid Rock Road #1, Soldotna, Alaska 99669, with campers name in the memo.</p>';
 	}
-	?>
 	
-	<hr>
-	<h3>Use a credit card:</h3>	
-		Name on Credit Card: <input type="text" name="cc_name">
-		Billing Zip <input style="width:100px;" type="text" name="cc_zipcode">
-		Credit Card # <input type="text" id="cc_number" name="cc_number"><br>
-		Verification Code: <input type="text" name="cc_vcode" style="width:5%">
-		Expiration: <select name="cc_month" size="1">
-									<option value="">Pick</option>
-									<option value="01">01</option>
-									<option value="02">02</option>
-									<option value="03">03</option>
-									<option value="04">04</option>
-									<option value="05">05</option>
-									<option value="06">06</option>
-									<option value="07">07</option>
-									<option value="08">08</option>
-									<option value="09">09</option>
-									<option value="10">10</option>
-									<option value="11">11</option>
-									<option value="12">12</option>
-								</select>/
-								<select name="cc_year" size="1">
-									<option value="">Pick</option>
-									<option value="19">2019</option>
-									<option value="20">2020</option>
-									<option value="21">2021</option>
-									<option value="22">2022</option>
-									<option value="23">2023</option>
-									<option value="24">2024</option>
-									<option value="25">2025</option>
-									<option value="26">2026</option>
-									<option value="27">2027</option>
-								</select>
-								<br>
-		<h3>OR</h3>
-		<h3 style="display:inline">Send a check</h3> <input type="checkbox" id="use_check" name="using_check">
-		<p>Please make checks out to Solid Rock Bible Camp and send to 36251 Solid Rock Road #1, Soldotna, Alaska 99669, with campers name in the memo.</p>
+		?>
+		<br>
 		<input type="submit" value="Submit">
 	</form> 
 	</div>
@@ -531,56 +574,77 @@ function srbc_registration_complete($atts)
 	require __DIR__ .  '/../requires/Camper.php';	
 	require __DIR__ .  '/../requires/health_form.php';	
 	
+	//Creates a camper and returns the camper ID.  If the camper already exists then it returns that ID.
+	//$_POST contains all of the data that we need.
+	$camper_id = Camper::createCamper($_POST);
+
+	HealthForm::healthFormSubmit($camper_id);
+	//Normal registration signup
+	if(isset($_POST['campid']))
+		signUpCamper($_POST,$camper_id,false);
+	//Registration is for workcrew
+	else
+	{
+		for($i = 1; $i <= 3; $i++)
+		{
+			$_POST['campid'] = $_POST['camp_' . $i]; 
+			$_POST['busride'] = $_POST['busride_' . $i];
+			//Means that the parent selected none for this week so skip over it
+			if($_POST['campid'] == 0)
+				continue;
+			signUpCamper($_POST,$camper_id,true);
+		}
+		Email::sendWorkcrewEmail($camper_id);
+	}
 	
+	return 'Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. <span style="color:red">(If you don\'t see the email check your spam box and please mark it not spam)';
+}
+
+function signUpCamper($vars,$camper_id,$isWorkcrew)
+{
 	//Horse option is just a boolean because I will pull the price from the camps database so we don't people changing prices
 	$horse_opt = 0;
 	if (isset($_POST["horse_opt"]))
 		$horse_opt = 1;
-	
-	
-	
-	//Creates a camper and returns the camper ID.  If the camper already exists then it returns that ID.
-	//$_POST contains all of the data that we need.
-	$camper_id = Camper::createCamper($_POST);
-	
+
 	global $wpdb;
 	
 	$waitlistsize = 0;
 	$waitlist = 0;
 	//Calculate if this camper needs to go on a waiting list
 	//If not then update how many people are registered for this camp
-	$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$_POST["campid"]));
+	$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$vars["campid"]));
 	//Check if they are already signed up for this camp:
 	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camper_id) FROM srbc_registration WHERE camper_id=%s AND camp_id=%s",$camper_id
-	,$_POST["campid"])); 
+	,$vars["campid"])); 
 	if ($count > 0)
 	{
 		error_msg("Sorry you are already registered for this camp");
 		return;
 	}
 	//Check if this camp is already full
-	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE camp_id=%s AND waitlist=0",$_POST["campid"])); 
+	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE camp_id=%s AND waitlist=0",$vars["campid"])); 
 	if($count < $camp->overall_size && $camp->closed_to_registrations == 0)
 	{
 		//This camp is not overall full check gender specific caps
-		if ($_POST['gender'] == "male")
+		if ($vars['gender'] == "male")
 		{
 			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$_POST["campid"])); 
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$vars["campid"])); 
 			if ($count >= $camp->boy_registration_size)
 			{
 				error_msg("Unfortunately we cannot register you because the boys section of this camp is full.");
 				goto waitinglist;
 			}
 		}
-		else if($_POST['gender'] == "female")
+		else if($vars['gender'] == "female")
 		{
 			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
 										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$_POST["campid"])); 
+										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$vars["campid"])); 
 			if ($count >= $camp->girl_registration_size)
 			{
 				error_msg("Unfortunately we cannot register you because the girls section of this camp is full.");
@@ -599,14 +663,14 @@ function srbc_registration_complete($atts)
 		//Check that this camper isn't already on a waiting list
 		waitinglist:
 		
-		if ($camp->boy_registration_size == 0 && $_POST["gender"] == "male")
+		if ($camp->boy_registration_size == 0 && $vars["gender"] == "male")
 		{
 			error_msg("Sorry this is a girls only camp!");
 			return;
 		}
 		
 		//Count overall waitlist size for this camp
-		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE NOT waitlist=0 AND camp_id=%s",$_POST["campid"])); 
+		$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE NOT waitlist=0 AND camp_id=%s",$vars["campid"])); 
 		//Check if the waiting list is full
 		if ($waitlistsize < $camp->waiting_list_size)
 		{	
@@ -624,13 +688,13 @@ function srbc_registration_complete($atts)
 	$horse_waitlist = 0;
 	if ($horse_opt == 1)
 	{
-		$listsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE horse_waitlist=0 AND horse_opt=1 AND camp_id=%s ",$_POST["campid"])); 
+		$listsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE horse_waitlist=0 AND horse_opt=1 AND camp_id=%s ",$vars["campid"])); 
 		//If we have too many people in horses
 		if($listsize >= $camp->horse_list_size)
 		{
 			//We have exceeded our horse list so turn this option to 0
 			$horse_opt = 0;
-			$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE horse_waitlist=1 AND camp_id=%s ",$_POST["campid"])); 
+			$waitlistsize = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE horse_waitlist=1 AND camp_id=%s ",$vars["campid"])); 
 			if($waitlistsize < $camp->horse_waiting_list_size)
 			{
 				$horse_waitlist = 1;
@@ -643,10 +707,10 @@ function srbc_registration_complete($atts)
 	}
 	$currentDate = new DateTime("now", new DateTimeZone('America/Anchorage'));
 	//Check that they aren't trying to cheat the system by saying they are signing up for a camp that isn't waitlisted and paying nothing
-	if(($waitlist == 0 && $_POST["cc_amount"] == ""))
+	if($waitlist == 0 && $camp->area != "Workcrew" && $vars["cc_amount"] == "")
 	{
 		//Let workcrew through though
-		if($_POST["code"] != "warden")
+		if($vars["code"] != "warden")
 		{
 		error_msg("Please enter credit card information or check the 'Send a check' option.
 		This camp is not currently full and therefore you aren't being put on the waiting list.
@@ -660,14 +724,14 @@ function srbc_registration_complete($atts)
 				'srbc_registration', 
 				array( 
 					'registration_id' =>0,
-					'camp_id' => $_POST["campid"], 
+					'camp_id' => $vars["campid"], 
 					'camper_id' => $camper_id,
 					'date' => $currentDate->format("m/d/Y h:i A"),
 					'horse_opt' => $horse_opt,
-					'busride' => $_POST['busride'],
+					'busride' => $vars['busride'],
 					'waitlist' => $waitlist,
 					'horse_waitlist' => $horse_waitlist,
-					'registration_notes' => $_POST['registration_notes']
+					'registration_notes' => (isset($vars['registration_notes']) ? $vars['registration_notes'] : "")
 				), 
 				array( 
 					'%d',
@@ -688,27 +752,39 @@ function srbc_registration_complete($atts)
 	}
 	$registration_id = $wpdb->insert_id;
 
-	//Health form stuff
-	HealthForm::healthFormSubmit($camper_id);
-
-
-	if($waitlist != 1 && $_POST["cc_amount"] != "")
+	if($waitlist != 1 && isset($_POST["cc_amount"]))
 	{
-		//Credit Card Stuff
+		storeCCData($vars,$camp,$horse_opt,$waitlistsize);
+	}
+	//We don't want to send 3 confirmation emails for workcrew
+	if ($waitlist == 1 && !$isWorkcrew)
+	{
+		Email::sendWaitlistEmail($registration_id);
+	}
+	else if(!$isWorkcrew)
+	{
+		Email::sendConfirmationEmail($registration_id);
+	}
+}
+
+function storeCCData($vars,$camp,$horse_opt,$waitlistsize)
+{
+	//Credit Card Stuff
 		//Make credit card easier to read
-		$cc_number = str_split($_POST["cc_number"]);
+		global $wpdb;
+		$cc_number = str_split($vars["cc_number"]);
 		array_splice($cc_number,4,0,"-");
 		array_splice($cc_number,9,0,"-");
 		array_splice($cc_number,14,0,"-");
 		//Append all the data together so we only have to encrypt one string
-		$data = $_POST["cc_name"] .	"	" . implode($cc_number) . "	" . $_POST["cc_month"]
-		. "/" . $_POST["cc_year"] . "	" . $_POST["cc_vcode"] . "	" . $_POST["cc_zipcode"];
+		$data = $vars["cc_name"] .	"	" . implode($cc_number) . "	" . $vars["cc_month"]
+		. "/" . $vars["cc_year"] . "	" . $vars["cc_vcode"] . "	" . $vars["cc_zipcode"];
 		if ($waitlistsize > 0)
 		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it
 			$data .= '   USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
 		}
 		//Show comments about buslist and horse option and horse_cost
-		$comments = autoSplit($_POST["cc_amount"],$camp->camp_id,$wpdb->insert_id,$_POST['busride'],$horse_opt);
+		$comments = autoSplit($vars["cc_amount"],$camp->camp_id,$wpdb->insert_id,$vars['busride'],$horse_opt);
 		//Encrypt using ssl pgp
 		//TODO turn this into a function
 		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
@@ -717,14 +793,16 @@ function srbc_registration_complete($atts)
 		openssl_get_publickey($pub_key);
 		//Temporary fix because I have not updated the javascript to use this padding.
 		openssl_public_encrypt($data,$edata,$pub_key);//,OPENSSL_PKCS1_OAEP_PADDING);
+
+		$currentDate = new DateTime("now", new DateTimeZone('America/Anchorage'));
 		$wpdb->insert(
 			'srbc_cc', 
 			array( 
 				'cc_id' =>0,
 				//Use base64 so the database can handle it properly since we are just using text
 				'data' => base64_encode($edata), 
-				'amount' => $_POST["cc_amount"],
-				'camper_name' => $_POST['camper_first_name'] . " " . $_POST['camper_last_name'],
+				'amount' => $vars["cc_amount"],
+				'camper_name' => $vars['camper_first_name'] . " " . $vars['camper_last_name'],
 				'camp' => ($camp->area . " " . $camp->name),
 				'comments' => $comments,
 				'payment_date' => $currentDate->format("m/d/Y")
@@ -739,18 +817,6 @@ function srbc_registration_complete($atts)
 				'%s'
 			) 
 			);
-		
-	}
-	if ($waitlist == 1)
-	{
-		Email::sendWaitlistEmail($registration_id);
-	}
-	else
-	{
-		Email::sendConfirmationEmail($registration_id);
-	}
-	
-	return 'Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. <span style="color:red">(If you don\'t see the email check your spam box and please mark it not spam)';
 }
 
 //From: https://www.php.net/manual/en/function.openssl-encrypt.php
