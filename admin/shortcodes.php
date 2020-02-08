@@ -13,49 +13,22 @@ function srbc_health_form_generate($atts)
 	return $finalText . HealthForm::generateSubmitForm();
 }
 
-//Stores information for workcrew and also sends email to WorkCrew Manager.
-function srbc_workcrew_registration($atts)
-{
-	//Generate text for body
-   $body = NULL;
-   $keys = array_keys($_POST);
-   $i = 0;
-   //Loop through all of the parameters and join them together in one big text block
-   foreach ($_POST as $val)
-   {
-	   if($keys[$i] == "emergency_contact")
-  			 break;
-	   if($val != "none")
-	   {
-		$body .= '<b style="font-size:20px">' . $keys[$i] . '</b>: ' . $val . "<br>";
-	   }
-	    $i++;
-   }
-   //Email applicant
-   Email::sendMail($_POST["email"], 'WorkCrew Registration ',
-   "Dear " . $_POST["camper_first_name"] . ",<br>Thanks for registering for workcrew at Solid Rock Bible Camp!
-   <br>Please use the code <code>warden</code> when you register as a camper.<bt>
-   <br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
-   <br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
-   /* Set the mail message body. */
-	Email::sendMail(workcrew_email, 'Workcrew Registration For ' . $_POST["camper_first_name"] . " " . $_POST["camper_last_name"],$body);
-
-	echo 'Registration submitted sucessfully!  <span style="color:red">Important note: Please register for the week of camp that you specified.  Please enter the code 
-	<code>warden</code> on the registration page when it asks you for a code.</span>
-  You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!';
-}
-
 //Creates a table of current lakeside camps for workcrew to choose from
-function srbc_workcrew_workschedule()
+function srbc_workcrew_workschedule($isWit)
 {
 	$area = "Workcrew";
+	if($isWit)
+		$area = "WIT";
 	
 	$finalText = '<table style="width:100%;">
 				<tr style="background:#51d3ff;">
 				<th>Preference</th>
-				<th>Camp</th>
-				<th>Bus</th>
-				</tr>';
+				<th>Week to work</th>';
+	//Don't show bus options for WIT's
+	if($isWit)
+		$finalText .= "</tr>";
+	else
+		$finalText .= '<th>Bus</th></tr>';
 	global $wpdb;
 	$camps = $wpdb->get_results("SELECT * FROM srbc_camps WHERE area='$area' ORDER BY start_date");	
 	//If no camps then give a message
@@ -78,6 +51,7 @@ function srbc_workcrew_workschedule()
 function createCampSelect($number,$camps)
 {
 	$select = '<select name="camp_' . $number . '">';
+	$select .= '<option value="0">None</option>';
 	foreach($camps as $camp)
 	{
 		$select .= '<option value="' . $camp->camp_id . '">' . $camp->area . " " . $camp->name . '</option>';
@@ -361,7 +335,13 @@ function srbc_registration( $atts )
 					//put workcrew in the title
 					echo " Lakeside Workcrew";
 				}
-				else if(!isset($_GET['workcrew']))
+				//Unless they are workcrew then let them through because they signup differently
+				else if(isset($_GET['wit']))
+				{
+					//put workcrew in the title
+					echo " Lakeside WIT (Wrangler in Training)";
+				}
+				else if(!isset($_GET['workcrew']) && !isset($_GET['wit']))
 				{
 					echo "</select><br><br>";
 					error_msg("Please use the Camp Finder page to select a camp or go to the correct program area and find your camp there.
@@ -370,8 +350,8 @@ function srbc_registration( $atts )
 				
 				
 				echo "</h3><br>";
-				//We aren't showing busrides here for workcrew
-				if(!isset($_GET['workcrew']))
+				//We aren't showing busrides here for workcrew or wit
+				if(!isset($_GET['workcrew']) && !isset($_GET['wit']))
 				{
 					echo '<span>Busride*:</span>
 					<!-- TODO remove busride option for Winter and Teen Camps -->
@@ -425,9 +405,14 @@ function srbc_registration( $atts )
 				<br>
 			<hr>
 			<?php
-				if(isset($_GET['workcrew']))
+				if(isset($_GET['workcrew']) || isset($_GET['wit']))
 				{
-					echo srbc_workcrew_workschedule();
+					echo srbc_workcrew_workschedule(isset($_GET['wit']));
+					echo srbc_workcrew_questions(isset($_GET['wit']));
+
+					//This hidden field is for letting the workcrew complete that this is a wit application
+					if(isset($_GET['wit']))
+						echo '<input type="hidden" name="wit">';
 				}
 			
 			?>
@@ -480,7 +465,7 @@ function srbc_registration( $atts )
 	<?php
 	require_once __DIR__ . '/../requires/health_form.php';
 	echo HealthForm::generateSubmitForm();
-	if(!isset($_GET['workcrew']))
+	if(!isset($_GET['workcrew']) && !isset($_GET['wit']))
 	{
 		echo '<hr style="clear:both;">
 		<h1>Payment:</h1>';
@@ -567,10 +552,33 @@ function srbc_registration( $atts )
 	return ob_get_clean();
 }
 
+//Generates workcrew/wit questions
+//Parameter is for WIT specific question
+function srbc_workcrew_questions($isWit)
+{
+	echo '<hr><br><h3>Help us get to know you by answering these questions:</h3>';
+
+	echo 'Do you have any hobbies or play any sports?<br><textarea rows="2" cols="45" name="activities"></textarea><br>
+	What school do you go to?<br><textarea rows="2" cols="45" name="school"></textarea><br>
+	Have you ever had a job before? (Babysitting, yard work, etc?)<br><textarea rows="2" cols="45" name="jobs"></textarea><br>';
+	if($isWit)
+		echo 'Do you have any experience with horses? Please describe<br><textarea rows="2" cols="45" name="horse_experience"></textarea><br>';
+	echo 'If you attend church or a youth group regularly, what church do you attend?<br><textarea rows="2" cols="45" name="church"></textarea><br>
+	What do you believe about the Bible?<br><textarea rows="2" cols="45" name="bible_beliefs"></textarea><br>
+	What do you believe about who Jesus is?<br><textarea rows="2" cols="45" name="jesus_beliefs"></textarea><br>
+	What do you believe about Prayer?<br><textarea rows="2" cols="45" name="prayer_beliefs"></textarea><br>';
+}
+
 
 function srbc_registration_complete($atts)
 {
-	
+	//Validate that this is a form post
+	if($_SERVER['REQUEST_METHOD'] !== 'POST' && !isset($_POST['camper_first_name']))
+	{
+		return;
+	}
+		
+
 	require __DIR__ .  '/../requires/Camper.php';	
 	require __DIR__ .  '/../requires/health_form.php';	
 	
@@ -582,21 +590,23 @@ function srbc_registration_complete($atts)
 	//Normal registration signup
 	if(isset($_POST['campid']))
 		signUpCamper($_POST,$camper_id,false);
-	//Registration is for workcrew
+	//Registration is for workcrew or wit
 	else
 	{
 		for($i = 1; $i <= 3; $i++)
 		{
 			$_POST['campid'] = $_POST['camp_' . $i]; 
 			$_POST['busride'] = $_POST['busride_' . $i];
-			//Means that the parent selected none for this week so skip over it
+			//Means that the parent selected none for this week of camp so skip over it
 			if($_POST['campid'] == 0)
 				continue;
 			signUpCamper($_POST,$camper_id,true);
 		}
-		Email::sendWorkcrewEmail($camper_id);
-	}
-	
+		Email::sendWorkcrewEmail($camper_id,$_POST,isset($_POST['wit']));
+		return 'Registration submitted sucessfully!  <span style="color:red">Important note: Please register for the week of camp that you specified.  Please enter the code 
+			<code>warden</code> on the registration page when it asks you for a code.</span>
+  			You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!';
+	}	
 	return 'Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. <span style="color:red">(If you don\'t see the email check your spam box and please mark it not spam)';
 }
 
