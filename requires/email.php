@@ -83,16 +83,18 @@ class Email
 		{
 			 $body .= '<br><b style="font-size:20px">' . $key . '</b>: ' . $postdata[$key] . "";
 		}
-		//TODO change this to say WIT for wit applications
+		$wcwit = ($isWit) ? "WIT" : "Workcrew";
 		//Email applicant
-		self::sendMail($info->email, 'WorkCrew Application ',
-		"Dear " . $info->camper_first_name . ",<br>Thanks for applying for workcrew at Solid Rock Bible Camp!
+		self::sendMail($info->email, $wcwit . ' Application ',
+		"Dear " . $info->camper_first_name . ",<br>Thanks for applying for $wcwit at Solid Rock Bible Camp!
 		<br>Please use the code <code>warden</code> when you register as a camper.<bt>
 		<br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
 		<br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
-		$email = ($isWit) ? wit_email : workcrew_email;
 		$body .= "</body></html>";
-		 self::sendMail(workcrew_email, 'Workcrew Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body);
+		if($isWit)
+			self::sendMail(wit_email, 'WIT Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body);
+		else
+		 	self::sendMail(workcrew_email, 'Workcrew Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body);
 		
 	}
 

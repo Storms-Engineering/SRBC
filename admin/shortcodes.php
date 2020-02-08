@@ -42,7 +42,8 @@ function srbc_workcrew_workschedule($isWit)
 		$finalText .=  '<tr>';
 		$finalText .=  '<td>#' . $i;
 		$finalText .= "<td>" . createCampSelect($i,$camps) . "</td>";
-		$finalText .= '<td>' .  createBusSelect($i) . '</td>';
+		if(!$isWit)
+			$finalText .= '<td>' .  createBusSelect($i) . '</td>';
 	}
 	$finalText .=  "</table>";
 	return $finalText;
@@ -122,6 +123,7 @@ function srbc_camp_search($atts){
 					<option value="Lakeside">Lakeside</option>
 					<option value="Wagon Train">Wagon Train</option>
 					<option value="Wilderness">Wilderness</option>
+					<option value="WIT">WIT</option>
 					<option value="Workcrew">Workcrew</option>
 					<option value="Sports">Sports Camp</option>
 					<option value="Fall Retreat">Fall Retreat</option>
@@ -409,7 +411,6 @@ function srbc_registration( $atts )
 				{
 					echo srbc_workcrew_workschedule(isset($_GET['wit']));
 					echo srbc_workcrew_questions(isset($_GET['wit']));
-
 					//This hidden field is for letting the workcrew complete that this is a wit application
 					if(isset($_GET['wit']))
 						echo '<input type="hidden" name="wit">';
@@ -596,7 +597,10 @@ function srbc_registration_complete($atts)
 		for($i = 1; $i <= 3; $i++)
 		{
 			$_POST['campid'] = $_POST['camp_' . $i]; 
-			$_POST['busride'] = $_POST['busride_' . $i];
+			if(isset($_POST['busride_' . $i]))
+				$_POST['busride'] = $_POST['busride_' . $i];
+			else
+				$_POST['busride'] = 'none';
 			//Means that the parent selected none for this week of camp so skip over it
 			if($_POST['campid'] == 0)
 				continue;
@@ -717,7 +721,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew)
 	}
 	$currentDate = new DateTime("now", new DateTimeZone('America/Anchorage'));
 	//Check that they aren't trying to cheat the system by saying they are signing up for a camp that isn't waitlisted and paying nothing
-	if($waitlist == 0 && $camp->area != "Workcrew" && $vars["cc_amount"] == "")
+	if($waitlist == 0 && $camp->area != "Workcrew" && $camp->area != "WIT" && $vars["cc_amount"] == "")
 	{
 		//Let workcrew through though
 		if($vars["code"] != "warden")

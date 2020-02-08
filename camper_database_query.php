@@ -7,7 +7,7 @@ global $wpdb;
 $campers = NULL;
 
 //Search for campers in specific areas and specific camps. 
-$areas = array("Lakeside", "Wagon Train", "Wilderness", "Workcrew", "Sports", "Fall Retreat", "Winter Camp");
+$areas = array("Lakeside", "Wagon Train", "Wilderness", "Workcrew", "Sports", "Fall Retreat", "Winter Camp", "WIT");
 $cs = $wpdb->get_results("SELECT area,name FROM " . $GLOBALS['srbc_camps'],ARRAY_N);
 $camps=array();
 $specificQuery = false;

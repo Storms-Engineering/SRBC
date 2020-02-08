@@ -327,6 +327,7 @@ function srbc_camper_management()
 		<option value="Lakeside">
 		<option value="Wagon Train">
 		<option value="Wilderness">
+		<option value="WIT">
 		<option value="Workcrew">
 		<option value="Sports">
 		<option value="Fall Retreat">
@@ -559,7 +560,10 @@ function srbc_camps_management()
 		
 		<div id="WorkCrew" class="tabcontent">
 			<?php
+			echo "<h2>Workcrew</h2><br>";
 			listCamps("Workcrew");
+			echo "<h2>WIT</h2><br>";
+			listCamps("WIT");
 			?>
 		</div> 
 		<div id="Misc" class="tabcontent">
@@ -578,6 +582,7 @@ function srbc_camps_management()
 					<option value="Lakeside">Lakeside</option>
 					<option value="Wagon Train">Wagon Train</option>
 					<option value="Wilderness">Wilderness</option>
+					<option value="WIT">WIT</option>
 					<option value="Workcrew">Workcrew</option>
 					<option value="Sports">Sports Camp</option>
 					<option value="Fall Retreat">Fall Retreat</option>
@@ -714,6 +719,7 @@ function srbc_camp_reports()
 			<option value="Lakeside">Lakeside</option>
 			<option value="Wagon Train">Wagon Train</option>
 			<option value="Wilderness">Wilderness</option>
+			<option value="WIT">Wilderness</option>
 			<option value="Workcrew">Workcrew</option>
 			<option value="Sports">Sports Camp</option>
 			<option value="Fall Retreat">Fall Retreat</option>
