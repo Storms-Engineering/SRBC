@@ -62,10 +62,43 @@ class Email
 		//BODY but it is also returned on ajax requests for resending email
 		echo "Email Sent!";
 	}
+
+	//Sends an email to parents letting them know their application was submitted
+	//Also sends an email to workcrew manager with questions that they answered
+	public static function sendWorkcrewEmail($camper_id,$postdata,$isWit)
+	{
+		global $wpdb;
+		$info = $wpdb->get_row($wpdb->prepare("SELECT *
+			FROM srbc_campers
+		 	WHERE srbc_campers.camper_id=%d", 	$camper_id)); 	
+
+		//Generate text for body
+		$body = "<html><body>Here is the questions answered for this application";
+		$keys = ['activities' ,'school', 'jobs', 'church', 'bible_beliefs', 'jesus_beliefs', 'prayer_beliefs'];
+		//WIT's have extra question
+		if($isWit)
+			array_push($keys, 'horse_experience');
+		//Loop through all of the parameters and join them together in one big text block
+		foreach($keys as $key)
+		{
+			 $body .= '<br><b style="font-size:20px">' . $key . '</b>: ' . $postdata[$key] . "";
+		}
+		//TODO change this to say WIT for wit applications
+		//Email applicant
+		self::sendMail($info->email, 'WorkCrew Application ',
+		"Dear " . $info->camper_first_name . ",<br>Thanks for applying for workcrew at Solid Rock Bible Camp!
+		<br>Please use the code <code>warden</code> when you register as a camper.<bt>
+		<br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
+		<br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
+		$email = ($isWit) ? wit_email : workcrew_email;
+		$body .= "</body></html>";
+		 self::sendMail(workcrew_email, 'Workcrew Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body);
+		
+	}
+
 	//Sends mail just a bit easier to use than declaring the class everytime
 	public static function sendMail($to,$subject,$msg,$attachment = "")
 	{
-
 		$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
 		try {
 
