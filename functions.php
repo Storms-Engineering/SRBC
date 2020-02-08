@@ -2,6 +2,7 @@
 //Collection of various random functions that come in handy
 define('srbc_email', 'solidrockbiblecamp@gmail.com');
 define('workcrew_email', 'n_mcgilvra@alaska.net');
+define('wit_email', 'courtneyprocter@alaska.net');
 define('developer_email', 'armystorms@gmail.com');
 
 $GLOBALS['srbc_camps'] = "srbc_camps" . get_option("srbc_database_year");
