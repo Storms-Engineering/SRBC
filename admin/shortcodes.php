@@ -597,7 +597,7 @@ function srbc_registration_complete($atts)
 	//Registration is for workcrew or wit
 	else
 	{
-		for($i = 1; $i <= 3; $i++)
+		for($i = 1; $i <= 5; $i++)
 		{
 			$_POST['campid'] = $_POST['camp_' . $i]; 
 			if(isset($_POST['busride_' . $i]))
