@@ -33,11 +33,11 @@ function srbc_workcrew_workschedule($isWit)
 	$camps = $wpdb->get_results("SELECT * FROM srbc_camps WHERE area='$area' ORDER BY start_date");	
 	//If no camps then give a message
 	if (count($camps) == 0)
-		return "<h2>There is currently no camps scheduled for this area at this time.  Please check back later!</h2>";
+		return "<h2>There is currently no workcrew weeks scheduled for this area at this time.  Please check back later!</h2>";
 	
 	
 	//Create table of camps
-	for($i = 1; $i <= 3; $i++)
+	for($i = 1; $i <= 5; $i++)
 	{
 		$finalText .=  '<tr>';
 		$finalText .=  '<td>#' . $i;
@@ -409,6 +409,8 @@ function srbc_registration( $atts )
 			<?php
 				if(isset($_GET['workcrew']) || isset($_GET['wit']))
 				{
+					echo '<h3>Please select the weeks that you would like to work*</h3>
+					<p>*Please note that final schedules will be confirmed by email</p>';
 					echo srbc_workcrew_workschedule(isset($_GET['wit']));
 					echo srbc_workcrew_questions(isset($_GET['wit']));
 					//This hidden field is for letting the workcrew complete that this is a wit application
@@ -607,7 +609,7 @@ function srbc_registration_complete($atts)
 			signUpCamper($_POST,$camper_id,true);
 		}
 		Email::sendWorkcrewEmail($camper_id,$_POST,isset($_POST['wit']));
-		return 'Registration submitted sucessfully!  <span style="color:red">Important note: Please register for the week of camp that you specified.  Please enter the code 
+		return 'Workcrew/WIT request submitted sucessfully!  <span style="color:red">Important note: Please register for the week of camp that you specified.  Please enter the code 
 			<code>warden</code> on the registration page when it asks you for a code.</span>
   			You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!';
 	}	

@@ -88,6 +88,7 @@ class Email
 		self::sendMail($info->email, $wcwit . ' Application ',
 		"Dear " . $info->camper_first_name . ",<br>Thanks for applying for $wcwit at Solid Rock Bible Camp!
 		<br>Please use the code <code>warden</code> when you register as a camper.<bt>
+		<br>You will get an email confirming the weeks that you are working.
 		<br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
 		<br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
 		$body .= "</body></html>";
