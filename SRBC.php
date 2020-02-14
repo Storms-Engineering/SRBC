@@ -98,6 +98,7 @@ function srbc_install() {
 		camper_id INT NOT NULL,
 		date TINYTEXT NOT NULL,
 		counselor TINYTEXT,
+		assistant_counselor TINYTEXT,
 		lodging TINYTEXT,
 		horse_opt TINYINT NOT NULL,
 		busride TINYTEXT NOT NULL,
@@ -110,6 +111,7 @@ function srbc_install() {
 		checked_in TINYINT NOT NULL,
 		health_form TINYINT NOT NULL,
 		packing_list_sent TINYINT NOT NULL,
+		registration_notes TEXT,
 		PRIMARY KEY (registration_id)
 		)  ENGINE=INNODB;";
 
