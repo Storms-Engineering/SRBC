@@ -559,7 +559,8 @@ function srbc_registration( $atts )
 //Parameter is for WIT specific question
 function srbc_workcrew_questions($isWit)
 {
-	echo '<hr><br><h3>Help us get to know you by answering these questions:</h3>';
+	echo '<hr>Please list any friends you would like to work the same week as: <input type="text" name="friends">';
+	echo '<br><h3>Help us get to know you by answering these questions:</h3>';
 
 	echo 'Do you have any hobbies or play any sports?<br><textarea rows="2" cols="45" name="activities"></textarea><br>
 	What school do you go to?<br><textarea rows="2" cols="45" name="school"></textarea><br>

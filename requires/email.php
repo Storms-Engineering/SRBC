@@ -74,7 +74,7 @@ class Email
 
 		//Generate text for body
 		$body = "<html><body>Here is the questions answered for this application";
-		$keys = ['activities' ,'school', 'jobs', 'church', 'bible_beliefs', 'jesus_beliefs', 'prayer_beliefs'];
+		$keys = ['friends', 'activities' ,'school', 'jobs', 'church', 'bible_beliefs', 'jesus_beliefs', 'prayer_beliefs'];
 		//WIT's have extra question
 		if($isWit)
 			array_push($keys, 'horse_experience');
