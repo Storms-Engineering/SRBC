@@ -51,11 +51,20 @@ function srbc_workcrew_workschedule($isWit)
 
 function createCampSelect($number,$camps)
 {
+	
 	$select = '<select name="camp_' . $number . '">';
 	$select .= '<option value="0">None</option>';
 	foreach($camps as $camp)
 	{
-		$select .= '<option value="' . $camp->camp_id . '">' . $camp->area . " " . $camp->name . '</option>';
+		global $wpdb;
+		$camperCount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+										FROM srbc_registration
+										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										WHERE camp_id=%s AND waitlist=0",$camp->camp_id)); 
+		if($camperCount >= $camp->overall_size)
+			$select .= '<option value="' . $camp->camp_id . '">' . $camp->area . " " . $camp->name . '~ Week is full! </option>';
+		else
+			$select .= '<option value="' . $camp->camp_id . '">' . $camp->area . " " . $camp->name . '</option>';
 	}
 	$select .= '</select>';
 	
