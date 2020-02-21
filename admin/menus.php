@@ -763,6 +763,7 @@ function srbc_camp_reports()
 		<button onclick="generateReport('transactions')">Registration Day Transactions</button>
 		<button onclick="generateReport('mailing_list')">Mailing List</button>
 		<button onclick="generateReport('healthForms')">Health Forms</button>
+		<button onclick="generateReport('lodging')">Lodging Report</button>
 
 
 		<hr>

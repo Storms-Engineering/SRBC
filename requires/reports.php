@@ -125,6 +125,16 @@ Class Report
 		else
 			echo '<h1 style="display:inline;">' . $header . "</h1>" . " - " . $campsString . "<br><br>";
 	}
+
+	//Shows all campers for a specific camp and where they are lodged
+	public function lodging()
+	{
+		$campers = $this->getCampers(" ORDER BY camper_last_name ASC");
+		$headers = array("Lodging", "Counselor");
+		$props = array("lodging", "counselor");
+		Tables::createTable($campers, $headers, $props);
+	}
+
 	//Displays all inactive registrations
 	public function inactive_registrations()
 	{
@@ -198,10 +208,11 @@ Class Report
 		//I think this is some kind of temp stream
 		$file = fopen('php://output','w');
 
-		foreach ($csvArray as $fields) {
+		foreach ($csvArray as $fields) 
+		{
 			fputcsv($file, $fields);
-}
-fclose($file);
+		}
+		fclose($file);
 	}
 	public function all_camp_totals()
 	{
