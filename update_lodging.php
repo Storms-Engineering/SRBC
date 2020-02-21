@@ -45,7 +45,7 @@ if(isset($_GET['registration_id']))
 
 $lodging = [
 "Lakeside"    => ["Augustine - 1" => 12, "Spurr - 3" => 12, "Susitna - 4" => 12, "Illiamna - 2" => 10, "Redoubt - 5" => 12, "Denali - 0" => 0
-					, "Spruce/Willow" => 12, "Birch/Aspen" => 12, "Tustumena" => 16, "Skilak" => 16, "Beluga"=>12, "Kenai" =>12],
+					, "Spruce/Willow" => 12, "Birch/Aspen" => 12, "Tustumena" => 16, "Skilak" => 16, "Beluga"=>12, "Kenai" =>12, "Ptarmigan" => 12, "Crows Nest" => 10],
 "Wagon Train" => ["Wagon 1" => 8, "Wagon 2"=>8, "Wagon 3"=>8, "Wagon 4"=>8],
 "Wilderness"  => ["Guys Tent"=>"∞", "Girls Tent"=>"∞"] ];
 
