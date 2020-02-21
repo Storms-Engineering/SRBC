@@ -70,20 +70,30 @@ class Email
 		global $wpdb;
 		$info = $wpdb->get_row($wpdb->prepare("SELECT *
 			FROM srbc_campers
-		 	WHERE srbc_campers.camper_id=%d", 	$camper_id)); 	
-
-		//Generate text for body
-		$body = "<html><body>Here is the questions answered for this application";
-		$keys = ['friends', 'activities' ,'school', 'jobs', 'church', 'bible_beliefs', 'jesus_beliefs', 'prayer_beliefs'];
-		//WIT's have extra question
-		if($isWit)
-			array_push($keys, 'horse_experience');
-		//Loop through all of the parameters and join them together in one big text block
-		foreach($keys as $key)
-		{
-			 $body .= '<br><b style="font-size:20px">' . $key . '</b>: ' . $postdata[$key] . "";
-		}
+			 WHERE srbc_campers.camper_id=%d", 	$camper_id)); 	
+			 
 		$wcwit = ($isWit) ? "WIT" : "Workcrew";
+		//Email section for emailing the workcrew/wit leaders the questionaire that was filled out
+		if($postdata !== NULL)
+		{
+			//Generate text for body
+			$body = "<html><body>Here is the questions answered for this application";
+			$keys = ['friends', 'activities' ,'school', 'jobs', 'church', 'bible_beliefs', 'jesus_beliefs', 'prayer_beliefs'];
+			//WIT's have extra question
+			if($isWit)
+				array_push($keys, 'horse_experience');
+			//Loop through all of the parameters and join them together in one big text block
+			foreach($keys as $key)
+			{
+				$body .= '<br><b style="font-size:20px">' . $key . '</b>: ' . $postdata[$key] . "";
+			}
+			$body .= "</body></html>";
+			if($isWit)
+				self::sendMail(wit_email, 'WIT Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body);
+			else
+				self::sendMail(workcrew_email, 'Workcrew Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body);
+		}
+		
 		//Email applicant
 		self::sendMail($info->email, $wcwit . ' Application ',
 		"Dear " . $info->camper_first_name . ",<br>Thanks for applying for $wcwit at Solid Rock Bible Camp!
@@ -91,12 +101,8 @@ class Email
 		<br>You will get an email confirming the weeks that you are working.
 		<br>Our camps wouldn't happen without people like you and others making Solid Rock Bible Camp Possible.
 		<br>If you have any questions or need to talk to someone feel free to call us at 907-262-4741.<br>-Solid Rock Bible Camp");
-		$body .= "</body></html>";
-		if($isWit)
-			self::sendMail(wit_email, 'WIT Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body);
-		else
-		 	self::sendMail(workcrew_email, 'Workcrew Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body);
-		
+		//This is mostly for the toast that pops up when using the Resend Confirmation Email
+		echo "Email Sent!";
 	}
 
 	//Sends mail just a bit easier to use than declaring the class everytime
