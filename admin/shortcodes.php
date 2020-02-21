@@ -1001,7 +1001,10 @@ function srbc_camps($atts)
 		if ($horsemanshipCount >= $camp->horse_list_size && $camp->horse_list_size != 0) 
 			$finalText .= '<span style="color:red;"> (Horsemanship Full)</span>';
 		
-		$finalText .=  "</td><td>$" . $camp->cost;
+		if($camp->name == "Family")
+			$finalText .=  "</td><td>TBD";
+		else
+			$finalText .=  "</td><td>$" . $camp->cost;
 		$finalText .=  "</td><td>" . date("M j",strtotime($camp->start_date)) . "-" . date("M j",strtotime($camp->end_date));
 		$finalText .=  "</td><td>" . $camp->grade_range;
 		
