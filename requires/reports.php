@@ -261,7 +261,7 @@ Class Report
 	{
 		$this->printHeader();
 		global $wpdb;
-		$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS["srbc_camps"]);
+		$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS["srbc_camps"] . " WHERE NOT area='Workcrew' AND NOT area='WIT'");
 		$totalRegistrations = 0;
 		foreach ($camps as $camp)
 		{
@@ -616,7 +616,8 @@ Class Report
 	{
 		$query = null;
 		if ($this->area == "")
-			$query = "AND " . $GLOBALS['srbc_camps'] . ".area LIKE '%' ";
+			$query = "AND " . $GLOBALS['srbc_camps'] . ".area LIKE '%' " . " AND NOT ". $GLOBALS['srbc_camps'] . ".area='Workcrew' "
+			. " AND NOT ". $GLOBALS['srbc_camps'] . ".area='WIT' ";
 		else 
 			$query .= "AND " . $GLOBALS['srbc_camps'] . ".area='$this->area' ";
 

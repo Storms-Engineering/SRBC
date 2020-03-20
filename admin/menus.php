@@ -715,16 +715,18 @@ function srbc_camp_reports()
 	
 	Program Area:
 		<select class="inputs" id="area">
-			<option value="">All</option>
+			<option value="">All*</option>
 			<option value="Lakeside">Lakeside</option>
 			<option value="Wagon Train">Wagon Train</option>
 			<option value="Wilderness">Wilderness</option>
-			<option value="WIT">Wilderness</option>
+			<option value="WIT">WIT</option>
 			<option value="Workcrew">Workcrew</option>
 			<option value="Sports">Sports Camp</option>
 			<option value="Fall Retreat">Fall Retreat</option>
 			<option value="Winter Camp">Winter Camp</option>
+			
 		</select><button onclick="generateReport('area_report')">Area Report</button><br>
+		*Excludes WIT and Workcrew
 		
 <br>
 		<h2 style="display:inline">General Reports</h2> <div class="tooltip">?
