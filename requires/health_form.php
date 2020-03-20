@@ -115,7 +115,7 @@ class HealthForm
 		treatment to my child, and if the need arises, provide transportation to a medical provider or call 911 for EMS response.
 		I give permission for medical care by a health provider or emergency care including hospitilization, x-rays, routine tests
 		treatment, and release of records necessary for insurance purposes.  I also give permission to share health information on an
-		 as needed to camp staff.  This completed form may be photocopied for trips out of camp.  Parents will be notified in the case of 
+		 as need to know basis to camp staff.  This completed form may be photocopied for trips out of camp.  Parents will be notified in the case of 
 		 an emergency or the need for outside medical care arises.
 	</p>
 	<h3>Signature:</h3>
@@ -296,20 +296,18 @@ class HealthForm
 	<h3>Essential Medical Information</h3>
 	<ul>
 		<li>For the safety of everyone in camp and to comply with regulations, all medication will be stored in the Health Center</li>
-		<li>The following over the counter medications are kept in the Health Center & are provided to campers under the standing orders provided by a local physician.
-			These would include: Acetaminophen, Ibuprofen, Robitussin DM/CF, Sudafed, Tums, Mylanta, Benadryl, and Claritin
-		</li>
-		<li>
-			<b>All prescription medications and vitamins must be in the original container with the correct name,
-			 date physicians name, and instructions on the bottle.</b>  
-			 The camp will not administer any prescribed medications that are improperly labeled.
+		<li>All prescription medications and over-the-counter (OTC) FDA approved medications must be in the original containers with the camper’s name and how it is to be given.
+		 Please do not send homeopathic meds (such as melatonin), as Alaska law does not permit us to give them.
+		  Vitamins will only be given with a doctor’s order. Inhalers and EpiPens need a prescription label.
+		   A few OTC meds are kept in the nurse’s office and provided for campers as needed, such as Tylenol,
+		    Ibuprofen, Tums, Benadryl, Robitussin, and Zyrtec, per our Standing Order Physician. 
 		</li>
 		<li>
 			Phone calls will be made to parents and/or physicians concering any medications about which there are any questions.
 		</li>
 		<li>
-				Solid Rock Bible Camp food service does not provide specialized diets.  
-				Campers with dietary restrictions or needs are welcome to bring their own food.
+		SRBC’s food service does not provide specialized diets, however we do try to provide healthy options for campers to choose.
+		 Campers with dietary restrictions or needs are welcome to bring their own food. Please consult the nurse. 
 		</li>
 	</ul>
 	<h3>Permission to provide necessary treatment or emergency care</h3>
@@ -318,7 +316,7 @@ class HealthForm
 		treatment to my child, and if the need arises, provide transportation to a medical provider or call 911 for EMS response.
 		I give permission for medical care by a health provider or emergency care including hospitilization, x-rays, routine tests
 		treatment, and release of records necessary for insurance purposes.  I also give permission to share health information on an
-		 as needed to camp staff.  This completed form may be photocopied for trips out of camp.  Parents will be notified in the case of 
+		 as need to know basis to camp staff.  This completed form may be photocopied for trips out of camp.  Parents will be notified in the case of 
 		 an emergency or the need for outside medical care arises.
 	</p>
 	<h3>Signature:</h3>
@@ -327,6 +325,10 @@ class HealthForm
 	<br>
 	<button type="button" onclick="signaturePad.clear()">Clear</button>
 	<button type="button" onclick="undo()">Undo</button>
+	<br>
+	<b>* Any medical information that needs to be discussed with the medical staff, please see them during camp registration </b>
+
+	
 	<br>
 	<script src="/wp-content/plugins/SRBC/requires/js/signature_pad/signature_pad.min.js"></script>
 	<script src="/wp-content/plugins/SRBC/admin/js/signature-pad-setup.js"></script>';
