@@ -418,7 +418,8 @@ function srbc_registration( $atts )
 			<?php
 				if(isset($_GET['workcrew']) || isset($_GET['wit']))
 				{
-					echo '<h3>Please select the weeks that you would like to work*</h3>
+					echo '<h3>Please select the first 3 weeks that you would like to work by order of preference</h3>
+					(Please note that weeks 4 & 5 are considered alternate weeks if the week you requested is full)
 					<p>*Please note that final schedules will be confirmed by email</p>';
 					echo srbc_workcrew_workschedule(isset($_GET['wit']));
 					echo srbc_workcrew_questions(isset($_GET['wit']));
@@ -616,7 +617,12 @@ function srbc_registration_complete($atts)
 			//Means that the parent selected none for this week of camp so skip over it
 			if($_POST['campid'] == 0)
 				continue;
-			signUpCamper($_POST,$camper_id,true);
+			if($i > 3)
+				//For weeks over 3 we just put them on the waitlist
+				//so it isn't filling up more spots in the normal camp
+				signUpCamper($_POST,$camper_id,true,1);
+			else
+				signUpCamper($_POST,$camper_id,true);
 		}
 		Email::sendWorkcrewEmail($camper_id,$_POST,isset($_POST['wit']));
 		return 'Workcrew/WIT request submitted sucessfully!  <span style="color:red">Important note: Please register for the week of camp that you specified.  Please enter the code 
@@ -626,7 +632,9 @@ function srbc_registration_complete($atts)
 	return 'Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. <span style="color:red">(If you don\'t see the email check your spam box and please mark it not spam)';
 }
 
-function signUpCamper($vars,$camper_id,$isWorkcrew)
+//Signs up a camper for a camp
+//Waitlist can force waitlist for a camper which is what we want for workcrew
+function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 {
 	//Horse option is just a boolean because I will pull the price from the camps database so we don't people changing prices
 	$horse_opt = 0;
@@ -635,8 +643,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew)
 
 	global $wpdb;
 	
-	$waitlistsize = 0;
-	$waitlist = 0;
+	$waitlistsize = 0;	
 	//Calculate if this camper needs to go on a waiting list
 	//If not then update how many people are registered for this camp
 	$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$vars["campid"]));
