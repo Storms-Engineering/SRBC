@@ -380,9 +380,21 @@ function srbc_registration( $atts )
 			Camper:
 			<input class="inputs" type="text" name="camper_first_name" placeholder="First Name" required>
 			<input class="inputs" type="text" name="camper_last_name" placeholder="Last Name" required>
-			Birthday: <input  type="date" name="birthday" required><br>Gender:
-			<input type="radio" name="gender" value="male" required> Male
-			<input type="radio" name="gender" value="female" required> Female<br>
+			Birthday: <input  type="date" name="birthday" required><br>
+			Gender:	<input type="radio" name="gender" value="male" required> 			Male
+			<input type="radio" name="gender" value="female" required> 	Female<br>
+			T-Shirt Size:
+			<select name="tshirt_size">
+			<option value="Youth_small">Youth Small</option>
+			<option value="Youth_Medium">Youth Medium</option>
+			<option value="Youth_large">Youth Large</option>
+			<option value="Adult_small">Adult Small</option>
+			<option value="Adult_medium">Adult Medium</option>
+			<option value="Adult_large">Adult Large</option>
+			<option value="Adult_XL">Adult XL</option>
+			<option value="Adult_XXL">Adult XXL</option>
+			<option value="Adult_XXXL">Adult XXXL</option>
+			</select>
 			Going into Grade: 
 			<select class="inputs" name="grade">
 				<option value="K">Kindergarten</option>

@@ -31,6 +31,7 @@ function srbc_install() {
 		gender TINYTEXT NOT NULL,
 		age TINYINT NOT NULL,
 		notes TEXT,
+		tshirt_size TINYTEXT,
 		PRIMARY KEY (camper_id)
 		)  ENGINE=INNODB;";
 

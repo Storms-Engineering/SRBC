@@ -33,7 +33,8 @@
 				echo '<span class="info"><label class="name_label">Birthday:</label> <input type="date" name="birthday" value="'. $camper->birthday . '"></span>';
 				echo '<span class="info">Grade: <input type="text" class="financial" name="grade" value="' . $camper->grade . '"></span>';
 				echo '<span class="info">Age: <input type="text" class="financial" name="age" value="'. $camper->age . '"></span>';
-				echo '<span class="info">Gender: <input type="text" class="financial" name="gender" value="'. $camper->gender . '"></span><br><br>';
+				echo '<span class="info">Gender: <input type="text" class="financial" name="gender" value="'. $camper->gender . '"></span>';
+				echo '<span class="info">T-Shirt Size: <input type="text" style="width:150px" name="tshirt_size" value="'. $camper->tshirt_size . '"></span><br><br>';
 				echo '<span class="info"><label class="name_label">Address:</label> <input type="text" name="address" value="' . $camper->address . '">';
 				echo ' <input type="text" name="city" value="' . $camper->city . '"> ' .
 					'<input type="text" name="state" class="financial" value="' . $camper->state . '"> ' .

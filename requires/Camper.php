@@ -47,7 +47,8 @@ class Camper
 			'address' => $info["address"],
 			'city' => $info["city"],
 			'state' => $info["state"],
-			'zipcode' => $info["zipcode"]
+			'zipcode' => $info["zipcode"],
+			'tshirt_size' => $info["tshirt_size"]
 		), 
 		array( 
 			'%d',
@@ -65,7 +66,8 @@ class Camper
 			'%s',
 			'%s',
 			'%s',
-			'%d'		
+			'%d',
+			'%s'		
 			
 		) 
 		);

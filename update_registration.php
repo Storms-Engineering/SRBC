@@ -125,7 +125,8 @@ else {
 			'city' => $obj["camper"]["city"],
 			'state' => $obj["camper"]["state"],
 			'zipcode' => $obj["camper"]["zipcode"],
-			'notes' => $obj["camper"]["notes"]
+			'notes' => $obj["camper"]["notes"],
+			'tshirt_size' => $obj["camper"]["tshirt_size"]
 		), 
 		array( 'camper_id' => $obj["camper"]["id"] ), 
 		array( 
