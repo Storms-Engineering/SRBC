@@ -78,14 +78,26 @@ class Email
 		{
 			//Generate text for body
 			$body = "<html><body>Here is the questions answered for this application";
-			$keys = ['friends', 'activities' ,'school', 'jobs', 'church', 'bible_beliefs', 'jesus_beliefs', 'prayer_beliefs'];
+			$keys = ['camper_first_name', 'camper_last_name', 'parent_first_name', 'email', 
+					'phone', 'camp_1', 'camp_2', 'camp_3', 'camp_4', 'camp_5',
+					 'friends', 'activities' ,'school', 'jobs', 'church', 'bible_beliefs',
+					  'jesus_beliefs', 'prayer_beliefs'];
 			//WIT's have extra question
 			if($isWit)
 				array_push($keys, 'horse_experience');
 			//Loop through all of the parameters and join them together in one big text block
 			foreach($keys as $key)
 			{
-				$body .= '<br><b style="font-size:20px">' . $key . '</b>: ' . $postdata[$key] . "";
+				//Grab the camp title not just the camp id
+				if(strpos($key, "camp_") !== false)
+				{
+					$camp = $wpdb->get_row($wpdb->prepare("SELECT *
+											FROM srbc_camps
+											 WHERE srbc_camps.camp_id=%d", 	$postdata[$key])); 
+					$body .= '<br><b style="font-size:20px">' . $key . '</b>: ' . $camp->name . "";						 
+				}
+				else
+					$body .= '<br><b style="font-size:20px">' . $key . '</b>: ' . $postdata[$key] . "";
 			}
 			$body .= "</body></html>";
 			if($isWit)
