@@ -95,6 +95,7 @@ class Email
 											FROM srbc_camps
 											 WHERE srbc_camps.camp_id=%d", 	$postdata[$key])); 
 					$body .= '<br><b style="font-size:20px">' . $key . '</b>: ' . $camp->name . "";						 
+
 				}
 				else
 					$body .= '<br><b style="font-size:20px">' . $key . '</b>: ' . $postdata[$key] . "";
