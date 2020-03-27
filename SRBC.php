@@ -172,6 +172,26 @@ function srbc_install() {
 		)  ENGINE=INNODB;";
 
 	dbDelta( $sql );
+
+	//Create parental_agreements_versions database
+	//This is for storing different versions of the parental agreements so that the parent's
+	//signature is on the correct one if the agreement gets updated
+	$sql = "CREATE TABLE IF NOT EXISTS srbc_parental_agreements_versions (
+		agreement_id INT AUTO_INCREMENT,
+		agreement_text MEDIUMTEXT,
+		PRIMARY KEY (agreement_id)
+		)  ENGINE=INNODB;";
+	dbDelta( $sql );
+
+	//Create database for parental_agreement_signatures
+	$sql = "CREATE TABLE IF NOT EXISTS srbc_parental_agreements_sig (
+		agreement_sig_id INT AUTO_INCREMENT,
+		camper_id INT,
+		signature_img MEDIUMTEXT,
+		agreement_id INT,
+		PRIMARY KEY (agreement_sig_id)
+		)  ENGINE=INNODB;";
+	dbDelta( $sql );
 }
 register_activation_hook( __FILE__, 'srbc_install' );
 

@@ -442,48 +442,28 @@ function srbc_registration( $atts )
 			
 			?>
 			<hr>
-			<h3>Parental Notice and Release - Agreement is required for camper admittance</h3>
-				
-				<p>I/We, the undersigned, understand that while attending Solid Rock Bible Camp of Soldotna, Alaska (camp),
-			the below-named child may be involved in various activities including but not limited to: horseback riding,
-			water-skiing, the waterslide, swimming, boating, the Blob, riflery, archery, rope swing, the obstacle course,
-			and other traditional camp activities. I/We have familiarized ourselves with these programs and activities included in,
-			but not limited to, the Camp brochure. 	<select required title="You must agree to register for camp" class="legal">
-					<option value="">Disagree</option>
-					<option value="agree">Agree</option>
-				</select></p>
+			
+			<?php 
+			//Parent Agreement Section
+			//Print latest version from the database
+			echo $wpdb->get_row("SELECT * FROM srbc_parental_agreements_versions ORDER BY agreement_id DESC LIMIT 1")->agreement_text;		
+			//Signature pad for parental agreement
+			echo '<canvas id="pa_canvas" style="border:1px solid black" height="200" width="500"></canvas>
+			<input type="hidden" name="pa_signature_img">
+			<br>
+			<button type="button" onclick="pa_signaturePad.clear()">Clear</button>
+			<button type="button" onclick="pa_undo()">Undo</button>';
 
-			
-			<p>
-			In consideration of Solid Rock Ministries, Inc. allowing the child to attend Camp for the period specified
-			and to participate in the activities of the Camp, I/we do hereby grant permission for the child to attend
-			and to participate fully in said activities. I/We understand and accept the risks and dangers involved in
-			such activities and do hereby release Solid Rock Ministries, Inc., its officers and directors, its employees,
-			agents, and the Camp staff, from any and all claims, demands, actions, causes of actions of any sort,
-			for injuries or death sustained by myself/ourselves or the child due to negligence or any other fault during 
-			the period covered by this release, whether such an injury occurred on or off the Camp property.
-			<select required title="You must agree to register for camp" class="legal">
-				<option value ="">Disagree</option>
-				<option value="agree">Agree</option>
-			</select> </p>
-			
-			<p>I/We have instructed my/our son/daughter to obey the rules of Solid Rock Bible Camp.
-				This waiver is effective only for the week(s) for which the camper is registered.
-			<select required title="You must agree to register for camp" class="legal">
+
+			//Extra agreement for workcrew for payments
+			if(isset($_GET['workcrew']))
+			{
+				echo '<p>I/we understand that we will be responsible for all the fee\'s incurred by registering for camp if there is not room available for WorkCrew in the weeks that you have chosen, or if your child is removed from WorkCrew because of outstanding circumstances by the parent or if the WorkCrew program coordinator takes disciplinary action as to remove them from that week of workcrew.
+				<select class="legal" title="You must agree to register for camp" required="">
 				<option value="">Disagree</option>
 				<option value="agree">Agree</option>
-			</select></p>
-
-			<?php 
-				//Extra agreement for workcrew for payments
-				if(isset($_GET['workcrew']))
-				{
-					echo '<p>I/we understand that we will be responsible for all the fee\'s incurred by registering for camp if there is not room available for WorkCrew in the weeks that you have chosen, or if your child is removed from WorkCrew because of outstanding circumstances by the parent or if the WorkCrew program coordinator takes disciplinary action as to remove them from that week of workcrew.
-					<select class="legal" title="You must agree to register for camp" required="">
-					<option value="">Disagree</option>
-					<option value="agree">Agree</option>
-					</select></p>';
-				}
+				</select></p>';
+			}
 			?>
 	<hr>
 
@@ -611,6 +591,22 @@ function srbc_registration_complete($atts)
 	//Creates a camper and returns the camper ID.  If the camper already exists then it returns that ID.
 	//$_POST contains all of the data that we need.
 	$camper_id = Camper::createCamper($_POST);
+	global $wpdb;
+	//Store signature for parental agreement in database
+	$agreement_id = $wpdb->get_row("SELECT * FROM srbc_parental_agreements_versions ORDER BY agreement_id DESC LIMIT 1")->agreement_id;
+	$wpdb->insert( 
+		'srbc_parental_agreements_sig', 
+		array( 
+			'signature_img' => $_POST['pa_signature_img'], 
+			'camper_id' => $camper_id,
+			'agreement_id' => $agreement_id
+		), 
+		array( 
+			'%s', 
+			'%d', 
+			'%d' 
+		) 
+	);
 
 	HealthForm::healthFormSubmit($camper_id);
 	//Normal registration signup

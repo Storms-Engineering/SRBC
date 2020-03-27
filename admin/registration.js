@@ -32,6 +32,11 @@ function validateForm()
 	}
 	if(signaturePad.isEmpty())
 	{
+		alert("Please fill in your signature for the health form");
+		return false;
+	}
+	if(pa_signaturePad.isEmpty())
+	{
 		alert("Please fill in your signature");
 		return false;
 	}

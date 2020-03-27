@@ -191,7 +191,24 @@ function srbc_settings()
 		srbc_install();
 		goto end;
 	}
-	
+	if(isset($_POST['parental_agreement_text']))
+	{
+		$agreement_text = $wpdb->get_row("SELECT * FROM srbc_parental_agreements_versions ORDER BY agreement_id DESC LIMIT 1")->agreement_text;
+		
+		if(trim($_POST['parental_agreement_text']) != trim($agreement_text))
+		{
+			$wpdb->insert( 
+				'srbc_parental_agreements_versions', 
+				array( 
+					'agreement_text' => $_POST['parental_agreement_text']
+				), 
+				array( 
+					'%s',
+				) 
+			);
+		}
+	}
+
 	//Update the summer camps disabled option
 	if(isset($_POST['srbc_summer_camps_disable']))
 		update_option("srbc_summer_camps_disable",$_POST["srbc_summer_camps_disable"]);
@@ -209,9 +226,20 @@ function srbc_settings()
 	end:
 	?>
 	<h1>Settings</h1>
+
 	<form method="post">
-	Disable Summer Camps <br><input type="radio" name="srbc_summer_camps_disable" value="true" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "checked" : ""; ?>>True<br>
-	<input type="radio" name="srbc_summer_camps_disable" value="" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "" : "checked" ?>>False<br>
+	<div style="float:left;">
+		Disable Summer Camps <br><input type="radio" name="srbc_summer_camps_disable" value="true" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "checked" : ""; ?>>True<br>
+		<input type="radio" name="srbc_summer_camps_disable" value="" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "" : "checked" ?>>False<br>
+	</div>
+	<div style="float:left;margin-left:20px;">
+		Parental Agreement Text:<br> 
+		<textarea cols="50" rows="15" name="parental_agreement_text">
+		<?php echo $wpdb->get_row("SELECT * FROM srbc_parental_agreements_versions ORDER BY agreement_id DESC LIMIT 1")->agreement_text;?>
+		</textarea>
+	</div>
+	<div style="clear:both;">
+	<br><br>
 	<h1>Database Management</h1>
 	Please choose which year you would like to pull data from: 
 	<input type="year"  pattern="[2][0-9][0-9][0-9]" placeholder="ex 2019" title="Use a full year format like 2019" name="srbc_database_year" value="<?php echo get_option("srbc_database_year");?>">
@@ -220,7 +248,9 @@ function srbc_settings()
 		<br>
 		<br>
 		<input type="submit" value="Save">
+	</div>
 	</form>
+
 	<br><br>
 	<form method="post" onsubmit="return confirm('Are you sure you want to archive all data?');">
 		Year to archive data under: <input type="text" name="year_to_rename">
