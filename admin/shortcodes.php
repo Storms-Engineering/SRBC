@@ -384,7 +384,8 @@ function srbc_registration( $atts )
 			Gender:	<input type="radio" name="gender" value="male" required> 			Male
 			<input type="radio" name="gender" value="female" required> 	Female<br>
 			T-Shirt Size:
-			<select name="tshirt_size">
+			<select name="tshirt_size" required>
+			<option value="">None</option>
 			<option value="Youth_small">Youth Small</option>
 			<option value="Youth_Medium">Youth Medium</option>
 			<option value="Youth_large">Youth Large</option>
@@ -396,7 +397,8 @@ function srbc_registration( $atts )
 			<option value="Adult_XXXL">Adult XXXL</option>
 			</select>
 			Going into Grade: 
-			<select class="inputs" name="grade">
+			<select class="inputs" name="grade" required>
+				<option value="">None</option>
 				<option value="K">Kindergarten</option>
 				<option value="1">1st</option>
 				<option value="2">2nd</option>
