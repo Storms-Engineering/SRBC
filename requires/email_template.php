@@ -118,7 +118,7 @@ u + .em_body .em_full_wrap {
         <tr>
           <td valign="top" align="center"><table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
               <tbody><tr>
-                <td valign="top" align="center"><img class="em_img" alt="Solid Rock Logo" style="display:block; font-family:Arial, sans-serif; font-size:30px; line-height:34px; color:#000000; max-width:700px;" src="SR-logo-email.png" width="700" border="0" height="225"></td>
+                <td valign="top" align="center"><img class="em_img" alt="Solid Rock Logo" style="display:block; font-family:Arial, sans-serif; font-size:30px; line-height:34px; color:#000000; max-width:700px;" src="http://solidrockbiblecamp.com/files/emailPics/SR-logo-email.png" width="700" border="0" height="225"></td>
               </tr>
             </tbody></table></td>
         </tr>
@@ -149,9 +149,9 @@ $emailTempPt2 = '<br><br>
 	<td style="padding:10px;" class="mobile-block"><a href="tel:1-907-262-4741" target="_blank" style="color:#999999; text-decoration:underline;">(907)262-4741</a><br>
 	Fax: (907)262-9088<br>
 	<a href="http://www.solidrockbiblecamp.com" target="_blank">www.solidrockbiblecamp.com</a></td>
-	<td valign="top" align="center"><a href="https://www.facebook.com/solid.rock.alaska/" target="_blank" style="text-decoration:none;"><img src="fb.png" alt="fb" style="display:block; font-family:Arial, sans-serif; font-size:14px; line-height:14px; color:#ffffff; max-width:26px;" width="26" border="0" height="26"></a></td>
+	<td valign="top" align="center"><a href="https://www.facebook.com/solid.rock.alaska/" target="_blank" style="text-decoration:none;"><img src="http://solidrockbiblecamp.com/files/emailPics/fb.png" alt="fb" style="display:block; font-family:Arial, sans-serif; font-size:14px; line-height:14px; color:#ffffff; max-width:26px;" width="26" border="0" height="26"></a></td>
 	<td style="width:6px;" width="6">&nbsp;</td>
-	<td valign="top" align="center"><a href="https://www.instagram.com/solidrockbiblecamp/" target="_blank" style="text-decoration:none;"><img src="ig.png" alt="tw" style="display:block; font-family:Arial, sans-serif; font-size:14px; line-height:14px; color:#ffffff; max-width:27px;" width="27" border="0" height="26"></a></td>
+	<td valign="top" align="center"><a href="https://www.instagram.com/solidrockbiblecamp/" target="_blank" style="text-decoration:none;"><img src="http://solidrockbiblecamp.com/files/emailPics/ig.png" alt="tw" style="display:block; font-family:Arial, sans-serif; font-size:14px; line-height:14px; color:#ffffff; max-width:27px;" width="27" border="0" height="26"></a></td>
   </tr>
 </tbody></table></td>
 </tr>
