@@ -40,7 +40,8 @@ function validateForm()
 		alert("Please fill in your signature");
 		return false;
 	}
-	if (document.getElementById("use_check").checked || document.getElementById("waitlist").checked || document.getElementById("code").value == "warden")
+	//Letting users not have to pay $50 registration fee
+	if (document.getElementById("override").checked || document.getElementById("use_check").checked || document.getElementById("waitlist").checked || document.getElementById("code").value == "warden")
 	{
 		return true;
 	}
