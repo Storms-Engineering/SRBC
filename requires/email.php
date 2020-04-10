@@ -92,9 +92,9 @@ class Email
 					$body .= '<br><b style="font-size:20px">' . $key . '</b>: ' . $postdata[$key] . "";
 			}
 			if($isWit)
-				self::sendMail(wit_email, 'WIT Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body);
+				self::sendMail(wit_email, 'WIT Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body,"",false);
 			else
-				self::sendMail(workcrew_email, 'Workcrew Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body);
+				self::sendMail(workcrew_email, 'Workcrew Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body,"",false);
 		}
 		
 		//Email applicant
@@ -109,10 +109,15 @@ class Email
 	}
 
 	//Sends mail just a bit easier to use than declaring the class everytime
-	public static function sendMail($to,$subject,$msg,$attachment = "")
+	//Fancy parameter is if we want the fancy emails or not.  Sometimes for back end emails we done want this
+	public static function sendMail($to,$subject,$msg,$attachment = "",$fancy = true)
 	{
-		global $emailTempPt1, $emailTempPt2;
-		$msg = $emailTempPt1 . $msg . $emailTempPt2;
+		//Put msg inside of fancy html template
+		if($fancy)
+		{
+			global $emailTempPt1, $emailTempPt2;
+			$msg = $emailTempPt1 . $msg . $emailTempPt2;
+		}		
 		$mail = new PHPMailer(true);                              // Passing `true` enables exceptions
 		try {
 
