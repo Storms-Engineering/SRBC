@@ -1,5 +1,9 @@
-{
+{   
     "require-dev": {
         "phpunit/phpunit": "^7"
-    }
+    },
+    "require": {
+        "php": ">=5.6",
+        "authorizenet/authorizenet": "2.0.0"
+        }
 }
