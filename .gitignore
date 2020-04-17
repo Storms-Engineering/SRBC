@@ -1,4 +1,5 @@
 bin/
-vendor/
+vendor/*
 node_modules/
 test.*
+!vendor/authorizenet
