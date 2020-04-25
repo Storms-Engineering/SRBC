@@ -519,6 +519,7 @@ function srbc_registration( $atts )
 			Billing Zip <input style="width:100px;" type="text" name="cc_zipcode">
 			Credit Card # <input type="text" id="cc_number" name="cc_number"><br>
 			Verification Code: <input type="text" name="cc_vcode" style="width:5%">
+			<!--TODO make these computer generated -->
 			Expiration: <select name="cc_month" size="1">
 										<option value="">Pick</option>
 										<option value="01">01</option>
@@ -536,15 +537,15 @@ function srbc_registration( $atts )
 									</select>/
 									<select name="cc_year" size="1">
 										<option value="">Pick</option>
-										<option value="19">2019</option>
-										<option value="20">2020</option>
-										<option value="21">2021</option>
-										<option value="22">2022</option>
-										<option value="23">2023</option>
-										<option value="24">2024</option>
-										<option value="25">2025</option>
-										<option value="26">2026</option>
-										<option value="27">2027</option>
+										<option value="2019">2019</option>
+										<option value="2020">2020</option>
+										<option value="2121">2021</option>
+										<option value="2022">2022</option>
+										<option value="2023">2023</option>
+										<option value="2024">2024</option>
+										<option value="2025">2025</option>
+										<option value="2026">2026</option>
+										<option value="2027">2027</option>
 									</select>
 									<br>
 			<h3>OR</h3>
@@ -800,7 +801,8 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 
 	if($waitlist != 1 && isset($_POST["cc_amount"]))
 	{
-		storeCCData($vars,$camp,$horse_opt,$waitlistsize);
+		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
+		createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id);
 	}
 	//We don't want to send 3 confirmation emails for workcrew
 	if ($waitlist == 1 && !$isWorkcrew)
@@ -811,6 +813,127 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	{
 		Email::sendConfirmationEmail($registration_id);
 	}
+}
+require __DIR__ . '/../vendor/autoload.php';
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
+function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
+{
+	/* Create a merchantAuthenticationType object with authentication details
+       retrieved from the constants file */
+	require_once __DIR__ .  '/../requires/authorizedotnetcreds.php';
+	
+	
+	
+	$merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+	$merchantAuthentication->setName(MERCHANT_NAME);
+	$merchantAuthentication->setTransactionKey(MERCHANT_TRANSACTION_KEY);
+
+	// Set the transaction's refId
+    $refId = 'ref' . time();
+
+    // Create the payment data for a credit card
+    $creditCard = new AnetAPI\CreditCardType();
+	$creditCard->setCardNumber($vars["cc_number"]);
+	echo $vars["cc_year"] . "-" . $vars["cc_month"];
+    $creditCard->setExpirationDate($vars["cc_year"] . "-" . $vars["cc_month"]);
+    $creditCard->setCardCode($vars["cc_vcode"]);
+
+    // Add the payment data to a paymentType object
+    $paymentOne = new AnetAPI\PaymentType();
+    $paymentOne->setCreditCard($creditCard);
+
+	// Create order information
+	$order = new AnetAPI\OrderType();
+	//TODO setup invoice number database or have invoices numbers with payment database
+    $order->setInvoiceNumber("10101");
+    $order->setDescription($camp->area . " " . $camp->name);
+
+    // Set the customer's Bill To address
+    $customerAddress = new AnetAPI\CustomerAddressType();
+    $customerAddress->setFirstName($vars["parent_first_name"]);
+    $customerAddress->setLastName($vars["parent_last_name"]);
+    $customerAddress->setCompany("");
+    $customerAddress->setAddress($vars["address"]);
+    $customerAddress->setCity($vars["city"]);
+    $customerAddress->setState($vars["state"]);
+	$customerAddress->setZip($vars["zipcode"]);
+	//TODO add other countries
+    $customerAddress->setCountry("USA");
+
+    // Set the customer's identifying information
+    $customerData = new AnetAPI\CustomerDataType();
+    $customerData->setType("individual");
+    $customerData->setId($camper_id);
+    $customerData->setEmail($vars["email"]);
+
+    // Add values for transaction settings
+    $duplicateWindowSetting = new AnetAPI\SettingType();
+    $duplicateWindowSetting->setSettingName("duplicateWindow");
+    $duplicateWindowSetting->setSettingValue("60");
+
+    // Create a TransactionRequestType object and add the previous objects to it
+    $transactionRequestType = new AnetAPI\TransactionRequestType();
+    $transactionRequestType->setTransactionType("authCaptureTransaction");
+    $transactionRequestType->setAmount($vars["cc_amount"]);
+    $transactionRequestType->setOrder($order);
+    $transactionRequestType->setPayment($paymentOne);
+    $transactionRequestType->setBillTo($customerAddress);
+    $transactionRequestType->setCustomer($customerData);
+    $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
+
+    // Assemble the complete transaction request
+    $request = new AnetAPI\CreateTransactionRequest();
+    $request->setMerchantAuthentication($merchantAuthentication);
+    $request->setRefId($refId);
+    $request->setTransactionRequest($transactionRequestType);
+
+    // Create the controller and get the response
+    $controller = new AnetController\CreateTransactionController($request);
+    $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
+    
+
+    if ($response != null) {
+        // Check to see if the API request was successfully received and acted upon
+        if ($response->getMessages()->getResultCode() == "Ok") {
+            // Since the API request was successful, look for a transaction response
+            // and parse it to display the results of authorizing the card
+            $tresponse = $response->getTransactionResponse();
+        
+            if ($tresponse != null && $tresponse->getMessages() != null) {
+				//TODO Now put payment into our database since transaction was successfull
+				//Use autosplit payment
+
+                echo " Successfully created transaction with Transaction ID: " . $tresponse->getTransId() . "\n";
+                echo " Transaction Response Code: " . $tresponse->getResponseCode() . "\n";
+                echo " Message Code: " . $tresponse->getMessages()[0]->getCode() . "\n";
+                echo " Auth Code: " . $tresponse->getAuthCode() . "\n";
+                echo " Description: " . $tresponse->getMessages()[0]->getDescription() . "\n";
+            } else {
+                echo "Transaction Failed \n";
+                if ($tresponse->getErrors() != null) {
+                    echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
+                    echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
+                }
+            }
+            // Or, print errors if the API request wasn't successful
+        } else {
+            echo "Transaction Failed \n";
+            $tresponse = $response->getTransactionResponse();
+        
+            if ($tresponse != null && $tresponse->getErrors() != null) {
+                echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
+                echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
+            } else {
+                echo " Error Code  : " . $response->getMessages()->getMessage()[0]->getCode() . "\n";
+                echo " Error Message : " . $response->getMessages()->getMessage()[0]->getText() . "\n";
+            }
+        }
+    } else {
+        echo  "No response returned \n";
+    }
+
+    return $response;
 }
 
 function storeCCData($vars,$camp,$horse_opt,$waitlistsize)
