@@ -769,7 +769,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	//If they are not on the waitlist and they have cc info then run their credit card
 	if($waitlist != 1 && isset($_POST["cc_amount"]))
 	{
-		//TODO get rid of this function
+		//TODO get ride of function below
 		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
 		$result = createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id);
 
@@ -860,8 +860,11 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
 
 	// Create order information
 	$order = new AnetAPI\OrderType();
-	//TODO setup invoice number database or have invoices numbers with payment database
-    $order->setInvoiceNumber("10101");
+	//The invoice number will be the same as the registration number
+	global $wpdb;
+	//Get the latest registration id and add one to as the invoice number
+	$invoiceNumber = $wpdb->get_var("SELECT MAX(registration_id) FROM srbc_registration") + 1;
+    $order->setInvoiceNumber($invoiceNumber);
     $order->setDescription($camp->area . " " . $camp->name);
 
 	//TODO add seperate fields for credit card address if it is different
