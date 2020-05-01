@@ -66,3 +66,19 @@ function validateForm()
 		}
 	}
 }
+
+function moveAddress()
+{
+	// Get the checkbox
+	var checkBox = document.getElementById("same_cc_address");
+	var addresses = ["address", "zipcode", "state", "city"];
+  
+	for(i=0;i<addresses.length;i++)
+	{
+		text = document.getElementsByName(addresses[i])[0].value;
+		if(checkBox.checked)
+			document.getElementsByName("cc_" + addresses[i])[0].value = text;
+		else
+		document.getElementsByName("cc_" + addresses[i])[0].value = "";
+	}
+}
