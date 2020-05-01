@@ -765,6 +765,23 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		exit();
 		}
 	}
+
+	//If they are not on the waitlist and they have cc info then run their credit card
+	if($waitlist != 1 && isset($_POST["cc_amount"]))
+	{
+		//TODO get rid of this function
+		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
+		$result = createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id);
+
+		if(!$result)
+		{
+			error_msg("It seems like their was a problem with your credit card.
+			  Please use the back button and double check your credit card information");
+			exit();
+		}
+	}
+
+	//Insert camper registration into database
 	try
 	{
 		$wpdb->insert(
@@ -798,12 +815,9 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		Email::emailDeveloper($e->getMessage());
 	}
 	$registration_id = $wpdb->insert_id;
-
-	if($waitlist != 1 && isset($_POST["cc_amount"]))
-	{
-		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
-		createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id);
-	}
+	//Now put payment into our database since transaction was successfull using autopayment
+	Payments::autoPayment($registration_id,$vars["cc_amount"],"card","Online");
+	
 	//We don't want to send 3 confirmation emails for workcrew
 	if ($waitlist == 1 && !$isWorkcrew)
 	{
@@ -814,6 +828,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		Email::sendConfirmationEmail($registration_id);
 	}
 }
+
 require __DIR__ . '/../vendor/autoload.php';
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
@@ -822,8 +837,8 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
 	/* Create a merchantAuthenticationType object with authentication details
        retrieved from the constants file */
 	require_once __DIR__ .  '/../requires/authorizedotnetcreds.php';
-	
-	
+	require_once __DIR__ .  '/../requires/payments.php';
+
 	
 	$merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
 	$merchantAuthentication->setName(MERCHANT_NAME);
@@ -849,6 +864,7 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
     $order->setInvoiceNumber("10101");
     $order->setDescription($camp->area . " " . $camp->name);
 
+	//TODO add seperate fields for credit card address if it is different
     // Set the customer's Bill To address
     $customerAddress = new AnetAPI\CustomerAddressType();
     $customerAddress->setFirstName($vars["parent_first_name"]);
@@ -900,21 +916,15 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
             // and parse it to display the results of authorizing the card
             $tresponse = $response->getTransactionResponse();
         
-            if ($tresponse != null && $tresponse->getMessages() != null) {
-				//TODO Now put payment into our database since transaction was successfull
-				//Use autosplit payment
-
-                echo " Successfully created transaction with Transaction ID: " . $tresponse->getTransId() . "\n";
-                echo " Transaction Response Code: " . $tresponse->getResponseCode() . "\n";
-                echo " Message Code: " . $tresponse->getMessages()[0]->getCode() . "\n";
-                echo " Auth Code: " . $tresponse->getAuthCode() . "\n";
-                echo " Description: " . $tresponse->getMessages()[0]->getDescription() . "\n";
-            } else {
+			if ($tresponse != null && $tresponse->getMessages() != null) 
+				return true;
+			else 
+			{
                 echo "Transaction Failed \n";
                 if ($tresponse->getErrors() != null) {
                     echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
                     echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
-                }
+				}
             }
             // Or, print errors if the API request wasn't successful
         } else {
@@ -927,13 +937,12 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
             } else {
                 echo " Error Code  : " . $response->getMessages()->getMessage()[0]->getCode() . "\n";
                 echo " Error Message : " . $response->getMessages()->getMessage()[0]->getText() . "\n";
-            }
+			}
         }
     } else {
-        echo  "No response returned \n";
-    }
-
-    return $response;
+		echo  "No response returned \n";
+	}
+	return false;
 }
 
 function storeCCData($vars,$camp,$horse_opt,$waitlistsize)
