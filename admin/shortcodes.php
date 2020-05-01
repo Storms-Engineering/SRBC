@@ -515,8 +515,14 @@ function srbc_registration( $atts )
 		echo '
 		<hr>
 		<h3>Use a credit card:</h3>	
-			Name on Credit Card: <input type="text" name="cc_name">
-			Billing Zip <input style="width:100px;" type="text" name="cc_zipcode">
+			Name on Credit Card: <input type="text" name="cc_name"><br>
+			Billing Address:<br>
+			Same as above <input type="checkbox" id="same_cc_address" onclick="moveAddress()">
+				<textarea class="inputs" required name="cc_address" rows="1" cols="30"></textarea>
+				City:<input type="text" style="width:100px;" required name="cc_city">
+				State:<input type="text" style="width:50px;" required name="cc_state">
+				Zipcode:<input type="text"  style="width:100px;" required pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="cc_zipcode" >
+				<br>
 			Credit Card # <input type="text" id="cc_number" name="cc_number"><br>
 			Verification Code: <input type="text" name="cc_vcode" style="width:5%">
 			<!--TODO make these computer generated -->
@@ -850,7 +856,6 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
     // Create the payment data for a credit card
     $creditCard = new AnetAPI\CreditCardType();
 	$creditCard->setCardNumber($vars["cc_number"]);
-	echo $vars["cc_year"] . "-" . $vars["cc_month"];
     $creditCard->setExpirationDate($vars["cc_year"] . "-" . $vars["cc_month"]);
     $creditCard->setCardCode($vars["cc_vcode"]);
 
@@ -873,10 +878,10 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
     $customerAddress->setFirstName($vars["parent_first_name"]);
     $customerAddress->setLastName($vars["parent_last_name"]);
     $customerAddress->setCompany("");
-    $customerAddress->setAddress($vars["address"]);
-    $customerAddress->setCity($vars["city"]);
-    $customerAddress->setState($vars["state"]);
-	$customerAddress->setZip($vars["zipcode"]);
+    $customerAddress->setAddress($vars["cc_address"]);
+    $customerAddress->setCity($vars["cc_city"]);
+    $customerAddress->setState($vars["cc_state"]);
+	$customerAddress->setZip($vars["cc_zipcode"]);
 	//TODO add other countries
     $customerAddress->setCountry("USA");
 
