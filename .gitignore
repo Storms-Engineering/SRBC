@@ -1,6 +1,5 @@
 bin/
-vendor/*
 node_modules/
 test.*
-!vendor/authorizenet
 /requires/authorizedotnetcreds.php
+
