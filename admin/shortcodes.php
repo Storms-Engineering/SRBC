@@ -518,10 +518,10 @@ function srbc_registration( $atts )
 			Name on Credit Card: <input type="text" name="cc_name"><br>
 			Billing Address:<br>
 			Same as above <input type="checkbox" id="same_cc_address" onclick="moveAddress()">
-				<textarea class="inputs" required name="cc_address" rows="1" cols="30"></textarea>
-				City:<input type="text" style="width:100px;" required name="cc_city">
-				State:<input type="text" style="width:50px;" required name="cc_state">
-				Zipcode:<input type="text"  style="width:100px;" required pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="cc_zipcode" >
+				<textarea class="inputs" name="cc_address" rows="1" cols="30"></textarea>
+				City:<input type="text" style="width:100px;" name="cc_city">
+				State:<input type="text" style="width:50px;" name="cc_state">
+				Zipcode:<input type="text"  style="width:100px;" pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="cc_zipcode" >
 				<br>
 			Credit Card # <input type="text" id="cc_number" name="cc_number"><br>
 			Verification Code: <input type="text" name="cc_vcode" style="width:5%">
@@ -773,8 +773,9 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	}
 
 	//If they are not on the waitlist and they have cc info then run their credit card
-	if($waitlist != 1 && isset($_POST["cc_amount"]))
+	if($waitlist != 1 && isset($_POST["cc_amount"]) && $_POST["cc_amount"] !== "0")
 	{
+		echo $_POST["cc_amount"];
 		//TODO get ride of function below
 		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
 		$result = createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id);
@@ -821,8 +822,14 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		Email::emailDeveloper($e->getMessage());
 	}
 	$registration_id = $wpdb->insert_id;
-	//Now put payment into our database since transaction was successfull using autopayment
-	Payments::autoPayment($registration_id,$vars["cc_amount"],"card","Online");
+
+	if($_POST["cc_amount"] !== "0")
+	{
+		//Now put payment into our database since transaction was successfull using autopayment
+		require_once __DIR__ .  '/../requires/payments.php';
+		Payments::autoPayment($registration_id,$vars["cc_amount"],"card","Online");
+	}
+	
 	
 	//We don't want to send 3 confirmation emails for workcrew
 	if ($waitlist == 1 && !$isWorkcrew)
