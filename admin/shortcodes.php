@@ -849,7 +849,7 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
 {
 	/* Create a merchantAuthenticationType object with authentication details
        retrieved from the constants file */
-	require_once __DIR__ .  '/../requires/authorizedotnetcreds.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/files/authorizedotnetcreds.php';
 	require_once __DIR__ .  '/../requires/payments.php';
 
 	
