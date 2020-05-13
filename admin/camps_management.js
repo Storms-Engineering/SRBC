@@ -70,10 +70,20 @@ function saveCampInfo(cmp_id)
 	for (var j = 0; j < inputs.length; ++j) {
 			info[inputs[j].name] = inputs[j].value;
 			if(inputs[j].name == "closed_to_registrations" )
+			{
 				if(inputs[j].checked)
 					info[inputs[j].name] = 1;
 				else
 					info[inputs[j].name] = 0;
+			}
+			if(inputs[j].name == "day_camp" )
+			{
+				if(inputs[j].checked)
+					info[inputs[j].name] = 1;
+				else
+					info[inputs[j].name] = 0;
+			}
+				
 	}
 	console.log(info);
 	postCampAjax(info);
@@ -94,6 +104,13 @@ function addNewCamp()
 	info["description"] = container.getElementsByClassName("description")[0].value;
 	for (var j = 0; j < inputs.length; ++j) {
 			info[inputs[j].name] = inputs[j].value;
+			if(inputs[j].name == "day_camp" )
+			{
+				if(inputs[j].checked)
+					info[inputs[j].name] = 1;
+				else
+					info[inputs[j].name] = 0;
+			}
 	}
 	console.log(info);
 	postCampAjax(info);

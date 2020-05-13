@@ -18,6 +18,7 @@ if (isset($obj["deleteid"])) {
 	exit;
 }
 
+//TODO Replace instead of 2 seperate queries?
 //Can we just use replace for this?
 //If this is set then we are updating a camp
 else if (isset($obj["camp_id"])) {
@@ -44,7 +45,8 @@ else if (isset($obj["camp_id"])) {
 		'girl_registration_size' => $obj["girl_registration_size"],
 		'overall_size' => $obj["overall_size"],
 		'grade_range' => $obj["grade_range"],
-		'closed_to_registrations' =>  $obj["closed_to_registrations"]
+		'closed_to_registrations' =>  $obj["closed_to_registrations"],
+		'day_camp' =>  $obj["day_camp"]
 	), 
 	array( 'camp_id' => $obj["camp_id"]), 
 	array( 
@@ -65,6 +67,7 @@ else if (isset($obj["camp_id"])) {
 		'%d',
 		'%d',
 		'%s',
+		'%d',
 		'%d'
 	),
 	array( '%d' ) 
@@ -93,7 +96,8 @@ $wpdb->insert(
 		'boy_registration_size' => $obj["boy_registration_size"],
 		'girl_registration_size' => $obj["girl_registration_size"],
 		'overall_size' => $obj["overall_size"],
-		'grade_range' => $obj["grade_range"]
+		'grade_range' => $obj["grade_range"],
+		'day_camp' =>  $obj["day_camp"]
 	),
 	array( 
 		'%s',	
@@ -113,6 +117,7 @@ $wpdb->insert(
 		'%d',
 		'%d',
 		'%s',
+		'%d',
 		'%d'
 	)
 );

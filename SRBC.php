@@ -59,6 +59,7 @@ function srbc_install() {
 		overall_size SMALLINT NOT NULL,
 		grade_range TINYTEXT NOT NULL,
 		closed_to_registrations TINYINT,
+		day_camp TINYINT,
 		PRIMARY KEY (camp_id)
 		)  ENGINE=INNODB;";
 

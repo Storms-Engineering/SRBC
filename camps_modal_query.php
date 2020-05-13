@@ -32,7 +32,9 @@
 	echo 'Overall Size: <input name="overall_size" type="text" value="' . $camp->overall_size . '">';
 	echo 'Grade Range: <input name="grade_range" type="text" value="' . $camp->grade_range . '">';
 	$closed = $camp->closed_to_registrations == 0 ? "" : "checked";
-	echo '<br>Closed To Registrations <input type="checkbox" name="closed_to_registrations" ' . $closed . '><br><br>';
+	echo '<br>Closed To Registrations <input type="checkbox" name="closed_to_registrations" ' . $closed . '><br>';
+	$closed = $camp->day_camp == 0 ? "" : "checked";
+	echo '<br>Day Camp <input type="checkbox" name="day_camp" ' . $closed . '><br><br>';
 	
 	require_once 'requires/tables.php';
 	require_once 'requires/camper_search.php';

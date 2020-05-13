@@ -879,7 +879,6 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
     $order->setInvoiceNumber($invoiceNumber);
     $order->setDescription($camp->area . " " . $camp->name);
 
-	//TODO add seperate fields for credit card address if it is different
     // Set the customer's Bill To address
     $customerAddress = new AnetAPI\CustomerAddressType();
     $customerAddress->setFirstName($vars["parent_first_name"]);
@@ -889,6 +888,7 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
     $customerAddress->setCity($vars["cc_city"]);
     $customerAddress->setState($vars["cc_state"]);
 	$customerAddress->setZip($vars["cc_zipcode"]);
+	
 	//TODO add other countries
     $customerAddress->setCountry("USA");
 
