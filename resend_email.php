@@ -18,6 +18,12 @@ if($info[0]->area == "Workcrew" || $info[0]->area == "WIT")
     Email::sendWorkcrewEmail($info[0]->camper_id,null,$isWit);
 }
 else
-    Email::sendConfirmationEmail($_GET['r_id']);
+{
+    if($info[0]->day_camp == 0)
+        Email::sendConfirmationEmail($_GET['r_id']);
+    else
+        Email::sendDayCampConfirmationEmail($_GET['r_id']);
+}
+    
 
 ?>

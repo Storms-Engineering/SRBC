@@ -42,11 +42,29 @@ class Email
 	{
 		$info = self::getInfo($registration_id);
 		$msg = "Hello ". $info->parent_first_name . ",<br><br>Thanks for signing up " . $info->camper_first_name . " for <b>" . $info->area . " " . $info->name . "</b>!  <br><br>
-		<b>Camp Start date</b>: " .date("l, M j,Y",strtotime($info->start_date)) . '<br><pre style="display:inline">	</pre><b>Camp Drop off time</b>: ' . $info->dropoff_time . 
-		"<br><br><b>Camp End date</b>: " .date("l, M j,Y",strtotime($info->end_date)) . '<br><pre style="display:inline">	</pre><b>Camp Pick up time</b>: '. $info->pickup_time . '<br><br>' . 
+		<b>Camp Start Date</b>: " .date("l, M j, Y",strtotime($info->start_date)) . '<br><pre style="display:inline">	</pre><b>Camp Drop-off time</b>: ' . $info->dropoff_time . 
+		"<br><br><b>Camp End Date</b>: " .date("l, M j, Y",strtotime($info->end_date)) . '<br><pre style="display:inline">	</pre><b>Camp Pick-up time</b>: '. $info->pickup_time . '<br><br>' . 
 		'If your camper is riding the bus please refer to our FAQ page for bus stop location and times.<br><br>' .
 		'If you have any other questions please refer to our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.<br><br>' .
 		'If you want to know what your camper should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>.'.
+		"<br><br>See you on the opening day of camp!";
+		self::sendMail($info->email,"Thank you for signing up for a Solid Rock Camp!", $msg);
+		//TODO fix this for registrations because it looks corny
+		//BODY but it is also returned on ajax requests for resending email
+		echo "Email Sent!";
+	}
+
+	//Sends day camp confirmation email.
+	//Info is the information that we need in an object
+	public static function sendDayCampConfirmationEmail($registration_id)
+	{
+		$info = self::getInfo($registration_id);
+		$msg = "Hello ". $info->parent_first_name . ",<br><br>Thanks for signing up " . $info->camper_first_name . " for <b>" . $info->area . " " . $info->name . "</b>!  <br><br>
+		<b>Camp Start Date</b>: " .date("l, M j, Y",strtotime($info->start_date)) . '<br><b>Camp End Date</b>: ' .date("l, M j, Y",strtotime($info->end_date)) . '<br><br><b>Daily Drop-off time</b>: ' . $info->dropoff_time . 
+		'<br><b>Daily Pick-up time</b>: '. $info->pickup_time . '<br><br>' . 
+		'If you have any other questions please refer to our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.<br><br>' .
+		'If you want to know what your camper should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>.'.
+		'<br>Follow us on Facebook for current updates regarding camp changes for Summer 2020.' . 
 		"<br><br>See you on the opening day of camp!";
 		self::sendMail($info->email,"Thank you for signing up for a Solid Rock Camp!", $msg);
 		//TODO fix this for registrations because it looks corny

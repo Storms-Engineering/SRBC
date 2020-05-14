@@ -775,7 +775,6 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	//If they are not on the waitlist and they have cc info then run their credit card
 	if($waitlist != 1 && isset($_POST["cc_amount"]) && $_POST["cc_amount"] !== "0")
 	{
-		echo $_POST["cc_amount"];
 		//TODO get ride of function below
 		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
 		$result = createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id);
@@ -838,7 +837,10 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	}
 	else if(!$isWorkcrew)
 	{
-		Email::sendConfirmationEmail($registration_id);
+		if($camp->day_camp == 0)
+			Email::sendConfirmationEmail($registration_id);
+		else
+			Email::sendDayCampConfirmationEmail($registration_id);
 	}
 }
 
