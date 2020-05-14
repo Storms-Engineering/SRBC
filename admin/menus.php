@@ -621,8 +621,8 @@ function srbc_camps_management()
 			Camp: <input type="text" name="name">
 			Start Date:<input  type="date" name="start_date">
 			End Date: <input  type="date" name="end_date"><br>
-			Dropoff Time:<input  type="text" name="dropoff_time" value="5:00pm">
-			Pickup Time: <input  type="text" name="pickup_time" value="10:00am"><br>
+			Dropoff Time:<input  type="text" name="dropoff_time" value="5:00 PM">
+			Pickup Time: <input  type="text" name="pickup_time" value="10:00 AM"><br>
 			Description: <br><textarea class="description" rows="2" cols="30"></textarea>
 			<br>
 			Grade Range (ex. 2nd to 3rd): <input type="text" name="grade_range"><br>
