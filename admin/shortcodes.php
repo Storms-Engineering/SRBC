@@ -853,8 +853,6 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
        retrieved from the constants file */
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/files/authorizedotnetcreds.php';
 	require_once __DIR__ .  '/../requires/payments.php';
-
-	
 	$merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
 	$merchantAuthentication->setName(MERCHANT_NAME);
 	$merchantAuthentication->setTransactionKey(MERCHANT_TRANSACTION_KEY);
@@ -923,7 +921,7 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
 
     // Create the controller and get the response
     $controller = new AnetController\CreateTransactionController($request);
-    $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
+    $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
     
 
     if ($response != null) {
