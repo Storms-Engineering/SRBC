@@ -1,6 +1,37 @@
 <?php
 class Payments
 {
+	//Calculates the amount due for a registration.  
+	//2nd parameter is a bool to determine whether we are looking at the inactive_registration database.
+	public static function amountDue($registration_id,$inactive_registration = false)
+	{
+		//Determines which registration_database we are looking at
+		$database = $GLOBALS["srbc_registration"];
+		if ($inactive_registration)
+			$database = $GLOBALS["srbc_registration_inactive"] ;
+		global $wpdb;
+		$totalpaid = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
+										FROM " . $GLOBALS["srbc_payments"] . " WHERE registration_id=%s AND NOT " . $GLOBALS["srbc_payments"] .
+										".fee_type='Store' ",$registration_id));
+		$cost = $wpdb->get_var($wpdb->prepare("
+								SELECT SUM(" . $GLOBALS["srbc_camps"] . ".cost +
+								(CASE WHEN " . $database . ".horse_opt = 1 THEN " . $GLOBALS["srbc_camps"] .".horse_opt_cost
+								ELSE 0
+								END) +
+								(CASE WHEN " . $database . ".busride = 'to' THEN 35
+								WHEN " . $database . ".busride = 'from' THEN 35
+								WHEN " . $database . ".busride = 'both' THEN 60
+								ELSE 0
+								END) 
+								- IF(" . $database . ".discount IS NULL,0," . $database . ".discount)
+								- IF(" . $database . ".scholarship_amt IS NULL,0," . $database . ".scholarship_amt)		
+								)								
+								FROM " . $database . "
+								INNER JOIN " . $GLOBALS["srbc_camps"] . " ON " . $database . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id
+								WHERE " . $database . ".registration_id=%d",$registration_id));
+		return $cost - $totalpaid;
+	}
+
     //Puts a payment into the database and also updates payment_card payment_cash etc...
     public static function makePayment($registration_id,$payment_type,$payment_amt,$note,$fee_type)
     {
