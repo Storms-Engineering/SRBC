@@ -920,8 +920,13 @@ function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
     $request->setTransactionRequest($transactionRequestType);
 
     // Create the controller and get the response
-    $controller = new AnetController\CreateTransactionController($request);
-    $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
+	$controller = new AnetController\CreateTransactionController($request);
+
+	//If we are on localhost use the sandbox else use production
+	if($_SERVER['SERVER_NAME'] === "localhost" || $_SERVER['SERVER_NAME'] === "127.0.0.1")
+		$response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
+    else
+    	$response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
     
 
     if ($response != null) {
