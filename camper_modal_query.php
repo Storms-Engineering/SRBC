@@ -352,7 +352,8 @@ function campSection($registration,$camper,$inactive)
 	else
 		echo '<br><br><button class="big_button" onclick="saveInfo();" >Save</button>';
 	echo ' <button class="big_button" onclick="changeCamp('.$registration->registration_id.','.$camper->camper_id.','.$camp->camp_id.')">Change Camp To</button>';
-	echo '<br><br><button class="big_button" style="background:#009933" onclick="resendEmail('.$registration->registration_id.');" >Resend Email</button>';
+	echo '<br><br><button class="big_button" style="background:#009933" onclick="sendEmail('.$registration->registration_id.',\'resend\');" >Resend Confirmation Email</button>';
+	echo '<button class="big_button" style="background:#009933" onclick="sendEmail('.$registration->registration_id.',\'balance_due\');" >Send Balance Due Email</button>';
 	if ($inactive)
 	{
 		echo '<button class="big_button" style="background:green;float:right;" onclick="reactivateRegistration(' . $registration->registration_id . ',' 
