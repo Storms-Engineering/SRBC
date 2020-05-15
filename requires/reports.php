@@ -61,6 +61,7 @@ Class Report
 		HealthForm::after();
 	}
 
+	//TODO make this use the amountDue function from the payment class
 	//Calculates that amount due for a registration.  
 	//2nd parameter is a bool to determine whether we are looking at the inactive_registration database.
 	private function amountDue($registration_id,$inactive_registration)
@@ -794,6 +795,7 @@ Class Report
 		
 	}
 	
+	//Return an array of amountDue by registration number
 	private function getAmountDueArray()
 	{
 		//TODO inactive_registration support?
@@ -829,8 +831,6 @@ Class Report
 							WHERE (owe - payed) > 0
 				GROUP BY registration_id",OBJECT_K);
 			return $arrayOfTotalPayed;	
-		
-		   
 	}
 	
 	//Generates a report for all the overpaid campers.

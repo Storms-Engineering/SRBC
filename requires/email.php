@@ -8,12 +8,30 @@ require_once __DIR__ . '/../PHPMailer/src/PHPMailer.php';
 
 class Email
 {
-	
+	//Emails parents how much they owe on a camp and a link to let them pay
+	public static function emailParentRemainingBalance($registration_id)
+	{
+		//Get camper information
+		$info = self::getInfo($registration_id);
+		require_once __DIR__ . 'payments.php';
+		$owed = Payments::amountDue($registration_id);
+
+		$msg = "Hello ". $info->parent_first_name . ",<br><br>We are letting you know that you have a balance due on your account. The balance is for " . $info->camper_first_name . "(<b>" . $info->area . " " . $info->name . "</b>)  <br><br>
+		You currently owe <b>$$owed<b>." . '  If you wish to make an online payment please click <a href="http://127.0.0.1/make-payment?r_id=' . $registration_id . '">here</a>.
+		<br><br>If you have any furthur questions please give us a call.';
+		self::sendMail($info->email,"Camp Remaining Balance Due", $msg);
+		//TODO fix this for registrations because it looks corny
+		//BODY but it is also returned on ajax requests for resending email
+		echo "Email Sent!";
+	}
+
+
 	public static function emailDeveloper($information)
 	{
 		sendMail($GLOBALS['developer_email'],"Message From Peter Hawke", "Greetings Brayden, 
 		It seems we are having some problems with the website.  Here is the information I have:\r" . $information);
 	}
+
 	//Queries database for camper information
 	private static function getInfo($registration_id)
 	{

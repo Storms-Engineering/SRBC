@@ -8,7 +8,7 @@ function deletePayment(camper_id,payment_id,wpNonce)
 }
 
 //Resend the confirmation email
-function resendEmail(r_id){
+function sendEmail(r_id,emailType){
 	var xhttp;
 	if (window.XMLHttpRequest) {
 		// code for modern browsers
@@ -22,7 +22,7 @@ function resendEmail(r_id){
 		showToast(this.responseText);
 		}
 	};
-	xhttp.open("GET", "/wp-content/plugins/SRBC/resend_email.php?r_id="+r_id, true);
+	xhttp.open("GET", "/wp-content/plugins/SRBC/emailAjaxHandler.php?r_id="+r_id + "&type=" + emailType, true);
 	xhttp.send();
 }
 
