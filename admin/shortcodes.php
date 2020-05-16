@@ -822,7 +822,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	}
 	$registration_id = $wpdb->insert_id;
 
-	if($_POST["cc_amount"] !== "0")
+	if($_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
 	{
 		//Now put payment into our database since transaction was successfull using autopayment
 		require_once __DIR__ .  '/../requires/payments.php';
