@@ -1,6 +1,52 @@
 <?php
 class Payments
 {
+	//Echos HTML code for credit card info
+	//$sameAsAbove is for whether the checkbox for same info as above will be shown
+	public static function setupCreditCardHTML($sameAsAbove = false)
+	{
+		echo 'Use a credit card:</h3>	
+			Name on Credit Card: <input type="text" name="cc_name"><br>
+			Billing Address:<br>';
+		echo ($sameAsAbove ? 'Same as above <input type="checkbox" id="same_cc_address" onclick="moveAddress()">' : "" );
+		echo '		<textarea class="inputs" style="width:auto;" name="cc_address" rows="1" cols="30"></textarea>
+				City:<input type="text" style="width:100px;" name="cc_city">
+				State:<input type="text" style="width:50px;" name="cc_state">
+				Zipcode:<input type="text"  style="width:100px;" pattern="[0-9]{5}" title="Please enter a 5 digit zipcode" name="cc_zipcode" >
+				<br>
+			Credit Card # <input type="text" id="cc_number" name="cc_number"><br>
+			Verification Code: <input type="text" name="cc_vcode" style="width:5%">
+			<!--TODO make these computer generated -->
+			Expiration: <select name="cc_month" size="1">
+										<option value="">Pick</option>
+										<option value="01">01</option>
+										<option value="02">02</option>
+										<option value="03">03</option>
+										<option value="04">04</option>
+										<option value="05">05</option>
+										<option value="06">06</option>
+										<option value="07">07</option>
+										<option value="08">08</option>
+										<option value="09">09</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
+									</select>/
+									<select name="cc_year" size="1">
+										<option value="">Pick</option>
+										<option value="2019">2019</option>
+										<option value="2020">2020</option>
+										<option value="2121">2021</option>
+										<option value="2022">2022</option>
+										<option value="2023">2023</option>
+										<option value="2024">2024</option>
+										<option value="2025">2025</option>
+										<option value="2026">2026</option>
+										<option value="2027">2027</option>
+									</select>
+									<br>';
+	}
+
 	//Calculates the amount due for a registration.  
 	//2nd parameter is a bool to determine whether we are looking at the inactive_registration database.
 	public static function amountDue($registration_id,$inactive_registration = false)

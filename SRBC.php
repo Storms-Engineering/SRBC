@@ -349,5 +349,6 @@ add_shortcode( 'srbc_camp_search', 'srbc_camp_search' );
 add_shortcode( 'srbc_contact_form_email', 'srbc_contact_form_email' );
 add_shortcode( 'srbc_volunteer_contact_form_email', 'srbc_volunteer_contact_form_email' );
 add_shortcode( 'srbc_health_form_generate', 'srbc_health_form_generate' );
+add_shortcode( 'srbc_make_payment_on_camper', 'srbc_make_payment_on_camper' );
 
 

@@ -6,6 +6,27 @@ SHORTCODE HOOKS
 */
 require_once __DIR__ . '/../requires/email.php';
 
+function srbc_make_payment_on_camper($atts)
+{
+	$registration_id = $_GET["r_id"];
+	global $wpdb;
+	$camper = $wpdb->get_row($wpdb->prepare( "SELECT *
+		FROM ((" . $GLOBALS['srbc_registration'] . "
+		INNER JOIN " . $GLOBALS['srbc_camps']. " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
+		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE " .
+			$GLOBALS["srbc_registration"] . ".registration_id=%d ", $registration_id));
+	echo "<h1>Make a payment for " . $camper->camper_first_name .  " " . $camper->camper_last_name . "</h1>";
+
+	require_once __DIR__ . '/../requires/payments.php';
+	$amountDue = Payments::amountDue($registration_id);
+	echo '<h2>Amount due: $' . $amountDue . "</h2>";
+
+	Payments::setupCreditCardHTML();
+
+
+	
+}
+
 function srbc_health_form_generate($atts)
 {
 	require_once __DIR__ . '/../requires/health_form.php';
@@ -822,7 +843,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	}
 	$registration_id = $wpdb->insert_id;
 
-	if($_POST["cc_amount"] !== "0")
+	if($_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
 	{
 		//Now put payment into our database since transaction was successfull using autopayment
 		require_once __DIR__ .  '/../requires/payments.php';
