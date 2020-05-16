@@ -43,7 +43,21 @@ function validateForm()
 	//Letting users not have to pay $50 registration fee
 	if (document.getElementById("override").checked || document.getElementById("use_check").checked || document.getElementById("waitlist").checked || document.getElementById("code").value == "warden")
 	{
-		return true;
+		var numValidated = 0;
+		for (let name of names)
+		{
+				 if (document.getElementsByName(name)[0].value != "")
+				 {
+					  numValidated++;
+				 }
+		}
+		if(document.getElementById("use_check").checked && numValidated == 7)
+		{
+			alert("Please use a check or credit card not both!")
+			return false;
+		}
+		else
+			return true;
 	}
 	else
 	{
