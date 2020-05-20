@@ -1,12 +1,137 @@
 <?php
+
+require __DIR__ . '/../vendor/autoload.php';
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
+
 class Payments
 {
+
+	public static function createCCTransaction($vars,$camp,$camper_id)
+	{
+		/* Create a merchantAuthenticationType object with authentication details
+		   retrieved from the constants file */
+		require_once $_SERVER['DOCUMENT_ROOT'] . '/files/authorizedotnetcreds.php';
+		require_once __DIR__ .  '/../requires/payments.php';
+		$merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+		$merchantAuthentication->setName(MERCHANT_NAME);
+		$merchantAuthentication->setTransactionKey(MERCHANT_TRANSACTION_KEY);
+	
+		// Set the transaction's refId
+		$refId = 'ref' . time();
+	
+		// Create the payment data for a credit card
+		$creditCard = new AnetAPI\CreditCardType();
+		$creditCard->setCardNumber($vars["cc_number"]);
+		$creditCard->setExpirationDate($vars["cc_year"] . "-" . $vars["cc_month"]);
+		$creditCard->setCardCode($vars["cc_vcode"]);
+	
+		// Add the payment data to a paymentType object
+		$paymentOne = new AnetAPI\PaymentType();
+		$paymentOne->setCreditCard($creditCard);
+	
+		// Create order information
+		$order = new AnetAPI\OrderType();
+		//The invoice number will be the same as the registration number
+		global $wpdb;
+		//Get the latest registration id and add one to as the invoice number
+		$invoiceNumber = $wpdb->get_var("SELECT MAX(registration_id) FROM srbc_registration") + 1;
+		$order->setInvoiceNumber($invoiceNumber);
+		$order->setDescription($camp->area . " " . $camp->name);
+	
+		// Set the customer's Bill To address
+		$customerAddress = new AnetAPI\CustomerAddressType();
+		$customerAddress->setFirstName($vars["parent_first_name"]);
+		$customerAddress->setLastName($vars["parent_last_name"]);
+		$customerAddress->setCompany("");
+		$customerAddress->setAddress($vars["cc_address"]);
+		$customerAddress->setCity($vars["cc_city"]);
+		$customerAddress->setState($vars["cc_state"]);
+		$customerAddress->setZip($vars["cc_zipcode"]);
+		
+		//TODO add other countries
+		$customerAddress->setCountry("USA");
+	
+		// Set the customer's identifying information
+		$customerData = new AnetAPI\CustomerDataType();
+		$customerData->setType("individual");
+		$customerData->setId($camper_id);
+		$customerData->setEmail($vars["email"]);
+	
+		// Add values for transaction settings
+		$duplicateWindowSetting = new AnetAPI\SettingType();
+		$duplicateWindowSetting->setSettingName("duplicateWindow");
+		$duplicateWindowSetting->setSettingValue("60");
+	
+		// Create a TransactionRequestType object and add the previous objects to it
+		$transactionRequestType = new AnetAPI\TransactionRequestType();
+		$transactionRequestType->setTransactionType("authCaptureTransaction");
+		$transactionRequestType->setAmount($vars["cc_amount"]);
+		$transactionRequestType->setOrder($order);
+		$transactionRequestType->setPayment($paymentOne);
+		$transactionRequestType->setBillTo($customerAddress);
+		$transactionRequestType->setCustomer($customerData);
+		$transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
+	
+		// Assemble the complete transaction request
+		$request = new AnetAPI\CreateTransactionRequest();
+		$request->setMerchantAuthentication($merchantAuthentication);
+		$request->setRefId($refId);
+		$request->setTransactionRequest($transactionRequestType);
+	
+		// Create the controller and get the response
+		$controller = new AnetController\CreateTransactionController($request);
+	
+		//If we are on localhost use the sandbox else use production
+		if($_SERVER['SERVER_NAME'] === "localhost" || $_SERVER['SERVER_NAME'] === "127.0.0.1")
+			$response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
+		else
+			$response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
+		
+	
+		if ($response != null) {
+			// Check to see if the API request was successfully received and acted upon
+			if ($response->getMessages()->getResultCode() == "Ok") {
+				// Since the API request was successful, look for a transaction response
+				// and parse it to display the results of authorizing the card
+				$tresponse = $response->getTransactionResponse();
+			
+				if ($tresponse != null && $tresponse->getMessages() != null) 
+					return true;
+				else 
+				{
+					echo "Transaction Failed \n";
+					if ($tresponse->getErrors() != null) {
+						echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
+						echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
+					}
+				}
+				// Or, print errors if the API request wasn't successful
+			} else {
+				echo "Transaction Failed \n";
+				$tresponse = $response->getTransactionResponse();
+			
+				if ($tresponse != null && $tresponse->getErrors() != null) {
+					echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
+					echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
+				} else {
+					echo " Error Code  : " . $response->getMessages()->getMessage()[0]->getCode() . "\n";
+					echo " Error Message : " . $response->getMessages()->getMessage()[0]->getText() . "\n";
+				}
+			}
+		} else {
+			echo  "No response returned \n";
+		}
+		return false;
+	}
+
 	//Echos HTML code for credit card info
 	//$sameAsAbove is for whether the checkbox for same info as above will be shown
 	public static function setupCreditCardHTML($sameAsAbove = false)
 	{
-		echo 'Use a credit card:</h3>	
-			Name on Credit Card: <input type="text" name="cc_name"><br>
+		echo '<h3>Use a credit card:</h3>	
+			Name on Credit Card: <input type="text" name="parent_first_name" placeholder="First Name"> <input type="text" name="parent_last_name" placeholder="Last Name"> <br>
+			Email: <input type="text" name="email">
 			Billing Address:<br>';
 		echo ($sameAsAbove ? 'Same as above <input type="checkbox" id="same_cc_address" onclick="moveAddress()">' : "" );
 		echo '		<textarea class="inputs" style="width:auto;" name="cc_address" rows="1" cols="30"></textarea>
