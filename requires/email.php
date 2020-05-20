@@ -17,7 +17,7 @@ class Email
 		$owed = Payments::amountDue($registration_id);
 
 		$msg = "Hello ". $info->parent_first_name . ",<br><br>We are letting you know that you have a balance due on your account. The balance is for " . $info->camper_first_name . "(<b>" . $info->area . " " . $info->name . "</b>)  <br><br>
-		You currently owe <b>$$owed</b>." . '  If you wish to make an online payment please click <a href="http://127.0.0.1/make-payment?r_id=' . $registration_id . '">here</a>.
+		You currently owe <b>$$owed</b>." . '  If you wish to make an online payment please click <a href="http://' . $_SERVER['SERVER_NAME'] . '/make-payment?r_id=' . $registration_id . '">here</a>.
 		<br><br>If you have any furthur questions please give us a call.';
 		self::sendMail($info->email,"Camp Remaining Balance Due", $msg);
 		//TODO fix this for registrations because it looks corny
