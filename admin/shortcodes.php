@@ -10,20 +10,41 @@ function srbc_make_payment_on_camper($atts)
 {
 	$registration_id = $_GET["r_id"];
 	global $wpdb;
+	require_once __DIR__ . '/../requires/payments.php';
 	$camper = $wpdb->get_row($wpdb->prepare( "SELECT *
 		FROM ((" . $GLOBALS['srbc_registration'] . "
 		INNER JOIN " . $GLOBALS['srbc_camps']. " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
 		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE " .
 			$GLOBALS["srbc_registration"] . ".registration_id=%d ", $registration_id));
+	
+	if(isset($_POST['cc_amount']))
+	{
+		$result = Payments::createCCTransaction($_POST,$camper,$camper->camper_id);
+		if($result)
+		{
+			echo '<span style="color:green">Payment Successful!</span>';
+			Payments::autoPayment($registration_id,$_POST["cc_amount"],"card","Online");
+		}
+		else
+		{
+			error_msg("It seems like their was a problem with your credit card.
+			Please use the back button and double check your credit card information");
+		}
+	}
 	echo "<h1>Make a payment for " . $camper->camper_first_name .  " " . $camper->camper_last_name . "</h1>";
 
-	require_once __DIR__ . '/../requires/payments.php';
+	
 	$amountDue = Payments::amountDue($registration_id);
 	echo '<h2>Amount due: $' . $amountDue . "</h2>";
 
+	echo '<form method="post"> 
+	Amount to pay: $<input type="text" name="cc_amount"><br><br>
+	<input type="hidden" name="r_id" value="' . $registration_id . '">';
+
 	Payments::setupCreditCardHTML();
 
-
+	echo '<br><input type="submit" value="Submit">
+	</form>';
 	
 }
 
@@ -798,7 +819,9 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	{
 		//TODO get ride of function below
 		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
-		$result = createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id);
+
+		require_once __DIR__ . '/../requires/payments.php';
+		$result = Payments::createCCTransaction($vars,$camp,$camper_id);
 
 		if(!$result)
 		{
@@ -865,126 +888,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	}
 }
 
-require __DIR__ . '/../vendor/autoload.php';
-use net\authorize\api\contract\v1 as AnetAPI;
-use net\authorize\api\controller as AnetController;
-function createCCTransaction($vars,$camp,$horse_opt,$waitlistsize,$camper_id)
-{
-	/* Create a merchantAuthenticationType object with authentication details
-       retrieved from the constants file */
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/files/authorizedotnetcreds.php';
-	require_once __DIR__ .  '/../requires/payments.php';
-	$merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
-	$merchantAuthentication->setName(MERCHANT_NAME);
-	$merchantAuthentication->setTransactionKey(MERCHANT_TRANSACTION_KEY);
 
-	// Set the transaction's refId
-    $refId = 'ref' . time();
-
-    // Create the payment data for a credit card
-    $creditCard = new AnetAPI\CreditCardType();
-	$creditCard->setCardNumber($vars["cc_number"]);
-    $creditCard->setExpirationDate($vars["cc_year"] . "-" . $vars["cc_month"]);
-    $creditCard->setCardCode($vars["cc_vcode"]);
-
-    // Add the payment data to a paymentType object
-    $paymentOne = new AnetAPI\PaymentType();
-    $paymentOne->setCreditCard($creditCard);
-
-	// Create order information
-	$order = new AnetAPI\OrderType();
-	//The invoice number will be the same as the registration number
-	global $wpdb;
-	//Get the latest registration id and add one to as the invoice number
-	$invoiceNumber = $wpdb->get_var("SELECT MAX(registration_id) FROM srbc_registration") + 1;
-    $order->setInvoiceNumber($invoiceNumber);
-    $order->setDescription($camp->area . " " . $camp->name);
-
-    // Set the customer's Bill To address
-    $customerAddress = new AnetAPI\CustomerAddressType();
-    $customerAddress->setFirstName($vars["parent_first_name"]);
-    $customerAddress->setLastName($vars["parent_last_name"]);
-    $customerAddress->setCompany("");
-    $customerAddress->setAddress($vars["cc_address"]);
-    $customerAddress->setCity($vars["cc_city"]);
-    $customerAddress->setState($vars["cc_state"]);
-	$customerAddress->setZip($vars["cc_zipcode"]);
-	
-	//TODO add other countries
-    $customerAddress->setCountry("USA");
-
-    // Set the customer's identifying information
-    $customerData = new AnetAPI\CustomerDataType();
-    $customerData->setType("individual");
-    $customerData->setId($camper_id);
-    $customerData->setEmail($vars["email"]);
-
-    // Add values for transaction settings
-    $duplicateWindowSetting = new AnetAPI\SettingType();
-    $duplicateWindowSetting->setSettingName("duplicateWindow");
-    $duplicateWindowSetting->setSettingValue("60");
-
-    // Create a TransactionRequestType object and add the previous objects to it
-    $transactionRequestType = new AnetAPI\TransactionRequestType();
-    $transactionRequestType->setTransactionType("authCaptureTransaction");
-    $transactionRequestType->setAmount($vars["cc_amount"]);
-    $transactionRequestType->setOrder($order);
-    $transactionRequestType->setPayment($paymentOne);
-    $transactionRequestType->setBillTo($customerAddress);
-    $transactionRequestType->setCustomer($customerData);
-    $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
-
-    // Assemble the complete transaction request
-    $request = new AnetAPI\CreateTransactionRequest();
-    $request->setMerchantAuthentication($merchantAuthentication);
-    $request->setRefId($refId);
-    $request->setTransactionRequest($transactionRequestType);
-
-    // Create the controller and get the response
-	$controller = new AnetController\CreateTransactionController($request);
-
-	//If we are on localhost use the sandbox else use production
-	if($_SERVER['SERVER_NAME'] === "localhost" || $_SERVER['SERVER_NAME'] === "127.0.0.1")
-		$response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
-    else
-    	$response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
-    
-
-    if ($response != null) {
-        // Check to see if the API request was successfully received and acted upon
-        if ($response->getMessages()->getResultCode() == "Ok") {
-            // Since the API request was successful, look for a transaction response
-            // and parse it to display the results of authorizing the card
-            $tresponse = $response->getTransactionResponse();
-        
-			if ($tresponse != null && $tresponse->getMessages() != null) 
-				return true;
-			else 
-			{
-                echo "Transaction Failed \n";
-                if ($tresponse->getErrors() != null) {
-                    echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
-                    echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
-				}
-            }
-            // Or, print errors if the API request wasn't successful
-        } else {
-            echo "Transaction Failed \n";
-            $tresponse = $response->getTransactionResponse();
-        
-            if ($tresponse != null && $tresponse->getErrors() != null) {
-                echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
-                echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
-            } else {
-                echo " Error Code  : " . $response->getMessages()->getMessage()[0]->getCode() . "\n";
-                echo " Error Message : " . $response->getMessages()->getMessage()[0]->getText() . "\n";
-			}
-        }
-    } else {
-		echo  "No response returned \n";
-	}
-	return false;
-}
 
 function storeCCData($vars,$camp,$horse_opt,$waitlistsize)
 {
