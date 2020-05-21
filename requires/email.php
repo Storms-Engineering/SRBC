@@ -17,7 +17,7 @@ class Email
 		$owed = Payments::amountDue($registration_id);
 
 		$msg = "Hello ". $info->parent_first_name . ",<br><br>We are letting you know that you have a balance due on your account. The balance is for " . $info->camper_first_name . "(<b>" . $info->area . " " . $info->name . "</b>)  <br><br>
-		You currently owe <b>$$owed</b>." . '  If you wish to make an online payment please click <a href="http://' . $_SERVER['SERVER_NAME'] . '/make-payment?r_id=' . $registration_id . '">here</a>.
+		You currently owe <b>$$owed</b>." . '  If you wish to make an online payment please click <a style="color:#688df2" href="http://' . $_SERVER['SERVER_NAME'] . '/make-payment?r_id=' . $registration_id . '">here</a>.
 		<br><br>If you have any furthur questions please give us a call.';
 		self::sendMail($info->email,"Camp Remaining Balance Due", $msg);
 		//TODO fix this for registrations because it looks corny
@@ -63,8 +63,8 @@ class Email
 		<b>Camp Start Date</b>: " .date("l, M j, Y",strtotime($info->start_date)) . '<br><pre style="display:inline">	</pre><b>Camp Drop-off time</b>: ' . $info->dropoff_time . 
 		"<br><br><b>Camp End Date</b>: " .date("l, M j, Y",strtotime($info->end_date)) . '<br><pre style="display:inline">	</pre><b>Camp Pick-up time</b>: '. $info->pickup_time . '<br><br>' . 
 		'If your camper is riding the bus please refer to our FAQ page for bus stop location and times.<br><br>' .
-		'If you have any other questions please refer to our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.<br><br>' .
-		'If you want to know what your camper should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>.'.
+		'If you have any other questions please refer to our <a style="color:#688df2" href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.<br><br>' .
+		'If you want to know what your camper should pack for camp, check out our <a style="color:#688df2" href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>.'.
 		"<br><br>See you on the opening day of camp!";
 		self::sendMail($info->email,"Thank you for signing up for a Solid Rock Camp!", $msg);
 		//TODO fix this for registrations because it looks corny
@@ -80,8 +80,8 @@ class Email
 		$msg = "Hello ". $info->parent_first_name . ",<br><br>Thanks for signing up " . $info->camper_first_name . " for <b>" . $info->area . " " . $info->name . "</b>!  <br><br>
 		<b>Camp Start Date</b>: " .date("l, M j, Y",strtotime($info->start_date)) . '<br><b>Camp End Date</b>: ' .date("l, M j, Y",strtotime($info->end_date)) . '<br><br><b>Daily Drop-off time</b>: ' . $info->dropoff_time . 
 		'<br><b>Daily Pick-up time</b>: '. $info->pickup_time . '<br><br>' . 
-		'If you have any other questions please refer to our <a href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.<br><br>' .
-		'If you want to know what your camper should pack for camp, check out our <a href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>.'.
+		'If you have any other questions please refer to our <a style="color:#688df2" href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.<br><br>' .
+		'If you want to know what your camper should pack for camp, check out our <a style="color:#688df2" href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>.'.
 		'<br>Follow us on Facebook for current updates regarding camp changes for Summer 2020.' . 
 		"<br><br>See you on the opening day of camp!";
 		self::sendMail($info->email,"Thank you for signing up for a Solid Rock Camp!", $msg);
