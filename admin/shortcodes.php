@@ -357,6 +357,7 @@ function srbc_registration( $atts )
 				{
 					$cmpid = $_GET['campid'];
 					$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_camps WHERE camp_id=%s",$cmpid));
+
 					//TODO add a check if the camp is past the signup date
 					//BODY also could add a check if the camp is completely full
 					if($camp->closed_to_registrations === "1")
@@ -403,8 +404,8 @@ function srbc_registration( $atts )
 				
 				
 				echo "</h3><br>";
-				//We aren't showing busrides here for workcrew or wit
-				if(!isset($_GET['workcrew']) && !isset($_GET['wit']))
+				//We aren't showing busrides here for workcrew or wit or day camps
+				if(!isset($_GET['workcrew']) && !isset($_GET['wit']) && $camp->day_camp !== "1")
 				{
 					echo '<span>Busride*:</span>
 					<!-- TODO remove busride option for Winter and Teen Camps -->
@@ -417,6 +418,13 @@ function srbc_registration( $atts )
 	
 					<p>*The bus will depart from and return to the Duluth Trading Company parking lot at 8931 Old Seward Hwy., Suite A Anchorage, AK 99515.
 					The exact times will be sent you in your confirmation email or letter.</p>';
+				}
+				else if($camp->day_camp === "1")
+				{
+					echo '<span>Busride*:</span>
+					<select class="inputs" id="busride" name="busride">
+					<option value="none" selected>No bus ride available for day camps</option>
+						</select><br><br>';
 				}
 				?>
 			Camper:
