@@ -19,6 +19,8 @@ function calculateTotal()
 		total += parseInt(document.getElementById("horse_opt_cost").innerText);		
 	document.getElementById("total").innerText = total;	
 	document.getElementById("cc_amount").value = total;
+
+	document.getElementById("totalDisplay").innerText = total + parseInt(document.getElementById("snackshop_amt").value);	
 }
 var names = ["cc_amount", "cc_number", "cc_name", "cc_zipcode", "cc_vcode", "cc_month", "cc_year" ];
 	
