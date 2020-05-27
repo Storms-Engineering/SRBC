@@ -534,7 +534,7 @@ function srbc_registration( $atts )
 		else
 		{
 			echo 'Workcrew Code: <input type="text" id="code" name="code">
-			<hr>
+			
 			<!-- Due to Covid 19 we are not requiring $50 down payment
 			
 			<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received unless you are workcrew*.  (This $50 DOES go towards the cost of the camp)</span><br>
@@ -542,7 +542,7 @@ function srbc_registration( $atts )
 			<br>
 			*If you are workcrew please enter the code received in your email and after registering in the box above and your registration will be allowed.
 			<br>
-			<br>
+			<hr>
 			<h3>Amount to pay*: </h3>
 			<!--Due to Covid 19 we are not requiring $50 down payment-->
 			<label class="container">$0
@@ -560,7 +560,15 @@ function srbc_registration( $atts )
 				<span class="checkmark"></span>
 			</label>
 			*Disregard this section if are workcrew and have put in your code.<br>
-			<input type="hidden" name="registration_notes">';
+			<input type="hidden" name="registration_notes">
+			<br>
+			<h3>Snack Shop Money - New!</h3>
+			- Add money to your child\'s Snack Shop Card. (Note: Snack Shop payment is not refundable)<br>
+			Amount: $<input style="width:50px; "onchange="calculateTotal();" type="text" id="snackshop_amt" name="snackshop_amt"> (Recommended amount $40 for week-long camp)
+			<br><br>
+			<h3>Total:<span id="totalDisplay"></span></h3>';
+		
+			
 		}
 		echo '
 		<hr>
