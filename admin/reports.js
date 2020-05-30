@@ -38,13 +38,8 @@ function generateReport(data)
 	}
 	
 	url =  "/wp-content/plugins/SRBC/report_query.php?" + data;
-	if ((data.includes("mailing_list")  && hasStartDate) ||  data.includes("balance_due_addresses") || data.includes("kids_mailingList") || data.includes("healthForms"))
+	if ((data.includes("mailing_list") ) ||  data.includes("balance_due_addresses") || data.includes("kids_mailingList") || data.includes("healthForms"))
 		window.open(url, '_blank');
-	else if(data.includes("mailing_list"))
-	{
-		alert("Please pick a start date");
-		return;
-	}
 	else
 	{
 	xhttp.open("GET",url, true);
