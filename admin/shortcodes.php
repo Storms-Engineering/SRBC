@@ -19,7 +19,7 @@ function srbc_make_payment_on_camper($atts)
 	
 	if(isset($_POST['cc_amount']))
 	{
-		$result = Payments::createCCTransaction($_POST,$camper,$camper->camper_id);
+		$result = Payments::createCCTransaction($_POST["cc_amount"], $_POST,$camper,$camper->camper_id);
 		if($result)
 		{
 			echo '<span style="color:green">Payment Successful!</span>';
@@ -564,9 +564,10 @@ function srbc_registration( $atts )
 			<br>
 			<h3>Snack Shop Money - New!</h3>
 			- Add money to your child\'s Snack Shop Card. (Note: Snack Shop payment is not refundable)<br>
-			Amount: $<input style="width:50px; "onchange="calculateTotal();" type="text" id="snackshop_amt" name="snackshop_amt"> (Recommended amount $40 for week-long camp)
+			Amount: $<input style="width:75px; "onchange="calculateTotal();" type="number" min="0"
+			 id="snackshop_amt" name="snackshop_amt" value="0"> (Recommended amount $40 for week-long camp)
 			<br><br>
-			<h3>Total:<span id="totalDisplay"></span></h3>';
+			<h3>Total due:<span id="totalDisplay"></span></h3>';
 		
 			
 		}
@@ -835,9 +836,10 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	{
 		//TODO get ride of function below
 		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
-
+-
 		require_once __DIR__ . '/../requires/payments.php';
-		$result = Payments::createCCTransaction($vars,$camp,$camper_id);
+		$totalToPay = $vars["cc_amount"] + $vars["snackshop_amt"];
+		$result = Payments::createCCTransaction($totalToPay, $vars, $camp, $camper_id);
 
 		if(!$result)
 		{

@@ -98,3 +98,5 @@ function moveAddress()
 		document.getElementsByName("cc_" + addresses[i])[0].value = "";
 	}
 }
+//Call calulateTotal onload so that is shows a total
+calculateTotal();
