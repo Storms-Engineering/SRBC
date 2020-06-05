@@ -7,7 +7,7 @@ use net\authorize\api\controller as AnetController;
 class Payments
 {
 
-	public static function createCCTransaction($vars,$camp,$camper_id)
+	public static function createCCTransaction($amount, $vars, $camp, $camper_id)
 	{
 		/* Create a merchantAuthenticationType object with authentication details
 		   retrieved from the constants file */
@@ -66,7 +66,7 @@ class Payments
 		// Create a TransactionRequestType object and add the previous objects to it
 		$transactionRequestType = new AnetAPI\TransactionRequestType();
 		$transactionRequestType->setTransactionType("authCaptureTransaction");
-		$transactionRequestType->setAmount($vars["cc_amount"]);
+		$transactionRequestType->setAmount($amount);
 		$transactionRequestType->setOrder($order);
 		$transactionRequestType->setPayment($paymentOne);
 		$transactionRequestType->setBillTo($customerAddress);
