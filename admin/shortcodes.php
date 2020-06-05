@@ -17,18 +17,22 @@ function srbc_make_payment_on_camper($atts)
 		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE " .
 			$GLOBALS["srbc_registration"] . ".registration_id=%d ", $registration_id));
 	
+	//User submitted payment charge
 	if(isset($_POST['cc_amount']))
 	{
-		$result = Payments::createCCTransaction($_POST,$camper,$camper->camper_id);
+		$result = Payments::createCCTransaction(($_POST["cc_amount"] + $_POST["snackshop_amt"]), $_POST ,$camper, $camper->camper_id);
 		if($result)
 		{
-			echo '<span style="color:green">Payment Successful!</span>';
+			//Make autopayment for camp fees
 			Payments::autoPayment($registration_id,$_POST["cc_amount"],"card","Online");
-		}
-		else
-		{
-			error_msg("It seems like their was a problem with your credit card.
-			Please use the back button and double check your credit card information");
+
+			if($_POST["snackshop_amt"] != "0")
+				//Make seperate payment for snackshop
+				Payments::makePayment($registration_id,"card",$_POST["snackshop_amt"],
+				"online","Store");
+
+			echo '<span style="color:green">Payment Successful!</span>';
+
 		}
 	}
 	echo "<h1>Make a payment for " . $camper->camper_first_name .  " " . $camper->camper_last_name . "</h1>";
@@ -38,13 +42,22 @@ function srbc_make_payment_on_camper($atts)
 	echo '<h2>Amount due: $' . $amountDue . "</h2>";
 
 	echo '<form method="post"> 
-	Amount to pay: $<input type="text" name="cc_amount"><br><br>
-	<input type="hidden" name="r_id" value="' . $registration_id . '">';
+	Amount to pay for camp: $<input id="cc_amount" onchange="calculateTotal();" type="number" min="0" name="cc_amount" value="0">
+	<br><br>
+	Amount to put on snackshop card* <input type="number" onchange="calculateTotal();" min="0" name="snackshop_amt" id="snackshop_amt" value="0"> (Recommended amount $40 for week-long camp) 
+	<br><br>
+	*Note: Snack Shop payment is not refundable
+	<br>
+	<input type="hidden" name="r_id" value="' . $registration_id . '">
+	<br>
+	<h1>Total: $<span id="total"></span></h1>';
 
 	Payments::setupCreditCardHTML();
 
 	echo '<br><input type="submit" value="Submit">
-	</form>';
+	</form>
+	<script src="../wp-content/plugins/SRBC/admin/js/payment.js"></script>
+	';
 	
 }
 
@@ -829,7 +842,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
 
 		require_once __DIR__ . '/../requires/payments.php';
-		$result = Payments::createCCTransaction($vars,$camp,$camper_id);
+		$result = Payments::createCCTransaction($vars["cc_amount"], $vars, $camp, $camper_id);
 
 		if(!$result)
 		{
