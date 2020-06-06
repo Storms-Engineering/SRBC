@@ -16,9 +16,36 @@ class Email
 		require_once __DIR__ . '/payments.php';
 		$owed = Payments::amountDue($registration_id);
 
-		$msg = "Hello ". $info->parent_first_name . ",<br><br>We are letting you know that you have a balance due on your account. The balance is for " . $info->camper_first_name . "(<b>" . $info->area . " " . $info->name . "</b>)  <br><br>
-		You currently owe <b>$$owed</b>." . '  If you wish to make an online payment please click <a style="color:#688df2" href="http://' . $_SERVER['SERVER_NAME'] . '/make-payment?r_id=' . $registration_id . '">here</a>.
-		<br><br>If you have any furthur questions please give us a call.';
+		$msg = "Hello ". $info->parent_first_name . ",<br><br>" . $info->camper_first_name . " is registered for " . $info->area . " " . $info->name . " which starts " .
+		date("l, F j, Y",strtotime($info->start_date)) . ". <br><br>
+		<b>Camp Drop-Off Time</b>: " . $info->dropoff_time . "<br>" .
+		"<b>Camp Pick-Up Time</b>: " . $info->pickup_time . "<br><br>" . 
+
+		"<b>Amount due: $$owed<b><br><br>" . 
+		'<b>To pre-pay camp fees and snack shop, click <a style="color:#688df2" href="http://' . $_SERVER['SERVER_NAME'] . '/make-payment?r_id=' . $registration_id . '">here</a>.</b>
+		<br>(You can still pay at check-in, but we encourage you to make use of our new, easy online payment system!)
+		<br><br>
+		We look forward to your camper being here this summer and have a few extra items they will need for their camp experience this year.
+		<br><br>
+		Extra Needed Packing Items:
+		<br>
+		-Face Covering
+		<br>
+		-Personal Water Bottle
+		<br><br>
+		Extra Recommended Packing Item:
+		<br>
+		-Personal Hand Sanitizer
+		<br><br>
+		For the rest of your Lakeside and Wagon Train packing lists, visit our packing list page <a href="https://solidrockbiblecamp.com/camps/packing-lists/">here</a>.<br><br>
+
+		For updates on what our summer will look like, follow us on Facebook for the most current camp news!<br><br>
+
+		We appreciate your understanding as our schedule has fluctuated. Contact our office with any concerns or questions.<br><br>
+
+		We look forward to seeing you and your camper soon!<br><br>
+
+		Thank you!';
 		self::sendMail($info->email,"Camp Remaining Balance Due", $msg);
 		//TODO fix this for registrations because it looks corny
 		//BODY but it is also returned on ajax requests for resending email
