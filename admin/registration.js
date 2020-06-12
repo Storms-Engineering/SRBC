@@ -32,12 +32,12 @@ function validateForm()
 	}
 	if(signaturePad.isEmpty())
 	{
-		alert("Please fill in your signature for the health form");
+		alert("Please fill in your signature for the Health Form");
 		return false;
 	}
 	if(pa_signaturePad.isEmpty())
 	{
-		alert("Please fill in your signature");
+		alert("Please fill in your signature for the Parental Agreement");
 		return false;
 	}
 	//Letting users not have to pay $50 registration fee
