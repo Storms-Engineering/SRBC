@@ -363,6 +363,115 @@ Class Report
 		echo "</table>";
 	}
 
+	//Enter a start date to grab fees from
+	public function breakdown_fees()
+	{
+		global $wpdb;
+		$newFormat = date("m/d/Y",strtotime( $this->start_date));
+		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+										FROM ((" . $GLOBALS['srbc_payments'] . " 
+										INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
+										INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+										WHERE (" . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s AND " . $GLOBALS['srbc_payments'] . ".payment_type = 'card' AND " . $GLOBALS['srbc_payments'] . ".note='Online')
+										ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
+										
+		echo "<h3>Registration day fees collected:</h3>";
+		echo '<table id="report_table">';
+		echo "<tr><th>Parent Last name</th><th>Parent Last name</th><th>Camper Last name</th><th>Camper First Name</th><th>Camp fee</th><th>Program Area</th>
+				<th>Horse fee (WT)</th><th>Horse Option(LS)</th><th>Bus Fee</th><th>Store</th><th>Total</th></tr>";
+				
+		//Set this to default Because some camps are free so we say none for program area
+		$program_area = "None";
+		//Declare variables to sum up together in one row
+		$horse_fee = $horse_opt_cost = $bus_fee = $camp_fee  = $store = $next_id = $next_reg_id = $total = 0;
+		$pointer = 1;
+		$totals = ["card" => 0,"check" => 0, "cash" => 0, "Bus" => 0, "Store" => 0, "LS Horsemanship" => 0, "WT Horsemanship" => 0,
+		"Lakeside" => 0, "Wagon Train" => 0, "Wilderness" => 0, "None" => 0, "Refund" => 0];
+		$camper_ids = [];
+		foreach ($campers as $camper)
+		{
+			$camper_ids[] = $camper->camper_id;
+			$totals[$camper->payment_type] += $camper->payment_amt;
+			$totals[$camper->fee_type] += $camper->payment_amt;
+			if ($camper->fee_type == "Bus")
+				$bus_fee += $camper->payment_amt;
+			else if($camper->fee_type == "Store")
+				$store += $camper->payment_amt;
+			else if($camper->fee_type == "LS Horsemanship")
+				$horse_opt_cost += $camper->payment_amt;
+			else if($camper->fee_type == "WT Horsemanship")
+				$horse_fee += $camper->payment_amt;
+			else
+			{
+				$camp_fee += $camper->payment_amt;	
+				
+				if($program_area == "None")
+					$program_area = $camper->fee_type;
+				if ($program_area != $camper->fee_type)
+					$program_area .= "," . $camper->fee_type;
+			}
+			
+			$total += $camper->payment_amt;
+			$last_id = $camper->camper_id;
+			
+			if ($pointer < count($campers))
+			{
+				$nextid = $campers[$pointer]->camper_id;
+				$next_reg_id = $campers[$pointer]->registration_id;
+			}
+			else 
+			{
+				//If this is the last camper then just force the row to print.
+				$nextid = 0;
+				$next_reg_id = 0;
+			}
+			//Write out data
+			if ($camper->camper_id != $nextid || $camper->registration_id != $next_reg_id)
+			{
+				echo '<tr class="'.$camper->gender.'" onclick="openCamperModal('.$camper->camper_id.');"><td>'. $camper->parent_first_name . '</td><td>' . $camper->parent_last_name . '</td><td>'. $camper->camper_last_name . "</td><td>" . $camper->camper_first_name . "</td>";
+				echo "<td>$". $camp_fee . "</td>";
+				echo "<td>". $program_area . "</td>";
+				echo "<td>$". $horse_fee . "</td>";
+				echo "<td>$". $horse_opt_cost . "</td>";
+				echo "<td>$". $bus_fee . "</td>";
+				echo "<td>$". $store . "</td>";
+				echo "<td>$". $total . "</td>";
+				echo "</tr>";
+				//Then reset the variables
+				$horse_fee = $horse_opt_cost = $bus_fee = $camp_fee = $store = $last_id = $total = 0;
+				$program_area = "None";
+			}
+			$pointer++;
+		}
+		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
+										FROM ((" . $GLOBALS['srbc_camps'] . " 
+										INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id)
+										INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+										WHERE " . $GLOBALS['srbc_camps'] . ".start_date=%s
+										ORDER BY srbc_campers.camper_id",$_GET['start_date'] ));
+		//Show campers who are signed up for these camps, but didn't pay anything
+		foreach($campers as $camper)
+		{
+			//TODO make this use sql
+			//BODY that will be faster
+			if(!in_array($camper->camper_id,$camper_ids))
+			{
+				echo '<tr class="'.$camper->gender.'" onclick="openCamperModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name . "</td><td>" . $camper->camper_first_name . "</td>";
+				echo "<td>$0</td>";
+				echo "<td>None</td>";
+				echo "<td>$0</td>";
+				echo "<td>$0</td>";
+				echo "<td>$0</td>";
+				echo "<td>$0</td>";
+				echo "<td>$0</td>";
+				echo "</tr>";
+			}
+		}
+		//Close out the table
+		echo "</table>";
+		$this->printTotals($totals);
+	}
+
 	public function registration_day()
 	{
 		global $wpdb;

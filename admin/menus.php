@@ -799,6 +799,7 @@ function srbc_camp_reports()
 		<button onclick="generateReport('mailing_list')">Mailing List</button>
 		<button onclick="generateReport('healthForms')">Health Forms</button>
 		<button onclick="generateReport('lodging')">Lodging Report</button>
+		<button onclick="generateReport('breakdown_fees')">Breakdown Fees for Online Payments</button>
 
 
 		<hr>
