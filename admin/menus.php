@@ -252,6 +252,7 @@ function srbc_settings()
 	</form>
 
 	<br><br>
+	<h1> Archive data section - Only use once a year!</h1>
 	<form method="post" onsubmit="return confirm('Are you sure you want to archive all data?');">
 		Year to archive data under: <input type="text" name="year_to_rename">
 	  	<input type="submit" name="rename_database" value="Archive All Current Data">
