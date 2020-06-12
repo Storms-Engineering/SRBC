@@ -51,7 +51,7 @@ Class Report
 	public function healthForms()
 	{
 		//Get campers but don't print header
-		$campers = $this->getCampers(NULL,false);
+		$campers = $this->getCampers(" ORDER BY srbc_campers.camper_last_name ASC",false);
 		require_once 'health_form.php';
 		HealthForm::before();
 		foreach($campers as $camper)
