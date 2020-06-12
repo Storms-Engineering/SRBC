@@ -24,7 +24,7 @@ class HealthForm
         <input type="hidden" name="aesKey" value="'. $healthForm->aesKey . '">
         <input type="hidden" name="data" value="'. $healthForm->data . '">';
         //echo '<button onclick="decryptHealthForms();">Decrypt</button>';
-		echo '<h3>Health History for: ' . $healthForm->camper_last_name .',' . $healthForm->camper_first_name . '</h3>
+		echo '<h3>Health History for: ' . $healthForm->camper_last_name .', ' . $healthForm->camper_first_name . '</h3>
 		DOB:<span class="value">' . $healthForm->birthday . '</span>
 		Age:<span class="value">' . $healthForm->age . '</span>
 		Gender:<span class="value">' . $healthForm->gender . '</span>
