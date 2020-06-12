@@ -22,18 +22,18 @@ class Email
 		"<b>Camp Pick-Up Time</b>: " . $info->pickup_time . "<br><br>" . 
 
 		"<b>Amount due: $$owed</b><br><br>" . 
-		'To pre-pay camp fees and snack shop, click <a style="color:#688df2" href="http://' . $_SERVER['SERVER_NAME'] . '/make-payment?r_id=' . $registration_id . '">here</a>.</b>
+		'<b>To pre-pay camp fees and snack shop, click <a style="color:#688df2" href="http://' . $_SERVER['SERVER_NAME'] . '/make-payment?r_id=' . $registration_id . '">here</a>.</b>
 		<br>(You can still pay at check-in, but we encourage you to make use of our new, easy online payment system!)
 		<br><br>
 		We look forward to your camper being here this summer and have a few extra items they will need for their camp experience this year.
 		<br><br>
-		Extra Needed Packing Items:
+		<b>Extra Needed Packing Items:</b>
 		<br>
 		-Face Covering
 		<br>
 		-Personal Water Bottle
 		<br><br>
-		Extra Recommended Packing Item:
+		<b>Extra Recommended Packing Item:</b>
 		<br>
 		-Personal Hand Sanitizer
 		<br><br>
