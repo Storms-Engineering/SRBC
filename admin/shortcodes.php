@@ -513,7 +513,15 @@ function srbc_registration( $atts )
 			//Print latest version from the database
 			echo $wpdb->get_row("SELECT * FROM srbc_parental_agreements_versions ORDER BY agreement_id DESC LIMIT 1")->agreement_text;		
 			//Signature pad for parental agreement
-			echo '<canvas id="pa_canvas" style="border:1px solid black" height="200" width="500"></canvas>
+			echo '<br>
+			I 
+			<select required>
+				<option value="">do not affirm</option>
+				<option value="true">affirm</option>
+			</select>			
+			to the above statements by signing below
+			<br><br>
+			<canvas id="pa_canvas" style="border:1px solid black" height="200" width="500"></canvas>
 			<input type="hidden" name="pa_signature_img">
 			<br>
 			<button type="button" onclick="pa_signaturePad.clear()">Clear</button>
