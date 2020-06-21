@@ -84,6 +84,44 @@ else if (isset($obj["deactivate_id"]))
 	echo "Deactivated Registration and Saved Sucessfully";
 	}
 }
+//Add the camper to another camp
+else if(isset($obj["add_camp_id"]))
+{
+	$currentDate = new DateTime("now", new DateTimeZone('America/Anchorage'));
+	//Insert query into database
+	try
+	{
+		$wpdb->insert(
+				'srbc_registration', 
+				array( 
+					'registration_id' =>0,
+					'camp_id' => $obj["add_camp_id"], 
+					'camper_id' => $obj["camper_id"],
+					'date' => $currentDate->format("m/d/Y h:i A"),
+					'horse_opt' => 0,
+					'busride' => "none",
+					'waitlist' => 0,
+					'horse_waitlist' => 0,
+					'registration_notes' => ""
+				), 
+				array( 
+					'%d',
+					'%d', 
+					'%d',
+					'%s',
+					'%d',
+					'%s',
+					'%d',
+					'%d',
+					'%s'
+				) 
+				);
+	}
+	catch(Exception $e)
+	{
+		Email::emailDeveloper($e->getMessage());
+	}
+}
 else if(isset($obj["registration_id"])){
 	//Change registration to another camp
 	
@@ -91,8 +129,7 @@ else if(isset($obj["registration_id"])){
 	if ($obj["change_to_id"] == "none"){
 		echo "Please specify a camp to change to!";
 		return;
-	}
-	
+	}	
 	$wpdb->update( 
 		$GLOBALS['srbc_registration'], 
 		array( 
