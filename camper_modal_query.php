@@ -40,6 +40,7 @@
 					'<input type="text" name="state" class="financial" value="' . $camper->state . '"> ' .
 					'<input type="text" name="zipcode" value="' . $camper->zipcode . '"></span>';
 				echo '<br><h3>Camper Notes:<h3> <br><textarea id="notes" rows="4" cols="50">' . $camper->notes . '</textarea></div>';
+				echo '<button class="big_button" onclick="addCamp('.$camper->camper_id.')">Add Camper to camp</button>';
 				echo '<h3>Camps signed up for:</h3><br>';
 				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE camper_id=%s",$camper->camper_id));
 				//Check that they have registrations
