@@ -56,7 +56,7 @@ class HealthForm
 					<label for="recent_injury_illness">Any recent injury or illness?</label>
 					<span class="value" name="recent_injury_illness">
 					</span>
-				<label for="ear_infections">Frequency ear infections?</label>
+				<label for="ear_infections">Frequent ear infections?</label>
 				<span class="value" name="ear_infections">
 				</span>
 				<label for="skin_problems">Any Skin Problems?</label>
@@ -76,6 +76,9 @@ class HealthForm
 				</span>
 				<label for="mono">Mono in last year?</label>
 				<span class="value" name="mono">
+				</span>
+				<label for="allergies">Allergies?</label>
+				<span class="value" name="allergies">
 				</span>
 				<br>
 				<label for="current_medications">Any current medications?</label>
@@ -215,6 +218,12 @@ class HealthForm
 				<br>
 				Mono in last year?
 				<select name="mono">
+						<option value="No">No</option>
+						<option value="Yes">Yes</option>
+				</select>
+				<br>
+				Allergies?
+				<select name="allergies">
 						<option value="No">No</option>
 						<option value="Yes">Yes</option>
 				</select>
@@ -370,6 +379,7 @@ class HealthForm
 		"glassses_contacts" => $_POST['glassses_contacts'],
 		"orthodontic_appliance" => $_POST['orthodontic_appliance'],
 		"mono" => $_POST['mono'],
+		"allergies" => $_POST['allergies'],
 		"current_medications" => $_POST['current_medications'],
 		"frequent_headaches" => $_POST['frequent_headaches'],
 		"stomach_aches" => $_POST['stomach_aches'],
