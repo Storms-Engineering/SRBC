@@ -16,7 +16,7 @@ require_once 'requires/health_form.php';
 HealthForm::before();
 //Just one camper id so generate one health form
 if($camper_id != null)
-    HealthForm::generateHealthForm($camper_id);
+    HealthForm::generateHealthForm($camper_id,null);
 else
 {
     //Now we have multiple loop through

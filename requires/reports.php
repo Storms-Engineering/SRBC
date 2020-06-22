@@ -53,11 +53,10 @@ Class Report
 		//Get campers but don't print header
 		$campers = $this->getCampers(" ORDER BY srbc_campers.camper_last_name ASC",false);
 		require_once 'health_form.php';
-		echo "<h3> Camp: " . $campers[0]->area . " " . $campers[0]->name . "</h3>";
 		HealthForm::before();
 		foreach($campers as $camper)
 		{
-			HealthForm::generateHealthForm($camper->camper_id);
+			HealthForm::generateHealthForm($camper->camper_id,$campers);
 		}
 		HealthForm::after();
 	}

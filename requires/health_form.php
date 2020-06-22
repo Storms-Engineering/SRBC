@@ -2,7 +2,7 @@
 require_once 'Encryption.php';
 class HealthForm
 {
-    public static function generateHealthForm($camperId)
+    public static function generateHealthForm($camperId,$campers)
     {
 		//Make this loop?  So only 1 sql query?
         global $wpdb;
@@ -24,8 +24,18 @@ class HealthForm
         <input type="hidden" name="aesKey" value="'. $healthForm->aesKey . '">
         <input type="hidden" name="data" value="'. $healthForm->data . '">';
         //echo '<button onclick="decryptHealthForms();">Decrypt</button>';
-		echo '<h3>Health History for: ' . $healthForm->camper_last_name .', ' . $healthForm->camper_first_name . '</h3>
-		DOB:<span class="value">' . $healthForm->birthday . '</span>
+		
+
+		if($campers != null)
+		{
+			echo '<h3>Health History for: ' . $healthForm->camper_last_name . ', ' . $healthForm->camper_first_name;
+			echo ' for ' . $campers[0]->area . " " . $campers[0]->name . '</h3>';
+		}
+		else 
+			echo '<h3>Health History for: ' . $healthForm->camper_last_name . ', ' . $healthForm->camper_first_name . "</h3>";
+			
+			
+		echo 'DOB:<span class="value">' . $healthForm->birthday . '</span>
 		Age:<span class="value">' . $healthForm->age . '</span>
 		Gender:<span class="value">' . $healthForm->gender . '</span>
         Parent/Guardian
