@@ -516,8 +516,8 @@ function srbc_registration( $atts )
 			echo '<br>
 			I 
 			<select required>
-				<option value="">do not affirm</option>
-				<option value="true">affirm</option>
+				<option value="">do not agree</option>
+				<option value="true">agree</option>
 			</select>			
 			to the above statements by signing below
 			<br><br>
