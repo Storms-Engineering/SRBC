@@ -378,7 +378,7 @@ Class Report
 		echo "<h3>Registration day fees collected:</h3>";
 		echo '<table id="report_table">';
 		echo "<tr><th>Parent Last name</th><th>Parent Last name</th><th>Camper Last name</th><th>Camper First Name</th><th>Camp fee</th><th>Program Area</th>
-				<th>Horse fee (WT)</th><th>Horse Option(LS)</th><th>Bus Fee</th><th>Store</th><th>Total</th></tr>";
+				<th>Horse fee (WT)</th><th>Horse Option(LS)</th><th>Bus Fee</th><th>Store</th><th>Total</th><th>Payment Dates</th></tr>";
 				
 		//Set this to default Because some camps are free so we say none for program area
 		$program_area = "None";
@@ -393,6 +393,11 @@ Class Report
 			$camper_ids[] = $camper->camper_id;
 			$totals[$camper->payment_type] += $camper->payment_amt;
 			$totals[$camper->fee_type] += $camper->payment_amt;
+
+			//Add all the payment dates into a string
+			$dates = NULL;
+			$dates .= $camper->payment_date . "<br>";
+
 			if ($camper->fee_type == "Bus")
 				$bus_fee += $camper->payment_amt;
 			else if($camper->fee_type == "Store")
@@ -436,9 +441,11 @@ Class Report
 				echo "<td>$". $bus_fee . "</td>";
 				echo "<td>$". $store . "</td>";
 				echo "<td>$". $total . "</td>";
+				echo "<td>". $dates . "</td>";
 				echo "</tr>";
 				//Then reset the variables
 				$horse_fee = $horse_opt_cost = $bus_fee = $camp_fee = $store = $last_id = $total = 0;
+				$dates = "";
 				$program_area = "None";
 			}
 			$pointer++;
