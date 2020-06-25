@@ -674,7 +674,7 @@ Class Report
 			echo "<td>" . $camper->area . " ".  $camper->name . "</td>";
 			echo "<td>" . $camper->phone . "</td>";
 			$totalpaid = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s",$camper->registration_id));
+									FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s  AND NOT srbc_payments.fee_type='store'",$camper->registration_id));
 			$cost = $wpdb->get_var($wpdb->prepare("
 									SELECT SUM(srbc_camps.cost +
 										(CASE WHEN " . $GLOBALS['srbc_registration'] . ".horse_opt = 1 THEN " . $GLOBALS['srbc_camps'] . ".horse_opt_cost
