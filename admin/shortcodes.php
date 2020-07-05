@@ -9,8 +9,11 @@ require_once __DIR__ . '/../requires/email.php';
 function srbc_make_payment_on_camper($atts)
 {
 	$registration_id = $_GET["r_id"];
+	
 	global $wpdb;
 	require_once __DIR__ . '/../requires/payments.php';
+ 	$amountDue = Payments::amountDue($registration_id);
+
 	$camper = $wpdb->get_row($wpdb->prepare( "SELECT *
 		FROM ((" . $GLOBALS['srbc_registration'] . "
 		INNER JOIN " . $GLOBALS['srbc_camps']. " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
@@ -20,6 +23,11 @@ function srbc_make_payment_on_camper($atts)
 	//User submitted payment charge
 	if(isset($_POST['cc_amount']))
 	{
+		if($amountDue == 0 && $_POST["cc_amount"] !== 0)
+		{
+			error_msg("You have already payed all of your camp amount");
+			return;
+		}
 		$result = Payments::createCCTransaction(($_POST["cc_amount"] + $_POST["snackshop_amt"]), $_POST ,$camper, $camper->camper_id);
 		if($result)
 		{
@@ -32,13 +40,13 @@ function srbc_make_payment_on_camper($atts)
 				"Online","Store");
 
 			echo '<span style="color:green">Payment Successful!</span>';
-
+			$amountDue = Payments::amountDue($registration_id);
 		}
 	}
 	echo "<h1>Make a payment for " . $camper->camper_first_name .  " " . $camper->camper_last_name . "</h1>";
 
 	
-	$amountDue = Payments::amountDue($registration_id);
+	
 	echo '<h2>Amount due: $' . $amountDue . "</h2>";
 
 	echo '<form method="post"> 
