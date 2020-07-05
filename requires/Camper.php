@@ -14,6 +14,10 @@ class Camper
 	public static function createCamper($info)
 	{
 		global $wpdb;
+		$info["camper_first_name"] = trim($info["camper_first_name"]);
+		$info["camper_last_name"] = trim($info["camper_last_name"]);
+		$info["parent_first_name"] = trim($info["parent_first_name"]);
+		$info["parent_last_name"] = trim($info["parent_last_name"]);
 		$camper = Camper::doesCamperExist($info["camper_first_name"],$info["camper_last_name"],$info["birthday"]);
 		
 		//Calculate the campers age
