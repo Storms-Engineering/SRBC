@@ -29,7 +29,7 @@ function srbc_make_payment_on_camper($atts)
 			if($_POST["snackshop_amt"] != "0")
 				//Make seperate payment for snackshop
 				Payments::makePayment($registration_id,"card",$_POST["snackshop_amt"],
-				"online","Store");
+				"Online","Store");
 
 			echo '<span style="color:green">Payment Successful!</span>';
 
@@ -846,7 +846,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	//If they are not on the waitlist and they have cc info then run their credit card
 	if($waitlist != 1 && isset($_POST["cc_amount"]) && $_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
 	{
-		//TODO get ride of function below
+		//TODO get rid of function below
 		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
 
 		require_once __DIR__ . '/../requires/payments.php';
