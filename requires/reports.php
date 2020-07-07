@@ -136,6 +136,33 @@ Class Report
 		Tables::createTable($campers, $headers, $props);
 	}
 
+	//Shows all campers for a specific camp and where they are lodged
+	public function tshirts()
+	{
+		$campers = $this->getCampers(" ORDER BY camper_last_name ASC");
+		$headers = array("T-shirt size");
+		$props = array("tshirt_size");
+		Tables::createTable($campers, $headers, $props);
+		$totalShirts = ["None" => 0];
+		foreach($campers as $camper)
+		{
+			//Some campers don't have a tshirt size
+			if($camper->tshirt_size == "")
+				$totalShirts["None"] += 1;
+			//We have to initialize the array key with a value
+			else if(!isset($totalShirts[$camper->tshirt_size]))
+				$totalShirts[$camper->tshirt_size] = 1;
+			else
+				$totalShirts[$camper->tshirt_size] += 1;
+		}
+		$keys = array_keys($totalShirts);
+		echo "<br>";
+		foreach($keys as $key)
+		{
+			echo "<b>$key: $totalShirts[$key] <b><br>";
+		}
+	}
+
 	//Displays all inactive registrations
 	public function inactive_registrations()
 	{
