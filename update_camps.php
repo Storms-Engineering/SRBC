@@ -1,5 +1,5 @@
 <?php
-//Makes updates camps or deletes or creates new ones
+//Updates camps or deletes or creates new ones
 header("Content-Type: application/json; charset=UTF-8");
 $obj = json_decode( stripslashes($_POST["x"]), true);
 

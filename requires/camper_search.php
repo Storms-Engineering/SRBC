@@ -46,15 +46,17 @@ class CamperSearch
 		throw new Exception("Method is not yet implemented");
 	}
 	
-	public static function getCampersByCampID($camp_id)
+	public static function getCampersByCampID($camp_id, $includeWaitlist)
 	{
+		//Add this query to exclude waitlist
+		$includeWaitlist = $includeWaitlist ? "" : "AND waitlist=0";
 		global $wpdb;
 		$campers = $wpdb->get_results(
 			$wpdb->prepare( "SELECT *
 							FROM ((" . $GLOBALS['srbc_registration'] . " 
 							INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS['srbc_registration'] . '.camp_id= ' . $GLOBALS['srbc_camps'] . '.camp_id)
 							INNER JOIN srbc_campers ON ' . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
-							WHERE " . $GLOBALS['srbc_camps'] . ".camp_id=%d",$camp_id));	
+							WHERE " . $GLOBALS['srbc_camps'] . ".camp_id=%d " . $includeWaitlist,$camp_id));	
 		return $campers;
 	}
 	

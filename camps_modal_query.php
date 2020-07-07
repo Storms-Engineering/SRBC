@@ -10,6 +10,7 @@
 	echo $camp->area . " " . $camp->name;
 	echo "</h2></div>";
 	echo '<button class="big_button" style="float:right;" onclick="saveCampInfo(' . $camp->camp_id . ');">Save Info & Close</button>';
+	echo '<button class="big_button" style="float:right;background-color:#009933;" onclick="sendBalanceEmails(' . $camp->camp_id . ');">Send Balance Due Emails</button>';
 	echo '<div class="modal-body">';
 	echo 'Area: <input name="area" type="text" value="' . $camp->area . '">';
 	echo 'Camp: <input name="name" type="text" value="' . $camp->name . '"><br>';
@@ -38,7 +39,7 @@
 	
 	require_once 'requires/tables.php';
 	require_once 'requires/camper_search.php';
-	$campers = CamperSearch::getCampersByCampID($camp->camp_id);
+	$campers = CamperSearch::getCampersByCampID($camp->camp_id, true);
 	Tables::createTable($campers);
 	
 	echo "</div>";
