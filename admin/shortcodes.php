@@ -23,10 +23,14 @@ function srbc_make_payment_on_camper($atts)
 	//User submitted payment charge
 	if(isset($_POST['cc_amount']))
 	{
-		if($amountDue == 0 && $_POST["cc_amount"] !== 0)
+		if(($amountDue == 0 && $_POST["cc_amount"] !== 0)) 
 		{
-			error_msg("You have already payed all of your camp amount");
-			return;
+			//Just paying snackshop
+			if($_POST["snackshop_amt"] == 0)
+			{
+				error_msg("You have already payed all of your camp amount");
+				return;
+			}
 		}
 		$result = Payments::createCCTransaction(($_POST["cc_amount"] + $_POST["snackshop_amt"]), $_POST ,$camper, $camper->camper_id);
 		if($result)
