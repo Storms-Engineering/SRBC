@@ -333,6 +333,8 @@ Class Report
 					echo "<h3>No Lodging Assigned</h3>";
 				else
 					echo "<h3>$camper->lodging</h3>";
+				
+				//Dont put a page-break on the last table
 				echo '<table style="page-break-after: always;" id="report_table">';
 				echo '<tr><th>Camper</th><th>Parent/Guardian</th><th style="width:200px;">Signature</th></tr>';			
 			}			
@@ -348,6 +350,7 @@ Class Report
 		}
 		//Close out the table
 		echo "</table>";
+		echo '<style type="text/css"> table:last-of-type {page-break-after:unset !important;}</style>';
 	}
 	
 	//TODO Similar to signout sheets?
