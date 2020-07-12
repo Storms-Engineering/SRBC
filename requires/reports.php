@@ -397,14 +397,14 @@ Class Report
 	public function breakdown_fees()
 	{
 		global $wpdb;
-		$newFormat = date("Y/m/d",strtotime( $this->start_date));
+		global $wpdb;
+		$newFormat = date("m/d/Y",strtotime( $this->start_date));
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 										FROM ((" . $GLOBALS['srbc_payments'] . " 
 										INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
 										INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
-										WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s AND " . $GLOBALS['srbc_payments'] . ".payment_type = 'card' AND " . $GLOBALS['srbc_payments'] . ".note='Online'
-										ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat ));
-										
+										WHERE (" . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s AND " . $GLOBALS['srbc_payments'] . ".payment_type = 'card' AND " . $GLOBALS['srbc_payments'] . ".note='Online')
+										ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
 		echo "<h3>Registration day fees collected:</h3>";
 		echo '<table id="report_table">';
 		echo "<tr><th>Parent Last name</th><th>Parent Last name</th><th>Camper Last name</th><th>Camper First Name</th><th>Camp fee</th><th>Program Area</th>
