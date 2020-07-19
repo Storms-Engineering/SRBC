@@ -717,11 +717,14 @@ function srbc_camp_reports()
 	<style>
 		@media print
 		{		
-			#adminmenuwrap,#dontprint,#footer-thankyou,#footer-upgrade
+			#adminmenuwrap,#dontprint,#footer-thankyou,#footer-upgrade, #wpfooter
 			{
 				display:none;
 			}
-			
+			#wpbody-content
+			{
+				padding-bottom:0px !important;
+			}
 		}
 		button {
 			background-color: #11835a;
