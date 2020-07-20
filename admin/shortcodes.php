@@ -6,6 +6,37 @@ SHORTCODE HOOKS
 */
 require_once __DIR__ . '/../requires/email.php';
 
+function srbc_make_donation($atts)
+{
+	echo '<h3>Pick a fund to donate to</h3>
+	<select name="fund">
+		<option value="General Fund">General Fund</option>
+		<option value="Counselor Honorarium Fund">Counselor Honorarium Fund</option>
+		<option value="Baber">Kelly Baber</option>
+		<option value="Dicksons">Dicksons Family</option>
+		<option value="Synders">Synder Family</option>
+		<option value="Runion">Ryann Runion</option>
+		<option value="Proctors">Proctor Family</option>
+		<option value="Fishers">Fisher Family</option>
+		<option value="Minnichs">Minnich Family</option>
+		<option value="Eaton">James Eaton</option>
+		<option value="McKenney">Val McKenney</option>
+		<option value="Gottlob">Joanna Gottlob</option>
+		<option value="Mcgilvra">Mcgilvra Family</option>
+		<option value="Rehbein">Rachel Rehbein</option>
+	</select>
+	<br>
+	<br>
+	Amount:
+	<input type="number" name="amount" value="0">
+	<br>
+	<br>
+	';
+
+	require_once __DIR__ . '/../requires/payments.php';
+	Payments::setupCreditCardHTML();
+}
+
 function srbc_make_payment_on_camper($atts)
 {
 	$registration_id = $_GET["r_id"];
