@@ -7,7 +7,7 @@ use net\authorize\api\controller as AnetController;
 class Payments
 {
 
-	public static function createCCTransaction($amount, $vars, $camp, $camper_id)
+	public static function createCCTransaction($amount, $vars, $camp, $camper_id, $registration_id)
 	{
 		/* Create a merchantAuthenticationType object with authentication details
 		   retrieved from the constants file */
@@ -35,7 +35,7 @@ class Payments
 		//The invoice number will be the same as the registration number
 		global $wpdb;
 		//Get the latest registration id and add one to as the invoice number
-		$invoiceNumber = $wpdb->get_var("SELECT MAX(registration_id) FROM srbc_registration") + 1;
+		$invoiceNumber = $registration_id;
 		$order->setInvoiceNumber($invoiceNumber);
 		$order->setDescription($camp->area . " " . $camp->name);
 	

@@ -30,10 +30,10 @@ function srbc_make_payment_on_camper($atts)
 		}
 		else if($_POST["cc_amount"] != 0 ) 
 			//Charge credit card for both camp fees and snackshop
-			$result = Payments::createCCTransaction($_POST["snackshop_amt"] + $_POST["cc_amount"], $_POST ,$camper, $camper->camper_id);
+			$result = Payments::createCCTransaction($_POST["snackshop_amt"] + $_POST["cc_amount"], $_POST ,$camper, $camper->camper_id, $registration_id);
 		else
 			//Just pay for snackshop
-			$result = Payments::createCCTransaction(($_POST["snackshop_amt"]), $_POST ,$camper, $camper->camper_id);
+			$result = Payments::createCCTransaction(($_POST["snackshop_amt"]), $_POST ,$camper, $camper->camper_id, $registration_id);
 			
 		
 		if($result)
@@ -858,22 +858,6 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		}
 	}
 
-	//If they are not on the waitlist and they have cc info then run their credit card
-	if($waitlist != 1 && isset($_POST["cc_amount"]) && $_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
-	{
-		//TODO get rid of function below
-		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
-
-		require_once __DIR__ . '/../requires/payments.php';
-		$result = Payments::createCCTransaction($vars["cc_amount"], $vars, $camp, $camper_id);
-
-		if(!$result)
-		{
-			error_msg("It seems like their was a problem with your credit card.
-			  Please use the back button and double check your credit card information");
-			exit();
-		}
-	}
 
 	//Insert camper registration into database
 	try
@@ -909,6 +893,27 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		Email::emailDeveloper($e->getMessage());
 	}
 	$registration_id = $wpdb->insert_id;
+
+	//If they are not on the waitlist and they have cc info then run their credit card
+	if($waitlist != 1 && isset($_POST["cc_amount"]) && $_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
+	{
+		//TODO get rid of function below
+		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
+
+		require_once __DIR__ . '/../requires/payments.php';
+		$result = Payments::createCCTransaction($vars["cc_amount"], $vars, $camp, $camper_id, $registration_id);
+
+		if(!$result)
+		{
+			//Delete the registration since the credit card didn't work :(
+			$wpdb->delete( 'srbc_registration', array( 'registration_id' => $registration_id ) );
+
+			error_msg("It seems like their was a problem with your credit card.
+			  Please use the back button and double check your credit card information");
+			exit();
+		}
+	}
+
 
 	if($_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
 	{
