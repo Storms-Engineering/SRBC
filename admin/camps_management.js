@@ -1,23 +1,27 @@
 function sendBalanceEmails(camp_id)
 {
-	obj = {"emails_camp_id" : camp_id}
-	param = JSON.stringify(obj);
-	xmlhttp = new XMLHttpRequest();
-	xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-		var txt = this.responseText;1
-		//If an error occurs show the error from the php properly so it doesn't go away in a toast
-        if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
-			showToast("Error occured, please let Website Administrator know");
-			document.getElementById("error").innerHTML = txt;
-		}
-		else
-			showToast(txt);
-    }
-};
-xmlhttp.open("POST", "../wp-content/plugins/SRBC/handlers/camps_handler.php", true);
-xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xmlhttp.send("x=" + encodeURIComponent(param));
+	if(confirm("Are you sure you want to send a balance due email to this entire camp?"))
+	{
+		obj = {"emails_camp_id" : camp_id}
+		param = JSON.stringify(obj);
+		xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				var txt = this.responseText;1
+				//If an error occurs show the error from the php properly so it doesn't go away in a toast
+				if (txt.includes("Error") || txt.includes("Notice") || txt.includes("Warning")){
+					showToast("Error occured, please let Website Administrator know");
+					document.getElementById("error").innerHTML = txt;
+				}
+				else
+					showToast(txt);
+				}
+		};
+	xmlhttp.open("POST", "../wp-content/plugins/SRBC/handlers/camps_handler.php", true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.send("x=" + encodeURIComponent(param));
+	}
+	
 }
 
 function deleteCamp(ev,cmpid,nonce)
