@@ -857,13 +857,9 @@ Class Report
 	public function not_checked_in()
 	{
 		$campers = $this->getCampers("AND " . $GLOBALS['srbc_registration']. ".checked_in=0");
-		echo '<table id=""><tr><th>Last Name</th><th>First Name</th></tr>';
-		foreach($campers as $info)
-		{
-			echo '<tr class="'.$info->gender.'" onclick="openCamperModal('.$info->camper_id.');"><td>' . $info->camper_last_name ."</td><td> " . $info->camper_first_name. "</td>";
-			echo "</tr>";
-		}
-		echo "</table>";
+		$headers = array("Busride");
+		$props = array("busride");
+		Tables::createTable($campers, $headers, $props);
 	}
 	
 	public function balance_due()
