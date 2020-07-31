@@ -912,16 +912,10 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 			  Please use the back button and double check your credit card information");
 			exit();
 		}
-	}
 
-
-	if($_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
-	{
-		//Now put payment into our database since transaction was successfull using autopayment
-		require_once __DIR__ .  '/../requires/payments.php';
+		//Put payment into our database since transaction was successfull using autopayment
 		Payments::autoPayment($registration_id,$vars["cc_amount"],"card","Online");
 	}
-	
 	
 	//We don't want to send 3 confirmation emails for workcrew
 	if ($waitlist == 1 && !$isWorkcrew)
