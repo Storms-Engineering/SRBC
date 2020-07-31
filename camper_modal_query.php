@@ -19,8 +19,7 @@
 				echo '<a class="big_button" style="float:right;" target="_blank" href="/wp-content/plugins/SRBC/get_health_form.php?c_id='.$_GET['camper_id'].'">Health Form</a>';
 				//TODO  I might not need this span class
 				//BODY Everything might be handled by the label now
-				$hidden = wp_get_current_user()->user_login === "Unixen" ? NULL : "display:none";
-				echo '<div id="information"><span style="' . $hidden . '" id="camper_id">' . $camper->camper_id . '</span>';
+				echo '<div id="information"><span id="camper_id">' . $camper->camper_id . '</span>';
 				echo '<span class="info"><label class="name_label">Camper: </label><input type="text" name="camper_first_name" value="' . $camper->camper_first_name . '"> ';
 				//WP nonces for security, 
 				wp_nonce_field( 'update_camper_'.$_GET['camper_id']);
@@ -106,8 +105,7 @@ function campSection($registration,$camper,$inactive)
 	global $wpdb;
 	//Grab the camp since we need some info from it
 	$camp = $wpdb->get_row($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_camps'] . " WHERE camp_id=%s",$registration->camp_id));
-	$hidden = wp_get_current_user()->user_login === "Unixen" ? NULL : "display:none";
-	echo '<span id="registration_id" style="'.$hidden.'">' . $registration->registration_id . '</span>';
+	echo '<span id="registration_id">' . $registration->registration_id . '</span>';
 	//Calculate the busfee
 	$busride = $registration->busride;
 	//TODO Check is busride_cost used?
