@@ -21,6 +21,7 @@ function srbc_make_donation($atts)
 			  Please use the back button and double check your credit card information");
 			exit();
 		}
+		echo "Payment successful!";
 		return;
 	}
 
