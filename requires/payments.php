@@ -6,8 +6,9 @@ use net\authorize\api\controller as AnetController;
 
 class Payments
 {
-
-	public static function createCCTransaction($amount, $vars, $camp, $camper_id, $registration_id)
+	//Creates a credit card transaction with authorize.negative
+	//
+	public static function createCCTransaction($amount, $vars, $desc, $camper_id, $registration_id)
 	{
 		/* Create a merchantAuthenticationType object with authentication details
 		   retrieved from the constants file */
@@ -37,7 +38,12 @@ class Payments
 		//Get the latest registration id and add one to as the invoice number
 		$invoiceNumber = $registration_id;
 		$order->setInvoiceNumber($invoiceNumber);
-		$order->setDescription($camp->area . " " . $camp->name);
+		//If is a string then it is description
+		if(is_string($desc))
+			$order->setDescription($desc);
+		//It is a camp object otherwise
+		else
+			$order->setDescription($desc->area . " " . $desc->name);
 	
 		// Set the customer's Bill To address
 		$customerAddress = new AnetAPI\CustomerAddressType();
