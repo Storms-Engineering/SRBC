@@ -103,6 +103,19 @@ function changeCamp(r_id,camper_id,old_id){
 	};
 }
 
+function addCamp(camper_id){
+	moveForward = confirm("Please note that this registration will be forced, ignoring all waiting lists.  Do you want to continue?");
+	if(!moveForward)
+		return;
+	
+	document.getElementById("popup_camps_background").style.display = "block";
+	document.getElementById("popup_camps_button").onclick = function(){
+					var info = {"add_camp_id" : document.getElementById("camps").value, "camper_id":camper_id};
+					console.log(info);
+					postAjax(info,camper_id);
+	};
+}
+
 function saveInfo()
 {
 	// Get the container element
