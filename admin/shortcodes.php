@@ -83,10 +83,10 @@ function srbc_make_payment_on_camper($atts)
 		}
 		else if($_POST["cc_amount"] != 0 ) 
 			//Charge credit card for both camp fees and snackshop
-			$result = Payments::createCCTransaction($_POST["snackshop_amt"] + $_POST["cc_amount"], $_POST ,$camper, $camper->camper_id);
+			$result = Payments::createCCTransaction($_POST["snackshop_amt"] + $_POST["cc_amount"], $_POST ,$camper, $camper->camper_id, $registration_id);
 		else
 			//Just pay for snackshop
-			$result = Payments::createCCTransaction(($_POST["snackshop_amt"]), $_POST ,$camper, $camper->camper_id);
+			$result = Payments::createCCTransaction(($_POST["snackshop_amt"]), $_POST ,$camper, $camper->camper_id, $registration_id);
 			
 		
 		if($result)
@@ -948,29 +948,28 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	}
 	$registration_id = $wpdb->insert_id;
 
-	if($_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
+	if($waitlist != 1 && isset($_POST["cc_amount"]) && $_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
 	{
 		//TODO get rid of function below
 		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
 
 		require_once __DIR__ . '/../requires/payments.php';
-		$result = Payments::createCCTransaction($vars["cc_amount"], $vars, $camp, $camper_id);
+		$result = Payments::createCCTransaction($vars["cc_amount"], $vars, $camp, $camper_id, $registration_id);
 
-		if(!$result)
+		//Payment successful add it to our payment database
+		if($result)
+			Payments::autoPayment($registration_id,$vars["cc_amount"],"card","Online");
+		else
 		{
+			//Delete the registration since the credit card didn't work :(
+			$wpdb->delete( 'srbc_registration', array( 'registration_id' => $registration_id ) );
+
 			error_msg("It seems like their was a problem with your credit card.
 			  Please use the back button and double check your credit card information");
 			exit();
 		}
 	}
 
-	if($_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
-	{
-		//Now put payment into our database since transaction was successfull using autopayment
-		require_once __DIR__ .  '/../requires/payments.php';
-		Payments::autoPayment($registration_id,$vars["cc_amount"],"card","Online");
-	}
-	
 	
 	//We don't want to send 3 confirmation emails for workcrew
 	if ($waitlist == 1 && !$isWorkcrew)
