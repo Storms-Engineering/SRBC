@@ -119,22 +119,6 @@ function srbc_install() {
 
 	dbDelta( $sql );
 	
-	//Database for encrypted credit card storage
-	//TODO I should consolidate these into one tracked id (registration_id) - ugh I wasn't expecting to use this so much
-	$sql = "CREATE TABLE IF NOT EXISTS srbc_cc (
-		cc_id INT AUTO_INCREMENT,
-		data TEXT NOT NULL,
-		amount FLOAT(6,2) NOT NULL,
-		camper_name TINYTEXT NOT NULL,
-		camp TINYTEXT NOT NULL,
-		payment_date TINYTEXT NOT NULL,
-		comments TINYTEXT,
-		PRIMARY KEY (cc_id)
-		)  ENGINE=INNODB;";
-
-	dbDelta( $sql );
-	
-	
 	//Database keeping track of payments
 	$sql = "CREATE TABLE IF NOT EXISTS srbc_payments (
 		payment_id INT AUTO_INCREMENT,
@@ -263,19 +247,6 @@ function camps_reports()
     );
 }
 add_action('admin_menu', 'camps_reports');
-
-function credit_cards()
-{
-   add_submenu_page(
-        'srbc_overview',
-        'Credit Cards',
-        'Credit Cards',
-        'manage_options',
-        'credit_cards',
-		'srbc_credit_cards'
-    );
-}
-add_action('admin_menu', 'credit_cards');
 
 function program_menu()
 {

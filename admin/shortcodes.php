@@ -950,9 +950,6 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 
 	if($waitlist != 1 && isset($_POST["cc_amount"]) && $_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
 	{
-		//TODO get rid of function below
-		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
-
 		require_once __DIR__ . '/../requires/payments.php';
 		$result = Payments::createCCTransaction($vars["cc_amount"], $vars, $camp, $camper_id, $registration_id);
 
@@ -983,60 +980,6 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		else
 			Email::sendDayCampConfirmationEmail($registration_id);
 	}
-}
-
-
-
-function storeCCData($vars,$camp,$horse_opt,$waitlistsize)
-{
-	//Credit Card Stuff
-		//Make credit card easier to read
-		global $wpdb;
-		$cc_number = str_split($vars["cc_number"]);
-		array_splice($cc_number,4,0,"-");
-		array_splice($cc_number,9,0,"-");
-		array_splice($cc_number,14,0,"-");
-		//Append all the data together so we only have to encrypt one string
-		$data = $vars["cc_name"] .	"	" . implode($cc_number) . "	" . $vars["cc_month"]
-		. "/" . $vars["cc_year"] . "	" . $vars["cc_vcode"] . "	" . $vars["cc_zipcode"];
-		if ($waitlistsize > 0)
-		{	//Make sure to let the credit card processer that this is on the waitlist, so we might not need to process it
-			$data .= '   USER IS WAITLISTED, MAKE SURE THEY ARE NOT ON THE WAITLIST BEFORE PROCESSING';
-		}
-		//Show comments about buslist and horse option and horse_cost
-		$comments = autoSplit($vars["cc_amount"],$camp->camp_id,$wpdb->insert_id,$vars['busride'],$horse_opt);
-		//Encrypt using ssl pgp
-		//TODO turn this into a function
-		$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/public.pem',"r");
-		$pub_key=fread($fp,8192);
-		fclose($fp);
-		openssl_get_publickey($pub_key);
-		//Temporary fix because I have not updated the javascript to use this padding.
-		openssl_public_encrypt($data,$edata,$pub_key);//,OPENSSL_PKCS1_OAEP_PADDING);
-
-		$currentDate = new DateTime("now", new DateTimeZone('America/Anchorage'));
-		$wpdb->insert(
-			'srbc_cc', 
-			array( 
-				'cc_id' =>0,
-				//Use base64 so the database can handle it properly since we are just using text
-				'data' => base64_encode($edata), 
-				'amount' => $vars["cc_amount"],
-				'camper_name' => $vars['camper_first_name'] . " " . $vars['camper_last_name'],
-				'camp' => ($camp->area . " " . $camp->name),
-				'comments' => $comments,
-				'payment_date' => $currentDate->format("m/d/Y")
-			), 
-			array( 
-				'%d',
-				'%s', 
-				'%f',
-				'%s',
-				'%s',
-				'%s',
-				'%s'
-			) 
-			);
 }
 
 //From: https://www.php.net/manual/en/function.openssl-encrypt.php
