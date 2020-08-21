@@ -948,8 +948,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	}
 	$registration_id = $wpdb->insert_id;
 
-	//If they are not on the waitlist and they have cc info then run their credit card
-	if($waitlist != 1 && isset($_POST["cc_amount"]) && $_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
+	if($_POST["cc_amount"] !== "0" && !isset($_POST["using_check"]))
 	{
 		//TODO get rid of function below
 		//storeCCData($vars,$camp,$horse_opt,$waitlistsize);
