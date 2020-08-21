@@ -6,8 +6,7 @@ use net\authorize\api\controller as AnetController;
 
 class Payments
 {
-	//Creates a credit card transaction with authorize.negative
-	//
+	//Creates a credit card transaction with authorize.net
 	public static function createCCTransaction($amount, $vars, $desc, $camper_id, $registration_id)
 	{
 		/* Create a merchantAuthenticationType object with authentication details
