@@ -44,9 +44,8 @@
 				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE camper_id=%s",$camper->camper_id));
 				//Check that they have registrations
 				if (count($registrations) == 0)
-					echo '<h1 style="text-align:center;color:red">Camper is not signed up for any camps</h1>';
-				else
 				{
+					echo '<h1 style="text-align:center;color:red">Camper is not signed up for any camps</h1>';
 					//Create code for making a selection box
 					$camps = $wpdb->get_results("SELECT area,name,camp_id FROM " . $GLOBALS['srbc_camps'] . " ORDER BY area ASC");
 					$camp_selection = '<div id="popup_camps_background"><div id="popup_camps">
