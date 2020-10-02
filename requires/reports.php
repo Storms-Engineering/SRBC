@@ -48,6 +48,31 @@ Class Report
 		return $campers;
 	}
 	
+	//Helper function for parentalReleaseForms
+	private function selectFromArray($array, $data) {
+		foreach($array as $row) {
+		   if($row->agreement_id == $data ) return $row;
+		}
+		return NULL;
+	}
+	public function parentalReleaseForms()
+	{
+		global $wpdb;
+		$signatures = $wpdb->get_results("SELECT * FROM 
+										((srbc_campers INNER JOIN srbc_parental_agreements_sig ON srbc_parental_agreements_sig.camper_id=srbc_campers.camper_id)
+										 INNER JOIN srbc_registration ON srbc_registration.camper_id=srbc_campers.camper_id)
+										 GROUP BY srbc_registration.date ORDER BY srbc_campers.camper_last_name ASC");
+		$agreements = (array)$wpdb->get_results("SELECT * FROM srbc_parental_agreements_versions");
+		//var_dump($signatures);
+		foreach($signatures as $signature)
+		{	
+			echo '<div style="page-break-after: always;"> <h1>Agreement for ' . $signature->camper_first_name . " " . $signature->camper_last_name . "</h1>";
+			echo $this->selectFromArray($agreements, $signature->agreement_id)->agreement_text;
+			echo "<br><p><b>" . $signature->parent_first_name . " " . $signature->parent_last_name . " " . $signature->date . "</b></p>";
+			echo '<img src="' . $signature->signature_img . '" width="500" height="200"></div>';
+		}
+	}
+
 	public function healthForms()
 	{
 		//Get campers but don't print header
