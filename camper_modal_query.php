@@ -44,18 +44,19 @@
 				$registrations = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE camper_id=%s",$camper->camper_id));
 				//Check that they have registrations
 				if (count($registrations) == 0)
-				{
 					echo '<h1 style="text-align:center;color:red">Camper is not signed up for any camps</h1>';
-					//Create code for making a selection box
-					$camps = $wpdb->get_results("SELECT area,name,camp_id FROM " . $GLOBALS['srbc_camps'] . " ORDER BY area ASC");
-					$camp_selection = '<div id="popup_camps_background"><div id="popup_camps">
-					Pick what camp to change to: <select style="margin:auto;" id="camps" name="camps"><option value="none">none</option>';
-					foreach ($camps as $camp){
-						$camp_selection .= '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
-					}
-					$camp_selection .= '</select><br><button class="big_button" id="popup_camps_button">OK</button></div></div>';
-					echo $camp_selection;
+				
+
+				//Create code for making a selection box
+				$camps = $wpdb->get_results("SELECT area,name,camp_id FROM " . $GLOBALS['srbc_camps'] . " ORDER BY area ASC");
+				$camp_selection = '<div id="popup_camps_background"><div id="popup_camps">
+				Pick what camp to change to: <select style="margin:auto;" id="camps" name="camps"><option value="none">none</option>';
+				foreach ($camps as $camp){
+					$camp_selection .= '<option value='.$camp->camp_id .'>'.$camp->area . ' ' . $camp->name .'</option>';
 				}
+				$camp_selection .= '</select><br><button class="big_button" id="popup_camps_button">OK</button></div></div>';
+				echo $camp_selection;
+
 				$registration_ids = [];
 				//Display each camp that they are registered for in a collapsible
 				foreach ((array)$registrations as $registration)
