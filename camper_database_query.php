@@ -22,7 +22,7 @@ foreach($areas as $area){
 			$wpdb->prepare( "SELECT *
 							FROM ((". $GLOBALS['srbc_registration'] . " 
 							INNER JOIN " . $GLOBALS['srbc_camps']." ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id)
-							INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+							INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 							WHERE " . $GLOBALS['srbc_camps'] . ".area=%s ORDER BY " . $GLBOALS['srbc_registration'] . ".registration_id ASC",$area));
 	}
 }
@@ -37,7 +37,7 @@ foreach($camps as $camp){
 			$wpdb->prepare( "SELECT *
 							FROM ((" . $GLOBALS['srbc_registration'] . " 
 							INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS['srbc_registration'] . '.camp_id= ' . $GLOBALS['srbc_camps'] . '.camp_id)
-							INNER JOIN srbc_campers ON ' . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+							INNER JOIN ' . $GLOBALS['srbc_campers'] . ' ON ' . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
 							WHERE " . $GLOBALS['srbc_camps'] . ".area=%s AND " . $GLOBALS['srbc_camps'] . ".name=%s ORDER BY " .
 							$GLOBALS['srbc_registration'] . ".registration_id ASC",$q[0],$q[1]));
 	}
@@ -55,12 +55,12 @@ if (!$specificQuery)
 	{
 		$name = $_GET['query'];
 		$campers = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM srbc_campers
-			INNER JOIN srbc_registration ON srbc_campers.camper_id=srbc_registration.camper_id
+			$wpdb->prepare( "SELECT * FROM " . $GLOBALS['srbc_campers'] . "
+			INNER JOIN srbc_registration ON " . $GLOBALS['srbc_campers'] . ".camper_id=srbc_registration.camper_id
 			WHERE (camper_first_name 
 			LIKE %s OR camper_last_name LIKE %s OR parent_first_name LIKE %s OR parent_last_name LIKE %s)
 			AND srbc_registration.camp_id=%d
-			ORDER BY srbc_campers.camper_last_name ASC", 
+			ORDER BY " . $GLOBALS['srbc_campers'] . ".camper_last_name ASC", 
 			$name."%",$name."%",$name."%",$name."%",$_GET['camp_id']));
 	}
 	else if(is_numeric($_GET['query']))

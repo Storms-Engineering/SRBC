@@ -59,8 +59,8 @@ foreach($lodgesCanHold as $lodgeCanHold)
 				<th colspan="2">' . $lodgeNames[$count] . "</th>
 			</tr>";
 	$campers = $wpdb->get_results($wpdb->prepare("SELECT camper_first_name,camper_last_name,counselor,assistant_counselor, registration_id
-									FROM srbc_campers INNER JOIN srbc_registration
-									ON srbc_campers.camper_id=srbc_registration.camper_id
+									FROM " . $GLOBALS['srbc_campers'] . " INNER JOIN srbc_registration
+									ON " . $GLOBALS['srbc_campers'] . ".camper_id=srbc_registration.camper_id
 									WHERE srbc_registration.camp_id=%d AND srbc_registration.lodging=%s",$_GET['camp_id'],$lodgeNames[$count]));
 	
 	$counselor = (count($campers) == 0) ? null : $campers[0]->counselor;

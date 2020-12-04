@@ -9,9 +9,9 @@ class HealthForm
         $healthForm = $wpdb->get_results(
 			$wpdb->prepare( "SELECT *
                              FROM srbc_health_form 
-                             INNER JOIN srbc_campers ON srbc_health_form.camper_id=srbc_campers.camper_id
-							 WHERE srbc_campers.camper_id=%s
-							 ORDER BY srbc_campers.camper_last_name DESC ",$camperId));
+                             INNER JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_health_form.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id
+							 WHERE " . $GLOBALS['srbc_campers'] . ".camper_id=%s
+							 ORDER BY " . $GLOBALS['srbc_campers'] . ".camper_last_name DESC ",$camperId));
 		if($healthForm == NULL)
 		{
 			echo '<h1 id="no-print">No camper health information available</h1>';

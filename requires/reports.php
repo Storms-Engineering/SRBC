@@ -28,7 +28,7 @@ Class Report
 									FROM ((" . $GLOBALS['srbc_registration'] . "
 								 INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
 								 ".camp_id)
-								 INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+								 INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 		WHERE " . $GLOBALS['srbc_registration'] . ".waitlist=0 ". $query );
 		}
 		//
@@ -38,7 +38,7 @@ Class Report
 										FROM ((" . $GLOBALS['srbc_registration'] . "
 									INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . 
 									".camp_id)
-									INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+									INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 		WHERE " . $GLOBALS['srbc_registration'] . ".waitlist=0 AND (" . $GLOBALS["srbc_camps"] . ".start_date='%s' OR " . $GLOBALS['srbc_camps'] . ".camp_id=%d) " . $query ,
 									$this->start_date,$this->camp_id));
 		}
@@ -59,9 +59,9 @@ Class Report
 	{
 		global $wpdb;
 		$signatures = $wpdb->get_results("SELECT * FROM 
-										((srbc_campers INNER JOIN srbc_parental_agreements_sig ON srbc_parental_agreements_sig.camper_id=srbc_campers.camper_id)
-										 INNER JOIN srbc_registration ON srbc_registration.camper_id=srbc_campers.camper_id)
-										 GROUP BY srbc_registration.date ORDER BY srbc_campers.camper_last_name ASC");
+										((" . $GLOBALS['srbc_campers'] . " INNER JOIN srbc_parental_agreements_sig ON srbc_parental_agreements_sig.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
+										 INNER JOIN srbc_registration ON srbc_registration.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
+										 GROUP BY srbc_registration.date ORDER BY " . $GLOBALS['srbc_campers'] . ".camper_last_name ASC");
 		$agreements = (array)$wpdb->get_results("SELECT * FROM srbc_parental_agreements_versions");
 		//var_dump($signatures);
 		foreach($signatures as $signature)
@@ -76,7 +76,7 @@ Class Report
 	public function healthForms()
 	{
 		//Get campers but don't print header
-		$campers = $this->getCampers(" ORDER BY srbc_campers.camper_last_name ASC",false);
+		$campers = $this->getCampers(" ORDER BY " . $GLOBALS['srbc_campers'] . ".camper_last_name ASC",false);
 		require_once 'health_form.php';
 		HealthForm::before();
 		foreach($campers as $camper)
@@ -193,8 +193,8 @@ Class Report
 	{
 		global $wpdb;
 		$campers = $wpdb->get_results("SELECT *	FROM " . $GLOBALS['srbc_registration_inactive'] . 
-									" INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration_inactive'] .
-									".camper_id=srbc_campers.camper_id");
+									" INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration_inactive'] .
+									".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id");
 		echo "<table><tr><th>First Name</th><th>Last Name</th><th>Camp</th><th>Amount Due</th></tr>";
 		//Start new row and put in name 
 		foreach($campers as $camper)
@@ -279,7 +279,7 @@ Class Report
 		{
 			$totalRegistered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 											FROM " . $GLOBALS['srbc_registration'] . "
-											LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
+											LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
 											WHERE camp_id=%s AND waitlist=0",$camp->camp_id)); 
 			if ($oldArea != $camp->area)
 			{
@@ -320,12 +320,12 @@ Class Report
 		{
 			$male_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 											FROM " . $GLOBALS['srbc_registration'] . "
-											LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
-											WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id)); 
+											LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+											WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='male'",$camp->camp_id)); 
 			$female_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 											FROM " . $GLOBALS['srbc_registration'] . "
-											LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
-											WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
+											LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+											WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='female'",$camp->camp_id)); 
 			echo "<h3>" . $camp->area . " " . $camp->name . "</h3>			" . $camp->start_date . "<br>";
 			echo "		Male: " . $male_registered . "<br>";
 			echo "		Female: " . $female_registered . "<br>";
@@ -426,9 +426,9 @@ Class Report
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 										FROM ((" . $GLOBALS['srbc_payments'] . " 
 										INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
-										INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+										INNER JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 										WHERE (STR_TO_DATE(" . $GLOBALS['srbc_payments'] . ".payment_date, '%c/%%d/%Y %T') > %s AND " . $GLOBALS['srbc_payments'] . ".payment_type = 'card' AND " . $GLOBALS['srbc_payments'] . ".note='Online')
-										ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat ));
+										ORDER BY " . $GLOBALS['srbc_campers'] . ".camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat ));
 		echo "<h3>Registration day fees collected:</h3>";
 		echo '<table id="report_table">';
 		echo "<tr><th>Parent Last name</th><th>Parent Last name</th><th>Camper Last name</th><th>Camper First Name</th><th>Camp fee</th><th>Program Area</th>
@@ -507,7 +507,7 @@ Class Report
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 										FROM ((" . $GLOBALS['srbc_camps'] . " 
 										INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id)
-										INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+										INNER JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 										WHERE " . $GLOBALS['srbc_camps'] . ".start_date=%s
 										ORDER BY srbc_campers.camper_id",$_GET['start_date'] ));
 		//Show campers who are signed up for these camps, but didn't pay anything
@@ -542,9 +542,9 @@ Class Report
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 										FROM ((" . $GLOBALS['srbc_payments'] . " 
 										INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
-										INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+										INNER JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 										WHERE (" . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s OR " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s OR " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s) AND " . $GLOBALS['srbc_payments'] . ".registration_day=1
-										ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%",$newFormat2 . "%",$newFormat3 . "%"));
+										ORDER BY " . $GLOBALS['srbc_campers'] . ".camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%",$newFormat2 . "%",$newFormat3 . "%"));
 										
 		echo "<h3>Registration day fees collected:</h3>";
 		echo '<table id="report_table">';
@@ -617,9 +617,9 @@ Class Report
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 										FROM ((" . $GLOBALS['srbc_camps'] . " 
 										INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id)
-										INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+										INNER JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 										WHERE " . $GLOBALS['srbc_camps'] . ".start_date=%s
-										ORDER BY srbc_campers.camper_id",$_GET['start_date'] ));
+										ORDER BY " . $GLOBALS['srbc_campers'] . ".camper_id",$_GET['start_date'] ));
 		//Show campers who are signed up for these camps, but didn't pay anything
 		foreach($campers as $camper)
 		{
@@ -662,7 +662,7 @@ Class Report
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 														FROM ((" . $GLOBALS['srbc_payments'] . " 
 														INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
-														INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+														INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 														WHERE " . $GLOBALS['srbc_payments'] . ".fee_type='Store' AND " . $GLOBALS['srbc_registration'] . ".camp_id=%d",$this->camp_id));
 		$totalFees = 0;
 		foreach ($campers as $camper)
@@ -683,9 +683,9 @@ Class Report
 		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
 														FROM ((" . $GLOBALS['srbc_payments'] . " 
 														INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
-														INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+														INNER JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 														WHERE " . $GLOBALS['srbc_payments'] . ".payment_date LIKE %s AND " . $GLOBALS['srbc_payments'] . ".registration_day=1
-														ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
+														ORDER BY " . $GLOBALS['srbc_campers'] . ".camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC",$newFormat . "%"));
 		$this->printHeader();												
 		echo '<table id="report_table">';
 		echo "<tr><th>Last name</th><th>First Name</th><th>Payment Type</th><th>Fee Type</th>
@@ -765,7 +765,7 @@ Class Report
 		$campers = $wpdb->get_results($wpdb->prepare( "SELECT *
 		FROM ((" . $GLOBALS['srbc_registration'] . "
 		INNER JOIN " . $GLOBALS['srbc_camps']. " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
-		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE " .
+		INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id) WHERE " .
 			$GLOBALS["srbc_camps"] . ".camp_id=%d ", $this->camp_id));
 		$this->printHeader($campers);
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Waitlist</th></tr>';
@@ -913,7 +913,7 @@ Class Report
 			$database = $GLOBALS["srbc_registration_inactive"] ;*/
 		global $wpdb;
 		$balanceDueCampers = $this->getAmountDueArray();
-		$campersInformation = $wpdb->get_results("SELECT * FROM " . $database . " INNER JOIN srbc_campers ON srbc_campers.camper_id=" . $database . ".camper_id",OBJECT_K);
+		$campersInformation = $wpdb->get_results("SELECT * FROM " . $database . " INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_campers'] . ".camper_id=" . $database . ".camper_id",OBJECT_K);
 
 		
 		foreach($balanceDueCampers as $camper)
@@ -933,7 +933,7 @@ Class Report
 			$database = $GLOBALS["srbc_registration_inactive"] ;*/
 		global $wpdb;
 		$balanceDueCampers = $this->getAmountDueArray();
-		$campersInformation = $wpdb->get_results("SELECT * FROM " . $database . " INNER JOIN srbc_campers ON srbc_campers.camper_id=" . $database . ".camper_id",OBJECT_K);
+		$campersInformation = $wpdb->get_results("SELECT * FROM " . $database . " INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_campers'] . ".camper_id=" . $database . ".camper_id",OBJECT_K);
 
 		$csvArray = array();
 		$csvArray[] = array("Parent_first_name","parent_last_name","Address","City","State","Zipcode");
@@ -1029,9 +1029,9 @@ Class Report
 		$campers = $wpdb->get_results("SELECT *
 														FROM ((" . $GLOBALS['srbc_payments'] . " 
 														INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
-														INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id)
+														INNER JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 														WHERE " . $GLOBALS['srbc_payments'] . ".fee_type='Refund'
-														ORDER BY srbc_campers.camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC");
+														ORDER BY " . $GLOBALS['srbc_campers'] . ".camper_id, " . $GLOBALS['srbc_payments'] . ".registration_id ASC");
 		$this->printHeader();												
 		echo '<table id="report_table">';
 		echo "<tr><th>Last name</th><th>First Name</th><th>Payment Type</th><th>Fee Type</th>

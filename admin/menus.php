@@ -187,7 +187,7 @@ function srbc_settings()
 		//Rename databases and recreate new ones
 		$wpdb->query("RENAME TABLE srbc_registration TO srbc_registration" . $_POST["year_to_rename"] .  ",
 		srbc_camps TO srbc_camps" . $_POST["year_to_rename"] . ", srbc_payments to srbc_payments" . $_POST["year_to_rename"] . ", srbc_registration_inactive TO srbc_registration_inactive".
-		$_POST["year_to_rename"] . ";");
+		$_POST["year_to_rename"] . ", srbc_campers to srbc_campers" . $_POST["year_to_rename"] . ";");
 		srbc_install();
 		goto end;
 	}
@@ -222,6 +222,7 @@ function srbc_settings()
 		$GLOBALS['srbc_payments'] = "srbc_payments" . get_option("srbc_database_year");
 		$GLOBALS['srbc_registration'] = "srbc_registration" . get_option("srbc_database_year");
 		$GLOBALS['srbc_registration_inactive'] = "srbc_registration_inactive" . get_option("srbc_database_year");
+		$GLOBALS['srbc_campers'] = "srbc_campers" . get_option("srbc_database_year");
 	}
 	end:
 	?>
@@ -616,12 +617,12 @@ function listCamps($area)
 										WHERE camp_id=%s AND NOT waitlist=0",$camp->camp_id)); 
 		$male_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM " . $GLOBALS['srbc_registration'] . "
-										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id)); 
+										LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+										WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='male'",$camp->camp_id)); 
 		$female_registered = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM " . $GLOBALS['srbc_registration'] . "
-										LEFT JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
+										LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+										WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='female'",$camp->camp_id)); 
 		$horseWaitlist = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM " . $GLOBALS['srbc_registration'] . "
 										WHERE camp_id=%s AND NOT horse_waitlist=0",$camp->camp_id)); 

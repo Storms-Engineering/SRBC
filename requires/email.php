@@ -66,7 +66,7 @@ class Email
 		$info = $wpdb->get_results($wpdb->prepare("SELECT *
 			FROM ((srbc_registration 
 			INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
-			INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id) WHERE srbc_registration.registration_id=%d", 
+			INNER JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id) WHERE srbc_registration.registration_id=%d", 
 			$registration_id)); 	
 		//We only need the first object
 		return $info[0];
@@ -123,8 +123,8 @@ class Email
 	{
 		global $wpdb;
 		$info = $wpdb->get_row($wpdb->prepare("SELECT *
-			FROM srbc_campers
-			 WHERE srbc_campers.camper_id=%d", 	$camper_id)); 	
+			FROM " . $GLOBALS['srbc_campers'] . "
+			 WHERE " . $GLOBALS['srbc_campers'] . ".camper_id=%d", 	$camper_id)); 	
 			 
 		$wcwit = ($isWit) ? "WIT" : "Workcrew";
 		//Email section for emailing the workcrew/wit leaders the questionaire that was filled out

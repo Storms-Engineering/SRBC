@@ -69,7 +69,7 @@ function srbc_make_payment_on_camper($atts)
 	$camper = $wpdb->get_row($wpdb->prepare( "SELECT *
 		FROM ((" . $GLOBALS['srbc_registration'] . "
 		INNER JOIN " . $GLOBALS['srbc_camps']. " ON " . $GLOBALS["srbc_registration"] . ".camp_id=" . $GLOBALS["srbc_camps"] . ".camp_id)
-		INNER JOIN srbc_campers ON " . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id) WHERE " .
+		INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id) WHERE " .
 			$GLOBALS["srbc_registration"] . ".registration_id=%d ", $registration_id));
 	
 	//User submitted payment charge
@@ -182,7 +182,7 @@ function createCampSelect($number,$camps)
 		global $wpdb;
 		$camperCount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
+										LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
 										WHERE camp_id=%s AND waitlist=0",$camp->camp_id)); 
 		if($camperCount >= $camp->overall_size)
 			$select .= '<option value="' . $camp->camp_id . '">' . $camp->area . " " . $camp->name . '~ Week is full! </option>';
@@ -319,12 +319,12 @@ function srbc_camp_search($atts){
 										
 		$boycount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration']
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id));
+										LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+										WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='male'",$camp->camp_id));
 		$girlcount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
+										LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+										WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='female'",$camp->camp_id)); 
 										
 		
 										
@@ -823,8 +823,8 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		{
 			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$vars["campid"])); 
+										LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+										WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='male'",$vars["campid"])); 
 			if ($count >= $camp->boy_registration_size)
 			{
 				error_msg("Unfortunately we cannot register you because the boys section of this camp is full.");
@@ -835,8 +835,8 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		{
 			$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$vars["campid"])); 
+										LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+										WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='female'",$vars["campid"])); 
 			if ($count >= $camp->girl_registration_size)
 			{
 				error_msg("Unfortunately we cannot register you because the girls section of this camp is full.");
@@ -1148,12 +1148,12 @@ function srbc_camps($atts)
 										
 		$boycount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='male'",$camp->camp_id));
+										LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+										WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='male'",$camp->camp_id));
 		$girlcount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
 										FROM srbc_registration
-										LEFT JOIN srbc_campers ON srbc_registration.camper_id = srbc_campers.camper_id
-										WHERE camp_id=%s AND waitlist=0 AND srbc_campers.gender='female'",$camp->camp_id)); 
+										LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+										WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='female'",$camp->camp_id)); 
 										
 		
 										

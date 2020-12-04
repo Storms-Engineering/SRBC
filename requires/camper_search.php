@@ -8,7 +8,7 @@ class CamperSearch
 	{
 		global $wpdb;
 		$campers = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM srbc_campers WHERE camper_id=%s
+			$wpdb->prepare( "SELECT * FROM " . $GLOBALS['srbc_campers'] . " WHERE camper_id=%s
 			ORDER BY camper_id ASC", 
 			$camperId));
 		return $campers;
@@ -23,7 +23,7 @@ class CamperSearch
 		{
 			$fname = $name[0];
 			$campers = $wpdb->get_results(
-				$wpdb->prepare( "SELECT * FROM srbc_campers WHERE (camper_first_name 
+				$wpdb->prepare( "SELECT * FROM " . $GLOBALS['srbc_campers'] . " WHERE (camper_first_name 
 				LIKE %s AND camper_last_name LIKE %s )OR (parent_first_name LIKE %s AND parent_last_name LIKE %s)
 				ORDER BY camper_id ASC", 
 				$name[0]."%",$name[1]."%",$name[0]."%",$name[1]."%"));
@@ -32,7 +32,7 @@ class CamperSearch
 		{
 			$name = $name[0];
 			$campers = $wpdb->get_results(
-				$wpdb->prepare( "SELECT * FROM srbc_campers WHERE camper_first_name 
+				$wpdb->prepare( "SELECT * FROM " . $GLOBALS['srbc_campers'] . " WHERE camper_first_name 
 				LIKE %s OR camper_last_name LIKE %s OR parent_first_name LIKE %s OR parent_last_name LIKE %s
 				ORDER BY camper_id ASC", 
 				$name."%",$name."%",$name."%",$name."%"));
@@ -55,7 +55,7 @@ class CamperSearch
 			$wpdb->prepare( "SELECT *
 							FROM ((" . $GLOBALS['srbc_registration'] . " 
 							INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS['srbc_registration'] . '.camp_id= ' . $GLOBALS['srbc_camps'] . '.camp_id)
-							INNER JOIN srbc_campers ON ' . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+							INNER JOIN ' . $GLOBALS['srbc_campers'] . ' ON ' . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 							WHERE " . $GLOBALS['srbc_camps'] . ".camp_id=%d " . $includeWaitlist,$camp_id));	
 		return $campers;
 	}

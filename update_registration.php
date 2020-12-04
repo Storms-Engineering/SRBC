@@ -148,7 +148,7 @@ else {
 	//TODO: Use an array or something so I don't have to manually enter a new field everytime I add one
 	//Update Camper
 	$wpdb->update( 
-		'srbc_campers', 
+		$GLOBALS['srbc_campers'], 
 		array( 
 			'camper_first_name' => $obj["camper"]["camper_first_name"], 
 			'camper_last_name' => $obj["camper"]["camper_last_name"],
