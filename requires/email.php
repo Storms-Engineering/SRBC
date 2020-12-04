@@ -86,10 +86,32 @@ class Email
 	public static function sendConfirmationEmail($registration_id)
 	{
 		$info = self::getInfo($registration_id);
+
+		//Determine if we need to add bus info to this email
+		$busInfo = "";
+		if($info->busride != "none")
+		{
+			if($info->busride == "both")
+				$busInfo = "round trip bus ride";
+			else if($info->busride == "to")
+				$busInfo = "<b>one way</b> bus ride from Anchorage to Camp ";
+			else if($info->busride == "from")
+				$busInfo = "<b>one way</b> bus ride from Camp to Anchorage";
+		}
+
+		//Begin body of email
 		$msg = "Hello ". $info->parent_first_name . ",<br><br>Thanks for signing up " . $info->camper_first_name . " for <b>" . $info->area . " " . $info->name . "</b>!  <br><br>
 		<b>Camp Start Date</b>: " .date("l, M j, Y",strtotime($info->start_date)) . '<br><pre style="display:inline">	</pre><b>Camp Drop-off time</b>: ' . $info->dropoff_time . 
-		"<br><br><b>Camp End Date</b>: " .date("l, M j, Y",strtotime($info->end_date)) . '<br><pre style="display:inline">	</pre><b>Camp Pick-up time</b>: '. $info->pickup_time . '<br><br>' . 
-		'If your camper is riding the bus please refer to our FAQ page for bus stop location and times.<br><br>' .
+		"<br><br><b>Camp End Date</b>: " .date("l, M j, Y",strtotime($info->end_date)) . '<br><pre style="display:inline">	</pre><b>Camp Pick-up time</b>: '. $info->pickup_time . '<br><br>' .
+		//Extra bus info only if they registered for any bus rides
+		($info->busride != "none" ? "<b>BUS:</b> You have signed up for a " . $busInfo . "." : "") .
+		($info->busride != "none" ? "<br><br><b>Bus Times</b><br>
+									Opening Day from Anchorage to Camp: Please arrive between 1:30 – 2 PM <br>
+									Closing Day from Camp to Anchorage:  Bus will return between 1 – 1:30 PM
+									<br><br><b>Location of bus stop</b><br>
+									Duluth Trading Company Parking Lot<br>
+									8931 Old Seward Hwy Suite A<br>
+									Anchorage, AK 99515<br><br>" : "") .
 		'If you have any other questions please refer to our <a style="color:#688df2" href="http://solidrockbiblecamp.com/FAQS">FAQ page</a>.<br><br>' .
 		'If you want to know what your camper should pack for camp, check out our <a style="color:#688df2" href=" http://solidrockbiblecamp.com/camps/packing-lists">packing lists page</a>.'.
 		"<br><br>See you on the opening day of camp!";
