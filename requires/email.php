@@ -94,9 +94,9 @@ class Email
 			if($info->busride == "both")
 				$busInfo = "round trip bus ride";
 			else if($info->busride == "to")
-				$busInfo = "<b>one way</b> bus ride from Anchorage to Camp ";
+				$busInfo = "<b>one-way</b> bus ride from Anchorage to Camp ";
 			else if($info->busride == "from")
-				$busInfo = "<b>one way</b> bus ride from Camp to Anchorage";
+				$busInfo = "<b>one-way</b> bus ride from Camp to Anchorage";
 		}
 
 		//Begin body of email
