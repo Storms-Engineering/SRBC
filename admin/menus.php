@@ -208,7 +208,6 @@ function srbc_settings()
 			);
 		}
 	}
-
 	//Update the summer camps disabled option
 	if(isset($_POST['srbc_summer_camps_disable']))
 		update_option("srbc_summer_camps_disable",$_POST["srbc_summer_camps_disable"]);
@@ -224,21 +223,49 @@ function srbc_settings()
 		$GLOBALS['srbc_registration_inactive'] = "srbc_registration_inactive" . get_option("srbc_database_year");
 		$GLOBALS['srbc_campers'] = "srbc_campers" . get_option("srbc_database_year");
 	}
+
+
 	end:
 	?>
 	<h1>Settings</h1>
-
+	<link rel="stylesheet" type="text/css" href="../wp-content/plugins/SRBC/admin/css/tabs.css">
+	
 	<form method="post">
-	<div style="float:left;">
+	<!--BEGIN new settings tabs -->
+	
+    <div class="wrap">
+        <button type="button" class="tablink" onclick="openPage('General', this, '#b30000')" id="defaultOpen">General</button>
+		<button type="button" class="tablink" onclick="openPage('ParentalAgreement', this, 'green')" >Parental Agreement</button>
+		<button type="button" class="tablink" onclick="openPage('WagonTrain', this, '#993d00')">Wagon Train</button>
+		
+		
+		<div id="General" class="tabcontent">
 		Disable Summer Camps <br><input type="radio" name="srbc_summer_camps_disable" value="true" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "checked" : ""; ?>>True<br>
-		<input type="radio" name="srbc_summer_camps_disable" value="" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "" : "checked" ?>>False<br>
-	</div>
-	<div style="float:left;margin-left:20px;">
-		Parental Agreement Text:<br> 
-		<textarea cols="50" rows="15" name="parental_agreement_text">
-		<?php echo $wpdb->get_row("SELECT * FROM srbc_parental_agreements_versions ORDER BY agreement_id DESC LIMIT 1")->agreement_text;?>
-		</textarea>
-	</div>
+			<input type="radio" name="srbc_summer_camps_disable" value="" <?php echo (get_option("srbc_summer_camps_disable") == "true") ? "" : "checked" ?>>False<br>
+		</div>
+		
+		<div id="ParentalAgreement" class="tabcontent">
+			Parental Agreement Text:<br> 
+			<?php
+				//Create editor for parental_agreement_text
+				wp_editor($wpdb->get_row("SELECT * FROM srbc_parental_agreements_versions ORDER BY agreement_id DESC LIMIT 1")->agreement_text,
+								"pat_editor", array("media_buttons" => false));
+			?>
+		</div>
+		
+		<div id="WagonTrain" class="tabcontent">
+		
+		</div>
+		
+		
+		
+    </div>
+	<div id="snackbar"></div>
+	<div id="error"></div>
+	<script src="../wp-content/plugins/SRBC/admin/js/tabs.js"></script>
+
+	<!--END new settings tabs -->
+
 	<div style="clear:both;">
 	<br><br>
 	<h1>Database Management</h1>
