@@ -6,7 +6,7 @@ class Camper
 	public static function doesCamperExist($camper_first_name,$camper_last_name,$birthday)
 	{
 		global $wpdb;
-		$camper = $wpdb->get_row($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_campers'] . " WHERE camper_first_name=%s AND camper_last_name=%s AND birthday=%s",
+		$camper = $wpdb->get_row($wpdb->prepare("SELECT * FROM srbc_campers WHERE camper_first_name=%s AND camper_last_name=%s AND birthday=%s",
 		$camper_first_name,$camper_last_name,$birthday));
 		return $camper;
 	}
@@ -34,7 +34,7 @@ class Camper
 		}
 		//Replace existing camper information or create a new one if camper doesn't exist
 		$wpdb->replace( 
-		$GLOBALS['srbc_campers'], 
+		'srbc_campers', 
 		array( 
 			'camper_id' =>$camper_id,
 			'camper_first_name' => $info["camper_first_name"], 
