@@ -179,7 +179,7 @@ class Email
 			if($isWit)
 				self::sendMail(wit_email, 'WIT Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body,"",false);
 			else
-				self::sendMail(workcrew_email, 'Workcrew Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body,"",false);
+				self::sendMail(srbc_email, 'Workcrew Application For ' . $info->camper_first_name . " " . $info->camper_last_name,$body,"",false);
 		}
 		
 		//Email applicant
