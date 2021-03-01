@@ -8,7 +8,7 @@ global $wpdb;
 $info = $wpdb->get_results($wpdb->prepare("SELECT *
 			FROM ((srbc_registration 
 			INNER JOIN srbc_camps ON srbc_registration.camp_id=srbc_camps.camp_id)
-			INNER JOIN " . $GLOBALS['srbc_campers'] . " ON srbc_registration.camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id) WHERE srbc_registration.registration_id=%d", 
+			INNER JOIN srbc_campers ON srbc_registration.camper_id=srbc_campers.camper_id) WHERE srbc_registration.registration_id=%d", 
             $_GET['r_id'])); 	
 
 //For resending confirmation emails

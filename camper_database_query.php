@@ -23,7 +23,7 @@ foreach($areas as $area){
 							FROM ((". $GLOBALS['srbc_registration'] . " 
 							INNER JOIN " . $GLOBALS['srbc_camps']." ON " . $GLOBALS['srbc_registration'] . ".camp_id=" . $GLOBALS['srbc_camps'] . ".camp_id)
 							INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
-							WHERE " . $GLOBALS['srbc_camps'] . ".area=%s ORDER BY " . $GLBOALS['srbc_registration'] . ".registration_id ASC",$area));
+							WHERE " . $GLOBALS['srbc_camps'] . ".area=%s ORDER BY " . $GLOBALS['srbc_registration'] . ".registration_id ASC",$area));
 	}
 }
 //Catches if we have an emtpy database
@@ -37,11 +37,13 @@ foreach($camps as $camp){
 			$wpdb->prepare( "SELECT *
 							FROM ((" . $GLOBALS['srbc_registration'] . " 
 							INNER JOIN " . $GLOBALS['srbc_camps'] . " ON " . $GLOBALS['srbc_registration'] . '.camp_id= ' . $GLOBALS['srbc_camps'] . '.camp_id)
-							INNER JOIN ' . $GLOBALS['srbc_campers'] . ' ON ' . $GLOBALS['srbc_registration'] . ".camper_id=srbc_campers.camper_id)
+							INNER JOIN ' . $GLOBALS['srbc_campers'] . ' ON ' . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
 							WHERE " . $GLOBALS['srbc_camps'] . ".area=%s AND " . $GLOBALS['srbc_camps'] . ".name=%s ORDER BY " .
 							$GLOBALS['srbc_registration'] . ".registration_id ASC",$q[0],$q[1]));
 	}
 }
+
+
 require 'requires/camper_search.php';
 require 'requires/tables.php';
 if (!$specificQuery)
@@ -54,9 +56,10 @@ if (!$specificQuery)
 	if(isset($_GET['inner']))
 	{
 		$name = $_GET['query'];
+		//This code we only want for current campers
 		$campers = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM " . $GLOBALS['srbc_campers'] . "
-			INNER JOIN srbc_registration ON " . $GLOBALS['srbc_campers'] . ".camper_id=srbc_registration.camper_id
+			$wpdb->prepare( "SELECT * FROM srbc_campers 
+			INNER JOIN srbc_registration ON srbc_campers.camper_id=srbc_registration.camper_id
 			WHERE (camper_first_name 
 			LIKE %s OR camper_last_name LIKE %s OR parent_first_name LIKE %s OR parent_last_name LIKE %s)
 			AND srbc_registration.camp_id=%d
