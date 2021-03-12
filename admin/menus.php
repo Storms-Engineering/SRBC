@@ -278,7 +278,7 @@ function srbc_settings()
 function srbc_camper_management()
 {
     // check user capabilities
-   if (!current_user_can('manage_options') || in_array( 'program', (array) wp_get_current_user()->roles)) {
+   if (!current_user_can('manage_options')) {
          exit("Thus I refute thee.... P.H.");
     }
     ?>
