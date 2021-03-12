@@ -624,18 +624,15 @@ function srbc_registration( $atts )
 		{
 			echo 'Workcrew Code: <input type="text" id="code" name="code">
 			<hr>
-			<!-- Due to Covid 19 we are not requiring $50 down payment
-			
 			<span style="color:red">Note: Your registration is not valid until the $50 non-refundable registration fee is received unless you are workcrew*.  (This $50 DOES go towards the cost of the camp)</span><br>
-			You must pay $50, or pay the full amount of the camp, unless you a are registering for the waitlist then you don\'t have to pay a registration fee.  Any remaining amount will be due the day of registration.-->
+			You must pay $50, or pay the full amount of the camp, unless you a are registering for the waitlist then you don\'t have to pay a registration fee.  Any remaining amount will be due the day of registration.
 			<br>
 			*If you are workcrew please enter the code received in your email and after registering in the box above and your registration will be allowed.
 			<br>
 			<br>
 			<h3>Amount to pay*: </h3>
-			<!--Due to Covid 19 we are not requiring $50 down payment-->
-			<label class="container">$0
-				<input type="radio" name="cc_amount" id="override" checked="checked" value="0">
+			<label class="container">$50
+				<input type="radio" name="cc_amount" checked="checked" value="50">
 				<span class="checkmark"></span>
 			</label>
 			<label class="container">$<span id="total">';
