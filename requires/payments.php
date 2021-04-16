@@ -209,7 +209,7 @@ class Payments
 	}
 
     //Puts a payment into the database and also updates payment_card payment_cash etc...
-    public static function makePayment($registration_id,$payment_type,$payment_amt,$note,$fee_type)
+    public static function makePayment($registration_id, $payment_type, $payment_amt, $note, $fee_type, $archiveFriendly = false)
     {
         global $wpdb;
         //Get the current date time
@@ -219,10 +219,12 @@ class Payments
         if (strpos($username, 'registration') !== false)
             $is_registration = 1;
 
+		$database = $archiveFriendly ? $GLOBALS['srbc_payments'] : "srbc_payments";
+
         $date = new DateTime("now", new DateTimeZone('America/Anchorage'));
         global $wpdb;
         $wpdb->insert(
-                $GLOBALS['srbc_payments'], 
+                $database, 
                 array( 
                     'payment_id' =>0,
                     'registration_id' => $registration_id,
@@ -264,19 +266,24 @@ class Payments
 
 	//Note this function uses the old database whenever it is selected!
 	//Might have unintended consequences especially during registration?
-    public static function autoPayment($registration_id,$autoPaymentAmt,$paymentType,$note)
+    public static function autoPayment($registration_id,$autoPaymentAmt,$paymentType,$note, $archiveFriendly = false)
     {
         global $wpdb;
-        $o = $wpdb->get_row( $wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d ",$registration_id));
-		$totalpaid = $wpdb->get_var($wpdb->prepare("SELECT SUM(payment_amt) 
-								FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND NOT fee_type='Store'",$registration_id));
+		//Checking if they need to have the archivable database accessible
+		$query = $archiveFriendly ? "SELECT * FROM " . $GLOBALS['srbc_registration'] . " WHERE registration_id=%d" : "SELECT * FROM srbc_registration WHERE registration_id=%d";
+        $o = $wpdb->get_row( $wpdb->prepare($query,$registration_id));
+		$query = $archiveFriendly ? "SELECT SUM(payment_amt) FROM " . $GLOBALS['srbc_payments'] . " WHERE registration_id=%s AND NOT fee_type='Store'" 
+				: "SELECT SUM(payment_amt) FROM srbc_payments WHERE registration_id=%s AND NOT fee_type='Store'";
+		$totalpaid = $wpdb->get_var($wpdb->prepare($query,$registration_id));
 		
 		//Make the scholarships and discounts add to total paid so we take it out of the base camp fee
 		$totalpaid += $o->discount + $o->scholarship_amt;
 		if($totalpaid == NULL)
 			$totalpaid = 0;
+
+		$query = $archiveFriendly ? "SELECT * FROM " . $GLOBALS['srbc_camps'] ." WHERE camp_id=$o->camp_id" : "SELECT * FROM srbc_camps WHERE camp_id=$o->camp_id";
 		//Check if they have paid the base camp amount which is (camp cost - horse cost)
-		$camp = $wpdb->get_row("SELECT * FROM " . $GLOBALS['srbc_camps'] ." WHERE camp_id=$o->camp_id");
+		$camp = $wpdb->get_row($query);
 		$baseCampCost = $camp->cost - $camp->horse_cost;
 		$needToPayAmount = 0;
 		$feeType = NULL;

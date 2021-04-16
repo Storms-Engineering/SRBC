@@ -240,8 +240,9 @@ else {
 		}
 		if($obj[$key]["auto_payment_amt"] != "")
 		{
+			//Last argument is for archiveFriendly which we do want
 			Payments::autoPayment($key,$obj[$key]["auto_payment_amt"],$obj[$key]["auto_payment_type"],
-									$obj[$key]["auto_note"]);
+									$obj[$key]["auto_note"], true);
 		}
 		else if ($obj[$key]["payment_type"] != "none"){
 			Payments::makePayment($key,$obj[$key]["payment_type"],$obj[$key]["payment_amt"],
