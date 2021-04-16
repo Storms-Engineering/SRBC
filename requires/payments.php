@@ -262,6 +262,8 @@ class Payments
         return array($autoPaymentAmt,$paymentAmt);
     }
 
+	//Note this function uses the old database whenever it is selected!
+	//Might have unintended consequences especially during registration?
     public static function autoPayment($registration_id,$autoPaymentAmt,$paymentType,$note)
     {
         global $wpdb;
