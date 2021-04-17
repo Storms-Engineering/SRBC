@@ -32,11 +32,8 @@ class Payments
 	
 		// Create order information
 		$order = new AnetAPI\OrderType();
-		//The invoice number will be the same as the registration number
+		
 		global $wpdb;
-		//Get the latest registration id and add one to as the invoice number
-		$invoiceNumber = $registration_id;
-		$order->setInvoiceNumber($invoiceNumber);
 		//If is a string then it is description
 		if(is_string($desc))
 			$order->setDescription($desc);
@@ -73,6 +70,8 @@ class Payments
 		$transactionRequestType->setTransactionType("authCaptureTransaction");
 		$transactionRequestType->setAmount($amount);
 		$transactionRequestType->setOrder($order);
+		//Set registration id as Po number
+		$transactionRequestType->setPoNumber($registration_id);
 		$transactionRequestType->setPayment($paymentOne);
 		$transactionRequestType->setBillTo($customerAddress);
 		$transactionRequestType->setCustomer($customerData);
