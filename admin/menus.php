@@ -645,7 +645,7 @@ function srbc_camp_reports()
 	//TODO I might make reports more flexible by adding columns that the user can pick from
 	//and the type of data that they would want to sort by.  I think this should be fine for now, but might remkae in the future.
 	// check user capabilities
-    if (!current_user_can('manage_options') || in_array( 'program', (array) wp_get_current_user()->roles)) {
+    if (!current_user_can('manage_options')) {
          exit("Thus I refute thee.... P.H.");
     }
 	?>

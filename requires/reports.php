@@ -326,10 +326,16 @@ Class Report
 											FROM " . $GLOBALS['srbc_registration'] . "
 											LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
 											WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='female'",$camp->camp_id)); 
+
+			$waitingListAmt = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+											FROM " . $GLOBALS['srbc_registration'] . "
+											LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+											WHERE camp_id=%s AND waitlist=1",$camp->camp_id)); 
 			echo "<h3>" . $camp->area . " " . $camp->name . "</h3>			" . $camp->start_date . "<br>";
-			echo "		Male: " . $male_registered . "<br>";
-			echo "		Female: " . $female_registered . "<br>";
-			echo "		Total: " . ($male_registered + $female_registered) . "<br>"; 
+			echo "		Male: " . $male_registered . "/" . $camp->boy_registration_size . "<br>";
+			echo "		Female: " . $female_registered . "/" . $camp->boy_registration_size .  "<br>";
+			echo "		Total: " . ($male_registered + $female_registered) . "/" . $camp->overall_size . "<br>"; 
+			echo "		Waiting List: " . $waitingListAmt . "/" . $camp->waiting_list_size . "<br>"; 
 			$totalRegistrations += $male_registered + $female_registered;
 		}
 		echo "<br><br>Overall Camp Total: " . $totalRegistrations;
