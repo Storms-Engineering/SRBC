@@ -56,7 +56,16 @@ function validateForm()
 			return false;
 		}
 		else
+		{
+			document.getElementById("submit_button").disabled = true;
+			document.getElementById("submit_button").value = "Submitting...";
+			setTimeout(function(){ 
+				document.getElementById("submit_button").disabled = false;
+				document.getElementById("submit_button").value = "Submit";
+				}, 5000);
 			return true;
+		}
+			
 	}
 	else
 	{
@@ -70,6 +79,12 @@ function validateForm()
 		}
 		if (numValidated == 7)
 		{
+			document.getElementById("submit_button").disabled = true;
+			document.getElementById("submit_button").value = "Submitting...";
+			setTimeout(function(){ 
+				document.getElementById("submit_button").disabled = false;
+				document.getElementById("submit_button").value = "Submit";
+				}, 5000);
 			return true;
 		}
 		else 

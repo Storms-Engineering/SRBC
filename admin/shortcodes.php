@@ -906,7 +906,7 @@ function srbc_registration( $atts )
 	
 		?>
 		<br>
-		<input type="submit" value="Submit">
+		<input id="submit_button" type="submit" value="Submit">
 	</form> 
 	</div>
 	<script src="../wp-content/plugins/SRBC/admin/registration.js"></script>
