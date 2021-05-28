@@ -16,11 +16,33 @@ class Email
 		require_once __DIR__ . '/payments.php';
 		$owed = Payments::amountDue($registration_id);
 
+
+		//bus stuff
+		$busInfo = "";
+		if($info->busride != "none")
+		{
+			if($info->busride == "both")
+				$busInfo = "round trip bus ride";
+			else if($info->busride == "to")
+				$busInfo = "<b>one-way</b> bus ride from Anchorage to Camp ";
+			else if($info->busride == "from")
+				$busInfo = "<b>one-way</b> bus ride from Camp to Anchorage";
+		}
+
+
 		$msg = "Hello ". $info->parent_first_name . ",<br><br>" . $info->camper_first_name . " is registered for " . $info->area . " " . $info->name . " which starts " .
 		date("l, F j, Y",strtotime($info->start_date)) . ". <br><br>
 		<b>Camp Drop-Off Time</b>: " . $info->dropoff_time . "<br>" .
 		"<b>Camp Pick-Up Time</b>: " . $info->pickup_time . "<br><br>" . 
-
+		//Extra bus info only if they registered for any bus rides
+		($info->busride != "none" ? "<b>BUS:</b> You have signed up for a " . $busInfo . "." : "") .
+		($info->busride != "none" ? "<br><br><b>Bus Times</b><br>
+									Opening Day from Anchorage to Camp: Please arrive between 1:30 – 2 PM <br>
+									Closing Day from Camp to Anchorage:  Bus will return between 1 – 1:30 PM
+									<br><br><b>Location of bus stop</b><br>
+									Duluth Trading Company Parking Lot<br>
+									8931 Old Seward Hwy Suite A<br>
+									Anchorage, AK 99515<br><br>" : "") .
 		"<b>Amount due: $$owed</b><br><br>" . 
 		'<b>To pre-pay camp fees and snack shop, click <a style="color:#688df2" href="http://' . $_SERVER['SERVER_NAME'] . '/make-payment?r_id=' . $registration_id . '">here</a>.</b>
 		<br>(You can still pay at check-in, but we encourage you to make use of our new, easy online payment system!)
