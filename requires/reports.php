@@ -308,7 +308,7 @@ Class Report
 						</tr>";
 				$oldArea = $camp->area;
 			}
-			echo "<tr><td>" . $camp->start_date . "<td>" . $camp->area . " " . $camp->name . "</td><td>" . $totalRegisteredBoys . "/" . $camp->boy_registration_size . 
+			echo "<tr><td>" . $camp->start_date . "</td><td>" . $camp->area . " " . $camp->name . "</td><td>" . $totalRegisteredBoys . "/" . $camp->boy_registration_size . 
 					"</td><td>" . $totalRegisteredGirls . "/" . $camp->girl_registration_size . "</td><td>" . $totalRegistered . "/" . $camp->overall_size . "</td></tr>";
 			$totalRegistrationsPerArea[$camp->area] += $totalRegistered;
 			
