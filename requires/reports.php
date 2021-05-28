@@ -804,9 +804,10 @@ Class Report
 	public function area_report()
 	{
 		$query = null;
+		//All Query
 		if ($this->area == "")
-			$query = "AND " . $GLOBALS['srbc_camps'] . ".area LIKE '%' " . " AND NOT ". $GLOBALS['srbc_camps'] . ".area='Workcrew' "
-			. " AND NOT ". $GLOBALS['srbc_camps'] . ".area='WIT' ";
+			$query = "AND " . $GLOBALS['srbc_camps'] . ".area LIKE '%' " . " AND NOT ". $GLOBALS['srbc_camps'] . ".area='Winter Camp' ";
+		//Specific query
 		else 
 			$query .= "AND " . $GLOBALS['srbc_camps'] . ".area='$this->area' ";
 
