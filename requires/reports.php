@@ -271,7 +271,7 @@ Class Report
 	{
 		$this->printHeader();
 		global $wpdb;
-		$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS["srbc_camps"] . " ORDER BY area DESC");
+		$camps = $wpdb->get_results("SELECT * FROM " . $GLOBALS["srbc_camps"] . " WHERE NOT area='Winter Camp' ORDER BY area DESC");
 		$totalRegistrationsPerArea = [ "Wagon Train" => 0, "Lakeside" => 0, "Wilderness" => 0, "Sports" => 0 ];
 		$oldArea = NULL;
 		$totalRegistrations = 0;
@@ -281,6 +281,14 @@ Class Report
 											FROM " . $GLOBALS['srbc_registration'] . "
 											LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
 											WHERE camp_id=%s AND waitlist=0",$camp->camp_id)); 
+			$totalRegisteredBoys = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+											FROM " . $GLOBALS['srbc_registration'] . "
+											LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+											WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='male'",$camp->camp_id)); 
+			$totalRegisteredGirls = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id)
+											FROM " . $GLOBALS['srbc_registration'] . "
+											LEFT JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id = " . $GLOBALS['srbc_campers'] . ".camper_id
+											WHERE camp_id=%s AND waitlist=0 AND " . $GLOBALS['srbc_campers'] . ".gender='female'",$camp->camp_id)); 
 			if ($oldArea != $camp->area)
 			{
 				if ($oldArea !== NULL)
@@ -293,11 +301,14 @@ Class Report
 				echo "<table>
 						<tr>
 							<th>Camp</th>
-							<th># of Campers</th>
+							<th>Male</th>
+							<th>Female</th>
+							<th>Total</th>
 						</tr>";
 				$oldArea = $camp->area;
 			}
-			echo "<tr><td>" . $camp->area . " " . $camp->name . "</td><td>" . $totalRegistered . "</td></tr>";
+			echo "<tr><td>" . $camp->area . " " . $camp->name . "</td><td>" . $totalRegisteredBoys . "/" . $camp->boy_registration_size . 
+					"</td><td>" . $totalRegisteredGirls . "/" . $camp->girl_registration_size . "</td><td>" . $totalRegistered . "/" . $camp->overall_size . "</td></tr>";
 			$totalRegistrationsPerArea[$camp->area] += $totalRegistered;
 			
 		}
