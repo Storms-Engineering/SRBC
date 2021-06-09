@@ -30,13 +30,14 @@ class Email
 		}
 
 
-		$msg = "Hello ". $info->parent_first_name . ",<br><br>" . $info->camper_first_name . " is registered for " . $info->area . " " . $info->name . " which starts " .
-		date("l, F j, Y",strtotime($info->start_date)) . ". <br><br>
-		<b>Camp Drop-Off Time</b>: " . $info->dropoff_time . "<br>" .
-		"<b>Camp Pick-Up Time</b>: " . $info->pickup_time . "<br><br>" . 
+		$msg = "Hello ". $info->parent_first_name . ",<br><br>" . $info->camper_first_name . " is registered for " . $info->area . " " . $info->name . "!" .
+		"<br><br><b>Camp Start Date:</b> " . date("l, F j, Y",strtotime($info->start_date)) . "<br>
+		<b>Drop-Off Time</b>: " . $info->dropoff_time . "<br><br>" .
+		"<b>Camp End Date:</b> " . date("l, F j, Y",strtotime($info->end_date)) . "<br>
+		<b>Pick-Up Time</b>: " . $info->pickup_time . "<br><br>" . 
 		//Extra bus info only if they registered for any bus rides
 		($info->busride != "none" ? "<b>BUS:</b> You have signed up for a " . $busInfo . "." : "") .
-		($info->busride != "none" ? "<br><br><b>Bus Times</b><br>
+		($info->busride != "none" ? "<br><br><b>Bus Times:</b><br>
 									Opening Day from Anchorage to Camp: Please arrive between 1:30 – 2 PM <br>
 									Closing Day from Camp to Anchorage:  Bus will return between 1 – 1:30 PM
 									<br><br><b>Location of bus stop</b><br>
@@ -44,26 +45,15 @@ class Email
 									8931 Old Seward Hwy Suite A<br>
 									Anchorage, AK 99515<br><br>" : "") .
 		"<b>Amount due: $$owed</b><br><br>" . 
-		'<b>To pre-pay camp fees and snack shop, click <a style="color:#688df2" href="http://' . $_SERVER['SERVER_NAME'] . '/make-payment?r_id=' . $registration_id . '">here</a>.</b>
-		<br>(You can still pay at check-in, but we encourage you to make use of our new, easy online payment system!)
+		'<b>To pay for any camp fees and snack shop, click <a style="color:#688df2" href="http://' . $_SERVER['SERVER_NAME'] . '/make-payment?r_id=' . $registration_id . '">here</a>.</b>
 		<br><br>
-		We look forward to your camper being here this summer and have a few extra items they will need for their camp experience this year.
+		For your Lakeside and Wagon Train packing lists, visit our packing list page <a href="https://solidrockbiblecamp.com/camps/packing-lists/">here</a>.
+		If this is a Wilderness camp, you should have received a camp-specific packing list from the Wilderness Program Managers.
 		<br><br>
-		<b>Extra Needed Packing Items:</b>
-		<br>
-		-Face Covering
-		<br>
-		-Personal Water Bottle
-		<br><br>
-		<b>Extra Recommended Packing Item:</b>
-		<br>
-		-Personal Hand Sanitizer
-		<br><br>
-		For the rest of your Lakeside and Wagon Train packing lists, visit our packing list page <a href="https://solidrockbiblecamp.com/camps/packing-lists/">here</a>.<br><br>
 
 		For updates on what our summer will look like, follow us on Facebook for the most current camp news!<br><br>
 
-		We appreciate your understanding as our schedule has fluctuated. Contact our office with any concerns or questions.<br><br>
+		Contact our office with any concerns or questions.<br><br>
 
 		We look forward to seeing you and your camper soon!<br><br>
 
