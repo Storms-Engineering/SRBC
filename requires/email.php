@@ -38,7 +38,7 @@ class Email
 		//Extra bus info only if they registered for any bus rides
 		($info->busride != "none" ? "<b>BUS:</b> You have signed up for a " . $busInfo . "." : "") .
 		($info->busride != "none" ? "<br><br><b>Bus Times:</b><br>
-									Opening Day from Anchorage to Camp: Please arrive between 1:30 – 2 PM <br>
+									Opening Day from Anchorage to Camp: Please arrive between 2 – 2:30 PM <br>
 									Closing Day from Camp to Anchorage:  Bus will return between 1 – 1:30 PM
 									<br><br><b>Location of bus stop</b><br>
 									Duluth Trading Company Parking Lot<br>
@@ -118,7 +118,7 @@ class Email
 		//Extra bus info only if they registered for any bus rides
 		($info->busride != "none" ? "<b>BUS:</b> You have signed up for a " . $busInfo . "." : "") .
 		($info->busride != "none" ? "<br><br><b>Bus Times</b><br>
-									Opening Day from Anchorage to Camp: Please arrive between 1:30 – 2 PM <br>
+									Opening Day from Anchorage to Camp: Please arrive between 2 - 2:30 PM <br>
 									Closing Day from Camp to Anchorage:  Bus will return between 1 – 1:30 PM
 									<br><br><b>Location of bus stop</b><br>
 									Duluth Trading Company Parking Lot<br>
