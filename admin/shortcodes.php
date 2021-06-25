@@ -938,63 +938,75 @@ function srbc_registration_complete($atts)
 	//Validate that this is a form post
 	if($_SERVER['REQUEST_METHOD'] !== 'POST' && !isset($_POST['camper_first_name']))
 	{
+		error_msg("If you just submitted a registration, it seems you forgot to put in the first name of your camper.  Please hit the back button.
+		Or if you did fill everything out there might be a problem with your browser, please call the office, 907-262-4741. ");
 		return;
 	}
-		
-
-	require __DIR__ .  '/../requires/Camper.php';	
-	require __DIR__ .  '/../requires/health_form.php';	
-	
-	//Creates a camper and returns the camper ID.  If the camper already exists then it returns that ID.
-	//$_POST contains all of the data that we need.
-	$camper_id = Camper::createCamper($_POST);
-	global $wpdb;
-	//Store signature for parental agreement in database
-	$agreement_id = $wpdb->get_row("SELECT * FROM srbc_parental_agreements_versions ORDER BY agreement_id DESC LIMIT 1")->agreement_id;
-	$wpdb->insert( 
-		'srbc_parental_agreements_sig', 
-		array( 
-			'signature_img' => $_POST['pa_signature_img'], 
-			'camper_id' => $camper_id,
-			'agreement_id' => $agreement_id
-		), 
-		array( 
-			'%s', 
-			'%d', 
-			'%d' 
-		) 
-	);
-
-	HealthForm::healthFormSubmit($camper_id);
-	//Normal registration signup
-	if(isset($_POST['campid']))
-		signUpCamper($_POST,$camper_id,false);
-	//Registration is for workcrew or wit
-	else
+	//We are having random errors in this so trying to troubleshoot
+	try
 	{
-		for($i = 1; $i <= 5; $i++)
+		require __DIR__ .  '/../requires/Camper.php';	
+		require __DIR__ .  '/../requires/health_form.php';	
+		
+		//Creates a camper and returns the camper ID.  If the camper already exists then it returns that ID.
+		//$_POST contains all of the data that we need.
+		$camper_id = Camper::createCamper($_POST);
+		global $wpdb;
+		//Store signature for parental agreement in database
+		$agreement_id = $wpdb->get_row("SELECT * FROM srbc_parental_agreements_versions ORDER BY agreement_id DESC LIMIT 1")->agreement_id;
+		$wpdb->insert( 
+			'srbc_parental_agreements_sig', 
+			array( 
+				'signature_img' => $_POST['pa_signature_img'], 
+				'camper_id' => $camper_id,
+				'agreement_id' => $agreement_id
+			), 
+			array( 
+				'%s', 
+				'%d', 
+				'%d' 
+			) 
+		);
+
+		HealthForm::healthFormSubmit($camper_id);
+		//Normal registration signup
+		if(isset($_POST['campid']))
+			signUpCamper($_POST,$camper_id,false);
+		//Registration is for workcrew or wit
+		else
 		{
-			$_POST['campid'] = $_POST['camp_' . $i]; 
-			if(isset($_POST['busride_' . $i]))
-				$_POST['busride'] = $_POST['busride_' . $i];
-			else
-				$_POST['busride'] = 'none';
-			//Means that the parent selected none for this week of camp so skip over it
-			if($_POST['campid'] == 0)
-				continue;
-			if($i > 3)
-				//For weeks over 3 we just put them on the waitlist
-				//so it isn't filling up more spots in the normal camp
-				signUpCamper($_POST,$camper_id,true,1);
-			else
-				signUpCamper($_POST,$camper_id,true);
-		}
-		Email::sendWorkcrewEmail($camper_id,$_POST,isset($_POST['wit']));
-		return 'Workcrew/WIT request submitted sucessfully!  <span style="color:red">Important note: Please register for the week of camp that you specified.  Please enter the code 
-			<code>warden</code> on the registration page when it asks you for a code.</span>
-  			You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!';
-	}	
-	return 'Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. <span style="color:red">(If you don\'t see the email check your spam box and please mark it not spam)';
+			for($i = 1; $i <= 5; $i++)
+			{
+				$_POST['campid'] = $_POST['camp_' . $i]; 
+				if(isset($_POST['busride_' . $i]))
+					$_POST['busride'] = $_POST['busride_' . $i];
+				else
+					$_POST['busride'] = 'none';
+				//Means that the parent selected none for this week of camp so skip over it
+				if($_POST['campid'] == 0)
+					continue;
+				if($i > 3)
+					//For weeks over 3 we just put them on the waitlist
+					//so it isn't filling up more spots in the normal camp
+					signUpCamper($_POST,$camper_id,true,1);
+				else
+					signUpCamper($_POST,$camper_id,true);
+			}
+			Email::sendWorkcrewEmail($camper_id,$_POST,isset($_POST['wit']));
+			return 'Workcrew/WIT request submitted sucessfully!  <span style="color:red">Important note: Please register for the week of camp that you specified.  Please enter the code 
+				<code>warden</code> on the registration page when it asks you for a code.</span>
+  				You should be receiving a call soon from Solid Rock Bible Camp.  Thanks for applying with us!';
+		}	
+		return 'Registration Sucessful!<br>  We sent you a confirmation email with some frequently asked questions and what camp you signed up for. <span style="color:red">(If you don\'t see the email check your spam box and please mark it not spam)';
+	}
+	catch (Exception $e)
+	{
+		emailDeveloper($e->getMessage());
+		return '<span style="color:red">Registration unsucessful!  You can hit the back button and try to register again.
+		 If problem persists please let us know by emailing or calling us.</span><br><br>
+		 <code>Error message: ' . + $e->getMessage() . '</code>';
+	}
+	
 }
 
 //Signs up a camper for a camp

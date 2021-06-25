@@ -355,7 +355,7 @@ class HealthForm
 
 	public static function healthFormSubmit($camper_id)
 	{
-			//Health form stuff
+	//Health form stuff
 	//generate a random key for encrypting the signature_img
 	$fp=fopen($_SERVER['DOCUMENT_ROOT']. '/files/health_form_public_key.pem',"r");
 	$pub_key=fread($fp,8192);
