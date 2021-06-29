@@ -676,19 +676,35 @@ Class Report
 		global $wpdb;
 		echo "<h3>Snackshop (Store) fees collected:</h3>";
 		echo '<table id="report_table">';
-		echo "<tr><th>Last name</th><th>First Name</th><th>Amount</th></tr>";
-		$campers = $wpdb->get_results($wpdb->prepare("SELECT *
-														FROM ((" . $GLOBALS['srbc_payments'] . " 
-														INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
-														INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
-														WHERE " . $GLOBALS['srbc_payments'] . ".fee_type='Store' AND " . $GLOBALS['srbc_registration'] . ".camp_id=%d",$this->camp_id));
+		echo "<tr><th>Last name</th><th>First Name</th><th>Amount</th><th>Payment Type</th></tr>";
+		$campers = $wpdb->get_results($wpdb->prepare("SELECT * FROM " . $GLOBALS['srbc_registration'] . "
+														INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id
+														WHERE " . $GLOBALS['srbc_registration'] . ".camp_id=%d",$this->camp_id));
+		
 		$totalFees = 0;
 		foreach ($campers as $camper)
 		{
 			echo '<tr class="'.$camper->gender.'" onclick="openCamperModal('.$camper->camper_id.');"><td>'. $camper->camper_last_name
 			. "</td><td>" . $camper->camper_first_name . "</td>";
+			$paymentData = $wpdb->get_results($wpdb->prepare("SELECT payment_amt, payment_type
+										FROM ((" . $GLOBALS['srbc_payments'] . " 
+										INNER JOIN " . $GLOBALS['srbc_registration'] . " ON " . $GLOBALS['srbc_registration'] . ".registration_id=" . $GLOBALS['srbc_payments'] . ".registration_id)
+										INNER JOIN " . $GLOBALS['srbc_campers'] . " ON " . $GLOBALS['srbc_registration'] . ".camper_id=" . $GLOBALS['srbc_campers'] . ".camper_id)
+										WHERE " . $GLOBALS['srbc_payments'] . ".fee_type='Store' AND " . $GLOBALS['srbc_registration'] . ".camp_id=%d AND " . $GLOBALS['srbc_campers'] . ".camper_id=%d ",$this->camp_id,$camper->camper_id));
+			//No snackshop payments
+			if(empty($paymentData))
+			{
+				echo "<td>$0</td>";
+				echo "<td>NONE</td>";
+			}
+			else
+			{
+				echo "<td>$" . $paymentData[0]->payment_amt . '</td>';
+				echo "<td>" . $paymentData[0]->payment_type . '</td>';
+			}
+			
 			//Extra cell for checkbox so office can check off when they are done with one
-			echo "<td>$" . $camper->payment_amt . '</td><td><input type="checkbox" onclick="event.stopPropagation();"></td></tr>';
+			echo '<td><input type="checkbox" onclick="event.stopPropagation();"></td></tr>';
 		}
 		echo "</table>";
 		echo "<br>Total fees: $" . $totalFees;
