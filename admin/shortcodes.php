@@ -96,7 +96,7 @@ function srbc_make_payment_on_camper($atts)
 			srbc_registration.registration_id=%d ", $registration_id));
 	
 	//User submitted payment charge
-	if(isset($_POST['cc_amount']))
+	if(!empty($_POST) && $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cc_amount']))
 	{
 		$result = false;
 		if($amountDue == 0 && $_POST["cc_amount"] != 0)
@@ -255,6 +255,13 @@ function srbc_make_payment_on_camper($atts)
 					);
 
 			echo '<span style="color:green">Payment Successful!</span>';
+			//This prevents the user from reloading the page and resubmitting a payment
+			echo '<script>
+			if ( window.history.replaceState ) {
+			  window.history.replaceState( null, null, window.location.href );
+			}
+			</script>';
+			//header( "Location: {$_SERVER['REQUEST_URI']}", true, 303 );
 			return;
 		}
 	}
@@ -277,7 +284,7 @@ function srbc_make_payment_on_camper($atts)
 
 	Payments::setupCreditCardHTML();
 
-	echo '<br><input type="submit" value="Submit">
+	echo '<br><input type="submit" id="submitButton" onclick="disableButton(this)" value="Submit">
 	</form>
 	<script src="../wp-content/plugins/SRBC/admin/js/payment.js"></script>
 	';

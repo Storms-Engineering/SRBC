@@ -5,3 +5,10 @@ function calculateTotal()
 	document.getElementById("total").innerHTML = total;
 }
 calculateTotal();
+
+//Maybe will help with double clickers?
+function disableButton(btn){
+    button = document.getElementById(btn.id);
+    button.value = "Submitting..."; 
+    setTimeout(function(){ button.disabled=true; }, 100);
+}
