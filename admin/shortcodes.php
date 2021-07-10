@@ -705,7 +705,6 @@ function srbc_registration( $atts )
 				if(!isset($_GET['workcrew']) && !isset($_GET['wit']) && $camp->day_camp !== "1")
 				{
 					echo '<span>Busride*:</span>
-					<!-- TODO remove busride option for Winter and Teen Camps -->
 					<select onchange="calculateTotal();" class="inputs" id="busride" name="busride">
 						<option value="none" selected>No bus ride needed</option>
 						<option value="both">Round-Trip $60</option>
@@ -716,7 +715,7 @@ function srbc_registration( $atts )
 					<p>*The bus will depart from and return to the Duluth Trading Company parking lot at 8931 Old Seward Hwy., Suite A Anchorage, AK 99515.
 					The exact times will be sent you in your confirmation email or letter.</p>';
 				}
-				else if($camp->day_camp === "1")
+				else if($camp != null && $camp->day_camp === "1")
 				{
 					echo '<span>Busride*:</span>
 					<select class="inputs" id="busride" name="busride">
