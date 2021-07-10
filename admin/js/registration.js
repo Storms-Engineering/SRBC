@@ -24,7 +24,21 @@ var names = ["cc_amount", "cc_number", "cc_name", "cc_zipcode", "cc_vcode", "cc_
 	
 function validateForm()
 {
-	
+	success = checkForm();
+	if(success)
+	{
+		//Disable submit button to hopefully stop those double clickers
+		button = document.getElementById("submitButton");
+		button.value = "Submitting..."; 
+		setTimeout(function(){ button.disabled=true; }, 100);
+		//If the request really did not work then stop and enable the submit button again
+		setTimeout(function(){ window.stop(); button.disabled=false; button.value="Submit"; }, 10000);
+	}
+	return success;
+}
+
+function checkForm()
+{
 	if (document.getElementById("retyped_email").value != document.getElementsByName("email")[0].value)
 	{
 		alert("Please check emails to make sure that they match!");
@@ -95,3 +109,4 @@ function moveAddress()
 		document.getElementsByName("cc_" + addresses[i])[0].value = "";
 	}
 }
+

@@ -913,10 +913,10 @@ function srbc_registration( $atts )
 	
 		?>
 		<br>
-		<input type="submit" value="Submit">
+		<input type="submit" id="submitButton" value="Submit">
 	</form> 
 	</div>
-	<script src="../wp-content/plugins/SRBC/admin/registration.js"></script>
+	<script src="../wp-content/plugins/SRBC/admin/js/registration.js"></script>
 	<?php
 	return ob_get_clean();
 }
@@ -978,7 +978,12 @@ function srbc_registration_complete($atts)
 		HealthForm::healthFormSubmit($camper_id);
 		//Normal registration signup
 		if(isset($_POST['campid']))
-			signUpCamper($_POST,$camper_id,false);
+		{
+			//Check if we have success signing up camper
+			//If not return 
+			if(!signUpCamper($_POST,$camper_id,false))
+				return;
+		}			
 		//Registration is for workcrew or wit
 		else
 		{
@@ -1037,7 +1042,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 	if ($count > 0)
 	{
 		error_msg("Sorry you are already registered for this camp");
-		return;
+		return false;
 	}
 	//Check if this camp is already full
 	$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(camp_id) FROM srbc_registration WHERE camp_id=%s AND waitlist=0",$vars["campid"])); 
@@ -1070,8 +1075,8 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		}
 		else
 		{
-			error_msg("gender not specified in registration");
-			return;
+			error_msg("Gender not specified in registration");
+			return false;
 		}
 	}
 	else
@@ -1083,7 +1088,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		if ($camp->boy_registration_size == 0 && $vars["gender"] == "male")
 		{
 			error_msg("Sorry this is a girls only camp!");
-			return;
+			return false;
 		}
 		
 		//Count overall waitlist size for this camp
@@ -1098,7 +1103,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		{
 			//We can't continue registration because waiting list is full
 			error_msg("Sorry we are unable to add you to the waiting list because the waiting list is full");
-			return;
+			return false;
 		}
 	}
 	//Initially set this to 0 and if they need to be put on the horses waitlist we will update this to one
@@ -1132,7 +1137,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		error_msg("Please enter credit card information or check the 'Send a check' option.
 		This camp is not currently full and therefore you aren't being put on the waiting list.
 		Please hit the back button and try again. Thanks!");
-		exit();
+		return false;
 		}
 	}
 
@@ -1188,7 +1193,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 
 			error_msg("It seems like their was a problem with your credit card.
 			  Please use the back button and double check your credit card information");
-			exit();
+			return false;
 		}
 	}
 
@@ -1205,6 +1210,7 @@ function signUpCamper($vars,$camper_id,$isWorkcrew,$waitlist = 0)
 		else
 			Email::sendDayCampConfirmationEmail($registration_id);
 	}
+	return true;
 }
 
 //From: https://www.php.net/manual/en/function.openssl-encrypt.php
