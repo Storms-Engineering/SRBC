@@ -1359,6 +1359,9 @@ function srbc_camps($atts)
 	$descriptions = NULL;
 	//Create the table of camps
 	foreach ($camps as $camp){
+		if($camp->hidden === "1")
+			continue;
+			
 		$finalText .=  '<tr><td>' . $camp->name . '		<a href="../register-for-a-camp/?campid='.$camp->camp_id .'">(Register)</a><a href="#'.$camp->camp_id.'"> (More Info)</a>';
 		//See if horsemanship is full
 		$horsemanshipCount = $wpdb->get_var($wpdb->prepare("SELECT COUNT(registration_id)

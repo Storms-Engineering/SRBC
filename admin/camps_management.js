@@ -109,6 +109,13 @@ function saveCampInfo(cmp_id)
 				else
 					info[inputs[j].name] = 0;
 			}
+			if(inputs[j].name == "hidden" )
+			{
+				if(inputs[j].checked)
+					info[inputs[j].name] = 1;
+				else
+					info[inputs[j].name] = 0;
+			}
 				
 	}
 	console.log(info);
@@ -131,6 +138,13 @@ function addNewCamp()
 	for (var j = 0; j < inputs.length; ++j) {
 			info[inputs[j].name] = inputs[j].value;
 			if(inputs[j].name == "day_camp" )
+			{
+				if(inputs[j].checked)
+					info[inputs[j].name] = 1;
+				else
+					info[inputs[j].name] = 0;
+			}
+			if(inputs[j].name == "hidden" )
 			{
 				if(inputs[j].checked)
 					info[inputs[j].name] = 1;

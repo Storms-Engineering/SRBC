@@ -60,6 +60,7 @@ function srbc_install() {
 		grade_range TINYTEXT NOT NULL,
 		closed_to_registrations TINYINT,
 		day_camp TINYINT,
+		hidden TINYINT,
 		PRIMARY KEY (camp_id)
 		)  ENGINE=INNODB;";
 

@@ -46,7 +46,8 @@ else if (isset($obj["camp_id"])) {
 		'overall_size' => $obj["overall_size"],
 		'grade_range' => $obj["grade_range"],
 		'closed_to_registrations' =>  $obj["closed_to_registrations"],
-		'day_camp' =>  $obj["day_camp"]
+		'day_camp' =>  $obj["day_camp"],
+		'hidden' =>  $obj["hidden"]
 	), 
 	array( 'camp_id' => $obj["camp_id"]), 
 	array( 
@@ -67,6 +68,7 @@ else if (isset($obj["camp_id"])) {
 		'%d',
 		'%d',
 		'%s',
+		'%d',
 		'%d',
 		'%d'
 	),
@@ -97,7 +99,8 @@ $wpdb->insert(
 		'girl_registration_size' => $obj["girl_registration_size"],
 		'overall_size' => $obj["overall_size"],
 		'grade_range' => $obj["grade_range"],
-		'day_camp' =>  $obj["day_camp"]
+		'day_camp' =>  $obj["day_camp"],
+		'hidden' =>  $obj["hidden"]
 	),
 	array( 
 		'%s',	
@@ -117,6 +120,7 @@ $wpdb->insert(
 		'%d',
 		'%d',
 		'%s',
+		'%d',
 		'%d',
 		'%d'
 	)
