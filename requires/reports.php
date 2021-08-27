@@ -923,7 +923,15 @@ Class Report
 	
 	public function balance_due()
 	{
-		$campers = $this->getCampers();
+		$query = null;
+		//All Query, excluding winter camp
+		if ($this->area == "")
+			$query = "AND " . $GLOBALS['srbc_camps'] . ".area LIKE '%' " . " AND NOT ". $GLOBALS['srbc_camps'] . ".area='Winter Camp' ";
+		//Specific query
+		else 
+			$query .= "AND " . $GLOBALS['srbc_camps'] . ".area='$this->area' ";
+
+		$campers = $this->getCampers($query);
 		echo '<table id=""><tr><th>Last Name</th><th>First Name</th><th>Amount Due</th><th>Camp</th></tr>';
 		foreach($campers as $info)
 		{
