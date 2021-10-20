@@ -574,7 +574,8 @@ function srbc_camps_management()
 			This will allow the boy/girl registrations to be flexible.  However if you only want 8 boys to register for this camp then put 8 in the 
 			boy campers.  If the overall camp size is 32, and you only want to allow 8 boys, then you will need to put 24 in the number of allowed girls.
 			<br>
-			Day Camp <input type="checkbox" name="day_camp">
+			Day Camp <input type="checkbox" name="day_camp"><br>
+			Camp is Hidden from registration?<input type="checkbox" name="hidden">
 
 			<br><br>
 			<button onclick="addNewCamp()" class="tablink" >Create New Camp</button>
