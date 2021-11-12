@@ -213,7 +213,7 @@ Class Report
 	public function mailing_list()
 	{
 		//Get campers but don't print header
-		$campers = $this->getCampers("AND " . $GLOBALS['srbc_camps'] . ".area='$this->area'",false);
+		$campers = $this->getCampers("",false);
 		$csvArray = array();
 		$csvArray[] = array("First_name","Last_name","Address","City","State","Zipcode","Cabin", "Camp");
 		foreach($campers as $camper)
