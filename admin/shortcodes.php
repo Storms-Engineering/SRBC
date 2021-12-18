@@ -702,7 +702,7 @@ function srbc_registration( $atts )
 				
 				echo "</h3><br>";
 				//We aren't showing busrides here for workcrew or wit or day camps
-				if(!isset($_GET['workcrew']) && !isset($_GET['wit']) && $camp->day_camp !== "1")
+				if(!isset($_GET['workcrew']) && !isset($_GET['wit']) && $camp->day_camp !== "1" && $camp->area != "Winter Camp")
 				{
 					echo '<span>Busride*:</span>
 					<select onchange="calculateTotal();" class="inputs" id="busride" name="busride">
@@ -720,6 +720,14 @@ function srbc_registration( $atts )
 					echo '<span>Busride*:</span>
 					<select class="inputs" id="busride" name="busride">
 					<option value="none" selected>No bus ride available for day camps</option>
+						</select><br><br>';
+				}
+				//No busrides for winter camps
+				else if($camp->area == "Winter Camp")
+				{
+					echo '<span>Busride*:</span>
+					<select class="inputs" id="busride" name="busride">
+					<option value="none" selected>No bus ride available for winter camps</option>
 						</select><br><br>';
 				}
 				?>
